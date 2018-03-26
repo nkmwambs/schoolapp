@@ -96,12 +96,32 @@
         </li>
 
         <!-- PARENTS -->
-        <li class="<?php if ($page_name == 'parent') echo 'active'; ?> ">
-            <a href="<?php echo base_url(); ?>index.php?admin/parent">
+
+        <li class="<?php
+        if ($page_name == 'parent' ||
+                $page_name == 'parent_activity')
+            echo 'opened active has-sub';
+        ?> ">
+            <a href="#">
                 <i class="entypo-user"></i>
-                <span><?php echo get_phrase('parents'); ?></span>
+                <span><?php echo get_phrase('parent'); ?></span>
             </a>
+            <ul>
+                <li class="<?php if ($page_name == 'parent') echo 'active'; ?> ">
+                    <a href="<?php echo base_url(); ?>index.php?admin/parent">
+                        <span><i class="fa fa-user-md"></i> <?php echo get_phrase('view_parent'); ?></span>
+                    </a>
+                </li>
+                <li class="<?php if ($page_name == 'parent_activity') echo 'active'; ?> ">
+                    <a href="<?php echo base_url(); ?>index.php?admin/parent_activity">
+                        <span><i class="fa fa-trophy"></i> <?php echo get_phrase('parent_activity'); ?></span>
+                    </a>
+                </li>
+            </ul>
         </li>
+
+
+
 
         <!-- CLASS -->
         <li class="<?php

@@ -47,7 +47,7 @@
 	                                <div class="form-group">
 		                                <label class="col-sm-3 control-label"><?php echo get_phrase('student');?></label>
 		                                <div class="col-sm-9">
-		                                    <select name="student_id" class="form-control" style="width:100%;" id="student_selection_holder">
+		                                    <select name="student_id" class="form-control" style="width:100%;" id="student_selection_holder" onchange="get_transport_info(this.value);">
 		                                        <option value=""><?php echo get_phrase('select_class_first');?></option>
 		                                    	
 		                                    </select>
@@ -83,6 +83,10 @@
 	                                    <div class="col-sm-9">
 	                                        <input type="text" class="datepicker form-control" name="date"/>
 	                                    </div>
+	                                </div>
+	                                
+	                                <div class="well" id="transport_info" style="display: none;">
+	                                	
 	                                </div>
 	                                
 	                            </div>
@@ -297,6 +301,18 @@
                 jQuery('#student_selection_holder').html(response);
             }
         });
+    }
+    
+    function get_transport_info(student_id){
+    	jQuery('#transport_info').css('display','block');
+    	jQuery('#transport_info').html("");
+        $.ajax({
+            url: '<?php echo base_url();?>index.php?admin/get_transport_info/' + student_id ,
+            success: function(response)
+            {
+                jQuery('#transport_info').html(response);
+            }
+        });    	
     }
     
     function get_total_fees(){

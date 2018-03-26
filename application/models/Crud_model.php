@@ -28,6 +28,11 @@ class Crud_model extends CI_Model {
         $query = $this->db->get_where('student', array('student_id' => $student_id));
         return $query->result_array();
     }
+	
+	function get_parent_info($parent_id){
+		$query = $this->db->get_where('parent', array('parent_id' => $parent_id));
+        return $query->result_array();
+	}
 
     /////////TEACHER/////////////
     function get_teachers() {
@@ -530,14 +535,14 @@ class Crud_model extends CI_Model {
 		return $open;
 	}
 
-	function budget_expense_summary_by_expense_category($expense_category_id){
+	function budget_expense_summary_by_expense_category($expense_category_id,$fy){
 		
 		$arr = range(1,12);
 		
 		$month_total = array();
 		
 		for($i=1;$i<sizeof($arr)+1;$i++){
-			$cond = "budget.expense_category_id=".$expense_category_id." AND budget_schedule.month=".$i."";	
+			$cond = "budget.expense_category_id=".$expense_category_id." AND budget_schedule.month=".$i." AND budget.fy=".$fy."";	
 			$month_total[$i] = $this->db->select_sum('amount')->join('budget','budget_schedule.budget_id=budget.budget_id',"right")->where($cond)->get('budget_schedule')->row()->amount; 
 			
 		}
@@ -545,14 +550,14 @@ class Crud_model extends CI_Model {
 		return $month_total;
 	}
 
-	function budget_income_summary_by_expense_category($income_category_id){
+	function budget_income_summary_by_expense_category($income_category_id,$fy){
 		
 		$arr = range(1,12);
 		
 		$month_total = array();
 		
 		for($i=1;$i<sizeof($arr)+1;$i++){
-			$cond = "expense_category.income_category_id=".$income_category_id." AND budget_schedule.month=".$i."";	
+			$cond = "expense_category.income_category_id=".$income_category_id." AND budget_schedule.month=".$i." AND budget.fy=".$fy."";	
 			$this->db->join('budget','budget_schedule.budget_id=budget.budget_id',"right");
 			$this->db->join('expense_category','budget.expense_category_id=expense_category.expense_category_id',"right");
 			$month_total[$i] = $this->db->select_sum('amount')->where($cond)->get('budget_schedule')->row()->amount; 
@@ -562,14 +567,14 @@ class Crud_model extends CI_Model {
 		return $month_total;
 	}
 	
-	function budget_summary_by_expense_category(){
+	function budget_summary_by_expense_category($fy){
 		
 		$arr = range(1,12);
 		
 		$month_total = array();
 		
 		for($i=1;$i<sizeof($arr)+1;$i++){
-			$cond = "budget_schedule.month=".$i."";	
+			$cond = "budget_schedule.month=".$i." AND budget.fy=".$fy."";	
 			$month_total[$i] = $this->db->select_sum('amount')->join('budget','budget_schedule.budget_id=budget.budget_id',"right")->where($cond)->get('budget_schedule')->row()->amount; 
 			
 		}

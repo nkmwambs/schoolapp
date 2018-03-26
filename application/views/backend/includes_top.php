@@ -1,3 +1,7 @@
+  
+  	<link href="assets/js/jquery-ui/css/jquery-ui.1.10.3.custom.css" rel="stylesheet">
+	<script src="assets/js/jquery-ui/js/jquery-1.9.1.js"></script>
+
 <link rel="stylesheet" href="assets/js/jquery-ui/css/no-theme/jquery-ui-1.10.3.custom.min.css">
 <link rel="stylesheet" href="assets/css/font-icons/entypo/css/entypo.css">
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic">

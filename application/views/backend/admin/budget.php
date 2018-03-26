@@ -1,15 +1,16 @@
 <?php
 //print_r($this->crud_model->budget_income_summary_by_expense_category(1))
+//$year = '2017';
 ?>
 
 <div class="row">
-	<div class="col-sm-10">
+	<div class="col-sm-12">
 	<div class="panel panel-primary" id="">
 						
 		<div class="panel-heading">
-			<div class="panel-title"><?=get_phrase('school_budget');?></div>						
+			<div class="panel-title"><?=get_phrase('school_budget_for_year_');?><?=$year;?></div>						
 				<div class="panel-options">
-					<ul class="nav nav-tabs">					
+					<ul class="nav nav-tabs" id="myTab">					
 						<li  class=""><a href="#new-budget-item" data-toggle="tab"><?=get_phrase('new_budget_item');?></a></li>
 						<li class="active"><a href="#budget-summary" data-toggle="tab"><?=get_phrase('budget_summary');?></a></li>
 						<li class=""><a href="#budget-schedules" data-toggle="tab"><?=get_phrase('budget_schedules');?></a></li>
@@ -23,6 +24,13 @@
 			<div class="tab-content">
 						
 				<div class="tab-pane" id="new-budget-item">
+					<div class="row">
+						<div class="col-sm-12">
+							<a class="btn btn-info btn-icon scroll" href="<?=base_url();?>index.php?admin/budget/scroll/<?=$year-1;?>"><i class="fa fa-angle-left"></i><?=$year-1;?></a>
+							<a class="btn btn-info btn-icon scroll" href="<?=base_url();?>index.php?admin/budget/scroll/<?=$year+1;?>"><i class="fa fa-angle-right"></i><?=$year+1;?></a>
+						</div>
+					</div>
+					<hr />
 					<?php echo form_open(base_url() . 'index.php?admin/budget/create/' , array('id'=>'frm_schedule','class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
 
 							<div class="row">
@@ -54,18 +62,19 @@
 								<div class="form-group">
 									<label class="control-label col-sm-4"><?=get_phrase('financial_year');?></label>
 									<div class="col-sm-7">
-										<select name="fy" id="fy" class="form-control"  required="required">
+										<!--<select name="fy" id="fy" class="form-control"  required="required">
 											<option disabled selected value=""><?=get_phrase('select');?></option>
 											<?php 
 												$fy = range(date('Y')-5, date('Y')+5);
 													
 												foreach($fy as $yr):
 											?>
-												<option value="<?=$yr;?>" <?php if($yr === date('Y')) echo 'selected';?>><?=$yr;?></option>
+												<option value="<?=$yr;?>" <?php if($yr === $year) echo 'selected';?>><?=$yr;?></option>
 											<?php 
 												endforeach;
 											?>
-										</select>
+										</select>-->
+										<input type="text" id="fy" name="fy" value="<?=$year;?>" class="form-control" required="required" readonly='readonly'/>
 									</div>
 								</div>
 								
@@ -149,6 +158,13 @@
 				</div>
 						
 				<div class="tab-pane active" id="budget-summary">
+					<div class="row">
+						<div class="col-sm-12">
+							<a class="btn btn-info btn-icon scroll" href="<?=base_url();?>index.php?admin/budget/scroll/<?=$year-1;?>"><i class="fa fa-angle-left"></i><?=$year-1;?></a>
+							<a class="btn btn-info btn-icon scroll" href="<?=base_url();?>index.php?admin/budget/scroll/<?=$year+1;?>"><i class="fa fa-angle-right"></i><?=$year+1;?></a>
+						</div>
+					</div>
+					<hr />
 					<caption><?=get_phrase('summary_by_expense_categories');?></caption>
 					<table class="table table-bordered table-striped">
 						<thead>
@@ -176,7 +192,7 @@
 								
 								foreach($expense_category as $exp_cat):
 								
-								$exp_spread = $this->crud_model->budget_expense_summary_by_expense_category($exp_cat->expense_category_id);
+								$exp_spread = $this->crud_model->budget_expense_summary_by_expense_category($exp_cat->expense_category_id,$year);
 								
 							?>
 								<tr>
@@ -200,7 +216,7 @@
 						</tbody>
 						<tfoot align="right">
 							<?php
-								$budget_summary = $this->crud_model->budget_summary_by_expense_category();
+								$budget_summary = $this->crud_model->budget_summary_by_expense_category($year);
 							?>
 							<tr>
 								<td align="left"><?=get_phrase('total');?></td>
@@ -248,7 +264,7 @@
 								
 							foreach($income_categories as $inc_cat):
 								
-								$inc_spread = $this->crud_model->budget_income_summary_by_expense_category($inc_cat->income_category_id);
+								$inc_spread = $this->crud_model->budget_income_summary_by_expense_category($inc_cat->income_category_id,$year);
 								
 							?>
 								<tr>
@@ -272,7 +288,7 @@
 						</tbody>
 						<tfoot align="right">
 							<?php
-								$budget_summary = $this->crud_model->budget_summary_by_expense_category();
+								$budget_summary = $this->crud_model->budget_summary_by_expense_category($year);
 							?>
 							<tr>
 								<td align="left"><?=get_phrase('total');?></td>
@@ -294,6 +310,13 @@
 				</div>
 											
 				<div class="tab-pane" id="budget-schedules">
+					<div class="row">
+						<div class="col-sm-12">
+							<a class="btn btn-info btn-icon scroll" href="<?=base_url();?>index.php?admin/budget/scroll/<?=$year-1;?>"><i class="fa fa-angle-left"></i><?=$year-1;?></a>
+							<a class="btn btn-info btn-icon scroll" href="<?=base_url();?>index.php?admin/budget/scroll/<?=$year+1;?>"><i class="fa fa-angle-right"></i><?=$year+1;?></a>
+						</div>
+					</div>
+					<hr />
 				<?php
 					$expense_category = $this->db->get('expense_category')->result_object();
 					
@@ -327,7 +350,7 @@
 						</thead>
 						<tbody>
 						<?php
-							$spread = $this->db->get_where('budget',array('expense_category_id'=>$exp->expense_category_id))->result_object();
+							$spread = $this->db->get_where('budget',array('expense_category_id'=>$exp->expense_category_id,fy=>$year))->result_object();
 							//print_r($spread);
 							$total = 0;
 							
@@ -415,16 +438,23 @@
 <script>
 	
 	$(document).ready(function(){
+
+    $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+        localStorage.setItem('activeTab', $(e.target).attr('href'));
+    });
+    var activeTab = localStorage.getItem('activeTab');
+    if(activeTab){
+        $('#myTab a[href="' + activeTab + '"]').tab('show');
+    }
+
 		
-		//$('#frm_schedule').submit(function(e){
-			//e.unbind();
-		//});
+
 	$('.months').keyup(function(){
-		//$('.months').each(function(i){
+
 			var total = parseFloat($('#total').val())+parseFloat($(this).val());
 			
 			$('#total').val(total);
-		//});
+
 	});	
 		
 	

@@ -10,7 +10,7 @@
 		<button id="contra" class="btn btn-success btn-icon" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_contras');"><i class="fa fa-tasks"></i><?=get_phrase('contra_entries');?></button>
 	</div>
 			
-		<label class="col-sm-3 control-label">Choose Month</label>							
+	<label class="col-sm-3 control-label">Choose Month</label>							
 				<div class="col-sm-3">
 					<div class="input-group">
 						<input type="text" name="t_date" class="form-control datepicker" data-format="yyyy-mm-dd">

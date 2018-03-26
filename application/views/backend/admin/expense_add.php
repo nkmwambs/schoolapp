@@ -38,14 +38,22 @@
 					<div class="form-group">
                         <label class="col-sm-3 control-label"><?php echo get_phrase('method');?></label>
                         <div class="col-sm-6">
-                            <select name="method" class="form-control select2" required="required">
+                            <select name="method" id="method" onchange="show_cheque_group(this.value);" class="form-control select2" required="required">
                             	<option value="" selected="selected" disabled="disabled"><?php echo get_phrase('select');?></option>
                                 <option value="1"><?php echo get_phrase('cash');?></option>
-                                <option value="2"><?php echo get_phrase('check');?></option>
+                                <option value="2"><?php echo get_phrase('cheque');?></option>
                                 <!--<option value="3"><?php echo get_phrase('card');?></option>-->
                             </select>
                         </div>
                     </div>
+                    
+                    <div class="form-group" id="chq_group" style="display: none;">
+						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('cheque_number');?></label>
+                        
+						<div class="col-sm-6">
+							<input type="text" class="form-control" name="cheque_no" id="cheque_no" onchange="validate_cheque_number(this.value);" value="0" required="required">
+						</div> 
+					</div>
                     
 					
 					<table class="table table-bordered" id="tbl_details">
@@ -70,7 +78,7 @@
                     <div class="form-group">
 						<div class="col-sm-offset-3 col-sm-5">
 							<div id="add_row" class="btn btn-orange"><?=get_phrase('add_row');?></div>
-							<button type="submit" class="btn btn-info"><?php echo get_phrase('add_expense');?></button>
+							<button type="submit" id="submit" class="btn btn-info"><?php echo get_phrase('add_expense');?></button>
 						</div>
 					</div>
                 <?php echo form_close();?>
@@ -80,6 +88,37 @@
 </div>
 
 <script>
+
+$("#submit").click(function(e){
+	if((isNaN($("#cheque_no").val()) || $("#cheque_no").val() === '0' )  && $("#method").val()=== '2'){
+		alert("Invalid Cheque");
+		e.preventDefault();
+	}
+});
+
+function show_cheque_group(pay_type){
+	if(pay_type==='2'){
+		$("#chq_group").css('display','block');
+	}else{
+		$("#cheque_no").val("0");
+		$("#chq_group").css('display','none');
+	}
+}
+
+function validate_cheque_number(cheque_number){
+	var url = "<?=base_url();?>index.php?admin/validate_cheque_number/"+cheque_number;
+	$.ajax({
+		url:url,
+		success:function(response){
+			//alert(response);
+			if(response !== '0'){
+				alert(response);
+				$("#cheque_no").val("0");
+			}
+		}
+	});
+}
+
 	$('#add_row').click(function(){
 		
 		var row = $('#tbl_details tbody tr').length;

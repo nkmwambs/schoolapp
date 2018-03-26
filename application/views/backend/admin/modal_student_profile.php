@@ -104,6 +104,20 @@ foreach($student_info as $row):?>
                         <td>Parent Phone</td>
                         <td><b><?php echo $this->db->get_where('parent' , array('parent_id' => $row['parent_id']))->row()->phone;?></b></td>
                     </tr>
+                    <tr>
+                        <td>Transport Route</td>
+                        <td><b>
+                        	<?php 
+                        		if($row['transport_id']!=='0'){
+                        			echo $this->db->get_where('transport' , array('transport_id' => $row['transport_id']))->row()->route_name;
+                        		}else{
+                        			echo "Not Set";
+                        		}
+                        		
+                        	?>
+                        	</b>
+                        </td>
+                    </tr>
                     <?php endif;?>
                     
                 </table>

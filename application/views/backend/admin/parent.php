@@ -13,6 +13,7 @@
                             <th><div><?php echo get_phrase('email');?></div></th>
                             <th><div><?php echo get_phrase('phone');?></div></th>
                             <th><div><?php echo get_phrase('profession');?></div></th>
+                            <th><div><?php echo get_phrase('beneficiaries');?></div></th>
                             <th><div><?php echo get_phrase('options');?></div></th>
                         </tr>
                     </thead>
@@ -27,6 +28,7 @@
                             <td><?php echo $row['email'];?></td>
                             <td><?php echo $row['phone'];?></td>
                             <td><?php echo $row['profession'];?></td>
+                            <td><?php echo $this->db->get_where('student',array('parent_id'=>$row['parent_id']))->num_rows();?></td>
                             <td>
                                 
                                 <div class="btn-group">
@@ -41,7 +43,15 @@
                                                 <i class="entypo-pencil"></i>
                                                     <?php echo get_phrase('edit');?>
                                                 </a>
-                                                        </li>
+                                        </li>
+                                        <li class="divider"></li>
+                                        
+                                        <li>
+                                            <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_beneficiaries/<?php echo $row['parent_id'];?>');">
+                                                <i class="fa fa-umbrella"></i>
+                                                    <?php echo get_phrase('beneficiaries');?>
+                                                </a>
+                                        </li>
                                         <li class="divider"></li>
                                         
                                         <!-- teacher DELETION LINK -->

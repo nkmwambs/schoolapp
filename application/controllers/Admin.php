@@ -250,7 +250,56 @@ class Admin extends CI_Controller
         $page_data['page_title']                = get_phrase('school_settings');
         $this->load->view('backend/index', $page_data);	
 	}
-     
+    
+	function parent_activity($param1){
+        if ($this->session->userdata('admin_login') != 1)
+            redirect('login', 'refresh');
+		
+		if($param1==='create'){
+			$data['name'] = $this->input->post("name");
+			$data["description"] = $this->input->post("description");
+			$data['start_date'] = $this->input->post("start_date");
+			$data["end_date"] = $this->input->post("end_date");
+			
+			$this->db->insert("activity",$data);
+			
+			$activity_id = $this->db->insert_id();
+			
+			redirect(base_url().'index.php?admin/parent_add_activity/'.$activity_id,"refresh");
+		}
+
+        $page_data['page_name']                 = 'parent_activity';
+        $page_data['page_title']                = get_phrase('parents_activity');
+        $this->load->view('backend/index', $page_data);					
+	}
+	
+	function parent_add_activity($param1="",$param2=""){
+        if ($this->session->userdata('admin_login') != 1)
+            redirect('login', 'refresh');
+		
+		if($param1=="search"){
+				
+			$list_parents = $this->db->get('parent')->result_object();
+			
+			if($param2>0){
+				$list_parents = $this->db->get_where('class')->result_object();
+			}
+			
+			//echo json_encode($list_parents);
+			
+			$data['list_parents'] = $list_parents;
+			
+			echo $this->load->view("backend/admin/data_ul_parents",$data,TRUE);
+			
+			return FALSE;
+		}
+		
+		
+        $page_data['page_name']                 = __FUNCTION__;
+        $page_data['page_title']                = get_phrase('add_parents');
+        $this->load->view('backend/index', $page_data);			
+	}
+	
     function parent($param1 = '', $param2 = '', $param3 = '')
     {
         if ($this->session->userdata('admin_login') != 1)
@@ -495,10 +544,28 @@ class Admin extends CI_Controller
         $students = $this->db->get_where('student' , array(
             'class_id' => $class_id
         ))->result_array();
+		$option = '<option value="">'.get_phrase("select_a_student").'</option>';
         foreach ($students as $row) {
-            echo '<option value="' . $row['student_id'] . '">' . $row['name'] . '</option>';
+            $option .= '<option value="' . $row['student_id'] . '">' . $row['name'] . '</option>';
         }
+		
+		echo $option;
     }
+	
+	function get_transport_info($student_id){
+		
+		$route = $this->db->get_where('student',array('student_id'=>$student_id))->row();
+		
+		$amount = $this->db->get_where('transport',array('transport_id'=>$route->transport_id))->row()->route_fare;
+		
+		$message = "Student not assigned to a route";
+		
+		if($route->transport_id>0){
+			$message = "Student entitled to transport cost of Kes.". number_format($amount,2)." on route ".$route->route_name;
+		}
+		
+		echo $message;
+	}
 	
 	function get_mass_fees_items($term,$year,$class){
 		$fees_id = $this->db->get_where('fees_structure',array("term"=>$term,"yr"=>$year,"class_id"=>$class))->row()->fees_id;
@@ -511,6 +578,7 @@ class Admin extends CI_Controller
 	}
 	
 	function get_fees_items($term,$year,$class,$student){
+		
 		$fees_id = $this->db->get_where('fees_structure',array("term"=>$term,"yr"=>$year,"class_id"=>$class))->row()->fees_id;
 
 		$details = $this->db->get_where('fees_structure_details',array("fees_id"=>$fees_id))->result_object();
@@ -526,6 +594,7 @@ class Admin extends CI_Controller
 				
 				echo "<tr><td><input type='checkbox' onchange='return get_full_amount(".$row->detail_id.")' id='chk_".$row->detail_id."'/></td><td>".$row->name."</td><td id='full_amount_".$row->detail_id."'>".$row->amount."</td><td><input type='text' onkeyup='return get_payable_amount(".$row->detail_id.")' class='form-control payable_items' id='payable_".$row->detail_id."' name='payable[".$row->detail_id."]'/></td><tr>";
 			endforeach;
+
 		}else{
 			
 			$amount_due = 0;
@@ -1216,7 +1285,15 @@ class Admin extends CI_Controller
             $this->session->set_flashdata('flash_message' , get_phrase('data_added_successfully'));
             redirect(base_url() . 'index.php?admin/school_settings/', 'refresh');				
 	}
-
+	function validate_cheque_number($cheque_number){
+		$count = $this->db->get_where('expense',array('cheque_no'=>$cheque_number))->num_rows();
+		
+		if($count>0){
+			echo "Cheque number exists";
+		}else{
+			echo 0;
+		}
+	}
     function expense($param1 = '' , $param2 = '')
     {
         if ($this->session->userdata('admin_login') != 1)
@@ -1226,7 +1303,8 @@ class Admin extends CI_Controller
 			$data['batch_number']        =   $this->crud_model->populate_batch_number($this->input->post('t_date'));   
 			$data['t_date']        =   $this->input->post('t_date');		
             $data['description']         =   $this->input->post('description');			
-            $data['method']              =   $this->input->post('method');				    	
+            $data['method']              =   $this->input->post('method');	
+			$data['cheque_no']              =   $this->input->post('cheque_no');			    	
             $data['amount']              =   $this->input->post('amount');
             $data['timestamp']           =   strtotime($this->input->post('timestamp'));
             $this->db->insert('expense' , $data);
@@ -2197,6 +2275,10 @@ class Admin extends CI_Controller
 			
 		}
 		
+		$page_data['year']  = date('Y');
+		if($param==="scroll"){
+			$page_data['year']  = $param2;
+		}
         $page_data['page_name']  = 'budget';
         $page_data['page_title'] = get_phrase('budget');
         $this->load->view('backend/index', $page_data);		
