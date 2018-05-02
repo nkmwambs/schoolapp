@@ -1,9 +1,4 @@
-
-<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/student_add/');" 
-    class="btn btn-primary pull-right">
-        <i class="entypo-plus-circled"></i>
-        <?php echo get_phrase('add_new_student');?>
-    </a> 
+ 
 <br><br>
 <table class="table table-bordered datatable" id="table_export">
     <thead>
@@ -50,22 +45,7 @@
                                 </a>
                                         </li>
                         
-                        <!-- STUDENT EDITING LINK -->
-                        <li>
-                            <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_student_edit/<?php echo $row['student_id'];?>');">
-                                <i class="entypo-pencil"></i>
-                                    <?php echo get_phrase('edit');?>
-                                </a>
-                                        </li>
-                        <li class="divider"></li>
                         
-                        <!-- STUDENT DELETION LINK -->
-                        <li>
-                            <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?teacher/student/<?php echo $class_id;?>/delete/<?php echo $row['student_id'];?>');">
-                                <i class="entypo-trash"></i>
-                                    <?php echo get_phrase('delete');?>
-                                </a>
-                                        </li>
                     </ul>
                 </div>
                 

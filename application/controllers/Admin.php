@@ -267,10 +267,41 @@ class Admin extends CI_Controller
 			
 			redirect(base_url().'index.php?admin/parent_add_activity/'.$activity_id,"refresh");
 		}
+		
 
         $page_data['page_name']                 = 'parent_activity';
         $page_data['page_title']                = get_phrase('parents_activity');
+		$page_data['activities'] = $this->db->order_by("end_date asc")->get("activity")->result_object();
         $this->load->view('backend/index', $page_data);					
+	}
+
+	function load_activity_register($param1=""){
+		$data['record'] = $this->db->get_where('activity',array('activity_id'=>$param1))->row();
+		echo $this->load->view('backend/loaded/new_activity_register', $data,TRUE);	
+	}
+
+	function mark_parent_activity_attendance($param1=""){
+		$attendance = $this->input->post();
+
+		$message = "Attendance Marked Successfully";
+		//$data_array = array();
+		foreach($attendance['attendance'] as $key=>$value){
+			$data['activity_id'] = $param1;
+			$data['parent_id'] = $key;
+			$data['attendance'] = $value;
+			
+			$check_attendance = $this->db->get_where('activity_attendance',array("activity_id"=>$param1,"parent_id"=>$key));
+			if($check_attendance->num_rows() === 0){
+				$this->db->insert("activity_attendance",$data);
+				
+			}else{
+				$this->db->where(array("activity_attendance_id"=>$check_attendance->row()->activity_attendance_id));
+				$this->db->update("activity_attendance",$data);
+			}
+			//$data_array[] = $data;
+		}
+
+		echo $message;
 	}
 	
 	function parent_add_activity($param1="",$param2=""){
@@ -872,10 +903,67 @@ class Admin extends CI_Controller
             $this->session->set_flashdata('flash_message' , get_phrase('data_deleted'));
             redirect(base_url() . 'index.php?admin/class_routine/', 'refresh');
         }
-        $page_data['page_name']  = 'class_routine';
+		
+		if($param1== "create_attendance"){
+			$data['class_routine_id'] = $param2;
+			$data['attendance_date'] = $this->input->post('attendance_date');
+			$data['notes'] = $this->input->post('notes');
+			
+			$message = get_phrase('attendance_exists');
+			$cond = array("class_routine_id"=>$param2,"attendance_date"=>$this->input->post('attendance_date'));
+			if($this->db->where($cond)->get("class_routine_attendance")->num_rows()== 0){
+				$this->db->insert("class_routine_attendance",$data);
+				$message = get_phrase('attendance_created');
+			}else{
+				$this->db->where($cond);
+				$this->db->update("class_routine_attendance",$data);
+				$message = get_phrase('attendance_updated');
+			}
+			
+			
+			$this->session->set_flashdata('flash_message' , $message);
+            redirect(base_url() . 'index.php?admin/class_routine/', 'refresh');
+		}	
+		$page_data['routine_attendance'] = $this->db->get_where("class_routine_attendance",array("attendance_date"=>date('Y-m-d')))->result_object();
+       	$page_data['attendance_date'] = date("Y-m-d");
+	    $page_data['page_name']  = 'class_routine';
         $page_data['page_title'] = get_phrase('manage_class_routine');
         $this->load->view('backend/index', $page_data);
     }
+	function create_routine_attendance($param2=""){
+			$data['class_routine_id'] = $param2;
+			$data['attendance_date'] = $this->input->post('attendance_date');
+			$data['notes'] = $this->input->post('notes');
+			
+			$message = get_phrase('attendance_exists');
+			$cond = array("class_routine_id"=>$param2,"attendance_date"=>$this->input->post('attendance_date'));
+			if($this->db->where($cond)->get("class_routine_attendance")->num_rows()== 0){
+				$this->db->insert("class_routine_attendance",$data);
+				$message = get_phrase('attendance_created');
+			}else{
+				$this->db->where($cond);
+				$this->db->update("class_routine_attendance",$data);
+				$message = get_phrase('attendance_updated');
+			}
+			
+			$this->search_class_routine($this->input->post('attendance_date'));
+	}
+	
+	function search_class_routine($param1="",$param2=""){
+		$cur_day = date("w",strtotime($param1));
+		$first_date = date("Y-m-d",strtotime('-'.$cur_day." days",strtotime($param1)));
+		$rem_days = 7 - $cur_day;
+		$last_date = date("Y-m-d",strtotime('+'.$rem_days." days",strtotime($param1)));
+		
+		//$data['first'] = $first_date;
+		//$data['last'] = $last_date;
+		
+		$query = "SELECT * FROM class_routine_attendance WHERE attendance_date BETWEEN '".$first_date."' AND '".$last_date."' ";
+		
+		$data['routine_attendance'] = $this->db->query($query)->result_object();
+		$data['attendance_date'] = $param1;
+		echo $this->load->view("backend/loaded/show_class_routine",$data,true);
+	}
 	
 	/****** DAILY ATTENDANCE *****************/
 	function manage_attendance($date='',$month='',$year='',$class_id='')

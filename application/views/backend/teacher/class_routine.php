@@ -57,13 +57,16 @@
 														foreach($routines as $row2):
 														?>
 															<button class="btn btn-primary" >
-                                                         <?php echo $this->crud_model->get_subject_name_by_id($row2['subject_id']);?>
-																<?php
+                                                         <?php 
+                                                         		echo $this->crud_model->get_subject_name_by_id($row2['subject_id']);
+															
                                                                     if ($row2['time_start_min'] == 0 && $row2['time_end_min'] == 0) 
                                                                         echo '('.$row2['time_start'].'-'.$row2['time_end'].')';
                                                                     if ($row2['time_start_min'] != 0 || $row2['time_end_min'] != 0)
                                                                         echo '('.$row2['time_start'].':'.$row2['time_start_min'].'-'.$row2['time_end'].':'.$row2['time_end_min'].')';
-                                                                ?>
+																		
+																		echo '-'.$this->db->get_where('subject',array('subject_id'=>$row2['subject_id']))->row()->teacher_id;
+                                                         ?>
                                                             </button>
 														<?php endforeach;?>
 

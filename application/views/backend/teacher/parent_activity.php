@@ -9,7 +9,7 @@
             </div>
 			<div class="panel-body">
 				
-				<div class="btn btn-primary btn-icon" onclick="showAjaxModal('<?=base_url();?>index.php?modal/popup/modal_activity_add');"><i class="fa fa-plus-circle"></i><?=get_phrase('add_activity');?></div>
+				
 				<hr/>
 				<table class="table table-striped" id="table_export">
 					<thead>
@@ -49,7 +49,7 @@
 	                                        <li>
 	                                            <a href="#" onclick="show_attendance(this);" id="<?php echo $activity->activity_id;?>">
 	                                                <i class="fa fa-check"></i>
-	                                                    <?php echo get_phrase('show_or_mark_attendance');?>
+	                                                    <?php echo get_phrase('show_attendance');?>
 	                                                </a>
 	                                        </li>
 	                                        

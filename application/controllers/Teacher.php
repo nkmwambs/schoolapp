@@ -154,6 +154,18 @@ class Teacher extends CI_Controller
             echo '<option value="' . $row['section_id'] . '">' . $row['name'] . '</option>';
         }
     }
+
+	function parent_activity($param1){
+        if ($this->session->userdata('teacher_login') != 1)
+            redirect('login', 'refresh');
+		
+	
+
+        $page_data['page_name']                 = 'parent_activity';
+        $page_data['page_title']                = get_phrase('parents_activity');
+		$page_data['activities'] = $this->db->order_by("end_date asc")->get("activity")->result_object();
+        $this->load->view('backend/index', $page_data);					
+	}
     
     /****MANAGE TEACHERS*****/
     function teacher_list($param1 = '', $param2 = '')
@@ -320,6 +332,8 @@ class Teacher extends CI_Controller
         ))->result_array();
         $this->load->view('backend/index', $page_data);
     }
+
+
     
     /**********MANAGING CLASS ROUTINE******************/
     function class_routine($param1 = '', $param2 = '', $param3 = '')

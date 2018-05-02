@@ -1,35 +1,13 @@
+<?php 
+	//print_r($routine_attendance)."<br/>";
+	//echo date("w",strtotime($attendance_date));
+	//echo $attendance_date;
+	//echo $first."<br/>";
+	//echo $last;
+?>
 
-<hr />
-<div class="row">
-	<div class="col-sm-12">
-			<div class="form-group">
-				<label for="field-1" class="col-sm-4 control-label"><?php echo get_phrase('routine_date');?></label>
-                        
-					<div class="col-sm-6">
-						<input type="text" class="form-control datepicker" id="routine_date" readonly="readonly" value="<?=date("Y-m-d");?>" data-format="yyyy-mm-dd" data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>" value="" autofocus>
-					</div>
-					
-					<div class="col-sm-2">
-						<button id="search_routine" class="btn btn-info"><?=get_phrase('search_routine');?></button>
-					</div>
-			</div>
-	</div>
-</div>
-
-<!-- <div class="row">
-	<div class="col-sm-12">
-		<div id="progress"></div>
-	</div>
-</div> -->
-
-<div class="row" id="routine_schedule">
-	<div class="col-md-12">
-    <?php 
-		//print_r($routine_attendance)."<br/>";
-		//echo date("w",strtotime($attendance_date));
-		//echo $attendance_date;
-	?>
-
+<div class="col-md-12">
+    
     	<!------CONTROL TABS START------>
 		<ul class="nav nav-tabs bordered">
 			<li class="active">
@@ -109,7 +87,7 @@
 																
 															?>
 															
-															<button class="btn <?=$color;?> dropdown-toggle" data-toggle="dropdown" title="<?php echo $this->crud_model->get_type_name_by_id('teacher',$teacher_id);?>">
+															<button  class="btn <?=$color;?> dropdown-toggle"  data-toggle="dropdown" title="<?php echo $this->crud_model->get_type_name_by_id('teacher',$teacher_id);?>">
                                                             	
 																<?php
 																	
@@ -130,16 +108,14 @@
                                                                         <?php echo get_phrase('edit');?>
                                                                     			</a>
 		                                                         </li>
-		                                                         
 		                                                         <?php if($d == date("w",strtotime($attendance_date))+1){?>
-			                                                         <li>
-	                                                                	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_class_routine_attendance/<?php echo $row2['class_routine_id'];?>/<?php echo $attendance_date;?>');">
-		                                                                    <i class="entypo-check"></i>
-		                                                                        <?php echo get_phrase('mark_attended');?>
-	                                                                    </a>
-			                                                         </li>
+		                                                         <li>
+                                                                	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_class_routine_attendance/<?php echo $row2['class_routine_id'];?>/<?php echo $attendance_date;?>');">
+                                                                    <i class="entypo-check"></i>
+                                                                        <?php echo get_phrase('mark_attended');?>
+                                                                    			</a>
+		                                                         </li>
 		                                                         <?php }?>
-		                                                         
 		                                                         <li>
 		                                                            <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?admin/class_routine/delete/<?php echo $row2['class_routine_id'];?>');">
 		                                                                <i class="entypo-trash"></i>
@@ -171,7 +147,7 @@
 			<!----CREATION FORM STARTS---->
 			<div class="tab-pane box" id="add" style="padding: 5px">
                 <div class="box-content">
-                	<?php echo form_open(base_url() . 'index.php?admin/class_routine/create' , array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
+                	<?php echo form_open(base_url() . 'index.php?admin/class_routine/create' , array('id'=> 'frm_routine', 'class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><?php echo get_phrase('class');?></label>
                                 <div class="col-sm-5">
@@ -279,35 +255,9 @@
             
 		</div>
 	</div>
-</div>
-
-<script type="text/javascript">
-
-    
-    $("#search_routine").on("click",function(e){
-
-    	var routine_date = $("#routine_date").val();
-    	var url = "<?=base_url();?>index.php?admin/search_class_routine/"+routine_date;
-    	
-    	$.ajax({
-    		url:url,
-    		beforeSend:function(){
-    			$("#routine_schedule").removeClass("hidden");
-    			
-    			$('#routine_schedule').html('<div style="text-align:center;"><img style="width:60px;height:60px;" src="<?php echo base_url();?>uploads/preloader4.gif" /></div>');
-    		},
-    		success:function(response){
-    			
-    			$('#routine_schedule').html(response);
-    		},
-    		error:function(){
-    			
-    		}
-    	});
-    });
-    
-    
-     function get_class_subject(class_id) {
+	
+<script>
+    function get_class_subject(class_id) {
         $.ajax({
             url: '<?php echo base_url();?>index.php?admin/get_class_subject/' + class_id ,
             success: function(response)
@@ -319,7 +269,7 @@
     
 	function mark_attendance(class_routine_id=""){
 	
-		showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_class_routine_attendance/'+class_routine_id+"/<?=$attendance_date;?>");
+		showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_class_routine_attendance/'+class_routine_id+"/<?php echo strtotime($attendance_date);?>");
 	}
 	
 	$(document).ready(function(){
@@ -337,5 +287,25 @@
 			
 			});
 		});
+		
+$("#frm_routine").submit(function(ev){
+	var url = $(this).attr("action")+"/"+$("#routine_date").val();
+	var data  = $(this).serializeArray();
+	
+	$.ajax({
+		url:url,
+		data:data,
+		beforeSend:function(){
+			$('#routine_schedule').html('<div style="text-align:center;"><img style="width:60px;height:60px;" src="<?php echo base_url();?>uploads/preloader4.gif" /></div>');
+		},
+		success:function(response){
+			$('#routine_schedule').html(response);
+		},
+		error:function(){
+			
+		}
+	});
+	
+	ev.preventDefault();
+});		
 </script>
-
