@@ -365,6 +365,14 @@
                 </li>
             </ul>
         </li>
+        
+         <!-- Admin -->
+        <li class="<?php if ($page_name == 'administrator') echo 'active'; ?> ">
+            <a href="<?php echo base_url(); ?>index.php?admin/administrator">
+                <i class="entypo-user-add"></i>
+                <span><?php echo get_phrase('administrators'); ?></span>
+            </a>
+        </li>
 
         <!-- ACCOUNT -->
         <li class="<?php if ($page_name == 'manage_profile') echo 'active'; ?> ">
