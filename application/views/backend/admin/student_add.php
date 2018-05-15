@@ -26,7 +26,7 @@
 							<select name="parent_id" class="form-control select2">
                               <option value=""><?php echo get_phrase('select');?></option>
                               <?php 
-								$parents = $this->db->get('parent')->result_array();
+								$parents = $this->db->get_where('parent',array('care_type'=>'primary'))->result_array();
 								foreach($parents as $row):
 									?>
                             		<option value="<?php echo $row['parent_id'];?>">
@@ -37,6 +37,24 @@
 							  ?>
                           </select>
 						</div> 
+					</div>
+					
+					<div class="form-group">
+						<label class="control-label col-sm-3"><?=get_phrase("other_caregivers");?></label>
+						<div class="col-sm-5">
+							<select class="form-control select2" name="secondary_care[]" id="secondary_care" multiple="multiple">
+								<?php 
+									$parents = $this->db->get_where('parent',array('care_type'=>'secondary'))->result_array();
+									foreach($parents as $row):
+								?>
+                            		<option value="<?php echo $row['parent_id'];?>">
+										<?php echo $row['name'];?>
+                                    </option>
+                                <?php
+									endforeach;
+							  	?>
+							</select>
+						</div>
 					</div>
 					
 					<div class="form-group">

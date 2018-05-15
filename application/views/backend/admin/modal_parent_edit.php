@@ -9,7 +9,7 @@
         	<div class="panel-heading">
             	<div class="panel-title">
             		<i class="entypo-plus-circled"></i>
-					<?php echo get_phrase('add_parent');?>
+					<?php echo get_phrase('edit_parent');?>
             	</div>
             </div>
 			<div class="panel-body">
@@ -46,6 +46,34 @@
                         
 						<div class="col-sm-5">
 							<input type="text" class="form-control" name="address" value="<?php echo $row['address'];?>">
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('relationship');?></label>
+                        
+						<div class="col-sm-5">
+							<select class="form-control select2" name="relationship" >
+								<option><?=get_phrase("select");?></option>
+								<?php 
+									$relationship = $this->db->get('relationship')->result_object();
+									foreach($relationship as $relate):
+								?>
+									<option value="<?=$relate->relationship_id;?>" <?php if($row['relationship_id'] === $relate->relationship_id) echo "selected";?>><?=$relate->name;?></option>
+								<?php endforeach;?>
+							</select>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('care_type');?></label>
+                        
+						<div class="col-sm-5">
+							<select class="form-control select2" name="care_type" >
+								<option value=""><?=get_phrase("select");?></option>
+								<option value="primary" <?php if($row['care_type'] === "primary") echo "selected";?> ><?=get_phrase("primary");?></option>
+								<option value="secondary" <?php if($row['care_type'] === "secondary") echo "selected";?> ><?=get_phrase("secondary");?></option>
+							</select>
 						</div>
 					</div>
 					

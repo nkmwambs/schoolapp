@@ -67,6 +67,25 @@ foreach ( $edit_data as $row):
 						</div> 
 					</div>
 					
+					
+					<div class="form-group">
+						<label class="control-label col-sm-3"><?=get_phrase("other_caregivers");?></label>
+						<div class="col-sm-5">
+							<select class="form-control select2" name="secondary_care[]" id="secondary_care" multiple="multiple">
+								<?php 
+									$parents = $this->db->get_where('parent',array('care_type'=>'secondary'))->result_array();
+									foreach($parents as $row3):
+								?>
+                            		<option value="<?php echo $row3['parent_id'];?>" <?php if($this->db->get_where("caregiver",array("parent_id"=>$row3['parent_id'],"student_id"=>$row['student_id']))->num_rows() > 0  ) echo "selected";?>>
+										<?php echo $row3['name'];?>
+                                    </option>
+                                <?php
+									endforeach;
+							  	?>
+							</select>
+						</div>
+					</div>
+					
 					<div class="form-group">
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('class');?></label>
                         

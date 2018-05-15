@@ -53,6 +53,34 @@
 					</div>
 					
 					<div class="form-group">
+						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('relationship');?></label>
+                        
+						<div class="col-sm-5">
+							<select class="form-control select2" name="relationship" >
+								<option><?=get_phrase("select");?></option>
+								<?php 
+									$relationship = $this->db->get('relationship')->result_object();
+									foreach($relationship as $row):
+								?>
+									<option value="<?=$row->relationship_id;?>"><?=$row->name;?></option>
+								<?php endforeach;?>
+							</select>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('care_type');?></label>
+                        
+						<div class="col-sm-5">
+							<select class="form-control select2" name="care_type" >
+								<option><?=get_phrase("select");?></option>
+								<option value="primary"><?=get_phrase("primary");?></option>
+								<option value="secondary"><?=get_phrase("secondary");?></option>
+							</select>
+						</div>
+					</div>
+					
+					<div class="form-group">
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('profession');?></label>
                         
 						<div class="col-sm-5">

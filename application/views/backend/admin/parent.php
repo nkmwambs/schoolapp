@@ -14,6 +14,8 @@
                             <th><div><?php echo get_phrase('phone');?></div></th>
                             <th><div><?php echo get_phrase('profession');?></div></th>
                             <th><div><?php echo get_phrase('beneficiaries');?></div></th>
+                            <th><div><?php echo get_phrase('relationship');?></div></th>
+                            <th><div><?php echo get_phrase('care_type');?></div></th>
                             <th><div><?php echo get_phrase('options');?></div></th>
                         </tr>
                     </thead>
@@ -28,7 +30,21 @@
                             <td><?php echo $row['email'];?></td>
                             <td><?php echo $row['phone'];?></td>
                             <td><?php echo $row['profession'];?></td>
-                            <td><?php echo $this->db->get_where('student',array('parent_id'=>$row['parent_id']))->num_rows();?></td>
+                            <td>
+                            	
+                            	<?php 
+                            			if($row['care_type'] === "primary"){
+                            				echo $this->db->get_where('student',array('parent_id'=>$row['parent_id']))->num_rows();
+                            			}else{
+                            				echo $this->db->get_where('caregiver',array('parent_id'=>$row['parent_id']))->num_rows();
+                            			}
+                            			
+                            	?>
+                            	
+                            </td>
+                            
+                            <td><?php if($this->db->get_where('relationship',array('relationship_id'=>$row['relationship_id']))->num_rows()>0) echo $this->db->get_where('relationship',array('relationship_id'=>$row['relationship_id']))->row()->name; else echo get_phrase("none");?></td>
+                            <td><?php echo ucfirst($row['care_type']);?></td>
                             <td>
                                 
                                 <div class="btn-group">
@@ -47,12 +63,24 @@
                                         <li class="divider"></li>
                                         
                                         <li>
-                                            <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_beneficiaries/<?php echo $row['parent_id'];?>');">
+                                            <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_beneficiaries/<?php echo $row['parent_id'];?>/<?php echo $row['care_type'];?>');">
                                                 <i class="fa fa-umbrella"></i>
                                                     <?php echo get_phrase('beneficiaries');?>
                                                 </a>
                                         </li>
                                         <li class="divider"></li>
+                                        
+                                        <?php if($row['care_type'] === "secondary"){?>
+                                        
+                                        <li>
+                                            <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_assign_beneficiaries/<?php echo $row['parent_id'];?>/<?php echo $row['care_type'];?>');">
+                                                <i class="fa fa-link"></i>
+                                                    <?php echo get_phrase('assign_beneficiary');?>
+                                                </a>
+                                        </li>
+                                        <li class="divider"></li>
+                                        
+                                        <?php }?>
                                         
                                         <!-- teacher DELETION LINK -->
                                         <li>
@@ -60,7 +88,7 @@
                                                 <i class="entypo-trash"></i>
                                                     <?php echo get_phrase('delete');?>
                                                 </a>
-                                                        </li>
+                                        </li>
                                     </ul>
                                 </div>
                                 

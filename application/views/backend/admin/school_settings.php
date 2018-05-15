@@ -1,9 +1,14 @@
 <div class="row">
-	<div class="col-xs-4">
-		<div class="panel panel-primary">
+	<div class="col-xs-6">
+		<div class="panel panel-primary" data-collapsed="1">
 								
 				<div class="panel-heading">
-					<div class="panel-title"><?=get_phrase('School_terms');?></div>						
+					<div class="panel-title"><?=get_phrase('School_terms');?></div>	
+					
+						<div class="panel-options">
+							<a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
+						</div>
+											
 				</div>
 										
 				<div class="panel-body">
@@ -67,10 +72,15 @@
 	
 	<div class="col-xs-6">
 		
-				<div class="panel panel-primary">
+				<div class="panel panel-primary" data-collapsed="1">
 								
 					<div class="panel-heading">
-						<div class="panel-title"><?=get_phrase('account_opening_balances');?></div>						
+						<div class="panel-title"><?=get_phrase('account_opening_balances');?></div>	
+						
+						<div class="panel-options">
+							<a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
+						</div>
+										
 					</div>
 										
 					<div class="panel-body">
@@ -111,9 +121,14 @@
 <div class="row">
 	<div class="col-xs-6">
 	
-	      <div class="panel panel-default panel-shadow" data-collapsed="0">
+	      <div class="panel panel-default panel-shadow" data-collapsed="1">
 	             <div class="panel-heading">
 	                  <div class="panel-title"><?php echo get_phrase('income_categories');?></div>
+	                  
+	                  <div class="panel-options">
+						<a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
+					</div>
+					
 	             </div>
 	             
 	             <div class="panel-body">		
@@ -185,9 +200,14 @@
 	
 	<div class="col-xs-6">
 
-         <div class="panel panel-default panel-shadow" data-collapsed="0">
+         <div class="panel panel-default panel-shadow" data-collapsed="1">
               <div class="panel-heading">
                    <div class="panel-title"><?php echo get_phrase('expense_categories');?></div>
+                   
+                   <div class="panel-options">
+						<a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
+					</div>
+					
               </div>
               
               <div class="panel-body">
@@ -257,6 +277,78 @@
 		</div>
 </div>
 
+<div class="row">
+	<div class="col-sm-6">
+		<div class="panel panel-default panel-shadow" data-collapsed="1">
+              <div class="panel-heading">
+                   <div class="panel-title"><?php echo get_phrase('care_relationship');?></div>
+                   
+                   <div class="panel-options">
+						<a href="#" data-rel="collapse"><i class="entypo-down-open"></i></a>
+					</div>
+						
+              </div>
+              
+              <div class="panel-body">
+              	
+              		<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_relationship_add/');" 
+						class="btn btn-primary pull-right">
+						<i class="entypo-plus-circled"></i>
+						<?php echo get_phrase('add_relationship');?>
+					</a> 
+						<br><br>
+              		
+					<table class="table table-bordered datatable" id="table_export_3">
+						<thead>
+							<tr>
+								<th><?=get_phrase('serial');?></th>
+								<th><?=get_phrase('name');?></th>
+								<th><?=get_phrase('action');?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php 
+								$cnt = 1;
+								$relationship = $this->db->get('relationship')->result_object();
+								foreach($relationship as $row):
+							?>
+								<tr>
+									<td><?=$cnt;?></td>
+									<td><?=$row->name;?></td>
+									<td>
+										<div class="btn-group">
+						                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+						                        Action <span class="caret"></span>
+						                    </button>
+						                    <ul class="dropdown-menu dropdown-default pull-right" role="menu">
+						                        
+						                        <!-- RELATIONSHIP EDITING LINK -->
+						                        <li>
+						                        	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_relationship_edit/<?php echo $row->relationship_id;?>');">
+						                            	<i class="entypo-pencil"></i>
+															<?php echo get_phrase('edit');?>
+						                               	</a>
+						                        				</li>
+						                        <li class="divider"></li>
+						                        
+						                        <!-- RELATIONSHIP DELETION LINK -->
+						                        <li>
+						                        	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?admin/school_settings/delete_relationship/<?php echo $row->relationship_id;?>');">
+						                            	<i class="entypo-trash"></i>
+															<?php echo get_phrase('delete');?>
+						                               	</a>
+						                        </li>
+						                    </ul>
+						                </div>
+									</td>
+								</tr>
+							<?php $cnt++; endforeach; ?>
+						</tbody>
+					</table>
+			</div>
+		</div>			
+	</div>
+</div>
 
 <!-----  DATA TABLE EXPORT CONFIGURATIONS ---->                      
 <script type="text/javascript">

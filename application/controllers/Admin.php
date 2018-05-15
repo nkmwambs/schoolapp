@@ -162,6 +162,20 @@ class Admin extends CI_Controller
             $data['roll']           = $this->input->post('roll');
             $this->db->insert('student', $data);
             $student_id = $this->db->insert_id();
+			
+			
+            if($this->input->post('secondary_care')){
+            	$care_array = $this->input->post('secondary_care');
+				
+				foreach($care_array as $caregiver_id){
+					$data2['parent_id'] =  $caregiver_id;
+					$data2['student_id'] =  $student_id;
+					
+					$this->db->insert('caregiver', $data2);
+				} 
+            }
+            
+			
             move_uploaded_file($_FILES['userfile']['tmp_name'], 'uploads/student_image/' . $student_id . '.jpg');
             $this->session->set_flashdata('flash_message' , get_phrase('data_added_successfully'));
             $this->email_model->account_opening_email('student', $data['email']); //SEND EMAIL ACCOUNT OPENING EMAIL
@@ -183,6 +197,24 @@ class Admin extends CI_Controller
             
             $this->db->where('student_id', $param3);
             $this->db->update('student', $data);
+			
+			if($this->input->post('secondary_care')){
+            	$care_array = $this->input->post('secondary_care');
+				
+				$this->db->where(array("student_id"=>$param3));
+				$this->db->delete('caregiver');
+				
+				foreach($care_array as $caregiver_id){
+					
+					$data2['parent_id'] =  $caregiver_id;
+					$data2['student_id'] =  $param3;
+
+					$this->db->insert('caregiver', $data2);
+					
+					
+				} 
+            }
+			
             move_uploaded_file($_FILES['userfile']['tmp_name'], 'uploads/student_image/' . $param3 . '.jpg');
             $this->crud_model->clear_cache();
             $this->session->set_flashdata('flash_message' , get_phrase('data_updated'));
@@ -244,6 +276,45 @@ class Admin extends CI_Controller
 			$this->session->set_flashdata('flash_message' , get_phrase('term_deleted'));
             redirect(base_url() . 'index.php?admin/school_settings/', 'refresh');
 		}
+		
+		if($param1==='add_relationship'){
+			$msg = get_phrase('duplicate_name');
+			$data['name']=$this->input->post('name');
+
+			if($this->db->get_where("relationship",array("name"=>$this->input->post('name')))->num_rows() === 0){
+				$msg = get_phrase('record_added');
+				$this->db->insert('relationship',$data);
+			}
+			
+			
+            $this->session->set_flashdata('flash_message' , $msg);
+            redirect(base_url() . 'index.php?admin/school_settings/', 'refresh');
+		}
+		
+		if($param1=='delete_relationship'){
+			$this->db->where(array('relationship_id'=>$param2));
+			
+			$this->db->delete('relationship');
+			
+			$this->session->set_flashdata('flash_message' , get_phrase('record_deleted'));
+            redirect(base_url() . 'index.php?admin/school_settings/', 'refresh');
+		}
+		
+		if($param1==='edit_relationship'){
+			
+			$msg = get_phrase('duplicate_record');
+			
+			if($this->db->get_where("relationship",array("name"=>$this->input->post('name')))->num_rows() === 0){
+				$this->db->where(array('relationship_id'=>$param2));
+				$data['name'] = $this->input->post('name');
+				$this->db->update('relationship',$data);
+				$msg = get_phrase('record_edited');
+			}		
+			
+			$this->session->set_flashdata('flash_message' , $msg);
+            redirect(base_url() . 'index.php?admin/school_settings/', 'refresh');
+		}
+		
 			    	
 		$page_data['terms'] = $this->db->get('terms')->result_object();
         $page_data['page_name']                 = 'school_settings';
@@ -341,10 +412,13 @@ class Admin extends CI_Controller
             $data['password']    			= $this->input->post('password');
             $data['phone']       			= $this->input->post('phone');
             $data['address']     			= $this->input->post('address');
+			$data['relationship_id']     	= $this->input->post('relationship');
+			$data['care_type']     	= $this->input->post('care_type');
             $data['profession']  			= $this->input->post('profession');
             $this->db->insert('parent', $data);
-            $this->session->set_flashdata('flash_message' , get_phrase('data_added_successfully'));
             $this->email_model->account_opening_email('parent', $data['email']); //SEND EMAIL ACCOUNT OPENING EMAIL
+            
+            $this->session->set_flashdata('flash_message' , get_phrase('data_added_successfully'));
             redirect(base_url() . 'index.php?admin/parent/', 'refresh');
         }
         if ($param1 == 'edit') {
@@ -352,6 +426,8 @@ class Admin extends CI_Controller
             $data['email']                  = $this->input->post('email');
             $data['phone']                  = $this->input->post('phone');
             $data['address']                = $this->input->post('address');
+			$data['relationship_id']     	= $this->input->post('relationship');
+			$data['care_type']     	= $this->input->post('care_type');
             $data['profession']             = $this->input->post('profession');
             $this->db->where('parent_id' , $param2);
             $this->db->update('parent' , $data);
@@ -364,6 +440,19 @@ class Admin extends CI_Controller
             $this->session->set_flashdata('flash_message' , get_phrase('data_deleted'));
             redirect(base_url() . 'index.php?admin/parent/', 'refresh');
         }
+		
+		if($param1 === "add_caregivers"){
+			$this->db->where(array("parent_id"=>$param2));
+			$this->db->delete('caregiver');
+			foreach($this->input->post("student_id") as $student_id){
+				
+				$data['student_id'] = $student_id;
+				$data['parent_id'] = $param2;
+				
+				$this->db->insert('caregiver',$data);
+			}
+		}
+		
         $page_data['page_title'] 	= get_phrase('all_parents');
         $page_data['page_name']  = 'parent';
         $this->load->view('backend/index', $page_data);
