@@ -2,18 +2,18 @@
 if (!defined('BASEPATH'))
 	exit('No direct script access allowed');
 
-/*	
- *	@author : Joyonto Roy
- *	date	: 1 August, 2013
- *	University Of Dhaka, Bangladesh
- *	Hospital Management system
- *	http://codecanyon.net/user/joyontaroy
- */
+	/*
+	 *	@author 	: Nicodemus Karisa Mwambire
+	 *	date		: 16th June, 2018
+	 *	Techsys School Management System
+	 *	https://www.techsysolutions.com
+	 *	support@techsysolutions.com
+	 */
 
 
 class Multilanguage extends CI_Controller
 {
-	
+
 	function __construct()
 	{
 		parent::__construct();
@@ -25,17 +25,17 @@ class Multilanguage extends CI_Controller
 		$this->output->set_header('Pragma: no-cache');
 		$this->output->set_header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 	}
-	
+
 	function index()
 	{
 	}
-	
+
 	function select_language($language = 'english')
 	{
 		$this->session->set_userdata('current_language', $language);
 		redirect(base_url(), 'refresh');
 	}
-	
-	
-	
+
+
+
 }

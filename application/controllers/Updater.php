@@ -2,13 +2,13 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-/*
- *	@author 	: Joyonto Roy
- *	date		: 27 september, 2014
- *	FPS School Management System Pro
- *	http://codecanyon.net/user/FreePhpSoftwares
- *	support@freephpsoftwares.com
- */
+    /*
+     *	@author 	: Nicodemus Karisa Mwambire
+     *	date		: 16th June, 2018
+     *	Techsys School Management System
+     *	https://www.techsysolutions.com
+     *	support@techsysolutions.com
+     */
 
 class Updater extends CI_Controller
 {

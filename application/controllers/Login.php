@@ -3,13 +3,13 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-/* 	
- * 	@author : Joyonto Roy
- * 	30th July, 2014
- * 	Creative Item
- * 	www.freephpsoftwares.com
- * 	http://codecanyon.net/user/joyontaroy
- */
+    /*
+     *	@author 	: Nicodemus Karisa Mwambire
+     *	date		: 16th June, 2018
+     *	Techsys School Management System
+     *	https://www.techsysolutions.com
+     *	support@techsysolutions.com
+     */
 
 class Login extends CI_Controller {
 
@@ -28,6 +28,9 @@ class Login extends CI_Controller {
     //Default function, redirects to logged in user area
     public function index() {
 
+      if ($this->session->userdata('active_login') == 1)
+          redirect(base_url() . 'index.php?dashboard', 'refresh');
+
         if ($this->session->userdata('admin_login') == 1)
             redirect(base_url() . 'index.php?admin/dashboard', 'refresh');
 
@@ -43,7 +46,7 @@ class Login extends CI_Controller {
         $this->load->view('backend/login');
     }
 
-    //Ajax login function 
+    //Ajax login function
     function ajax_login() {
         $response = array();
 
@@ -65,56 +68,73 @@ class Login extends CI_Controller {
 
     //Validating login from ajax request
     function validate_login($email = '', $password = '') {
-        $credential = array('email' => $email, 'password' => $password);
+        $credential = array('email' => $email, 'password' => $password,"auth"=>'1');
 
 
         // Checking login credential for admin
-        $query = $this->db->get_where('admin', $credential);
+        $query = $this->db->get_where('user', $credential);
         if ($query->num_rows() > 0) {
             $row = $query->row();
-            $this->session->set_userdata('admin_login', '1');
-            $this->session->set_userdata('admin_id', $row->admin_id);
-            $this->session->set_userdata('login_user_id', $row->admin_id);
-            $this->session->set_userdata('name', $row->name);
-            $this->session->set_userdata('login_type', 'admin');
+            $login_type = $this->db->get_where("login_type",array("login_type_id"=>$row->login_type_id))->row()->name;
+            $this->session->set_userdata('active_login', '1');
+            $this->session->set_userdata('login_user_id', $row->user_id);
+            $this->session->set_userdata('login_firstname', $row->firstname);
+            $this->session->set_userdata('login_lastname', $row->lastname);
+            $this->session->set_userdata('login_email', $row->email);
+            $this->session->set_userdata('login_type_id', $row->login_type_id);
+            $this->session->set_userdata('login_profile', $row->profile_id);
+            $this->session->set_userdata('login_type', $login_type);//
             return 'success';
         }
-
-        // Checking login credential for teacher
-        $query = $this->db->get_where('teacher', $credential);
-        if ($query->num_rows() > 0) {
-            $row = $query->row();
-            $this->session->set_userdata('teacher_login', '1');
-            $this->session->set_userdata('teacher_id', $row->teacher_id);
-            $this->session->set_userdata('login_user_id', $row->teacher_id);
-            $this->session->set_userdata('name', $row->name);
-            $this->session->set_userdata('login_type', 'teacher');
-            return 'success';
-        }
-
-        // Checking login credential for student
-        $query = $this->db->get_where('student', $credential);
-        if ($query->num_rows() > 0) {
-            $row = $query->row();
-            $this->session->set_userdata('student_login', '1');
-            $this->session->set_userdata('student_id', $row->student_id);
-            $this->session->set_userdata('login_user_id', $row->student_id);
-            $this->session->set_userdata('name', $row->name);
-            $this->session->set_userdata('login_type', 'student');
-            return 'success';
-        }
-
-        // Checking login credential for parent
-        $query = $this->db->get_where('parent', $credential);
-        if ($query->num_rows() > 0) {
-            $row = $query->row();
-            $this->session->set_userdata('parent_login', '1');
-            $this->session->set_userdata('parent_id', $row->parent_id);
-            $this->session->set_userdata('login_user_id', $row->parent_id);
-            $this->session->set_userdata('name', $row->name);
-            $this->session->set_userdata('login_type', 'parent');
-            return 'success';
-        }
+      //
+      //   // Checking login credential for admin
+      //   $query = $this->db->get_where('admin', $credential);
+      //   if ($query->num_rows() > 0) {
+      //       $row = $query->row();
+      //       $this->session->set_userdata('admin_login', '1');
+      //       $this->session->set_userdata('admin_id', $row->admin_id);
+      //       $this->session->set_userdata('login_user_id', $row->admin_id);
+      //       $this->session->set_userdata('name', $row->name);
+      //       $this->session->set_userdata('login_type', 'admin');
+			// $this->session->set_userdata('admin_level', $row->level);
+      //       return 'success';
+      //   }
+      //
+      //   // Checking login credential for teacher
+      //   $query = $this->db->get_where('teacher', $credential);
+      //   if ($query->num_rows() > 0) {
+      //       $row = $query->row();
+      //       $this->session->set_userdata('teacher_login', '1');
+      //       $this->session->set_userdata('teacher_id', $row->teacher_id);
+      //       $this->session->set_userdata('login_user_id', $row->teacher_id);
+      //       $this->session->set_userdata('name', $row->name);
+      //       $this->session->set_userdata('login_type', 'teacher');
+      //       return 'success';
+      //   }
+      //
+      //   // Checking login credential for student
+      //   $query = $this->db->get_where('student', $credential);
+      //   if ($query->num_rows() > 0) {
+      //       $row = $query->row();
+      //       $this->session->set_userdata('student_login', '1');
+      //       $this->session->set_userdata('student_id', $row->student_id);
+      //       $this->session->set_userdata('login_user_id', $row->student_id);
+      //       $this->session->set_userdata('name', $row->name);
+      //       $this->session->set_userdata('login_type', 'student');
+      //       return 'success';
+      //   }
+      //
+      //   // Checking login credential for parent
+      //   $query = $this->db->get_where('parent', $credential);
+      //   if ($query->num_rows() > 0) {
+      //       $row = $query->row();
+      //       $this->session->set_userdata('parent_login', '1');
+      //       $this->session->set_userdata('parent_id', $row->parent_id);
+      //       $this->session->set_userdata('login_user_id', $row->parent_id);
+      //       $this->session->set_userdata('name', $row->name);
+      //       $this->session->set_userdata('login_type', 'parent');
+      //       return 'success';
+      //   }
 
         return 'invalid';
     }
@@ -142,7 +162,7 @@ class Login extends CI_Controller {
 
         // Checking credential for admin
         $query = $this->db->get_where('admin' , array('email' => $email));
-        if ($query->num_rows() > 0) 
+        if ($query->num_rows() > 0)
         {
             $reset_account_type     =   'admin';
             $this->db->where('email' , $email);
@@ -151,7 +171,7 @@ class Login extends CI_Controller {
         }
         // Checking credential for student
         $query = $this->db->get_where('student' , array('email' => $email));
-        if ($query->num_rows() > 0) 
+        if ($query->num_rows() > 0)
         {
             $reset_account_type     =   'student';
             $this->db->where('email' , $email);
@@ -160,7 +180,7 @@ class Login extends CI_Controller {
         }
         // Checking credential for teacher
         $query = $this->db->get_where('teacher' , array('email' => $email));
-        if ($query->num_rows() > 0) 
+        if ($query->num_rows() > 0)
         {
             $reset_account_type     =   'teacher';
             $this->db->where('email' , $email);
@@ -169,7 +189,7 @@ class Login extends CI_Controller {
         }
         // Checking credential for parent
         $query = $this->db->get_where('parent' , array('email' => $email));
-        if ($query->num_rows() > 0) 
+        if ($query->num_rows() > 0)
         {
             $reset_account_type     =   'parent';
             $this->db->where('email' , $email);
@@ -177,7 +197,7 @@ class Login extends CI_Controller {
             $resp['status']         = 'true';
         }
 
-        // send new password to user email  
+        // send new password to user email
         $this->email_model->password_reset_email($new_password , $reset_account_type , $email);
 
         $resp['submitted_data'] = $_POST;

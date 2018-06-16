@@ -1,7 +1,7 @@
-	
-    
-    
-    
+
+
+
+
 
 	<link rel="stylesheet" href="assets/js/datatables/responsive/css/datatables.responsive.css">
 	<link rel="stylesheet" href="assets/js/select2/select2-bootstrap.css">
@@ -20,7 +20,7 @@
 	<script src="assets/js/fullcalendar/fullcalendar.min.js"></script>
     <script src="assets/js/bootstrap-datepicker.js"></script>
     <script src="assets/js/fileinput.js"></script>
-    
+
     <script src="assets/js/jquery.dataTables.min.js"></script>
 	<script src="assets/js/datatables/TableTools.min.js"></script>
 	<script src="assets/js/dataTables.bootstrap.js"></script>
@@ -29,16 +29,16 @@
 	<script src="assets/js/datatables/responsive/js/datatables.responsive.js"></script>
     <script src="assets/js/select2/select2.min.js"></script>
     <script src="assets/js/selectboxit/jquery.selectBoxIt.min.js"></script>
-    
-   
-    
+
+   <script src="assets/js/jquery.multi-select.js"></script>
+
 	<script src="assets/js/neon-calendar.js"></script>
 	<script src="assets/js/neon-chat.js"></script>
 	<script src="assets/js/neon-custom.js"></script>
 	<script src="assets/js/neon-demo.js"></script>
 
 	<script src="assets/js/printElement.js"></script>
-	
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
 
 <!-- SHOW TOASTR NOTIFIVATION -->
@@ -51,27 +51,27 @@
 <?php endif;?>
 
 
-<!-----  DATA TABLE EXPORT CONFIGURATIONS ---->                      
+<!-----  DATA TABLE EXPORT CONFIGURATIONS ---->
 <script type="text/javascript">
 
 	jQuery(document).ready(function($)
 	{
-		
+
 
 		var datatable = $("#table_export").dataTable();
-		
+
 		$(".dataTables_wrapper select").select2({
 			minimumResultsForSearch: -1
 		});
-		
+
 		$('.modal-dialog').draggable();
-		
+
 		$('.modal-content').resizable({
 		    //alsoResize: ".modal-dialog",
 		    minHeight: 300,
 		    minWidth: 300
 		});
-		
+
 	});
-		
+
 </script>

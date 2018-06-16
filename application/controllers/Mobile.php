@@ -2,20 +2,18 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-/*	
- *	@author 	     :    FreePhpSoftwares
- *	date		     :    25 July, 2015
- *	Item             :    FPS School Management System ios Application
- *  Specification    :    Mobile app response, JSON formatted data for iOS & android app
- *	Portfolio        :    http://codecanyon.net/user/FreePhpSoftwares
- *  Website          :    http://www.freephpsoftwares.com
- *	Support          :    http://support.freephpsoftwares.com
- */
+    /*
+     *	@author 	: Nicodemus Karisa Mwambire
+     *	date		: 16th June, 2018
+     *	Techsys School Management System
+     *	https://www.techsysolutions.com
+     *	support@techsysolutions.com
+     */
 
 class Mobile extends CI_Controller
 {
-    
-    
+
+
 	function __construct()
 	{
 		parent::__construct();
@@ -26,8 +24,8 @@ class Mobile extends CI_Controller
             die;
     }
 
-    
-    
+
+
     // generate response to home page with all pixels and advertise_id
     function get_class() {
         $response       =   $this->db->get('class')->result_array();
@@ -58,7 +56,7 @@ class Mobile extends CI_Controller
 
     // returns the students of a specific class according to requested class_id
     function get_students_of_class() {
-        
+
         $response       =   array();
         $class_id       =   $this->input->post('class_id');
         $students       =   $this->db->get_where('student' , array('class_id' => $class_id))->result_array();
@@ -139,7 +137,7 @@ class Mobile extends CI_Controller
 
     // teacher list of the school
     function get_teachers() {
-        
+
         $response       =   array();
         $teachers       =   $this->db->get('teacher')->result_array();
 
@@ -158,7 +156,7 @@ class Mobile extends CI_Controller
         }
 
         echo json_encode($response);
-        
+
     }
 
     // teacher profile information
@@ -168,7 +166,7 @@ class Mobile extends CI_Controller
         $teacher_id     =   $this->input->post('teacher_id');
         $response       =   $this->db->get_where('teacher' , array('teacher_id' => $teacher_id))->row();
         echo json_encode($response);
-        
+
     }
 
     // get parent list
@@ -236,7 +234,7 @@ class Mobile extends CI_Controller
             $data['roll']           =   $row['roll'];
 
             $full_date                   =   $year . '-' . $month . '-' . $date;
-            $attendance_query       =   $this->db->get_where('attendance' , array('date' => $full_date , 
+            $attendance_query       =   $this->db->get_where('attendance' , array('date' => $full_date ,
                                                                                     'student_id' => $row['student_id']));
             if ( $attendance_query->num_rows() > 0) {
                 $attendance_result_row     =   $attendance_query->row();
@@ -265,7 +263,7 @@ class Mobile extends CI_Controller
             $data['time_start']     =   $row['time_start'];
             $data['time_end']       =   $row['time_end'];
             $data['day']            =   $row['day'];
-            
+
             array_push($response , $data);
         }
         echo json_encode($response);
@@ -331,7 +329,7 @@ class Mobile extends CI_Controller
         $class_id       =   $this->input->post('class_id');
         $subject_id     =   $this->input->post('subject_id');
 
-        $marks          =   $this->db->get_where('mark' , array('exam_id' => $exam_id , 
+        $marks          =   $this->db->get_where('mark' , array('exam_id' => $exam_id ,
                                                                      'class_id' => $class_id ,
                                                                          'subject_id' => $subject_id))->result_array();
         foreach ( $marks as $row ) {
@@ -341,7 +339,7 @@ class Mobile extends CI_Controller
             $data['student_roll']   =   $this->db->get_where('student',array('student_id' => $row['student_id']))->row()->roll;
             $data['exam_id']        =   $row['exam_id'];
             $data['mark_obtained']  =   $row['mark_obtained'];
-            
+
             array_push($response , $data);
         }
 
@@ -419,7 +417,7 @@ class Mobile extends CI_Controller
         else {
             $response       =   array('update_status' => 'failed');
         }
-        
+
         echo json_encode($response);
     }
 
@@ -440,7 +438,7 @@ class Mobile extends CI_Controller
         echo json_encode($response);
     }
 
-    // dummy function 
+    // dummy function
     function getdata() {
 
         $response       =   array();
@@ -471,7 +469,7 @@ class Mobile extends CI_Controller
 
     }
 
-    
+
 
 
     // Students functions : own child list, class routine, exam marks of child, invoice of child, event schedule
@@ -607,7 +605,7 @@ class Mobile extends CI_Controller
 
         // Checking credential for admin
         $query = $this->db->get_where('admin' , array('email' => $email));
-        if ($query->num_rows() > 0) 
+        if ($query->num_rows() > 0)
         {
             $reset_account_type     =   'admin';
             $this->db->where('email' , $email);
@@ -616,7 +614,7 @@ class Mobile extends CI_Controller
         }
         // Checking credential for student
         $query = $this->db->get_where('student' , array('email' => $email));
-        if ($query->num_rows() > 0) 
+        if ($query->num_rows() > 0)
         {
             $reset_account_type     =   'student';
             $this->db->where('email' , $email);
@@ -625,7 +623,7 @@ class Mobile extends CI_Controller
         }
         // Checking credential for teacher
         $query = $this->db->get_where('teacher' , array('email' => $email));
-        if ($query->num_rows() > 0) 
+        if ($query->num_rows() > 0)
         {
             $reset_account_type     =   'teacher';
             $this->db->where('email' , $email);
@@ -634,7 +632,7 @@ class Mobile extends CI_Controller
         }
         // Checking credential for parent
         $query = $this->db->get_where('parent' , array('email' => $email));
-        if ($query->num_rows() > 0) 
+        if ($query->num_rows() > 0)
         {
             $reset_account_type     =   'parent';
             $this->db->where('email' , $email);
@@ -642,7 +640,7 @@ class Mobile extends CI_Controller
             $response['status']         = 'true';
         }
 
-        // send new password to user email  
+        // send new password to user email
         $this->email_model->password_reset_email($new_password , $reset_account_type , $email);
 
 
@@ -653,7 +651,7 @@ class Mobile extends CI_Controller
     function validate_auth_key() {
 
         /*
-        * Ignore the authentication and returns success by default to constructor 
+        * Ignore the authentication and returns success by default to constructor
         * For pubic calls: login, forget password.
         * Pass post parameter 'authenticate' = 'false' to ignore the user level authentication
         */
@@ -691,9 +689,5 @@ class Mobile extends CI_Controller
         //return json_encode($response);
         return $response['status'];
     }
-    
+
 }
-
-
-
-
