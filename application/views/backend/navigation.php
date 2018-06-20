@@ -4,7 +4,7 @@
         <!-- logo -->
         <div class="logo" style="">
             <a href="<?php echo base_url(); ?>">
-                <img src="uploads/logo.png"  style="max-height:60px;"/>
+                <img src="uploads/logo.png"  style="max-height:140px;"/>
             </a>
         </div>
 
@@ -236,14 +236,16 @@
 
         <!-- ACCOUNTING -->
         <li class="<?php
-        if ($page_name == 'income' ||
+        if (	$page_name == 'income' ||
                 $page_name == 'expense' ||
-                    $page_name == 'expense_category' ||
-                        $page_name == 'student_payment'||
-						$page_name == 'budget'||
-						$page_name == 'cash_book'||
-						$page_name == 'financial_report')
-                            echo 'opened active';
+                $page_name == 'expense_category' ||
+                $page_name == 'student_payment'||
+				$page_name == 'budget'||
+				$page_name == 'cash_book'||
+				$page_name == 'financial_report'||
+				$page_name == 'fees_structure'
+				)
+                echo 'opened active';
         ?> ">
             <a href="#">
                 <i class="entypo-suitcase"></i>
@@ -251,39 +253,39 @@
             </a>
             <ul>
                 <li class="<?php if ($page_name == 'fees_structure') echo 'active'; ?> ">
-                    <a href="<?php echo base_url(); ?>index.php?admin/fees_structure">
+                    <a href="<?php echo base_url(); ?>index.php?finance/fees_structure">
                         <span><i class="entypo-dot"></i> <?php echo get_phrase('fees_structure'); ?></span>
                     </a>
                 </li>
 
                 <li class="<?php if ($page_name == 'student_payment') echo 'active'; ?> ">
-                    <a href="<?php echo base_url(); ?>index.php?admin/student_payment">
+                    <a href="<?php echo base_url(); ?>index.php?finance/student_payment">
                         <span><i class="entypo-dot"></i> <?php echo get_phrase('create_invoice'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'income') echo 'active'; ?> ">
-                    <a href="<?php echo base_url(); ?>index.php?admin/income">
+                    <a href="<?php echo base_url(); ?>index.php?finance/income">
                         <span><i class="entypo-dot"></i> <?php echo get_phrase('student_payments'); ?></span>
                     </a>
                 </li>
 
                 <li class="<?php if ($page_name == 'expense') echo 'active'; ?> ">
-                    <a href="<?php echo base_url(); ?>index.php?admin/expense">
+                    <a href="<?php echo base_url(); ?>index.php?finance/expense">
                         <span><i class="entypo-dot"></i> <?php echo get_phrase('school_expenses'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'cash_book') echo 'active'; ?> ">
-                    <a href="<?php echo base_url(); ?>index.php?admin/cash_book">
+                    <a href="<?php echo base_url(); ?>index.php?finance/cash_book">
                         <span><i class="entypo-dot"></i> <?php echo get_phrase('cash_book'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'budget') echo 'active'; ?> ">
-                    <a href="<?php echo base_url(); ?>index.php?admin/budget">
+                    <a href="<?php echo base_url(); ?>index.php?finance/budget">
                         <span><i class="entypo-dot"></i> <?php echo get_phrase('budget'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'financial_report') echo 'active'; ?> ">
-                    <a href="<?php echo base_url(); ?>index.php?admin/financial_report">
+                    <a href="<?php echo base_url(); ?>index.php?finance/financial_report">
                         <span><i class="entypo-dot"></i> <?php echo get_phrase('financial_report'); ?></span>
                     </a>
                 </li>
