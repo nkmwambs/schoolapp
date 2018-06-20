@@ -153,7 +153,7 @@ class Finance extends CI_Controller
 			endforeach;
 
             $this->session->set_flashdata('flash_message' , get_phrase('data_added_successfully'));
-            redirect(base_url() . 'index.php?admin/fees_structure');
+            redirect(base_url() . 'index.php?finance/fees_structure');
         }
         if ($param1 == 'edit') {
             $data['name']   =   $this->input->post('name');
@@ -163,7 +163,7 @@ class Finance extends CI_Controller
             $this->db->where('detail_id' , $param2);
             $this->db->update('fees_structure_details' , $data);
             $this->session->set_flashdata('flash_message' , get_phrase('data_updated'));
-            redirect(base_url() . 'index.php?admin/fees_structure');
+            redirect(base_url() . 'index.php?finance/fees_structure');
         }
         if ($param1 == 'delete') {
             $this->db->where('detail_id' , $param2);
@@ -175,7 +175,7 @@ class Finance extends CI_Controller
 			
 			
             $this->session->set_flashdata('flash_message' , get_phrase('data_deleted'));
-            redirect(base_url() . 'index.php?admin/fees_structure');
+            redirect(base_url() . 'index.php?finance/fees_structure');
         }
 		$page_data['page_name']  = 'fees_structure_details';
         $page_dat['page_view'] = "finance";
@@ -228,7 +228,7 @@ class Finance extends CI_Controller
 			endforeach;
 
             $this->session->set_flashdata('flash_message' , get_phrase('invoice_created_successfully'));
-            redirect(base_url() . 'index.php?admin/student_payment', 'refresh');
+            redirect(base_url() . 'index.php?finance/create_invoice', 'refresh');
         }
 
 		if($param1==="edit"){
@@ -304,7 +304,7 @@ class Finance extends CI_Controller
 			//$this->db->update('invoice');
 
             $this->session->set_flashdata('flash_message' , get_phrase('invoice_editted_successfully'));
-            redirect(base_url() . 'index.php?admin/student_payment', 'refresh');			
+            redirect(base_url() . 'index.php?finance/create_invoice', 'refresh');			
 		}
 
         if ($param1 == 'create_mass_invoice') {
@@ -353,7 +353,7 @@ class Finance extends CI_Controller
            		$this->session->set_flashdata('flash_message' , get_phrase('failed:_some_invoices_exists'));
            }
 		   
-		   redirect(base_url() . 'index.php?admin/student_payment', 'refresh');
+		   redirect(base_url() . 'index.php?finance/create_invoice', 'refresh');
             
         }
 
@@ -368,7 +368,7 @@ class Finance extends CI_Controller
             $this->db->where('invoice_id', $param2);
             $this->db->update('invoice', $data);
             $this->session->set_flashdata('flash_message' , get_phrase('data_updated'));
-            redirect(base_url() . 'index.php?admin/invoice', 'refresh');
+            redirect(base_url() . 'index.php?finance/invoice', 'refresh');
         } else if ($param1 == 'edit') {
             $page_data['edit_data'] = $this->db->get_where('invoice', array(
                 'invoice_id' => $param2
@@ -431,7 +431,7 @@ class Finance extends CI_Controller
 			}
 
             $this->session->set_flashdata('flash_message' , get_phrase('payment_successfull'));
-            redirect(base_url() . 'index.php?admin/income', 'refresh');
+            redirect(base_url() . 'index.php?finance/income', 'refresh');
         }
 
         if ($param1 == 'delete') {
@@ -447,7 +447,7 @@ class Finance extends CI_Controller
             $this->db->delete('payment');
 			
             $this->session->set_flashdata('flash_message' , get_phrase('data_deleted'));
-            redirect(base_url() . 'index.php?admin/income', 'refresh');
+            redirect(base_url() . 'index.php?finance/income', 'refresh');
         }
         $page_data['page_name']  = 'invoice';
 		$page_data['page_view'] = "finance";
