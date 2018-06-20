@@ -262,4 +262,35 @@ class Student extends CI_Controller
   		$page_data['page_title'] = get_phrase('add_bulk_student');
   		$this->load->view('backend/index', $page_data);
   	}
+
+/**Miscelleneous Methods **/	
+	
+  function get_class_students($class_id)
+    {
+        $students = $this->db->get_where('student' , array('class_id' => $class_id))->result_array();
+		$option = '<option value="">'.get_phrase("select_a_student").'</option>';
+        foreach ($students as $row) {
+            $option .= '<option value="' . $row['student_id'] . '">' . $row['name'] . '</option>';
+        }
+		
+		echo $option;
+    }
+	
+	function get_class_students_mass($class_id)
+    {
+        $students = $this->db->get_where('student', array('class_id' => $class_id))->result_array();
+		
+        echo '<div class="form-group">
+                <label class="col-sm-3 control-label">' . get_phrase('students') . '</label>
+                <div class="col-sm-9">';
+        foreach ($students as $row) {
+            echo '<div class="checkbox">
+                    <label><input type="checkbox" class="check" name="student_id[]" value="' . $row['student_id'] . '">' . $row['name'] .'</label>
+                </div>';
+        }
+        echo '<br><button type="button" class="btn btn-default" onClick="select()">'.get_phrase('select_all').'</button>';
+        echo '<button style="margin-left: 5px;" type="button" class="btn btn-default" onClick="unselect()"> '.get_phrase('select_none').' </button>';
+        echo '</div></div>';
+    }
+	
 }

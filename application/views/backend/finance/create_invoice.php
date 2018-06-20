@@ -18,7 +18,7 @@
 				<div class="tab-pane active" id="unpaid">
 
 				<!-- creation of single invoice -->
-				<?php echo form_open(base_url() . 'index.php?admin/invoice/create' , array('id'=>'frm_single_invoice','class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
+				<?php echo form_open(base_url() . 'index.php?finance/invoice/create' , array('id'=>'frm_single_invoice','class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
 				<div class="row">
 					<div class="col-md-6">
 	                        <div class="panel panel-default panel-shadow" data-collapsed="0">
@@ -153,7 +153,7 @@
 				<div class="tab-pane" id="paid">
 
 				<!-- creation of mass invoice -->
-				<?php echo form_open(base_url() . 'index.php?admin/invoice/create_mass_invoice' , array('class' => 'form-horizontal form-groups-bordered validate', 'id'=> 'mass' ,'target'=>'_top'));?>
+				<?php echo form_open(base_url() . 'index.php?finance/invoice/create_mass_invoice' , array('class' => 'form-horizontal form-groups-bordered validate', 'id'=> 'mass' ,'target'=>'_top'));?>
 				<br>
 				<div class="row">
 				<div class="col-md-1"></div>
@@ -295,7 +295,7 @@
 <script type="text/javascript">
     function get_class_students(class_id) {
         $.ajax({
-            url: '<?php echo base_url();?>index.php?admin/get_class_students/' + class_id ,
+            url: '<?php echo base_url();?>index.php?student/get_class_students/' + class_id ,
             success: function(response)
             {
                 jQuery('#student_selection_holder').html(response);
@@ -307,7 +307,7 @@
     	jQuery('#transport_info').css('display','block');
     	jQuery('#transport_info').html("");
         $.ajax({
-            url: '<?php echo base_url();?>index.php?admin/get_transport_info/' + student_id ,
+            url: '<?php echo base_url();?>index.php?finance/get_transport_info/' + student_id ,
             success: function(response)
             {
                 jQuery('#transport_info').html(response);
@@ -320,7 +320,7 @@
     		var fees_structure_year = $("#fees_structure_year").val();
     		var fees_structure_term = $("#fees_structure_term").val();
     	    $.ajax({
-            url: '<?php echo base_url();?>index.php?admin/get_total_fees/' + fees_structure_term +'/'+ fees_structure_year + '/'+ fees_structure_class,
+            url: '<?php echo base_url();?>index.php?finance/get_total_fees/' + fees_structure_term +'/'+ fees_structure_year + '/'+ fees_structure_class,
             success: function(response)
             {
 
@@ -334,31 +334,44 @@
     		var fees_structure_year = $("#fees_structure_year").val();
     		var fees_structure_term = $("#fees_structure_term").val();
     		var student = $('#student_selection_holder').val();
-    	    $.ajax({
-            url: '<?php echo base_url();?>index.php?admin/get_fees_items/' + fees_structure_term +'/'+ fees_structure_year + '/'+ fees_structure_class + '/' + student,
-            success: function(response)
-            {
+    	    
+    	    
+    	    //alert(url);
+    	    
+    	    if(fees_structure_class !=="" && fees_structure_year!=="" && fees_structure_term !=="" && student!==""){
+    	    	
+    	    	var url = '<?php echo base_url();?>index.php?finance/get_fees_items/' + fees_structure_term +'/'+ fees_structure_year + '/'+ fees_structure_class + '/' + student;
+    	    	
+    	    	//alert(url);
+		    	    $.ajax({
+		            url: url,
+		            success: function(response)
+		            {
+		            	//alert(response);
+		
+		            		jQuery('#fee_items').html(response);
+							//alert(response);
+							var total_payable = 0;
+				    		$('.payable_items').each(function(){
+				    			var to_add = 0;
+				    			if($(this).val()!==""){
+				    				to_add = $(this).val();
+				    			}
+				    			total_payable=parseInt(total_payable)+parseInt(to_add);
+				    		});
+				    		$('#amount_due').val(total_payable);
+				    		
+				    		if($('#amount_due').val()>0){
+				    			
+				    			$('#btn-single').html('<?php echo get_phrase('edit_invoice');?>')
+				    			
+				    			$('#frm_single_invoice').attr('action','<?php echo base_url();?>index.php?finance/invoice/edit/'+$('#edit_invoice_id').val());
+				    		}
+		            }
+		        });    	    	    	
+    	    }
+    	    
 
-            		jQuery('#fee_items').html(response);
-
-					var total_payable = 0;
-		    		$('.payable_items').each(function(){
-		    			var to_add = 0;
-		    			if($(this).val()!==""){
-		    				to_add = $(this).val();
-		    			}
-		    			total_payable=parseInt(total_payable)+parseInt(to_add);
-		    		});
-		    		$('#amount_due').val(total_payable);
-		    		
-		    		if($('#amount_due').val()>0){
-		    			
-		    			$('#btn-single').html('<?php echo get_phrase('edit_invoice');?>')
-		    			
-		    			$('#frm_single_invoice').attr('action','<?php echo base_url();?>index.php?admin/invoice/edit/'+$('#edit_invoice_id').val());
-		    		}
-            }
-        });    	
     });
     
     function get_full_amount(id){
@@ -410,7 +423,7 @@
     		var fees_structure_year = $("#fees_mass_structure_year").val();
     		var fees_structure_term = $("#fees_mass_structure_term").val();
     	    $.ajax({
-            url: '<?php echo base_url();?>index.php?admin/get_total_fees/' + fees_structure_term +'/'+ fees_structure_year + '/'+ fees_structure_class,
+            url: '<?php echo base_url();?>index.php?finance/get_total_fees/' + fees_structure_term +'/'+ fees_structure_year + '/'+ fees_structure_class,
             success: function(response)
             {
                jQuery('#total_mass_fees_amount').val(response);
@@ -425,7 +438,7 @@
     		var fees_structure_term = $("#fees_mass_structure_term").val();
     		
 	    	$.ajax({
-	            url: '<?php echo base_url();?>index.php?admin/get_mass_fees_items/' + fees_structure_term +'/'+ fees_structure_year + '/'+ fees_structure_class,
+	            url: '<?php echo base_url();?>index.php?finance/get_mass_fees_items/' + fees_structure_term +'/'+ fees_structure_year + '/'+ fees_structure_class,
 	            success: function(response)
 	            {
 	               jQuery('#mass_fee_items').html(response);
@@ -478,13 +491,11 @@
     	
     }  
     
-</script>
 
-<script type="text/javascript">
     function get_class_students_mass(class_id) {
     	
         $.ajax({
-            url: '<?php echo base_url();?>index.php?admin/get_class_students_mass/' + class_id ,
+            url: '<?php echo base_url();?>index.php?student/get_class_students_mass/' + class_id ,
             success: function(response)
             {
                 jQuery('#student_selection_holder_mass').html(response);
