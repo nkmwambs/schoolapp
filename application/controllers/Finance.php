@@ -185,4 +185,14 @@ class Finance extends CI_Controller
 
 	/** Invoice Management **/
 
+	 function create_invoice($param1 = '' , $param2 = '' , $param3 = '') {
+
+        if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');
+     
+	    $page_data['page_name']  = 'create_invoice';
+		$page_data['page_view'] = "finance";
+        $page_data['page_title'] = get_phrase('create_invoice');
+        $this->load->view('backend/index', $page_data); 
+    }		
 }

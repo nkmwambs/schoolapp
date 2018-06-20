@@ -258,8 +258,8 @@
                     </a>
                 </li>
 
-                <li class="<?php if ($page_name == 'student_payment') echo 'active'; ?> ">
-                    <a href="<?php echo base_url(); ?>index.php?finance/student_payment">
+                <li class="<?php if ($page_name == 'create_invoice') echo 'active'; ?> ">
+                    <a href="<?php echo base_url(); ?>index.php?finance/create_invoice">
                         <span><i class="entypo-dot"></i> <?php echo get_phrase('create_invoice'); ?></span>
                     </a>
                 </li>

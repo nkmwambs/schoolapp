@@ -49,6 +49,59 @@ class Student extends CI_Controller
       $this->load->view('backend/index', $page_data);
     }
 
+	function student_promote($param1="",$param2="",$param3=""){
+		
+		$class = $this->db->get_where('class' , array('class_id' => $param2));
+		$new_numeric = $class->row()->name_numeric + 1; 
+    	$new_class = $this->db->get_where("class",array("name_numeric"=>$new_numeric));
+		
+		if($param1 == "mass_promotion"){
+			
+			$this->db->where(array("class_id"=>$param2));
+			$data['class_id'] = $new_class->row()->class_id;
+			
+			$this->db->update("student",$data);
+			
+			if($this->db->affected_rows() > 0 )$msg = get_phrase('data_updated'); else $msg = get_phrase('no_data_updated');
+			
+			$this->session->set_flashdata('flash_message' , $msg);
+			
+			redirect(base_url()."index.php?student/student_information/".$new_class->row()->class_id,'refresh');	
+		}
+		
+		if($param1=="single_promotion"){
+			
+			$this->db->where(array("class_id"=>$param2,"student_id"=>$param3));
+			$data['class_id'] = $new_class->row()->class_id;
+			
+			$this->db->update("student",$data);
+			
+			if($this->db->affected_rows() > 0 )$msg = get_phrase('data_updated'); else $msg = get_phrase('no_data_updated');
+			
+			$this->session->set_flashdata('flash_message' , $msg);
+			
+			redirect(base_url()."index.php?student/student_information/".$new_class->row()->class_id,'refresh');
+		}
+		
+		if($param1=="single_demotion"){
+			
+			$new_numeric = $class->row()->name_numeric - 1; 
+    		$new_class = $this->db->get_where("class",array("name_numeric"=>$new_numeric));
+			
+			$this->db->where(array("class_id"=>$param2,"student_id"=>$param3));
+			$data['class_id'] = $new_class->row()->class_id;
+			
+			$this->db->update("student",$data);
+			
+			if($this->db->affected_rows() > 0 )$msg = get_phrase('data_updated'); else $msg = get_phrase('no_data_updated');
+			
+			$this->session->set_flashdata('flash_message' , $msg);
+			
+			redirect(base_url()."index.php?student/student_information/".$new_class->row()->class_id,'refresh');
+		}
+		
+	}
+
     function student($param1 = '', $param2 = '', $param3 = '')
       {
           if ($this->session->userdata('active_login') != 1)

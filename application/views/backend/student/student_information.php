@@ -1,9 +1,29 @@
+<?php
+$class = $this->db->get_where('class' , array('class_id' => $class_id));
+?>
+
 <hr />
 <a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/student_add/');"
     class="btn btn-primary pull-right">
         <i class="entypo-plus-circled"></i>
         <?php echo get_phrase('add_new_student');?>
-    </a>
+</a>
+
+<?php 
+	$new_numeric = $class->row()->name_numeric + 1; 
+    $new_class = $this->db->get_where("class",array("name_numeric"=>$new_numeric));
+	
+	if($new_class->num_rows() > 0 && $this->db->get_where('student',array('class_id'=>$class_id))->num_rows() > 0){
+?>
+<a href="javascript:;" onclick="confirm_action('<?php echo base_url();?>index.php?student/student_promote/mass_promotion/<?php echo $class_id;?>');"
+    class="btn btn-primary pull-left">
+        <i class="entypo-forward"></i>
+        <?php echo get_phrase('promote_students');?> : <?php echo $new_class->row()->name;?>
+<?php 
+	}
+?>        
+</a>
+
 <br>
 
 <div class="row">
@@ -93,6 +113,26 @@
                                             <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_student_edit/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-pencil"></i>
                                                     <?php echo get_phrase('edit');?>
+                                                </a>
+                                        </li>
+                                        
+                                       <li class="divider"></li>
+
+                                        <!-- STUDENT PROMOTE LINK -->
+                                        <li>
+                                            <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?student/student_promote/single_promotion/<?php echo $class_id;?>/<?php echo $row['student_id'];?>');">
+                                                <i class="entypo-fast-forward"></i>
+                                                    <?php echo get_phrase('promote');?>
+                                                </a>
+                                        </li>
+                                        
+                                       <li class="divider"></li>
+
+                                        <!-- STUDENT DEMOTE LINK -->
+                                        <li>
+                                            <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?student/student_promote/single_demotion/<?php echo $class_id;?>/<?php echo $row['student_id'];?>');">
+                                                <i class="entypo-fast-backward"></i>
+                                                    <?php echo get_phrase('demote');?>
                                                 </a>
                                         </li>
                                         <li class="divider"></li>
