@@ -452,6 +452,28 @@ class Finance extends CI_Controller
             $this->session->set_flashdata('flash_message' , get_phrase('data_deleted'));
             redirect(base_url() . 'index.php?finance/income', 'refresh');
         }
+		
+		if ($param1 == 'cancel') {
+			$this->db->where('invoice_id', $param2);
+			$data3['status'] = 'cancelled';
+            $this->db->update('invoice',$data3);
+			
+			$this->session->set_flashdata('flash_message' , get_phrase('invoice_cancelled'));
+            redirect(base_url() . 'index.php?finance/income', 'refresh');
+		}
+
+		if ($param1 == 'reclaim') {
+					$data4['status'] = 'unpaid';	
+					if($this->db->get_where("invoice",array("invoice_id"=>$param2,"amount_due"=>0))->num_rows() > 0){
+						$data4['status'] = "paid";
+					}
+					$this->db->where('invoice_id', $param2);	
+		            $this->db->update('invoice',$data4);
+					
+					$this->session->set_flashdata('flash_message' , get_phrase('invoice_reclaimed'));
+		            redirect(base_url() . 'index.php?finance/income', 'refresh');
+				}
+			
         $page_data['page_name']  = 'invoice';
 		$page_data['page_view'] = "finance";
         $page_data['page_title'] = get_phrase('manage_invoice/payment');
@@ -568,5 +590,19 @@ class Finance extends CI_Controller
 		
 		echo $str;	
 	}
+
+	/**Income management **/
 	
+	function income($param1 = '' , $param2 = '')
+    {
+       if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');
+	   
+        $page_data['page_name']  = 'income';
+        $page_data['page_view'] = "finance";
+        $page_data['page_title'] = get_phrase('student_payments');
+        $this->db->order_by('creation_timestamp', 'desc');
+        $page_data['invoices'] = $this->db->get('invoice')->result_array();
+        $this->load->view('backend/index', $page_data); 
+    }	
 }
