@@ -232,81 +232,66 @@ class Finance extends CI_Controller
             redirect(base_url() . 'index.php?finance/create_invoice', 'refresh');
         }
 
-		if($param1==="edit"){
-	
-			//$structure_ids = $this->input->post('detail_id');
-			$payable_amount = $this->input->post('payable');
-			
-			$sum_invoice = 0;
-			
-			foreach($payable_amount as $key=>$value):
-				
-				//Check structure details id in invoices
-				
-				$details_id_check = $this->db->get_where('invoice_details',array('invoice_id'=>$param2,'detail_id'=>$key))->num_rows();
-				
-				//Get old value
-				$this->db->where(array('invoice_id'=>$param2,'detail_id'=>$key));
-				$old_amount_due = $this->db->get('invoice_details')->row()->amount_due;
-				
-				
-				
-				if($details_id_check>0){
-					
-					//Update details
-					$this->db->where(array('invoice_id'=>$param2,'detail_id'=>$key));
-					
-					$data['amount_due'] = $value;
-					$this->db->update('invoice_details',$data);	
-							
-					//Update invoice
-										
-					$this->db->set('amount_due',$this->input->post('amount_due'),FALSE);
-					$this->db->set('balance','amount_due - '.$this->db->get_where('invoice',array('invoice_id'=>$param2))->row()->amount_paid,FALSE);
-
-					$this->db->where(array('invoice_id'=>$param2));
-					$this->db->update('invoice');	
-					
-				}else{
-					$data['invoice_id'] = $param2;
-					$data['detail_id'] = $key;
-					$data['amount_due'] = $value;
-				
-					$this->db->insert('invoice_details',$data);
-					
-					//Adjust the Invoice header
-					
-					$this->db->set('amount_due',$this->input->post('amount_due'),FALSE);
-					$this->db->set('balance','amount_due - '.$this->db->get_where('invoice',array('invoice_id'=>$param2))->row()->amount_paid,FALSE);
-
-					
-					$this->db->where(array('invoice_id'=>$param2));
-					$this->db->update('invoice');
-				}
-							
-				$sum_invoice +=$value;
-							
-			endforeach;
-			
-			//Get student Class ID, yr and term
-			
-			//$class_id = $this->input->post('class_id');
-			//$yr = $this->input->post('yr');
-			//$term = $this->input->post('term');
-			
-			//$fees_id = $this->db->get_where('fees_structure',array('class_id'=>$class_id,'yr'=>$yr,'term'=>$term))->row()->fees_id;
-			
-			
-			//$this->db->where(array('invoice_id'=>$param2));
-			//$data['amount'] = $this->select_sum('amount')->db->get_where('fees_structure_details',array('fees_id'=>$fees_id))->row()->amount;
-			//$balance = $this->db->get_where('invoice',array('invoice_id'=>$param2))->row()->balance + $value;
-			//$data['amount_due'] = $value;
-			//$this->db->set('balance,balance+'.$value,FALSE);
-			//$this->db->update('invoice');
-
-            $this->session->set_flashdata('flash_message' , get_phrase('invoice_editted_successfully'));
-            redirect(base_url() . 'index.php?finance/create_invoice', 'refresh');			
-		}
+		// if($param1==="edit"){
+// 	
+			// //$structure_ids = $this->input->post('detail_id');
+			// $payable_amount = $this->input->post('payable');
+// 			
+			// $sum_invoice = 0;
+// 			
+			// foreach($payable_amount as $key=>$value):
+// 				
+				// //Check structure details id in invoices
+// 				
+				// $details_id_check = $this->db->get_where('invoice_details',array('invoice_id'=>$param2,'detail_id'=>$key))->num_rows();
+// 				
+				// //Get old value
+				// $this->db->where(array('invoice_id'=>$param2,'detail_id'=>$key));
+				// $old_amount_due = $this->db->get('invoice_details')->row()->amount_due;
+// 				
+// 				
+// 				
+				// if($details_id_check>0){
+// 					
+					// //Update details
+					// $this->db->where(array('invoice_id'=>$param2,'detail_id'=>$key));
+// 					
+					// $data['amount_due'] = $value;
+					// $this->db->update('invoice_details',$data);	
+// 							
+					// //Update invoice
+// 										
+					// $this->db->set('amount_due',$this->input->post('amount_due'),FALSE);
+					// $this->db->set('balance','amount_due - '.$this->db->get_where('invoice',array('invoice_id'=>$param2))->row()->amount_paid,FALSE);
+// 
+					// $this->db->where(array('invoice_id'=>$param2));
+					// $this->db->update('invoice');	
+// 					
+				// }else{
+					// $data['invoice_id'] = $param2;
+					// $data['detail_id'] = $key;
+					// $data['amount_due'] = $value;
+// 				
+					// $this->db->insert('invoice_details',$data);
+// 					
+					// //Adjust the Invoice header
+// 					
+					// $this->db->set('amount_due',$this->input->post('amount_due'),FALSE);
+					// $this->db->set('balance','amount_due - '.$this->db->get_where('invoice',array('invoice_id'=>$param2))->row()->amount_paid,FALSE);
+// 
+// 					
+					// $this->db->where(array('invoice_id'=>$param2));
+					// $this->db->update('invoice');
+				// }
+// 							
+				// $sum_invoice +=$value;
+// 							
+			// endforeach;
+// 			
+// 			
+            // $this->session->set_flashdata('flash_message' , get_phrase('invoice_editted_successfully'));
+            // redirect(base_url() . 'index.php?finance/create_invoice', 'refresh');			
+		// }
 
         if ($param1 == 'create_mass_invoice') {
         	
@@ -359,6 +344,29 @@ class Finance extends CI_Controller
 		   redirect(base_url() . 'index.php?finance/create_invoice', 'refresh');
             
         }
+
+		if($param1=="edit_invoice"){
+			$data['amount_due'] = $this->input->post('amount_due');
+			$data['amount_paid'] = $this->input->post('amount_paid');
+			$data['balance'] = $this->input->post('balance');
+			if($this->input->post('balance') === 0){
+				$data['status'] = "paid";
+			}elseif($this->input->post('balance') < 0){
+				$data['status'] = "excess";
+			}
+			
+			$this->db->where(array("invoice_id"=>$param2));
+			$this->db->update("invoice",$data);
+			
+			foreach($this->input->post('detail_amount_due') as $detail_id=>$amount_due){
+				$this->db->where(array("detail_id"=>$detail_id,"invoice_id"=>$param2));
+				$data8['amount_due'] = $amount_due;
+				$this->db->update("invoice_details",$data8);
+			}
+			//exit;
+			$this->session->set_flashdata('flash_message' , get_phrase('edit_successful'));
+			redirect(base_url() . 'index.php?finance/income', 'refresh');
+		}
 
         if ($param1 == 'do_update') {
             $data['student_id']         = $this->input->post('student_id');
@@ -560,7 +568,7 @@ class Finance extends CI_Controller
 						echo "<input type='hidden' id='edit_invoice_id' value='".$invoice->row()->invoice_id."'/>";
 						foreach($details as $row):
 							
-							$amount_due = $this->db->get_where('invoice_details',array('detail_id'=>$row->detail_id))->row()->amount_due;
+							$amount_due = $this->db->get_where('invoice_details',array('invoice_id'=>$invoice->row()->invoice_id,'detail_id'=>$row->detail_id))->row()->amount_due;
 							$body .= "<tr><td><input type='checkbox' onchange='return get_full_amount(".$row->detail_id.")' id='chk_".$row->detail_id."'/></td><td>".$row->name."</td><td id='full_amount_".$row->detail_id."'>".$row->amount."</td><td><input type='text' onkeyup='return get_payable_amount(".$row->detail_id.")' class='form-control payable_items' id='payable_".$row->detail_id."' name='payable[".$row->detail_id."]' value='".$amount_due."'/></td><tr>";
 						endforeach;
 					}	

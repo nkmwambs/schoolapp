@@ -265,15 +265,38 @@ class Student extends CI_Controller
 
 /**Miscelleneous Methods **/	
 	
-  function get_class_students($class_id)
+  function get_class_students($class_id="",$yr="",$term="")
     {
-        $students = $this->db->get_where('student' , array('class_id' => $class_id))->result_array();
-		$option = '<option value="">'.get_phrase("select_a_student").'</option>';
-        foreach ($students as $row) {
-            $option .= '<option value="' . $row['student_id'] . '">' . $row['name'] . '</option>';
-        }
 		
-		echo $option;
+		//$class_id = "1";
+		//$yr = "2018";
+		//$term = "1";
+		
+        $students_object = $this->db->get_where('student',array('class_id' => $class_id));
+		
+		$option = '<option value="">'.get_phrase("no_student_found").'</option>';
+		
+		if($students_object->num_rows() > 0){
+			$students = $students_object->result_array();
+			
+			$option = '<option value="">'.get_phrase("select_a_student").'</option>';
+	        foreach ($students as $row) {
+	        	
+				$sql = "SELECT * FROM invoice WHERE student_id = '".$row['student_id']."' AND class_id=".$class_id." AND yr = ".$yr." AND term = ".$term." ";
+				
+				$query = $this->db->query($sql)->num_rows();
+				
+				
+	        	if($query == 0){
+	            	$option .= '<option value="' . $row['student_id'] . '">' . $row['name'].'</option>';	        		
+	        	}
+
+	        }
+			
+			echo $option;
+		}
+		
+		
     }
 	
 	function get_class_students_mass($class_id="", $yr = "", $term = "" )

@@ -47,8 +47,7 @@
 	                                <div class="form-group">
 	                                    <label class="col-sm-3 control-label"><?php echo get_phrase('class');?></label>
 	                                    <div class="col-sm-9">
-	                                        <select name="class_id" class="form-control"
-	                                        	onchange="return get_class_students(this.value)" id="fees_structure_class" onblur='return get_total_fees()'>
+	                                        <select name="class_id" class="form-control get_ajax_details"  id="fees_structure_class" >
 	                                        	<option value=""><?php echo get_phrase('select_class');?></option>
 	                                        	<?php 
 	                                        		$classes = $this->db->get('class')->result_array();
@@ -62,26 +61,16 @@
 	                                </div>
 
 	                                <div class="form-group">
-		                                <label class="col-sm-3 control-label"><?php echo get_phrase('student');?></label>
-		                                <div class="col-sm-9">
-		                                    <select name="student_id" class="form-control" style="width:100%;" id="student_selection_holder" onchange="get_transport_info(this.value);">
-		                                        <option value=""><?php echo get_phrase('select_class_first');?></option>
-		                                    	
-		                                    </select>
-		                                </div>
-		                            </div>
-
-	                                <div class="form-group">
 	                                    <label class="col-sm-3 control-label"><?php echo get_phrase('year');?></label>
 	                                    <div class="col-sm-9">
-	                                        <input type="text" class="form-control" min="2010" max="2050" name="yr" onblur='return get_total_fees()' id='fees_structure_year'/>
+	                                        <input type="text" class="form-control get_ajax_details" min="2010" max="2050" name="yr" id='fees_structure_year'/>
 	                                    </div>
 	                                </div>
 	                                <div class="form-group">
 	                                    <label class="col-sm-3 control-label"><?php echo get_phrase('term');?></label>
 	                                    <div class="col-sm-9">
 	                                        <!--<input type="text" class="form-control" min="1" max="3" id="fees_structure_term" onblur='return get_total_fees()' name="description"/>-->
-	                                        <select name="term" class="form-control" id="fees_structure_term" onchange='return get_total_fees()'>
+	                                        <select name="term" class="form-control get_ajax_details" id="fees_structure_term"  >
 	                                        	<option value=""><?php echo get_phrase('select');?></option>
 	                                        	<?php
 	                                        		$terms = $this->db->get('terms')->result_object();
@@ -94,6 +83,18 @@
 	                                        </select>
 	                                    </div>
 	                                </div>
+
+
+	                                <div class="form-group">
+		                                <label class="col-sm-3 control-label"><?php echo get_phrase('student');?></label>
+		                                <div class="col-sm-9">
+		                                    <select name="student_id" class="form-control student_info" style="width:100%;" id="student_selection_holder" >
+		                                        <option value=""><?php echo get_phrase('select_class_first');?></option>
+		                                    	
+		                                    </select>
+		                                </div>
+		                            </div>
+		                            
 
 	                                <div class="form-group">
 	                                    <label class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
@@ -309,58 +310,57 @@
 </script>
 
 <script type="text/javascript">
-    function get_class_students(class_id) {
-        $.ajax({
-            url: '<?php echo base_url();?>index.php?student/get_class_students/' + class_id ,
-            success: function(response)
-            {
-                jQuery('#student_selection_holder').html(response);
-            }
-        });
-    }
-    
-    function get_transport_info(student_id){
-    	jQuery('#transport_info').css('display','block');
-    	jQuery('#transport_info').html("");
-        $.ajax({
-            url: '<?php echo base_url();?>index.php?finance/get_transport_info/' + student_id ,
-            success: function(response)
-            {
-                jQuery('#transport_info').html(response);
-            }
-        });    	
-    }
-    
-    function get_total_fees(){
-    		var fees_structure_class = $("#fees_structure_class").val();
-    		var fees_structure_year = $("#fees_structure_year").val();
-    		var fees_structure_term = $("#fees_structure_term").val();
+$(".get_ajax_details").change(function(){
+		var fees_structure_class = $("#fees_structure_class").val();
+    	var fees_structure_year = $("#fees_structure_year").val();
+    	var fees_structure_term = $("#fees_structure_term").val();
+    	var student = $("#student_selection_holder").val();
+    	
+    	if(fees_structure_class!=="" && fees_structure_year!=="" && fees_structure_term!==""){
+    		//alert(fees_structure_class + " - " + fees_structure_year + " - " + fees_structure_term + " - " + student);
+    		
+    		//Get Student Names
+    		
+	        $.ajax({
+	            url: '<?php echo base_url();?>index.php?student/get_class_students/' + fees_structure_class + '/' + fees_structure_year + '/' + fees_structure_term,
+	            success: function(response)
+	            {
+	                jQuery('#student_selection_holder').html(response);
+	            }
+	        });
+	        
+	        
+	        //Get Total Fees
+	        
     	    $.ajax({
-            url: '<?php echo base_url();?>index.php?finance/get_total_fees/' + fees_structure_term +'/'+ fees_structure_year + '/'+ fees_structure_class,
-            success: function(response)
-            {
-
-            		jQuery('#total_fees_amount').val(response);
-            }
-        });
-    }
+	            url: '<?php echo base_url();?>index.php?finance/get_total_fees/' + fees_structure_term +'/'+ fees_structure_year + '/'+ fees_structure_class,
+	            success: function(response)
+	            {
+	
+	            		jQuery('#total_fees_amount').val(response);
+	            }
+	        });
+	        
+	        
+	            
+		         
+       }
+       
+	});
+	
     
-    $("#fees_structure_class,#fees_structure_year,#fees_structure_term").change(function(){
-    		var fees_structure_class = $("#fees_structure_class").val();
-    		var fees_structure_year = $("#fees_structure_year").val();
-    		var fees_structure_term = $("#fees_structure_term").val();
-    		var student = $('#student_selection_holder').val();
-    	    
-    	    
-    	    //alert(url);
-    	    
-    	    if(fees_structure_class !=="" && fees_structure_year!=="" && fees_structure_term !=="" && student!==""){
-    	    	
-    	    	var url = '<?php echo base_url();?>index.php?finance/get_fees_items/' + fees_structure_term +'/'+ fees_structure_year + '/'+ fees_structure_class + '/' + student;
-    	    	
-    	    	//alert(url);
+    $(".student_info").change(function(){
+    	var fees_structure_class = $("#fees_structure_class").val();
+    	var fees_structure_year = $("#fees_structure_year").val();
+    	var fees_structure_term = $("#fees_structure_term").val();
+    	var student = $("#student_selection_holder").val();
+    	
+    	if(fees_structure_class!=="" && fees_structure_year!=="" && fees_structure_term!=="" && student!==""){
+
+	        	//Get Fees Items
+	
 		    	    $.ajax({
-		            url: url,
+		            url: '<?php echo base_url();?>index.php?finance/get_fees_items/' + fees_structure_term +'/'+ fees_structure_year + '/'+ fees_structure_class + '/' + student,
 		            success: function(response)
 		            {
 		            	//alert(response);
@@ -377,18 +377,29 @@
 				    		});
 				    		$('#amount_due').val(total_payable);
 				    		
-				    		if($('#amount_due').val()>0){
-				    			
-				    			$('#btn-single').html('<?php echo get_phrase('edit_invoice');?>')
-				    			
-				    			$('#frm_single_invoice').attr('action','<?php echo base_url();?>index.php?finance/invoice/edit/'+$('#edit_invoice_id').val());
-				    		}
+				    		
 		            }
-		        });    	    	    	
-    	    }
-    	    
-
+		        }); 
+		        
+		        
+		     //Transport Info
+		     
+		        jQuery('#transport_info').css('display','block');
+		    	jQuery('#transport_info').html("");
+		        $.ajax({
+		            url: '<?php echo base_url();?>index.php?finance/get_transport_info/' + student ,
+		            success: function(response)
+		            {
+		                jQuery('#transport_info').html(response);
+		            }
+		        });	
+	        	
+	        }
     });
+    
+
+    
+   
     
     function get_full_amount(id){
     	if($('#chk_'+id).is(':checked')){
