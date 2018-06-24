@@ -279,12 +279,14 @@ class Student extends CI_Controller
 	function get_class_students_mass($class_id="", $yr = "", $term = "" )
     {
         $students_array = $this->db->get_where('student', array('class_id' => $class_id))->result_array();
-		
+		// $yr = "2018";
+		// $term = "1";
+		// $class_id = "1";
 		$students = array();
 		
 		foreach($students_array as $student){
-			$check_invoice = $this->db->get_where("invoice",array("student_id"=>$student['student_id'],"yr"=>$yr,"term"=>$term));	
-			if($check_invoice->num_rows() === 0){
+			$check_invoice_object = $this->db->get_where("invoice",array("student_id"=>$student['student_id'],"yr"=>$yr,"term"=>$term));	
+			if($check_invoice_object->num_rows() === 0){
 				$students[] = $student;
 			}	
 		}

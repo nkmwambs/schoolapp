@@ -204,6 +204,7 @@ class Finance extends CI_Controller
         
         if ($param1 == 'create') {
             $data['student_id']         = $this->input->post('student_id');
+			$data['class_id']         = $this->input->post('class_id');
             $data['yr']              = $this->input->post('yr');
             $data['term']        = $this->input->post('term');
             $data['amount']             = $this->input->post('amount');
@@ -323,6 +324,7 @@ class Finance extends CI_Controller
                 	$invoice_found = $this->db->get_where("invoice",array("student_id"=>$id,"yr"=>$this->input->post('yr'),"term"=>$this->input->post('term')));
 					if($invoice_found->num_rows() === 0){
 	                    $data['student_id']         = $id;
+						$data['class_id']         = $this->input->post('class_id');
 	                    $data['yr']              = $this->input->post('yr');
 	                    $data['term']        = $this->input->post('term');
 	                    $data['amount']             = $this->input->post('amount');
@@ -544,7 +546,7 @@ class Finance extends CI_Controller
 				
 				
 			}else{
-				$body = "<tr><td class='col-sm-4'>".get_phrase('no_items_found')."</td></tr>";
+				$body .= "<tr><td class='col-sm-4'>".get_phrase('no_items_found')."</td></tr>";
 			}	
 		echo $body;	
 	}

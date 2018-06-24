@@ -1,3 +1,20 @@
+<?php
+
+// $students_array = $this->db->get_where('student', array('class_id' => 1))->result_array();
+// $yr = "2018";
+// $term = "1";
+		// $students = array();
+// 		
+		// foreach($students_array as $student){
+			// $check_invoice_object = $this->db->get_where("invoice",array("student_id"=>$student['student_id'],"yr"=>$yr,"term"=>$term));	
+			// if($check_invoice_object->num_rows() === 0){
+				// $students[] = $student;
+			// }	
+		// }
+// 
+// print_r($students);		
+
+?>
 <div class="row">
 	<div class="col-md-12">
 			
@@ -180,7 +197,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label"><?php echo get_phrase('year');?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" min="2010" max="2050" name="fees_mass_structure_yr" onchange="get_class_students_mass()" id='fees_mass_structure_year'/>
+                            <input type="text" class="form-control" min="2010" max="2050" name="yr" onchange="get_class_students_mass()" id='fees_mass_structure_year'/>
                         </div>
                     </div>
 
@@ -494,11 +511,15 @@
     function get_class_students_mass() {
     	
     	var mass_class = $("#fees_mass_structure_class").val();
-		var yr = $("#fees_mass_structure_yr").val();
+		var yr = $("#fees_mass_structure_year").val();
 		var term = $("#fees_mass_structure_term").val();
-    	//alert(term);
+    	//alert(mass_class);
     	if(fees_mass_structure_class!="" && yr!="" && term!=""){
+    		
 	        $.ajax({
+	        	beforeSend:function(){
+	        		jQuery('#student_selection_holder_mass').html('<div style="text-align:center;margin-top:200px;"><img src="assets/images/preloader.gif" /></div>');
+	        	},
 	            url: '<?php echo base_url();?>index.php?student/get_class_students_mass/' + mass_class + '/' + yr + '/' + term ,
 	            success: function(response)
 	            {
