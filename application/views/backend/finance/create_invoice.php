@@ -3,19 +3,19 @@
 			
 			<ul class="nav nav-tabs bordered">
 				<li class="active">
-					<a href="#unpaid" data-toggle="tab">
+					<a href="#single_invoice" data-toggle="tab">
 						<span class="hidden-xs"><?php echo get_phrase('create_single_invoice');?></span>
 					</a>
 				</li>
 				<li>
-					<a href="#paid" data-toggle="tab">
+					<a href="#mass_invoice" data-toggle="tab">
 						<span class="hidden-xs"><?php echo get_phrase('create_mass_invoice');?></span>
 					</a>
 				</li>
 			</ul>
 			
 			<div class="tab-content">
-				<div class="tab-pane active" id="unpaid">
+				<div class="tab-pane active" id="single_invoice">
 
 				<!-- creation of single invoice -->
 				<?php echo form_open(base_url() . 'index.php?finance/invoice/create' , array('id'=>'frm_single_invoice','class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
@@ -150,7 +150,7 @@
 				<!-- creation of single invoice -->
 					
 				</div>
-				<div class="tab-pane" id="paid">
+				<div class="tab-pane" id="mass_invoice">
 
 				<!-- creation of mass invoice -->
 				<?php echo form_open(base_url() . 'index.php?finance/invoice/create_mass_invoice' , array('class' => 'form-horizontal form-groups-bordered validate', 'id'=> 'mass' ,'target'=>'_top'));?>
@@ -162,8 +162,7 @@
 					<div class="form-group">
                         <label class="col-sm-3 control-label"><?php echo get_phrase('class');?></label>
                         <div class="col-sm-9">
-                            <select name="class_id" class="form-control"
-                            	onchange="return get_class_students_mass(this.value)" id='fees_mass_structure_class'>
+                            <select name="class_id" class="form-control" onchange="get_class_students_mass()" id='fees_mass_structure_class'>
                             	<option value=""><?php echo get_phrase('select_class');?></option>
                             	<?php 
                             		$classes = $this->db->get('class')->result_array();
@@ -181,7 +180,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label"><?php echo get_phrase('year');?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" min="2010" max="2050" name="yr" id='fees_mass_structure_year'/>
+                            <input type="text" class="form-control" min="2010" max="2050" name="fees_mass_structure_yr" onchange="get_class_students_mass()" id='fees_mass_structure_year'/>
                         </div>
                     </div>
 
@@ -189,7 +188,7 @@
                         <label class="col-sm-3 control-label"><?php echo get_phrase('term');?></label>
                         <div class="col-sm-9">
                             <!--<input type="text" class="form-control" min="1" max="3" name="term" id='fees_mass_structure_term'  onblur='return get_mass_total_fees()'/>-->
-                            <select name="term" class="form-control" id="fees_mass_structure_term" onchange='return get_mass_total_fees()'>
+                            <select name="term" class="form-control" id="fees_mass_structure_term" onblur="get_class_students_mass()" onchange='return get_mass_total_fees()'>
 	                                        	<option value=""><?php echo get_phrase('select');?></option>
 	                                        	<?php
 	                                        		$terms = $this->db->get('terms')->result_object();
@@ -492,16 +491,38 @@
     }  
     
 
-    function get_class_students_mass(class_id) {
+    function get_class_students_mass() {
     	
-        $.ajax({
-            url: '<?php echo base_url();?>index.php?student/get_class_students_mass/' + class_id ,
-            success: function(response)
-            {
-                jQuery('#student_selection_holder_mass').html(response);
-            }
-        });
-
+    	var mass_class = $("#fees_mass_structure_class").val();
+		var yr = $("#fees_mass_structure_yr").val();
+		var term = $("#fees_mass_structure_term").val();
+    	//alert(term);
+    	if(fees_mass_structure_class!="" && yr!="" && term!=""){
+	        $.ajax({
+	            url: '<?php echo base_url();?>index.php?student/get_class_students_mass/' + mass_class + '/' + yr + '/' + term ,
+	            success: function(response)
+	            {
+	                jQuery('#student_selection_holder_mass').html(response);//alert("Here");
+	            }
+	        });
+		}
         
     }
+    
+    
+    $(document).ready(function(){
+    	if (location.hash) {
+			        $("a[href='" + location.hash + "']").tab("show");
+			    }
+			    $(document.body).on("click", "a[data-toggle]", function(event) {
+			        location.hash = this.getAttribute("href");
+			    });
+		
+			$(window).on("popstate", function() {
+			    var anchor = location.hash || $("a[data-toggle='tab']").first().attr("href");
+			    $("a[href='" + anchor + "']").tab("show");
+		
+			});
+		
+		});
 </script>

@@ -54,21 +54,21 @@
                 <!-- STUDENT ADMISSION -->
                 <li class="<?php if ($page_name == 'student_add') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?student/student_add">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('admit_student'); ?></span>
+                        <span><i class="fa fa-male"></i> <?php echo get_phrase('admit_student'); ?></span>
                     </a>
                 </li>
 
                 <!-- STUDENT BULK ADMISSION -->
                 <li class="<?php if ($page_name == 'student_bulk_add') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?student/student_bulk_add">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('admit_bulk_student'); ?></span>
+                        <span><i class="fa fa-cloud-upload"></i> <?php echo get_phrase('admit_bulk_student'); ?></span>
                     </a>
                 </li>
 
                 <!-- STUDENT INFORMATION -->
                 <li class="<?php if ($page_name == 'student_information' || $page_name == 'student_marksheet') echo 'opened active'; ?> ">
                     <a href="#">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('student_information'); ?></span>
+                        <span><i class="fa fa-list"></i> <?php echo get_phrase('student_information'); ?></span>
                     </a>
                     <ul>
                         <?php
@@ -136,12 +136,12 @@
             <ul>
                 <li class="<?php if ($page_name == 'class') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?classes/classes">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('manage_classes'); ?></span>
+                        <span><i class="fa fa-star-o"></i> <?php echo get_phrase('manage_classes'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'section') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?classes/section">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('manage_sections'); ?></span>
+                        <span><i class="fa fa-ticket"></i> <?php echo get_phrase('manage_sections'); ?></span>
                     </a>
                 </li>
             </ul>
@@ -200,27 +200,27 @@
             <ul>
                 <li class="<?php if ($page_name == 'exam') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?exam/exam">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('exam_list'); ?></span>
+                        <span><i class="fa fa-bell"></i> <?php echo get_phrase('exam_list'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'grade') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?exam/grade">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('exam_grades'); ?></span>
+                        <span><i class="fa fa-archive"></i> <?php echo get_phrase('exam_grades'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'marks') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?exam/marks">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('manage_marks'); ?></span>
+                        <span><i class="fa fa-bullseye"></i> <?php echo get_phrase('manage_marks'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'exam_marks_sms') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?exam/exam_marks_sms">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('send_marks_by_sms'); ?></span>
+                        <span><i class="fa fa-mobile"></i> <?php echo get_phrase('send_marks_by_sms'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'tabulation_sheet') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?exam/tabulation_sheet">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('tabulation_sheet'); ?></span>
+                        <span><i class="fa fa-rss"></i> <?php echo get_phrase('tabulation_sheet'); ?></span>
                     </a>
                 </li>
             </ul>
@@ -238,7 +238,7 @@
         <li class="<?php
         if (	$page_name == 'income' ||
                 $page_name == 'expense' ||
-                $page_name == 'expense_category' ||
+                $page_name == 'create_invoice' ||
                 $page_name == 'student_payment'||
 				$page_name == 'budget'||
 				$page_name == 'cash_book'||
@@ -254,39 +254,39 @@
             <ul>
                 <li class="<?php if ($page_name == 'fees_structure') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?finance/fees_structure">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('fees_structure'); ?></span>
+                        <span><i class="fa fa-tasks"></i> <?php echo get_phrase('fees_structure'); ?></span>
                     </a>
                 </li>
 
                 <li class="<?php if ($page_name == 'create_invoice') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?finance/create_invoice">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('create_invoice'); ?></span>
+                        <span><i class="fa fa-bookmark"></i> <?php echo get_phrase('create_invoice'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'income') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?finance/income">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('student_payments'); ?></span>
+                        <span><i class="fa fa-money"></i> <?php echo get_phrase('student_payments'); ?></span>
                     </a>
                 </li>
 
                 <li class="<?php if ($page_name == 'expense') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?finance/expense">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('school_expenses'); ?></span>
+                        <span><i class="fa fa-credit-card"></i> <?php echo get_phrase('school_expenses'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'cash_book') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?finance/cash_book">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('cash_book'); ?></span>
+                        <span><i class="fa fa-book"></i> <?php echo get_phrase('cash_book'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'budget') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?finance/budget">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('budget'); ?></span>
+                        <span><i class="fa fa-code"></i> <?php echo get_phrase('budget'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'financial_report') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?finance/financial_report">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('financial_report'); ?></span>
+                        <span><i class="fa fa-filter"></i> <?php echo get_phrase('financial_report'); ?></span>
                     </a>
                 </li>
             </ul>
@@ -348,27 +348,27 @@
             <ul>
                 <li class="<?php if ($page_name == 'system_settings') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?admin/system_settings">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('general_settings'); ?></span>
+                        <span><i class="fa fa-cog"></i> <?php echo get_phrase('general_settings'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'sms_settings') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?admin/sms_settings">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('sms_settings'); ?></span>
+                        <span><i class="fa fa-mobile"></i> <?php echo get_phrase('sms_settings'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'manage_language') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?admin/manage_language">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('language_settings'); ?></span>
+                        <span><i class="fa fa-info"></i> <?php echo get_phrase('language_settings'); ?></span>
                     </a>
                 </li>
                  <li class="<?php if ($page_name == 'school_settings') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?admin/school_settings">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('school_settings'); ?></span>
+                        <span><i class="fa fa-gears"></i> <?php echo get_phrase('school_settings'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'crud_settings') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?admin/crud_settings">
-                        <span><i class="entypo-dot"></i> <?php echo get_phrase('crud_settings'); ?></span>
+                        <span><i class="fa fa-flag"></i> <?php echo get_phrase('crud_settings'); ?></span>
                     </a>
                 </li>
             </ul>

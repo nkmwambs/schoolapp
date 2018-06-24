@@ -320,31 +320,32 @@ class Finance extends CI_Controller
 			}
             if ($cnt===0) {
                 foreach ($this->input->post('student_id') as $id) {
-
-                    $data['student_id']         = $id;
-                    $data['yr']              = $this->input->post('yr');
-                    $data['term']        = $this->input->post('term');
-                    $data['amount']             = $this->input->post('amount');
-                    $data['amount_due']        = $this->input->post('amount_due');
-					$data['balance']        = $this->input->post('amount_due');
-                    $data['status']             = 'unpaid';
-                    $data['creation_timestamp'] = strtotime($this->input->post('date'));
-                    
-                    $this->db->insert('invoice', $data);
-					
-		            $invoice_id = $this->db->insert_id();
-					
-					$structure_ids = $this->input->post('detail_id');
-					$payable_amount = $this->input->post('payable');
-					
-					foreach($payable_amount as $key=>$value):
-						$data2['invoice_id'] = $invoice_id;
-						$data2['detail_id'] = $key;
-						$data2['amount_due'] = $value;
+                	$invoice_found = $this->db->get_where("invoice",array("student_id"=>$id,"yr"=>$this->input->post('yr'),"term"=>$this->input->post('term')));
+					if($invoice_found->num_rows() === 0){
+	                    $data['student_id']         = $id;
+	                    $data['yr']              = $this->input->post('yr');
+	                    $data['term']        = $this->input->post('term');
+	                    $data['amount']             = $this->input->post('amount');
+	                    $data['amount_due']        = $this->input->post('amount_due');
+						$data['balance']        = $this->input->post('amount_due');
+	                    $data['status']             = 'unpaid';
+	                    $data['creation_timestamp'] = strtotime($this->input->post('date'));
+	                    
+	                    $this->db->insert('invoice', $data);
 						
-						$this->db->insert('invoice_details',$data2);			
-					endforeach;
-					
+			            $invoice_id = $this->db->insert_id();
+						
+						$structure_ids = $this->input->post('detail_id');
+						$payable_amount = $this->input->post('payable');
+						
+						foreach($payable_amount as $key=>$value):
+							$data2['invoice_id'] = $invoice_id;
+							$data2['detail_id'] = $key;
+							$data2['amount_due'] = $value;
+							
+							$this->db->insert('invoice_details',$data2);			
+						endforeach;
+					}
                 }
 				
 				$this->session->set_flashdata('flash_message' , get_phrase('invoices_created_successfully'));
@@ -499,7 +500,9 @@ class Finance extends CI_Controller
 					$amount = $row['amount'];
 				endforeach;
 			}
-		}	
+		}
+		
+		echo $amount;	
 			
 	}
 	
@@ -546,14 +549,22 @@ class Finance extends CI_Controller
 		echo $body;	
 	}
 
-	function get_mass_fees_items($term,$year,$class){
-		$fees_id = $this->db->get_where('fees_structure',array("term"=>$term,"yr"=>$year,"class_id"=>$class))->row()->fees_id;
-
-		$details = $this->db->get_where('fees_structure_details',array("fees_id"=>$fees_id))->result_object();
+	function get_mass_fees_items($term="",$year="",$class=""){
+		$fees = $this->db->get_where('fees_structure',array("term"=>$term,"yr"=>$year,"class_id"=>$class));
 		
-		foreach($details as $row):
-			echo "<tr><td><input type='checkbox' onchange='return get_mass_full_amount(".$row->detail_id.")' id='mass_chk_".$row->detail_id."'/></td><td>".$row->name."</td><td id='mass_full_amount_".$row->detail_id."'>".$row->amount."</td><td><input type='text' onkeyup='return get_mass_payable_amount(".$row->detail_id.")' class='form-control mass_payable_items' id='mass_payable_".$row->detail_id."' name='payable[".$row->detail_id."]'/></td><tr>";
-		endforeach;		
+		$str = "<tr><td colspan='3'>".get_phrase('no_items_found')."</td></tr>";
+		
+		if($fees->num_rows() > 0){
+			$fees_id = $fees->row()->fees_id;
+			
+			$details = $this->db->get_where('fees_structure_details',array("fees_id"=>$fees_id))->result_object();
+			
+			foreach($details as $row):
+				echo "<tr><td><input type='checkbox' onchange='return get_mass_full_amount(".$row->detail_id.")' id='mass_chk_".$row->detail_id."'/></td><td>".$row->name."</td><td id='mass_full_amount_".$row->detail_id."'>".$row->amount."</td><td><input type='text' onkeyup='return get_mass_payable_amount(".$row->detail_id.")' class='form-control mass_payable_items' id='mass_payable_".$row->detail_id."' name='payable[".$row->detail_id."]'/></td><tr>";
+			endforeach;
+		}	
+		
+		echo $str;	
 	}
 	
 }
