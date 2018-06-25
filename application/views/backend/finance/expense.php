@@ -1,8 +1,8 @@
 
-<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_income_add/');" 
+<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_expense_add/');" 
 class="btn btn-primary pull-right">
 <i class="entypo-plus-circled"></i>
-<?php echo get_phrase('add_new_income');?>
+<?php echo get_phrase('add_new_expense');?>
 </a> 
 <br><br>
 <table class="table table-bordered datatable" id="table_export">
@@ -35,7 +35,7 @@ class="btn btn-primary pull-right">
 						                        
 						            <!-- View Bath Link -->
 						            <li>
-						               	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_income/<?=$row->batch_number;?>');">
+						               	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_expense/<?=$row->batch_number;?>');">
 						                   	<i class="fa fa-eye-slash"></i>
 												<?php echo get_phrase('view');?>
 						               	</a>
@@ -44,7 +44,7 @@ class="btn btn-primary pull-right">
 						                        
 						             <!--Reverse Batch Link -->
 						             <li>
-						                 <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?finance/income/reverse/<?=$row->income_id?>');">
+						                 <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?finance/expense/reverse/<?=$row->expense_id?>');">
 						                     <i class="fa fa-refresh"></i>
 												<?php echo get_phrase('reverse');?>
 						                  </a>

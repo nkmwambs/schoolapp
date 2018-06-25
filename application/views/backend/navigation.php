@@ -239,7 +239,8 @@
         if (	$page_name == 'income' ||
                 $page_name == 'expense' ||
                 $page_name == 'create_invoice' ||
-                $page_name == 'student_payment'||
+                $page_name == 'income'||
+                $page_name == 'student_payments'||
 				$page_name == 'budget'||
 				$page_name == 'cash_book'||
 				$page_name == 'financial_report'||
@@ -263,12 +264,18 @@
                         <span><i class="fa fa-bookmark"></i> <?php echo get_phrase('create_invoice'); ?></span>
                     </a>
                 </li>
-                <li class="<?php if ($page_name == 'income') echo 'active'; ?> ">
-                    <a href="<?php echo base_url(); ?>index.php?finance/income">
+                <li class="<?php if ($page_name == 'student_payments') echo 'active'; ?> ">
+                    <a href="<?php echo base_url(); ?>index.php?finance/student_payments">
                         <span><i class="fa fa-money"></i> <?php echo get_phrase('student_payments'); ?></span>
                     </a>
                 </li>
-
+				
+				<li class="<?php if ($page_name == 'income') echo 'active'; ?> ">
+                    <a href="<?php echo base_url(); ?>index.php?finance/income">
+                        <span><i class="fa fa-credit-card"></i> <?php echo get_phrase('income'); ?></span>
+                    </a>
+                </li>
+					
                 <li class="<?php if ($page_name == 'expense') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?finance/expense">
                         <span><i class="fa fa-credit-card"></i> <?php echo get_phrase('school_expenses'); ?></span>

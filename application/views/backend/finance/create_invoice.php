@@ -119,12 +119,20 @@
                             <div class="panel-body">
                                 
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label"><?php echo get_phrase('total_payable');?></label>
+                                    <label class="col-sm-3 control-label"><?php echo get_phrase('overpay');?></label>
                                     <div class="col-sm-9">
-                                        <input type="text" value="0" class="form-control" name="amount" readonly="readonly" placeholder="<?php echo get_phrase('enter_total_amount');?>" id='total_fees_amount'/>
+                                        <input type="text" value="0" class="form-control" name="" readonly="readonly" placeholder="<?php echo get_phrase('overpay');?>" id='overpay'/>
                                     </div>
                                 </div>
                                 
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label"><?php echo get_phrase('structure_payable');?></label>
+                                    <div class="col-sm-9">
+                                        <input type="text" value="0" class="form-control" name="amount" readonly="readonly" placeholder="<?php echo get_phrase('structure_total_amount');?>" id='total_fees_amount'/>
+                                    </div>
+                                </div>
+                                
+                                                                
                                 <div class="form-group">
                                 	<label class="col-sm-3 control-label"><?php echo get_phrase('fee_items');?></label>
                                 	<div class="col-sm-9">
@@ -135,6 +143,7 @@
                                 					<th><?=get_phrase('item');?></th>
                                 					<th><?=get_phrase('fee_structure_amount');?></th>
                                 					<th><?=get_phrase('amount_payable');?></th>
+                                					<th><?=get_phrase('charge_overpay');?></th>
                                 				</tr>
                                 			</thead>
                                 			<tbody id="fee_items">
@@ -310,6 +319,11 @@
 </script>
 
 <script type="text/javascript">
+
+$(".charge_overpay").change(function(){
+  alert("Hello");
+});
+
 $(".get_ajax_details").change(function(){
 		var fees_structure_class = $("#fees_structure_class").val();
     	var fees_structure_year = $("#fees_structure_year").val();
@@ -341,9 +355,10 @@ $(".get_ajax_details").change(function(){
 	            }
 	        });
 	        
-	        
-	            
-		         
+	        //Payable_fees_amount
+	        // var overpay_balance = parseFloat($("#overpay").val()) - parseFloat($("#amount_due").val());
+	        // $("#overpay").val(overpay_balance);
+	             
        }
        
 	});
@@ -393,6 +408,18 @@ $(".get_ajax_details").change(function(){
 		                jQuery('#transport_info').html(response);
 		            }
 		        });	
+
+				
+			//Get Total Over Pay
+	        
+    	    $.ajax({
+	            url: '<?php echo base_url();?>index.php?finance/get_overpay/' + student,
+	            success: function(response)
+	            {
+	
+	            		jQuery('#overpay').val(response);
+	            }
+	        });
 	        	
 	        }
     });
@@ -541,8 +568,12 @@ $(".get_ajax_details").change(function(){
         
     }
     
+       
     
     $(document).ready(function(){
+    	
+
+    	
     	if (location.hash) {
 			        $("a[href='" + location.hash + "']").tab("show");
 			    }

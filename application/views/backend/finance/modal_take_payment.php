@@ -197,6 +197,19 @@ $row = $edit_data[0];
 		$('#total_payment').val(tot);
 	}
 	
+	
+	$(".paying").change(function(){
+		var detail_balance = $(this).parent().prev().html();
+		var detail_paying = $(this).val();
+		
+		if(parseInt(detail_paying) > parseInt(detail_balance)){
+			alert("<?=get_phrase("paying_more_than_balance");?>");
+			$(this).val("0");
+			get_total_payment();
+			return false;
+		}
+		
+	});
 
 	
 </script>
