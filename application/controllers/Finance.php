@@ -222,11 +222,15 @@ class Finance extends CI_Controller
 			$charge_overpay = array_sum($this->input->post("charge_overpay"));
 			
 			foreach($payable_amount as $key=>$value):
-				$data2['invoice_id'] = $invoice_id;
-				$data2['detail_id'] = $key;
-				$data2['amount_due'] = $value;
+				if($value > 0){
+					$data2['invoice_id'] 	= $invoice_id;
+					$data2['detail_id'] 	= $key;
+					$data2['amount_due'] 	= $value;
+					$data2['balance']        = $value;
 				
-				$this->db->insert('invoice_details',$data2);			
+					$this->db->insert('invoice_details',$data2);
+				}
+							
 			endforeach;
 			
 			if($charge_overpay > 0){
@@ -253,66 +257,6 @@ class Finance extends CI_Controller
             redirect(base_url() . 'index.php?finance/create_invoice', 'refresh');
         }
 
-		// if($param1==="edit"){
-// 	
-			// //$structure_ids = $this->input->post('detail_id');
-			// $payable_amount = $this->input->post('payable');
-// 			
-			// $sum_invoice = 0;
-// 			
-			// foreach($payable_amount as $key=>$value):
-// 				
-				// //Check structure details id in invoices
-// 				
-				// $details_id_check = $this->db->get_where('invoice_details',array('invoice_id'=>$param2,'detail_id'=>$key))->num_rows();
-// 				
-				// //Get old value
-				// $this->db->where(array('invoice_id'=>$param2,'detail_id'=>$key));
-				// $old_amount_due = $this->db->get('invoice_details')->row()->amount_due;
-// 				
-// 				
-// 				
-				// if($details_id_check>0){
-// 					
-					// //Update details
-					// $this->db->where(array('invoice_id'=>$param2,'detail_id'=>$key));
-// 					
-					// $data['amount_due'] = $value;
-					// $this->db->update('invoice_details',$data);	
-// 							
-					// //Update invoice
-// 										
-					// $this->db->set('amount_due',$this->input->post('amount_due'),FALSE);
-					// $this->db->set('balance','amount_due - '.$this->db->get_where('invoice',array('invoice_id'=>$param2))->row()->amount_paid,FALSE);
-// 
-					// $this->db->where(array('invoice_id'=>$param2));
-					// $this->db->update('invoice');	
-// 					
-				// }else{
-					// $data['invoice_id'] = $param2;
-					// $data['detail_id'] = $key;
-					// $data['amount_due'] = $value;
-// 				
-					// $this->db->insert('invoice_details',$data);
-// 					
-					// //Adjust the Invoice header
-// 					
-					// $this->db->set('amount_due',$this->input->post('amount_due'),FALSE);
-					// $this->db->set('balance','amount_due - '.$this->db->get_where('invoice',array('invoice_id'=>$param2))->row()->amount_paid,FALSE);
-// 
-// 					
-					// $this->db->where(array('invoice_id'=>$param2));
-					// $this->db->update('invoice');
-				// }
-// 							
-				// $sum_invoice +=$value;
-// 							
-			// endforeach;
-// 			
-// 			
-            // $this->session->set_flashdata('flash_message' , get_phrase('invoice_editted_successfully'));
-            // redirect(base_url() . 'index.php?finance/create_invoice', 'refresh');			
-		// }
 
         if ($param1 == 'create_mass_invoice') {
         	
@@ -347,11 +291,14 @@ class Finance extends CI_Controller
 						$payable_amount = $this->input->post('payable');
 						
 						foreach($payable_amount as $key=>$value):
-							$data2['invoice_id'] = $invoice_id;
-							$data2['detail_id'] = $key;
-							$data2['amount_due'] = $value;
-							
-							$this->db->insert('invoice_details',$data2);			
+							if($value > 0){
+								$data2['invoice_id'] = $invoice_id;
+								$data2['detail_id'] = $key;
+								$data2['amount_due'] = $value;
+								$data2['balance'] = $value;
+								$this->db->insert('invoice_details',$data2);
+							}
+										
 						endforeach;
 					}
                 }
@@ -410,43 +357,61 @@ class Finance extends CI_Controller
         	
 			$this->db->select_max('serial');
 			$res = $this->db->get("payment")->row()->serial;
-			
-			$invoice_details = $this->db->get_where('invoice_details',array('invoice_id'=>$this->input->post('invoice_id')))->result_object();
-			
+						
 			$take_payment = $this->input->post('take_payment');
 			
-			$amt = 0;
 			
-			foreach($invoice_details as $key=>$value){
-				if($take_payment[$key]!=='0'){
+			
+			//Create a Payment Record
+			$data_payment['batch_number'] 	= $this->crud_model->populate_batch_number($this->input->post('timestamp'));
+			$data_payment['serial'] 		=  $res+1;
+			$data_payment['t_date'] 		= $this->input->post('timestamp');
+			$data_payment['invoice_id'] 	= $this->input->post('invoice_id');
+			$data_payment['method']			=   $this->input->post('method');
+			$data_payment['description']	=   $this->input->post('description');
+			$data_payment['payee']			=   $this->input->post('payee');
+			$data_payment['payment_type']	=   "1";//array_sum($take_payment);
+			$data_payment['amount']			=   array_sum($take_payment);
+			$data_payment['timestamp']    	=   strtotime($this->input->post('timestamp'));
+			
+			
+			$this->db->insert('payment' , $data_payment);
+			
+			$last_payment_id = $this->db->insert_id();
+			
+			//Update Invoice Details
+			
+			//$invoice_details = $this->db->get_where('invoice_details',array('invoice_id'=>$this->input->post('invoice_id')))->result_object();
+			
+			foreach($take_payment as $key=>$value){
+				if($value > 0){
 					
-					$amt += $take_payment[$key];
+					$detail = $this->db->get_where("invoice_details",array("detail_id"=>$key))->row();
+												
+					$paid_to_date  = $detail->amount_paid + $value;
 					
-					$data['invoice_id']   =   $this->input->post('invoice_id');
-		            $data['student_id']   =   $this->input->post('student_id');
-		            $data['yr']        =   $this->input->post('yr');
-					$data['serial'] = $res+1;
-					$data['batch_number'] = $this->crud_model->populate_batch_number($this->input->post('timestamp'));
-					$data['detail_id']  =   $value->detail_id;
-		            $data['term']  =   $this->input->post('term');
-		            $data['method']       =   $this->input->post('method');
-		            $data['amount']       =   $take_payment[$key];
-		            $data['timestamp']    =   strtotime($this->input->post('timestamp'));
-		            $this->db->insert('payment' , $data);
+					$data_invoice['amount_paid']   	=   $paid_to_date;
+					$data_invoice['balance'] 		= 	$detail->amount_due - $paid_to_date;
+					$data_invoice['detail_id'] 		=  $key;
+					$data_invoice['last_payment_id']  		=   $last_payment_id;
+		            
+					$this->db->where(array("invoice_id"=> $this->input->post('invoice_id'), "detail_id"=>$key));
+					
+		            $this->db->update('invoice_details' , $data_invoice);
+					
+					//Create Payment details
+					
+					$data_details['payment_id'] 	= $last_payment_id;//$this->input->post('invoice_id');
+					$data_details['detail_id'] 		=  $key;
+					$data_details['amount'] 		= $value;
+					$data_details['t_date'] 		= $this->input->post('timestamp');
+					
+					$this->db->insert("student_payment_details",$data_details);
+								
 		          }	
 			}
 			
-			
-			//Enter Income into the Cash Book
-			$data1['t_date'] = date('Y-m-d');
-			$data1['batch_number'] = $this->crud_model->populate_batch_number($this->input->post('timestamp'));
-			$data1['description'] = get_phrase('student_payment').' - '.$this->db->get_where('student',array('student_id'=>$this->input->post('student_id')))->row()->name;
-			$data1['transaction_type'] = '1'; //1 Means Income and 2 means expenses
-			$data1['account'] = $this->input->post('method');
-			$data1['amount'] = $amt;
-            $this->db->insert('cashbook' , $data1);
-			
-			
+			//Update Invoice Record			
 
             $data2['amount_paid']   =   $this->input->post('total_payment');
             $this->db->where('invoice_id' , $param2);
@@ -461,7 +426,22 @@ class Finance extends CI_Controller
             	$this->db->where('invoice_id' , $param2);
 				$this->db->update('invoice',$data3);
 			}
+			
+					
+			//Enter Income into the Cash Book
+			$data1['t_date'] = $this->input->post('timestamp');//date('Y-m-d');
+			$data1['batch_number'] = $this->crud_model->populate_batch_number($this->input->post('timestamp'));
 
+			$student_id = $this->db->get_where("invoice",array("invoice_id"=>$this->input->post('invoice_id')))->row()->student_id;
+						
+			$data1['description'] = get_phrase('student_payment').' - '.$this->db->get_where('student',array('student_id'=>$student_id))->row()->name;
+			$data1['transaction_type'] = '1'; //1 Means Income and 2 means expenses
+			$data1['account'] = $this->input->post('method');
+			$data1['amount'] = array_sum($take_payment);
+            $this->db->insert('cashbook' , $data1);
+			
+			
+			//exit;
             $this->session->set_flashdata('flash_message' , get_phrase('payment_successfull'));
             redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
         }
@@ -605,7 +585,7 @@ class Finance extends CI_Controller
 	function get_mass_fees_items($term="",$year="",$class=""){
 		$fees = $this->db->get_where('fees_structure',array("term"=>$term,"yr"=>$year,"class_id"=>$class));
 		
-		$str = "<tr><td colspan='3'>".get_phrase('no_items_found')."</td></tr>";
+		$str = "";
 		
 		if($fees->num_rows() > 0){
 			$fees_id = $fees->row()->fees_id;
@@ -613,8 +593,10 @@ class Finance extends CI_Controller
 			$details = $this->db->get_where('fees_structure_details',array("fees_id"=>$fees_id))->result_object();
 			
 			foreach($details as $row):
-				echo "<tr><td><input type='checkbox' onchange='return get_mass_full_amount(".$row->detail_id.")' id='mass_chk_".$row->detail_id."'/></td><td>".$row->name."</td><td id='mass_full_amount_".$row->detail_id."'>".$row->amount."</td><td><input type='text' onkeyup='return get_mass_payable_amount(".$row->detail_id.")' class='form-control mass_payable_items' id='mass_payable_".$row->detail_id."' name='payable[".$row->detail_id."]'/></td><tr>";
+				$str .= "<tr><td><input type='checkbox' onchange='return get_mass_full_amount(".$row->detail_id.")' id='mass_chk_".$row->detail_id."'/></td><td>".$row->name."</td><td id='mass_full_amount_".$row->detail_id."'>".$row->amount."</td><td><input type='text' onkeyup='return get_mass_payable_amount(".$row->detail_id.")' class='form-control mass_payable_items' id='mass_payable_".$row->detail_id."' name='payable[".$row->detail_id."]'/></td><tr>";
 			endforeach;
+		}else{
+			$str .= "<tr><td colspan='3'>".get_phrase('no_items_found')."</td></tr>";
 		}	
 		
 		echo $str;	
@@ -807,17 +789,21 @@ class Finance extends CI_Controller
             redirect('login', 'refresh');
             
         if ($param1 == 'create') {
-            $data['payee']        =   $this->input->post('payee'); 
-			$data['batch_number']        =   $this->crud_model->populate_batch_number($this->input->post('t_date'));   
-			$data['t_date']        =   $this->input->post('t_date');		
-            $data['description']         =   $this->input->post('description');			
-            $data['method']              =   $this->input->post('method');	
-			//$data['cheque_no']              =   $this->input->post('cheque_no');			    	
-            $data['amount']              =   $this->input->post('amount');
-            $data['timestamp']           =   strtotime($this->input->post('timestamp'));
-            $this->db->insert('income' , $data);
+       		$res = $this->db->get("payment")->row()->serial;
 			
-			$income_id = $this->db->insert_id();
+        	
+            $data['payee']        	=   $this->input->post('payee'); 
+			$data['serial']        	=   $res+1; 
+			$data['batch_number']   =   $this->crud_model->populate_batch_number($this->input->post('t_date'));   
+			$data['t_date']        	=   $this->input->post('t_date');		
+            $data['description']    =   $this->input->post('description');			
+            $data['method']         =   $this->input->post('method');	
+			$data['payment_type']   =   "2";
+            $data['amount']         =   $this->input->post('amount');
+            $data['timestamp']      =   strtotime($this->input->post('t_date'));
+            $this->db->insert('payment' , $data);
+			
+			$payment_id = $this->db->insert_id();
 			
 			$qty = $this->input->post('qty');
 			$desc = $this->input->post('desc');
@@ -826,20 +812,20 @@ class Finance extends CI_Controller
 			$category = $this->input->post('category');
 			
 			foreach($qty as $key=>$val):
-				$data2['income_id'] = $income_id;
+				$data2['payment_id'] = $payment_id;
 				$data2['qty'] = $qty[$key];
 				$data2['description'] = $desc[$key];
 				$data2['unitcost'] = $unitcost[$key];
 				$data2['cost'] = $cost[$key];
 				$data2['income_category_id'] = $category[$key];
 				
-				$this->db->insert('income_details' , $data2);
+				$this->db->insert('other_payment_details' , $data2);
 				
 			endforeach;
 			
 			
 			//Enter Income into the Cash Book
-			$data1['t_date'] = date('Y-m-d');
+			$data1['t_date'] = $this->input->post('t_date');
 			$data1['batch_number'] = $this->crud_model->populate_batch_number($this->input->post('t_date'));
 			$data1['description'] = $this->input->post('description');
 			$data1['transaction_type'] = '1';
@@ -877,30 +863,31 @@ class Finance extends CI_Controller
 					
 			$date = date('Y-m-d');
 			
-			$income = $this->db->get_where('income',array('income_id'=>$param2))->row();
+			$income = $this->db->get_where('payment',array('payment_id'=>$param2))->row();
 
             $data['payee']        =   $this->db->get_where('settings',array('type'=>'system_name'))->row()->description;    
 			$data['batch_mumber']        =   $this->crud_model->populate_batch_number($date);
 			$data['t_date']        =   date('Y-m-d');			
-            $data['description']         =   get_phrase('reversal:_batch').' - '.$expense->batch_number;			
-            $data['method']              =   $expense->method;				    	
-            $data['amount']              =   -$expense->amount;	
+            $data['description']         =   get_phrase('reversal:_batch').' - '.$income->batch_number;			
+            $data['method']              =   $income->method;				    	
+            $data['amount']              =   -$income->amount;	
             $data['timestamp']           =   strtotime(date('Y-m-d'));
-            $this->db->insert('income' , $data);
+			$data['payment_type']		= "2";
+            $this->db->insert('payment' , $data);
 			
-			$income_id = $this->db->insert_id();
+			$payment_id = $this->db->insert_id();
 			
-			$details = $this->db->get_where('income_details',array('income_id'=>$param2))->result_object();
+			$details = $this->db->get_where('other_payment_details',array('payment_id'=>$param2))->result_object();
 			
 			foreach($details as $row):
-				$data2['income_id'] = $income_id;
+				$data2['payment_id'] = $payment_id;
 				$data2['qty'] = $row->qty;
 				$data2['description'] = $row->description;
 				$data2['unitcost'] = -$row->unitcost;
 				$data2['cost'] = -$row->cost;
 				$data2['income_category_id'] = $row->income_category_id;
 				
-				$this->db->insert('income_details' , $data2);
+				$this->db->insert('other_payment_details' , $data2);
 				
 			endforeach;
 			
@@ -909,9 +896,9 @@ class Finance extends CI_Controller
 			$data1['t_date'] = date('Y-m-d');
 			$data1['batch_number'] = $this->crud_model->populate_batch_number(date('Y-m-d'));
 			$data1['description'] = get_phrase('reversal:_batch').' - '.$income->batch_number;
-			$data1['transaction_type'] = '2';
-			$data1['account'] = $expense->method;
-			$data1['amount'] = -$expense->amount;
+			$data1['transaction_type'] = '1';
+			$data1['account'] = $income->method;
+			$data1['amount'] = -$income->amount;
             $this->db->insert('cashbook' , $data1);
 			
 			
@@ -921,7 +908,7 @@ class Finance extends CI_Controller
 
         $page_data['page_name']  = 'income';
 		$page_data['page_view'] = "finance";
-		$page_data['expenses'] = $this->db->get('income')->result_object();
+		$page_data['payments'] = $this->db->get('payment')->result_object();
         $page_data['page_title'] = get_phrase('income');
         $this->load->view('backend/index', $page_data); 
     }	
@@ -940,4 +927,51 @@ class Finance extends CI_Controller
 		
 		
 	}
+	
+	function cash_book($param1="") {
+        if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');
+		
+		$t_date = date('Y-m-d');
+		
+		if($param1==="scroll") $t_date = $this->input->post('t_date'); 
+		
+		if($param1==="") $t_date = date('Y-m-01');
+			
+		$month = date('m',strtotime($t_date));
+		$year = date('Y',strtotime($t_date));
+		
+		$opening_balance = $this->crud_model->opening_account_balance($t_date);
+		
+
+		$page_data['cash_balance'] = $opening_balance['cash_balance'];
+		$page_data['bank_balance'] = $opening_balance['bank_balance'];
+        $page_data['page_name']  = 'cash_book';
+		$page_data['page_view'] = "finance";
+        $page_data['page_title'] = get_phrase('cash_book');
+		$page_data['current'] = $t_date;
+		$page_data['transactions'] = $this->db->get_where('cashbook',array('Month(t_date)'=>$month,'Year(t_date)'=>$year))->result_object();
+        $this->load->view('backend/index', $page_data); 
+    }
+	
+	function contra_entry($param1="",$param2=""){
+		
+		if($param1==='create'){
+			//Enter Income into the Cash Book
+			$data1['t_date'] = $this->input->post('t_date');
+			$data1['batch_number'] = $this->crud_model->populate_batch_number(date('Y-m-d'));
+			$data1['description'] = $this->input->post('description');
+			$data1['transaction_type'] = $this->input->post('entry_type');
+			$data1['account'] = 0;
+			$data1['amount'] = $this->input->post('amount');
+            $this->db->insert('cashbook' , $data1);
+
+            $this->session->set_flashdata('flash_message' , get_phrase('data_added_successfully'));
+            redirect(base_url() . 'index.php?finance/cash_book/'.$param2, 'refresh');			
+		}
+		
+		
+		//$this->cash_book($param2);
+	}
+		
 }

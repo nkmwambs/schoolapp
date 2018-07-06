@@ -18,7 +18,7 @@ class="btn btn-primary pull-right">
     </thead>
     <tbody>
 		<?php
-			foreach($expenses as $row):
+			foreach($payments as $row):
 		?>
        		<tr>
        			<td><?=$row->t_date;?></td>
@@ -44,7 +44,7 @@ class="btn btn-primary pull-right">
 						                        
 						             <!--Reverse Batch Link -->
 						             <li>
-						                 <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?finance/income/reverse/<?=$row->income_id?>');">
+						                 <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?finance/income/reverse/<?=$row->payment_id?>');">
 						                     <i class="fa fa-refresh"></i>
 												<?php echo get_phrase('reverse');?>
 						                  </a>
