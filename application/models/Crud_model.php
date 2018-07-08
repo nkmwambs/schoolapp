@@ -420,6 +420,34 @@ class Crud_model extends CI_Model {
 		return array('cash_balance'=>$cash_balance,'bank_balance'=>$bank_balance);
 	}
 
+	function closing_bank_balance($t_date = ""){
+		//$t_date = date("Y-m-t",$current);
+		$month = date('m',strtotime($t_date));
+		$year = date('Y',strtotime($t_date));
+		$opening_balance = $this->crud_model->opening_account_balance(date('Y-m-t',strtotime($t_date)));
+		$transactions = $this->db->get_where('cashbook',array('Month(t_date)'=>$month,'Year(t_date)'=>$year))->result_object();
+		
+		$sum_bank_income = 0;
+		$sum_bank_expense = 0;
+		$bank_balance = 0;
+							
+		foreach($transactions as $rows){
+			$bank_income = 0;
+			if(($rows->transaction_type==='1' && $rows->account==='2')||$rows->transaction_type==='3') $bank_income = $rows->amount;		
+			$sum_bank_income +=	$bank_income;
+			
+			$bank_expense = 0;
+			if(($rows->transaction_type==='2' && $rows->account==='2')||$rows->transaction_type==='4') $bank_expense = $rows->amount;
+			$sum_bank_expense +=	$bank_expense;
+				
+		}
+		
+		$bank_balance = $opening_balance['bank_balance']+$sum_bank_income-$sum_bank_expense;
+		
+		return  $bank_balance;
+		
+	}
+
 	function populate_batch_number($cur_date){
 		//Check if Cashbook has any record
 		$cashbook_records = $this->db->get('cashbook')->num_rows();
@@ -580,6 +608,38 @@ class Crud_model extends CI_Model {
 		}
 			
 		return $month_total;
+	}
+	
+	function next_cashbook_date(){
+		
+		/**Get Max data in the Cash Book**/
+		
+		$max_id = $this->db->select_max("cashbook_id")->get("cashbook")->row()->cashbook_id;
+		$last_transaction = $this->db->get_where("cashbook",array("cashbook_id"=>$max_id))->row();
+		$reconcile = $this->db->get("reconcile");
+		
+		$start_date = $last_transaction->t_date;
+		$end_date = date('Y-m-t',strtotime($last_transaction->t_date));
+		
+		if($reconcile->num_rows() > 0){
+			$last_reconcile_month = $this->db->select_max("month")->get("reconcile")->row()->month;
+			if($last_transaction->t_date < $last_reconcile_month){
+				$start_date = date("Y-m-01",strtotime('+1 month',strtotime($last_reconcile_month)));
+				$end_date = date("Y-m-t",strtotime('+1 month',strtotime($last_reconcile_month)));
+			}
+			
+			
+		}
+		
+		/**Derive Start and End Dates**/
+		
+		$cashbook_dates['start_date'] = $start_date;
+		$cashbook_dates['end_date'] = $end_date;
+		//$cashbook_dates['extra'] = $max_id;
+		
+		/** Create Date Object**/
+		
+		return (object)$cashbook_dates;
 	}
 
 }

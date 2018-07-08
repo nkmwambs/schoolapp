@@ -266,13 +266,13 @@
                 </li>
                 <li class="<?php if ($page_name == 'student_payments') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?finance/student_payments">
-                        <span><i class="fa fa-money"></i> <?php echo get_phrase('student_payments'); ?></span>
+                        <span><i class="fa fa-money"></i> <?php echo get_phrase('students_income'); ?></span>
                     </a>
                 </li>
 				
 				<li class="<?php if ($page_name == 'income') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?finance/income">
-                        <span><i class="fa fa-credit-card"></i> <?php echo get_phrase('income'); ?></span>
+                        <span><i class="fa fa-credit-card"></i> <?php echo get_phrase('other_income'); ?></span>
                     </a>
                 </li>
 					
@@ -369,7 +369,7 @@
                     </a>
                 </li>
                  <li class="<?php if ($page_name == 'school_settings') echo 'active'; ?> ">
-                    <a href="<?php echo base_url(); ?>index.php?admin/school_settings">
+                    <a href="<?php echo base_url(); ?>index.php?settings/school_settings">
                         <span><i class="fa fa-gears"></i> <?php echo get_phrase('school_settings'); ?></span>
                     </a>
                 </li>

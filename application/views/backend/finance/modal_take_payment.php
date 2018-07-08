@@ -137,7 +137,7 @@ $row = $edit_data[0];
                     <div class="form-group">
 	                    <label class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
 	                    <div class="col-sm-6">
-	                        <input type="text" class="datepicker form-control" data-format="yyyy-mm-dd" name="timestamp" 
+	                        <input type="text" class="datepicker form-control" data-start-date="<?php echo $this->crud_model->next_cashbook_date()->start_date;?>" data-end-date="<?php echo $this->crud_model->next_cashbook_date()->end_date;?>" data-format="yyyy-mm-dd" name="timestamp" 
 	                            value=""/>
 	                    </div>
 					</div>
@@ -163,6 +163,8 @@ $row = $edit_data[0];
 <?php //endforeach;?>
 
 <script>
+
+
 	
 	function get_total_payment(){
 		var tot = 0;

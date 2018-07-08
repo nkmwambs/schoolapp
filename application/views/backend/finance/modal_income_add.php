@@ -1,3 +1,7 @@
+<?php
+//print_r($this->crud_model->next_cashbook_date());
+?>
+
 <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-primary" data-collapsed="0">
@@ -23,7 +27,7 @@
 						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
                         
 						<div class="col-sm-6">
-							<input type="text" class="form-control datepicker" data-format="yyyy-mm-dd" readonly="readonly" name="t_date" data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>" autofocus>
+							<input type="text" id="t_date" data-start-date="<?php echo $this->crud_model->next_cashbook_date()->start_date;?>" data-end-date="<?php echo $this->crud_model->next_cashbook_date()->end_date;?>" class="form-control datepicker" data-format="yyyy-mm-dd" readonly="readonly" name="t_date" data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>" autofocus>
 						</div>
 					</div>
 					
@@ -80,7 +84,6 @@
 </div>
 
 <script>
-
 
 
 	$('#add_row').click(function(){

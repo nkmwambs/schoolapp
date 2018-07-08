@@ -642,7 +642,7 @@ class Finance extends CI_Controller
 			
 			
 			//Enter Income into the Cash Book
-			$data1['t_date'] = date('Y-m-d');
+			$data1['t_date'] = $this->input->post('t_date');
 			$data1['batch_number'] = $this->crud_model->populate_batch_number($this->input->post('t_date'));
 			$data1['description'] = $this->input->post('description');
 			$data1['transaction_type'] = '2';
@@ -928,6 +928,67 @@ class Finance extends CI_Controller
 		
 	}
 	
+	function reconcile($param1="",$param2=""){
+		if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');
+		
+
+        $page_data['page_name']  = 'reconcile';
+		$page_data['page_view'] = "finance";
+		$page_data["current"] = $param1;
+        $page_data['page_title'] = get_phrase('bank_reconciliation');
+        $this->load->view('backend/index', $page_data);
+	}
+	
+	function close_month($param1="",$param2=""){
+		
+		if($param1 == "create"){
+			$data['statement_amount'] = $this->input->post("statement_amount");
+			$data['month'] = date("Y-m-t",$param2);
+			
+			$msg = get_phrase('month_closed_successfully');
+			//Check if reconcile Present
+			$report = $this->db->get_where("reconcile",array("month"=>date("Y-m-t",$param2)));
+			if($report->num_rows() > 0){
+				$this->db->where(array("reconcile_id"=>$report->row()->reconcile_id));
+				$this->db->update("reconcile",$data);
+				$msg = get_phrase('month_editted_successfully');
+			}else{
+				$this->db->insert("reconcile",$data);
+			}	
+			
+						
+            $this->session->set_flashdata('flash_message' , $msg);
+            redirect(base_url() . 'index.php?finance/reconcile/'.$param2, 'refresh');	
+			
+		}
+		
+	}
+	
+	
+	function scroll_cashbook($param1=""){
+		if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');
+		
+		$t_date = date('Y-m-d',$param1);
+		
+		$month = date('m',strtotime($t_date));
+		$year = date('Y',strtotime($t_date));
+		
+		$opening_balance = $this->crud_model->opening_account_balance($t_date);
+		
+		$page_data['cash_balance'] = $opening_balance['cash_balance'];
+		$page_data['bank_balance'] = $opening_balance['bank_balance'];
+        $page_data['page_name']  = 'cash_book';
+		$page_data['page_view'] = "finance";
+        $page_data['page_title'] = get_phrase('cash_book');
+		$page_data['current'] = $t_date;
+		$page_data['transactions'] = $this->db->get_where('cashbook',array('Month(t_date)'=>$month,'Year(t_date)'=>$year))->result_object();
+        $this->load->view('backend/index', $page_data);
+		
+	}
+	
+	
 	function cash_book($param1="") {
         if ($this->session->userdata('active_login') != 1)
             redirect('login', 'refresh');
@@ -936,7 +997,28 @@ class Finance extends CI_Controller
 		
 		if($param1==="scroll") $t_date = $this->input->post('t_date'); 
 		
-		if($param1==="") $t_date = date('Y-m-01');
+		if($param1==="") {
+			
+			$t_date = date('Y-m-01');
+			
+			$reconcile = $this->db->get("reconcile");
+			
+			$cashbook = $this->db->get("cashbook");
+			
+			if($reconcile->num_rows() > 0 && $cashbook->num_rows() > 0){
+				
+				$last_reconcile_month = $this->db->select_max("month")->get("reconcile")->row()->month;
+
+				if(date("Y-m-01",strtotime($last_reconcile_month)) < $t_date ){
+					$t_date = date("Y-m-01",strtotime('+1 month',strtotime($last_reconcile_month)));
+				}
+				
+			}elseif($cashbook->num_rows() == 0){
+				$t_date = $this->db->get_where('settings',array('type'=>'system_start_date'))->row()->description;	
+			}elseif($reconcile->num_rows() === 0){
+				$t_date = $this->db->select_max("t_date")->get("cashbook")->row()->t_date;
+			}
+		}
 			
 		$month = date('m',strtotime($t_date));
 		$year = date('Y',strtotime($t_date));
