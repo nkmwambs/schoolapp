@@ -742,6 +742,26 @@ class Finance extends CI_Controller
 		
 		echo $overpay;
 	}
+
+	function income_scroll($param1=""){
+		$this->db->where(array("YEAR(t_date)"=>date("Y",$param1)));
+    	$this->db->order_by('timestamp' , 'desc');
+    	$payments = $this->db->get('payment')->result_object();
+		$data['payments'] = $payments;
+		$data['timestamp'] = $param1;
+		
+		echo $this->load->view("backend/finance/scroll_income",$data,true);
+	}
+	
+	function expense_scroll($param1=""){
+		$this->db->where(array("YEAR(t_date)"=>date("Y",$param1)));
+    	$this->db->order_by('timestamp' , 'desc');
+    	$expenses = $this->db->get('expense')->result_object();
+		$data['expenses'] = $expenses;
+		$data['timestamp'] = $param1;
+		
+		echo $this->load->view("backend/finance/scroll_expense",$data,true);
+	}
 	
 	function paid_invoice_scroll($param1=""){
 		$this->db->where(array('status' => 'paid',"yr"=>date("Y",$param1)));
