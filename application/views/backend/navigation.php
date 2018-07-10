@@ -362,17 +362,17 @@
             </a>
             <ul>
                 <li class="<?php if ($page_name == 'system_settings') echo 'active'; ?> ">
-                    <a href="<?php echo base_url(); ?>index.php?admin/system_settings">
+                    <a href="<?php echo base_url(); ?>index.php?settings/system_settings">
                         <span><i class="fa fa-cog"></i> <?php echo get_phrase('general_settings'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'sms_settings') echo 'active'; ?> ">
-                    <a href="<?php echo base_url(); ?>index.php?admin/sms_settings">
+                    <a href="<?php echo base_url(); ?>index.php?settings/sms_settings">
                         <span><i class="fa fa-mobile"></i> <?php echo get_phrase('sms_settings'); ?></span>
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'manage_language') echo 'active'; ?> ">
-                    <a href="<?php echo base_url(); ?>index.php?admin/manage_language">
+                    <a href="<?php echo base_url(); ?>index.php?settings/manage_language">
                         <span><i class="fa fa-info"></i> <?php echo get_phrase('language_settings'); ?></span>
                     </a>
                 </li>
@@ -382,7 +382,7 @@
                     </a>
                 </li>
                 <li class="<?php if ($page_name == 'crud_settings') echo 'active'; ?> ">
-                    <a href="<?php echo base_url(); ?>index.php?admin/crud_settings">
+                    <a href="<?php echo base_url(); ?>index.php?settings/crud_settings">
                         <span><i class="fa fa-flag"></i> <?php echo get_phrase('crud_settings'); ?></span>
                     </a>
                 </li>

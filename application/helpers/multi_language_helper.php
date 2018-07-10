@@ -26,10 +26,11 @@ if ( ! function_exists('get_phrase'))
 			$CI->session->set_userdata('current_language' , $current_language);
 		}
 
-
+		
 		/** insert blank phrases initially and populating the language db ***/
-		$check_phrase	=	$CI->db->get_where('language' , array('phrase' => $phrase))->row()->phrase;
-		if ( $check_phrase	!=		$phrase)
+		$check_phrase	=	$CI->db->get_where('language' , array('phrase' => $phrase));//->row()->phrase;
+		
+		if ( $check_phrase->num_rows() == 0)
 			$CI->db->insert('language' , array('phrase' => $phrase));
 			
 		

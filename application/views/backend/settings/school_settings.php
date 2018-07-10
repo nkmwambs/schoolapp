@@ -47,7 +47,7 @@
 	                                        
 	                                        <!-- DELETE -->
 	                                        <li>
-	                                            <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?admin/school_settings/delete_term/<?php echo $rows->terms_id;?>');">
+	                                            <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?settings/school_settings/delete_term/<?php echo $rows->terms_id;?>');">
 	                                                <i class="entypo-trash"></i>
 	                                                    <?php echo get_phrase('delete');?>
 	                                                </a>
@@ -176,7 +176,7 @@
 						                        
 						                        <!-- teacher DELETION LINK -->
 						                        <li>
-						                        	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?admin/income_category/delete/<?php echo $row['income_category_id'];?>');">
+						                        	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?settings/income_category/delete/<?php echo $row['income_category_id'];?>');">
 						                            	<i class="entypo-trash"></i>
 															<?php echo get_phrase('delete');?>
 						                               	</a>
@@ -256,7 +256,7 @@
 						                        
 						                        <!-- teacher DELETION LINK -->
 						                        <li>
-						                        	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?admin/expense_category/delete/<?php echo $row['expense_category_id'];?>');">
+						                        	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?settings/expense_category/delete/<?php echo $row['expense_category_id'];?>');">
 						                            	<i class="entypo-trash"></i>
 															<?php echo get_phrase('delete');?>
 						                               	</a>
@@ -333,7 +333,7 @@
 						                        
 						                        <!-- RELATIONSHIP DELETION LINK -->
 						                        <li>
-						                        	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?admin/school_settings/delete_relationship/<?php echo $row->relationship_id;?>');">
+						                        	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?settings/school_settings/delete_relationship/<?php echo $row->relationship_id;?>');">
 						                            	<i class="entypo-trash"></i>
 															<?php echo get_phrase('delete');?>
 						                               	</a>

@@ -1175,5 +1175,15 @@ class Finance extends CI_Controller
         $page_data['page_title'] = get_phrase('budget');
         $this->load->view('backend/index', $page_data);		
 	}
+
+	function validate_cheque_number($cheque_number){
+		$count = $this->db->get_where('expense',array('cheque_no'=>$cheque_number))->num_rows();
+		
+		if($count>0){
+			echo "Cheque number exists";
+		}else{
+			echo 0;
+		}
+	}
 		
 }
