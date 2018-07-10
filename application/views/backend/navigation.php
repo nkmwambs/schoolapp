@@ -309,7 +309,7 @@
 
         <!-- LIBRARY -->
         <li class="<?php if ($page_name == 'book') echo 'active'; ?> ">
-            <a href="<?php echo base_url(); ?>index.php?admin/book">
+            <a href="<?php echo base_url(); ?>index.php?Books/book">
                 <i class="entypo-book"></i>
                 <span><?php echo get_phrase('library'); ?></span>
             </a>
@@ -317,7 +317,7 @@
 
         <!-- TRANSPORT -->
         <li class="<?php if ($page_name == 'transport') echo 'active'; ?> ">
-            <a href="<?php echo base_url(); ?>index.php?admin/transport">
+            <a href="<?php echo base_url(); ?>index.php?transport/transport">
                 <i class="entypo-location"></i>
                 <span><?php echo get_phrase('transport'); ?></span>
             </a>
@@ -325,7 +325,7 @@
 
         <!-- DORMITORY -->
         <li class="<?php if ($page_name == 'dormitory') echo 'active'; ?> ">
-            <a href="<?php echo base_url(); ?>index.php?admin/dormitory">
+            <a href="<?php echo base_url(); ?>index.php?dormitory/dormitory">
                 <i class="entypo-home"></i>
                 <span><?php echo get_phrase('dormitory'); ?></span>
             </a>
@@ -333,7 +333,7 @@
 
         <!-- NOTICEBOARD -->
         <li class="<?php if ($page_name == 'noticeboard') echo 'active'; ?> ">
-            <a href="<?php echo base_url(); ?>index.php?admin/noticeboard">
+            <a href="<?php echo base_url(); ?>index.php?events/noticeboard">
                 <i class="entypo-doc-text-inv"></i>
                 <span><?php echo get_phrase('noticeboard'); ?></span>
             </a>
@@ -341,7 +341,7 @@
 
         <!-- MESSAGE -->
         <li class="<?php if ($page_name == 'message') echo 'active'; ?> ">
-            <a href="<?php echo base_url(); ?>index.php?admin/message">
+            <a href="<?php echo base_url(); ?>index.php?Messages/message">
                 <i class="entypo-mail"></i>
                 <span><?php echo get_phrase('message'); ?></span>
             </a>
