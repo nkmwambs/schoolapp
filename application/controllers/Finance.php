@@ -939,6 +939,33 @@ class Finance extends CI_Controller
         $page_data['page_title'] = get_phrase('bank_reconciliation');
         $this->load->view('backend/index', $page_data);
 	}
+
+	function clear_transactions(){
+		$table = $_POST['record_type'];
+		$record_id = $_POST["indx"];
+		$month = $_POST['month'];
+		
+		//$check current clear state
+		$record = $this->db->get_where($table,array($table."_id"=>$record_id))->row();
+		
+		$data['cleared'] = 1;
+		$data['clearedMonth'] = $month;
+		
+		if($record->cleared == '1'){
+			$data['cleared'] = 0;
+			$data['clearedMonth'] = "0000-00-00";	
+		}
+		
+		
+		$this->db->where(array($table."_id"=>$record_id));
+		$this->db->update($table,$data);
+		
+		if($this->db->affected_rows() > 0){
+			echo "Update Successful";
+		}else{
+			echo "Error Occurred";
+		}
+	}
 	
 	function close_month($param1="",$param2=""){
 		
@@ -1035,6 +1062,21 @@ class Finance extends CI_Controller
 		$page_data['transactions'] = $this->db->get_where('cashbook',array('Month(t_date)'=>$month,'Year(t_date)'=>$year))->result_object();
         $this->load->view('backend/index', $page_data); 
     }
+
+	function monthly_reconciliation($param1="",$param2=""){
+		 if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');
+			
+		if($param1 == "edit"){
+			$reconcile = $this->db->get_where("reconcile",array("reconcile_id"=>$param2))->row();
+			redirect(base_url() . 'index.php?finance/reconcile/'.strtotime($reconcile->month), 'refresh');	
+		}
+		
+        $page_data['page_name']  = 'monthly_reconciliation';
+		$page_data['page_view'] = "finance";
+        $page_data['page_title'] = get_phrase('monthly_reconciliation');
+	    $this->load->view('backend/index', $page_data); 
+	}
 	
 	function contra_entry($param1="",$param2=""){
 		
@@ -1054,6 +1096,84 @@ class Finance extends CI_Controller
 		
 		
 		//$this->cash_book($param2);
+	}
+	
+	function financial_report($param1=""){
+        if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');		
+		
+		$t_date = date('Y-m-d');
+		
+		if($param1==="scroll") $t_date = $this->input->post('t_date'); 
+		
+		if($param1==="") $t_date = date('Y-m-01');
+
+        $page_data['page_name']  = 'financial_report';
+		$page_data['current_date'] = $t_date;
+		$page_data['page_view'] = "finance";
+        $page_data['page_title'] = get_phrase('financial_report');
+        $this->load->view('backend/index', $page_data);
+	}
+	
+	public function budget($param="",$param2=""){
+        if ($this->session->userdata('active_login') != 1)
+            redirect(base_url() . 'index.php?login', 'refresh');
+		
+		if($param==='create'){
+			
+			$data['expense_category_id'] = $this->input->post('expense_category_id');
+			$data['description'] = $this->input->post('description');
+			$data['fy'] = $this->input->post('fy');
+			$data['qty'] = $this->input->post('qty');
+			$data['unitcost'] = $this->input->post('unitcost');
+			$data['often'] = $this->input->post('often');
+			$data['total'] = $this->input->post('total');
+			
+			$this->db->insert('budget',$data);
+			
+			$insert_id = $this->db->insert_id();
+			
+			$months = $this->input->post('months');
+			
+			for($i=0;$i<count($months);$i++):
+				$data2['month'] = $i+1;
+				$data2['amount'] = $months[$i];
+				$data2['budget_id'] = $insert_id;
+				
+				$this->db->insert('budget_schedule',$data2);
+			
+			endfor;
+
+			$this->session->set_flashdata('flash_message', 'Record Created');
+            redirect(base_url() . 'index.php?admin/budget/', 'refresh');
+		}
+		
+		if($param==='delete_item'){
+			
+			$this->db->where(array('budget_id'=>$param2));
+			
+			$this->db->delete('budget');
+			
+			$this->db->where(array('budget_id'=>$param2));
+			
+			$this->db->delete('budget_schedule');
+			
+			$this->session->set_flashdata('flash_message', 'Record Deleted');
+            redirect(base_url() . 'index.php?admin/budget/', 'refresh');
+		}
+		
+		if($param==='edit_item'){
+			
+		}
+		
+		$page_data['year']  = date('Y');
+		if($param==="scroll"){
+			$page_data['year']  = $param2;
+		}
+        $page_data['page_name']  = 'budget';
+		$page_data['page_view'] = 'finance';
+        $page_data['page_title'] = get_phrase('budget');
+        $this->load->view('backend/index', $page_data);		
 	}
 		
 }

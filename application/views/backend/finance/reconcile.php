@@ -5,41 +5,55 @@ $payment_method = array("1"=>"Cash","2"=>"Bank");
 $month_start = date("Y-m-d",$current);
 $month_end = date("Y-m-t",$current);
 
-$str = "(cleared = '0' OR ( t_date BETWEEN '".$month_start."' AND  '".$month_end."' ) OR (t_date < '".$month_start."' AND cleared = '1' AND clearedMonth BETWEEN '".$month_start."' AND '".$month_end."' ))";
+$str = "(cleared = '0' OR ( t_date BETWEEN '".$month_start."' AND  '".$month_end."' AND cleared = '0' ) OR (t_date < '".$month_start."' AND cleared = '1' AND clearedMonth BETWEEN '".$month_start."' AND '".$month_end."' ))";
 
-/**Deposit in Transit **/			
+$str_this_month_cleared = " cleared = '1' AND clearedMonth BETWEEN '".$month_start."' AND  '".$month_end."' ";
+
+/**Deposit in Transit Listing **/			
 $this->db->where($str);
 $this->db->where(array("method"=>"2"));
 $bank_income = $this->db->get("payment")->result_object();
 
-/** Outstanding Cheques **/	
+/**Cleared this month In Transit Listing **/
+
+$this->db->where($str_this_month_cleared);
+$this->db->where(array("method"=>"2"));
+$in_transit_cleared = $this->db->get("payment")->result_object();
+
+/** Outstanding Cheques Listing **/	
 
 //$str = "(cleared = '0' OR ( t_date BETWEEN '".$month_start."' AND  '".$month_end."' ) OR (t_date < '".$month_start."' AND cleared = '1' AND clearedMonth BETWEEN '".$month_start."' AND '".$month_end."' ))";
 $this->db->where($str);
 $this->db->where(array("method"=>"2"));
 $bank_expense = $this->db->get("expense")->result_object();
 
-/** Deposit in Transit**/
+/** Deposit in Transit in statement**/
 
 $this->db->where($str);
 $this->db->where(array("method"=>"2"));
-$deposit_in_transit = $this->db->select("SUM(amount) as amount")->get("payment")->row()->amount;
+$deposit_in_transit = 0;
+$deposit_in_transit_obj = $this->db->select("SUM(amount) as amount")->get("payment");
+if($deposit_in_transit_obj->num_rows() > 0 ) $deposit_in_transit = $deposit_in_transit_obj->row()->amount;
 
 
-/** Outstanding Cheques **/
+/** Outstanding Cheques in statement**/
 
 $this->db->where($str);
 $this->db->where(array("method"=>"2"));
-$outstanding_cheque = $this->db->select("SUM(amount) as amount")->get("expense")->row()->amount;
+$outstanding_cheque = 0;
+$outstanding_cheque_obj = $this->db->select("SUM(amount) as amount")->get("expense");
+if($outstanding_cheque_obj->num_rows() > 0) $outstanding_cheque = $outstanding_cheque_obj->row()->amount;
 
-/** Cashbook Balance **/
+/** Cashbook Balance i statement **/
 
 $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 			
 ?>
 <div class="row">
 	<div class="col-sm-12">
-		<a href="<?=base_url();?>index.php?finance/scroll_cashbook/<?=$current;?>" class="btn btn-success btn-icon"><i class="fa fa-angle-left"></i><?=get_phrase("back");?></a>
+		<a href="<?=base_url();?>index.php?finance/scroll_cashbook/<?=$current;?>" class="btn btn-success btn-icon"><i class="fa fa-angle-left"></i><?=get_phrase("cashbook");?></a>
+		
+		<a href="<?=base_url();?>index.php?finance/monthly_reconciliation" class="btn btn-success btn-icon"><i class="fa fa-angle-left"></i><?=get_phrase("reconciliation_reports");?></a>
 	</div>
 </div>
 <hr />
@@ -56,7 +70,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 				</li>
 				
 				<li class="">
-					<a href="#deposit_in_transit" data-toggle="tab">
+					<a href="#deposit_in_transit_pane" data-toggle="tab">
 						<span class="hidden-xs"><?php echo get_phrase('deposit_in_transit');?></span> 
 						<!-- <span class="badge badge-danger"><?php echo count($unpaid_invoices);?></span> -->
 					</a>
@@ -157,8 +171,8 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 				</form>				
 			</div>
 			
-			<div class="tab-pane" id="deposit_in_transit">
-				<table class="table table-striped">
+			<div class="tab-pane" id="deposit_in_transit_pane">
+				<table class="table table-striped" id="deposit_in_transit_table">
 					<thead>
 						<tr>
 							<th>Date</th>
@@ -190,7 +204,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 										$btn_label = "Unclear";
 									}
 								?>
-								<td><button class="btn btn-primary"><?=$btn_label;?></button></td>
+								<td><button class="btn btn-primary record_clear" id="<?php echo "payment_".$row->payment_id;?>"><?=$btn_label;?></button></td>
 								<td><?=$row->clearedMonth;?></td>
 							</tr>
 						<?php
@@ -200,18 +214,59 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 				</table>
 			</div>
 			
-			<div class="tab-pane" id="cleared_in_transit"></div>
-			
-			<div class="tab-pane" id="outstanding_cheques">
-				
-				<table class="table table-striped">
+			<div class="tab-pane" id="cleared_in_transit">
+				<table class="table table-striped" id="cleared_in_transit_table">
 					<thead>
 						<tr>
 							<th>Date</th>
 							<th>Batch Number</th>
 							<th>Payee</th>
 							<th>Description</th>
-							<!-- <th>Payment Type</th> -->
+							<th>Payment Type</th>
+							<th>Payment Method</th>
+							<th>Amount</th>
+							<th>Status</th>
+							<th>Change Month</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+							foreach($in_transit_cleared as $row){
+						?>	
+							<tr>
+								<td><?=$row->t_date;?></td>
+								<td><?=$row->batch_number;?></td>
+								<td><?=$row->payee;?></td>
+								<td><?=$row->description;?></td>
+								<td><?=$transaction_type[$row->payment_type];?></td>
+								<td><?=$payment_method[$row->method];?></td>
+								<td><?=$row->amount;?></td>
+								<?php
+									$btn_label = "Clear";
+									if($row->cleared == 1){
+										$btn_label = "Unclear";
+									}
+								?>
+								<td><button class="btn btn-primary record_unclear" id="<?php echo "payment_".$row->payment_id;?>"><?=$btn_label;?></button></td>
+								<td><?=$row->clearedMonth;?></td>
+							</tr>
+						<?php
+							}
+						?>
+						
+					</tbody>
+				</table>		
+			</div>
+			
+			<div class="tab-pane" id="outstanding_cheques">
+				
+				<table class="table table-striped" id="outstanding_cheques_table">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Batch Number</th>
+							<th>Payee</th>
+							<th>Description</th>
 							<th>Payment Method</th>
 							<th>Amount</th>
 							<th>Status</th>
@@ -227,7 +282,6 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 								<td><?=$row->batch_number;?></td>
 								<td><?=$row->payee;?></td>
 								<td><?=$row->description;?></td>
-								<!-- <td><?=$transaction_type[$row->payment_type];?></td> -->
 								<td><?=$payment_method[$row->method];?></td>
 								<td><?=$row->amount;?></td>
 								<?php
@@ -236,7 +290,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 										$btn_label = "Unclear";
 									}
 								?>
-								<td><button class="btn btn-primary"><?=$btn_label;?></button></td>
+								<td><button class="btn btn-primary record_clear" id="expense_<?=$row->expense_id;?>"><?=$btn_label;?></button></td>
 								<td><?=$row->clearedMonth;?></td>
 							</tr>
 						<?php
@@ -247,7 +301,24 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 				
 			</div>
 			
-			<div class="tab-pane" id="cleared_outstanding"></div>
+			<div class="tab-pane" id="cleared_outstanding">
+				<table class="table table-striped" id="cleared_outstanding_table">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Batch Number</th>
+							<th>Payee</th>
+							<th>Description</th>
+							<th>Payment Method</th>
+							<th>Amount</th>
+							<th>Status</th>
+							<th>Change Month</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>	
+			</div>
 			
 
 		</div>	
@@ -257,6 +328,60 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 
 <script>
 	$(document).ready(function(){
+		
+		/** Remove a row from deposit in transit and outstanding cheques table **/
+		
+		$(".record_clear, .record_unclear").click(function(){
+			var record_obj = $(this).attr("id").split("_");
+			var record_id = record_obj[1];
+			var record_type = record_obj[0];
+			var closest_tr = $(this).closest("tr");
+			var url = '<?=base_url();?>index.php?finance/clear_transactions';
+			var data = {"record_type":record_type,"indx":record_id,"month":'<?=date("Y-m-t",$current);?>'};
+			
+			if($(this).hasClass("record_clear")){
+				if(record_type == 'payment'){
+					$(this).html("Unclear").toggleClass("record_unclear record_clear");
+					closest_tr.clone().appendTo("#cleared_in_transit_table > tbody");
+					closest_tr.remove();
+				}else if(record_type == 'expense'){
+					$(this).html("Unclear").toggleClass("record_unclear record_clear");
+					closest_tr.clone().appendTo("#cleared_outstanding_table > tbody");
+					closest_tr.remove();
+				}
+			}else{
+				if(record_type == 'payment'){
+					$(this).html("Clear").toggleClass("record_clear record_unclear");
+					closest_tr.clone().appendTo("#deposit_in_transit_table > tbody");
+					closest_tr.remove();
+				}else if(record_type == 'expense'){
+					$(this).html("Unclear").toggleClass("record_clear record_unclear");
+					closest_tr.clone().appendTo("#outstanding_cheques_table > tbody");
+					closest_tr.remove();
+				}
+			}
+			
+			$.ajax({
+				url:url,
+				data:data,
+				type:"POST",
+				success:function(resp){
+					alert(resp);
+				},
+				error:function(){
+					alert("Error Occurred");
+				}
+			});
+		});
+		
+		
+		/** Remove arow from cleared effects to in traist or outstanding table **/
+		
+		// $(".record_unclear").click(function(){
+// 			
+		// });
+		
+		
 		
 		var outstanding = $("#outstanding_cheque").val();
 		var in_transit = $("#deposit_in_transit").val();

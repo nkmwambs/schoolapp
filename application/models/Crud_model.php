@@ -480,9 +480,9 @@ class Crud_model extends CI_Model {
 		$month_income = 0;
 		
 		foreach($detail_ids as $ids):
-			$cond = "detail_id=".$ids->detail_id." AND timestamp>=".strtotime($current_date)." AND timestamp<=".strtotime(date("Y-m-t",strtotime($current_date)))."";
+			$cond = "detail_id=".$ids->detail_id." AND t_date>=".strtotime($current_date)." AND t_date<=".strtotime(date("Y-m-t",strtotime($current_date)))."";
 			$this->db->where($cond);
-			$month_income += $this->db->select_sum('amount')->get('payment')->row()->amount;
+			$month_income += $this->db->select_sum('amount')->get('student_payment_details')->row()->amount;
 		endforeach;
 		
 		return $month_income;
@@ -493,9 +493,9 @@ class Crud_model extends CI_Model {
 		$sum_income = 0;
 		
 		foreach($detail_ids as $ids):
-			$cond = "detail_id=".$ids->detail_id." AND timestamp<".strtotime(date("Y-m-01",strtotime($current_date)))."";
+			$cond = "detail_id=".$ids->detail_id." AND t_date<".strtotime(date("Y-m-01",strtotime($current_date)))."";
 			$this->db->where($cond);
-			$sum_income += $this->db->select_sum('amount')->get('payment')->row()->amount;
+			$sum_income += $this->db->select_sum('amount')->get('student_payment_details')->row()->amount;
 		endforeach;
 		
 		return $sum_income;

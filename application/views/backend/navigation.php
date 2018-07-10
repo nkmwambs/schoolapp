@@ -244,7 +244,8 @@
 				$page_name == 'budget'||
 				$page_name == 'cash_book'||
 				$page_name == 'financial_report'||
-				$page_name == 'fees_structure'
+				$page_name == 'fees_structure' ||
+				$page_name == 'monthly_reconciliation'
 				)
                 echo 'opened active';
         ?> ">
@@ -291,6 +292,13 @@
                         <span><i class="fa fa-code"></i> <?php echo get_phrase('budget'); ?></span>
                     </a>
                 </li>
+                
+                <li class="<?php if ($page_name == 'monthly_reconciliation') echo 'active'; ?> ">
+                    <a href="<?php echo base_url(); ?>index.php?finance/monthly_reconciliation">
+                        <span><i class="fa fa-bell"></i> <?php echo get_phrase('monthly_reconciliation'); ?></span>
+                    </a>
+                </li>
+                
                 <li class="<?php if ($page_name == 'financial_report') echo 'active'; ?> ">
                     <a href="<?php echo base_url(); ?>index.php?finance/financial_report">
                         <span><i class="fa fa-filter"></i> <?php echo get_phrase('financial_report'); ?></span>
