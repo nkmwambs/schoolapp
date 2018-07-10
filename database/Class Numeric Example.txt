@@ -1,0 +1,12 @@
+Classes Numeric
+1 – Play group
+2 – KG
+3 – Pre School
+4 – Class 1
+5 – Class 2
+6 – Class 3
+7 – Class 4
+8 – Class 5 
+9 – Class 6
+10 – Class 7
+11 – Class 8

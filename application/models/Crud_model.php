@@ -612,25 +612,34 @@ class Crud_model extends CI_Model {
 	
 	function next_cashbook_date(){
 		
-		/**Get Max data in the Cash Book**/
+		//Get Cashbook Object
+		$cashbook_obj = $this->db->get("cashbook");
 		
-		$max_id = $this->db->select_max("cashbook_id")->get("cashbook")->row()->cashbook_id;
-		$last_transaction = $this->db->get_where("cashbook",array("cashbook_id"=>$max_id))->row();
-		$reconcile = $this->db->get("reconcile");
+		$system_start_date = $this->db->get_where("settings",array("type"=>"system_start_date"))->row()->description;
+		$start_date = date("Y-m-01",strtotime($system_start_date));
+		$end_date = date("Y-m-t",strtotime($system_start_date));
 		
-		$start_date = $last_transaction->t_date;
-		$end_date = date('Y-m-t',strtotime($last_transaction->t_date));
+		if($cashbook_obj->num_rows() > 0){
 		
-		if($reconcile->num_rows() > 0){
-			$last_reconcile_month = $this->db->select_max("month")->get("reconcile")->row()->month;
-			if($last_transaction->t_date < $last_reconcile_month){
-				$start_date = date("Y-m-01",strtotime('+1 month',strtotime($last_reconcile_month)));
-				$end_date = date("Y-m-t",strtotime('+1 month',strtotime($last_reconcile_month)));
+			/**Get Max data in the Cash Book**/
+			
+			$max_id = $this->db->select_max("cashbook_id")->get("cashbook")->row()->cashbook_id;
+			$last_transaction = $this->db->get_where("cashbook",array("cashbook_id"=>$max_id))->row();
+			$reconcile = $this->db->get("reconcile");
+			
+			$start_date = $last_transaction->t_date;
+			$end_date = date('Y-m-t',strtotime($last_transaction->t_date));
+			
+			if($reconcile->num_rows() > 0){
+				$last_reconcile_month = $this->db->select_max("month")->get("reconcile")->row()->month;
+				if($last_transaction->t_date < $last_reconcile_month){
+					$start_date = date("Y-m-01",strtotime('+1 month',strtotime($last_reconcile_month)));
+					$end_date = date("Y-m-t",strtotime('+1 month',strtotime($last_reconcile_month)));
+				}
+				
+				
 			}
-			
-			
 		}
-		
 		/**Derive Start and End Dates**/
 		
 		$cashbook_dates['start_date'] = $start_date;

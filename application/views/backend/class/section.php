@@ -13,7 +13,7 @@
 
 			<ul class="nav tabs-vertical">
 			<?php
-				$classes = $this->db->get('class')->result_array();
+				$classes = $this->db->order_by('name_numeric')->get('class')->result_array();
 				foreach ($classes as $row):
 			?>
 				<li class="<?php if ($row['class_id'] == $class_id) echo 'active';?>">

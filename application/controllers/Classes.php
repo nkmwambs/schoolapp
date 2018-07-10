@@ -59,7 +59,7 @@ class Classes extends CI_Controller
             $this->session->set_flashdata('flash_message' , get_phrase('data_deleted'));
             redirect(base_url() . 'index.php?classes/classes/', 'refresh');
         }
-        $page_data['classes']    = $this->db->get('class')->result_array();
+        $page_data['classes']    = $this->db->order_by("name_numeric","ASC")->get('class')->result_array();
         $page_data['page_name']  = 'class';
         $page_data['page_view'] = 'class';
         $page_data['page_title'] = get_phrase('manage_class');

@@ -22,7 +22,7 @@
 							<select name="class_id" id="class_id" class="form-control select2">
                               <option value=""><?php echo get_phrase('select');?></option>
                               <?php 
-								$class = $this->db->get('class')->result_array();
+								$class = $this->db->order_by("name_numeric")->get('class')->result_array();
 								foreach($class as $row):
 									?>
                             		<option value="<?php echo $row['class_id'];?>">

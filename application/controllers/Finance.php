@@ -743,6 +743,16 @@ class Finance extends CI_Controller
 		echo $overpay;
 	}
 	
+	function paid_invoice_scroll($param1=""){
+		$this->db->where(array('status' => 'paid',"yr"=>date("Y",$param1)));
+    	$this->db->order_by('creation_timestamp' , 'desc');
+    	$paid_invoices = $this->db->get('invoice')->result_array();
+		$data['paid_invoices'] = $paid_invoices;
+		$data['timestamp'] = $param1;
+		
+		echo $this->load->view("backend/finance/scroll_paid_invoices",$data,true);
+	}
+	
 	function student_payments($param1 = '' , $param2 = '')
     {
        if ($this->session->userdata('active_login') != 1)

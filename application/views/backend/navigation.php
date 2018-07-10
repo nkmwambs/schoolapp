@@ -72,7 +72,7 @@
                     </a>
                     <ul>
                         <?php
-                        $classes = $this->db->get('class')->result_array();
+                        $classes = $this->db->order_by("name_numeric","asc")->get('class')->result_array();
                         foreach ($classes as $row):
                             ?>
                             <li class="<?php if ($page_name == 'student_information' && $page_name == 'student_marksheet' && $class_id == $row['class_id']) echo 'active'; ?>">
