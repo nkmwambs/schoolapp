@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="col-sm-12">
 		<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_income_add/');" 
-			class="btn btn-primary pull-right">
+			class="btn btn-primary pull-right add_none_student_income">
 			<i class="entypo-plus-circled"></i>
 			<?php echo get_phrase('add_new_income');?>
 		</a> 
@@ -52,7 +52,7 @@
 							             <li class="divider"></li>
 							                        
 							             <!--Reverse Batch Link -->
-							             <li>
+							             <li class="reverse_none_student_income">
 							                 <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?finance/income/reverse/<?=$row->payment_id?>');">
 							                     <i class="fa fa-refresh"></i>
 													<?php echo get_phrase('reverse');?>

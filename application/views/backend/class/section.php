@@ -1,6 +1,6 @@
 <hr />
 <a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/section_add/');"
-	class="btn btn-primary pull-right">
+	class="btn btn-primary pull-right add_section">
     	<i class="entypo-plus-circled"></i>
 			<?php echo get_phrase('add_new_section');?>
 </a>
@@ -64,16 +64,16 @@
 		                                <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 
 		                                    <!-- EDITING LINK -->
-		                                    <li>
+		                                    <li class="edit_section">
 		                                        <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/section_edit/<?php echo $row['section_id'];?>');">
 		                                            <i class="entypo-pencil"></i>
 		                                                <?php echo get_phrase('edit');?>
 		                                            </a>
 		                                                    </li>
-		                                    <li class="divider"></li>
+		                                    <li class="divider edit_section"></li>
 
 		                                    <!-- DELETION LINK -->
-		                                    <li>
+		                                    <li class="delete_section">
 		                                        <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?classes/sections/delete/<?php echo $row['section_id'];?>');">
 		                                            <i class="entypo-trash"></i>
 		                                                <?php echo get_phrase('delete');?>

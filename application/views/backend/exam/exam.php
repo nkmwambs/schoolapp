@@ -39,21 +39,21 @@
                                 <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 
                                     <!-- EDITING LINK -->
-                                    <li>
+                                    <li class="edit_exam">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_exam/<?php echo $row['exam_id'];?>');">
                                             <i class="entypo-pencil"></i>
                                                 <?php echo get_phrase('edit');?>
                                             </a>
                                                     </li>
-                                    <li class="divider"></li>
+                                    <li class="divider edit_exam"></li>
 
                                     <!-- DELETION LINK -->
-                                    <li>
+                                    <li class="delete_exam">
                                         <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?exam/exam/delete/<?php echo $row['exam_id'];?>');">
                                             <i class="entypo-trash"></i>
                                                 <?php echo get_phrase('delete');?>
                                             </a>
-                                                    </li>
+                                     </li>
                                 </ul>
                             </div>
         					</td>
@@ -67,7 +67,7 @@
 
 			<!----CREATION FORM STARTS---->
 			<div class="tab-pane box" id="add" style="padding: 5px">
-                <div class="box-content">
+                <div class="box-content add_exam">
                 	<?php echo form_open(base_url() . 'index.php?exam/exam/create' , array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
 
                             <div class="form-group">

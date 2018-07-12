@@ -122,13 +122,13 @@
 
                                     <?php if ($bal != 0):?>
 
-                                    <li>
+                                    <li class="take_student_payment">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_take_payment/<?php echo $row['invoice_id'];?>');">
                                             <i class="entypo-bookmarks"></i>
                                                 <?php echo get_phrase('take_payment');?>
                                         </a>
                                     </li>
-                                    <li class="divider"></li>
+                                    <li class="divider take_student_payment"></li>
                                     <?php endif;?>
                                     
                                     <!-- VIEWING INVOICE LINK -->
@@ -141,16 +141,16 @@
                                     <li class="divider"></li>
                                     
                                     <!-- EDIT INVOICE LINK -->
-                                    <li>
+                                    <li class="edit_invoice">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_invoice/<?php echo $row['invoice_id'];?>');">
                                             <i class="entypo-pencil"></i>
                                                 <?php echo get_phrase('edit_invoice');?>
                                             </a>
                                                     </li>
-                                    <li class="divider"></li>
+                                    <li class="divider edit_invoice"></li>
 
                                     <!-- DELETION LINK -->
-                                    <li>
+                                    <li class="delete_or_cancel_invoice">
                                     	<?php
                                     	if($this->db->get_where("payment",array("invoice_id"=>$row['invoice_id']))->num_rows() === 0){	
                                     	?>
@@ -398,7 +398,7 @@
 						
 						<div class="col-sm-12">
 							<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_overpay_add/');" 
-							class="btn btn-primary pull-right">
+							class="btn btn-primary pull-right add_over_note">
 							<i class="entypo-plus-circled"></i>
 							<?php echo get_phrase('add_note');?>
 							</a> 
@@ -562,7 +562,7 @@
                                     <li class="divider"></li>
 
                                     <!-- Re-Claim LINK -->
-                                    <li>
+                                    <li class="reclaim_cancelled_invoice">
                                         <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?finance/invoice/reclaim/<?php echo $row['invoice_id'];?>');">
                                             <i class="entypo-reply"></i>
                                                 <?php echo get_phrase('reclaim_invoice');?>

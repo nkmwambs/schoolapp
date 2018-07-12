@@ -19,9 +19,9 @@
 	<meta name="description" content="FPS School Manager Pro - FreePhpSoftwares" />
 	<meta name="author" content="FreePhpSoftwares" />
 
-	<?php include 'crud_control.php';?>
 
 	<?php include 'includes_top.php';?>
+	<?php include 'privileges.php';?>
 
 </head>
 <body class="page-body <?php if ($skin_colour != '') echo 'skin-' . $skin_colour;?>" >

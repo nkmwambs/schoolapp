@@ -40,21 +40,21 @@
                                 <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 
                                     <!-- EDITING LINK -->
-                                    <li>
+                                    <li class="edit_subject">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_subject/<?php echo $row['subject_id'];?>');">
                                             <i class="entypo-pencil"></i>
                                                 <?php echo get_phrase('edit');?>
                                             </a>
                                                     </li>
-                                    <li class="divider"></li>
+                                    <li class="divider edit_subject"></li>
 
                                     <!-- DELETION LINK -->
-                                    <li>
+                                    <li class="delete_subject">
                                         <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?subject/subject/delete/<?php echo $row['subject_id'];?>/<?php echo $class_id;?>');">
                                             <i class="entypo-trash"></i>
                                                 <?php echo get_phrase('delete');?>
                                             </a>
-                                                    </li>
+                                     </li>
                                 </ul>
                             </div>
         					</td>
@@ -68,16 +68,16 @@
 
 			<!----CREATION FORM STARTS---->
 			<div class="tab-pane box" id="add" style="padding: 5px">
-                <div class="box-content">
+                <div class="box-content add_subject">
                 	<?php echo form_open(base_url() . 'index.php?subject/subject/create' , array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
                         <div class="padded">
-                            <div class="form-group">
+                            <div class="form-group add_subject">
                                 <label class="col-sm-3 control-label"><?php echo get_phrase('name');?></label>
                                 <div class="col-sm-5">
                                     <input type="text" class="form-control" name="name" data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>"/>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group add_subject">
                                 <label class="col-sm-3 control-label"><?php echo get_phrase('class');?></label>
                                 <div class="col-sm-5">
                                     <select name="class_id" class="form-control" style="width:100%;">
@@ -92,7 +92,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group add_subject">
                                 <label class="col-sm-3 control-label"><?php echo get_phrase('teacher');?></label>
                                 <div class="col-sm-5">
                                     <select name="teacher_id" class="form-control" style="width:100%;">
@@ -110,7 +110,7 @@
                         </div>
                         <div class="form-group">
                               <div class="col-sm-offset-3 col-sm-5">
-                                  <button type="submit" class="btn btn-info"><?php echo get_phrase('add_subject');?></button>
+                                  <button type="submit" class="btn btn-info add_subject"><?php echo get_phrase('add_subject');?></button>
                               </div>
 						   </div>
                     </form>

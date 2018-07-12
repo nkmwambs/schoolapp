@@ -33,7 +33,7 @@ $reconcile_obj = $this->db->get("reconcile");
                                     <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 
                                         <!-- EDIT -->
-                                        <li>
+                                        <li class="edit_reconciliation">
                                             <a href="<?php echo base_url();?>index.php?finance/monthly_reconciliation/edit/<?php echo $row->reconcile_id;?>">
                                                 <i class="fa fa-pencil"></i>
                                                     <?php echo get_phrase('edit');?>

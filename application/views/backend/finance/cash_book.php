@@ -9,11 +9,11 @@ if(isset($current)){
 
 <hr>
 <div class="row">
-	<div class="col-sm-2">
+	<div class="col-sm-2 add_contra_entry">
 			<button id="contra" class="btn btn-success btn-icon" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_contras');"><i class="fa fa-tasks"></i><?=get_phrase('contra_entries');?></button>
 	</div>
 	
-	<div class="col-sm-2">
+	<div class="col-sm-2 create_bank_reconciliation_statement">
 			<a href="<?=base_url();?>index.php?finance/reconcile/<?=$t_date;?>" id="reconcile" class="btn btn-success btn-icon"><i class="fa fa-book"></i><?=get_phrase('bank_reconciliation');?></a>
 	</div>	
 	

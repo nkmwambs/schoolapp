@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row show_events">
 	<div class="col-md-12">
     
     	<!------CONTROL TABS START------>
@@ -43,16 +43,16 @@
                                 <ul class="dropdown-menu dropdown-default pull-right" role="menu">
                                     
                                     <!-- EDITING LINK -->
-                                    <li>
+                                    <li class="edit_event">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_notice/<?php echo $row['notice_id'];?>');">
                                             <i class="entypo-pencil"></i>
                                                 <?php echo get_phrase('edit');?>
                                             </a>
                                                     </li>
-                                    <li class="divider"></li>
+                                    <li class="divider edit_event"></li>
                                     
                                     <!-- DELETION LINK -->
-                                    <li>
+                                    <li class="delete_event">
                                         <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?events/noticeboard/delete/<?php echo $row['notice_id'];?>');">
                                             <i class="entypo-trash"></i>
                                                 <?php echo get_phrase('delete');?>
@@ -70,7 +70,7 @@
             
             
 			<!----CREATION FORM STARTS---->
-			<div class="tab-pane box" id="add" style="padding: 5px">
+			<div class="tab-pane box add_event" id="add" style="padding: 5px">
                 <div class="box-content">
                 	<?php echo form_open(base_url() . 'index.php?events/noticeboard/create' , array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
                             <div class="form-group">

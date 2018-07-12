@@ -4,8 +4,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
 
 <hr />
 <a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/student_add/');"
-    class="btn btn-primary pull-right">
-        <i class="entypo-plus-circled"></i>
+    class="btn btn-primary pull-right student_admission" >
         <?php echo get_phrase('add_new_student');?>
 </a>
 
@@ -16,7 +15,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
 	if($new_class->num_rows() > 0 && $this->db->get_where('student',array('class_id'=>$class_id))->num_rows() > 0){
 ?>
 <a href="javascript:;" onclick="confirm_action('<?php echo base_url();?>index.php?student/student_promote/mass_promotion/<?php echo $class_id;?>');"
-    class="btn btn-primary pull-left">
+    class="btn btn-primary pull-left promote_student">
         <i class="entypo-forward"></i>
         <?php echo get_phrase('promote_students');?> : <?php echo $new_class->row()->name;?>
 <?php 
@@ -109,36 +108,36 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                         </li>
 
                                         <!-- STUDENT EDITING LINK -->
-                                        <li>
-                                            <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_student_edit/<?php echo $row['student_id'];?>');">
+                                        <li class="edit_student">
+                                            <a  href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_student_edit/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-pencil"></i>
                                                     <?php echo get_phrase('edit');?>
                                                 </a>
                                         </li>
                                         
-                                       <li class="divider"></li>
+                                       <li class="divider edit_student"></li>
 
                                         <!-- STUDENT PROMOTE LINK -->
-                                        <li>
+                                        <li class="promote_student">
                                             <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?student/student_promote/single_promotion/<?php echo $class_id;?>/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-fast-forward"></i>
                                                     <?php echo get_phrase('promote');?>
                                                 </a>
                                         </li>
                                         
-                                       <li class="divider"></li>
+                                       <li class="divider promote_student"></li>
 
                                         <!-- STUDENT DEMOTE LINK -->
-                                        <li>
+                                        <li class="demote_student">
                                             <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?student/student_promote/single_demotion/<?php echo $class_id;?>/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-fast-backward"></i>
                                                     <?php echo get_phrase('demote');?>
                                                 </a>
                                         </li>
-                                        <li class="divider"></li>
+                                        <li class="divider demote_student"></li>
 
                                         <!-- STUDENT SUSPEND LINK -->
-                                        <li>
+                                        <li class="suspend_student">
                                             <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?student/student/<?php echo $class_id;?>/delete/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-trash"></i>
                                                     <?php echo get_phrase('suspend');?>
@@ -196,7 +195,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                         <li class="divider"></li>
 
                                         <!-- STUDENT UNSUSPEND LINK -->
-                                        <li>
+                                        <li class="unsuspend_student">
                                             <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?admin/student/<?php echo $class_id;?>/unsuspend/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-cw"></i>
                                                     <?php echo get_phrase('unsuspend_');?>
@@ -262,16 +261,16 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                         </li>
 
                                         <!-- STUDENT EDITING LINK -->
-                                        <li>
+                                        <li class="edit_student">
                                             <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_student_edit/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-pencil"></i>
                                                     <?php echo get_phrase('edit');?>
                                                 </a>
                                         </li>
-                                        <li class="divider"></li>
+                                        <li class="divider edit_student"></li>
 
                                         <!-- STUDENT DELETION LINK -->
-                                        <li>
+                                        <li class="delete_student">
                                             <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?admin/student/<?php echo $class_id;?>/delete/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-trash"></i>
                                                     <?php echo get_phrase('delete');?>

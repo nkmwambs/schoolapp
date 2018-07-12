@@ -651,4 +651,19 @@ class Crud_model extends CI_Model {
 		return (object)$cashbook_dates;
 	}
 
+	/**USER PREVILEDGES**/
+	
+	function user_privilege($param1="",$privilege=""){
+		
+		$user_previledges = array();
+		$arr = $this->db->join("entitlement","entitlement.entitlement_id=access.entitlement_id")->get_where('access',array("profile_id"=>$param1))->result_object();
+			
+		foreach($arr as $row){
+			$user_previledges[] = $row->name;
+		}
+		
+		return in_array($privilege, $user_previledges) ? true : false; 
+
+	}
+
 }

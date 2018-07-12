@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="col-sm-12">
 		<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_expense_add/');" 
-			class="btn btn-primary pull-right">
+			class="btn btn-primary pull-right add_expense">
 			<i class="entypo-plus-circled"></i>
 			<?php echo get_phrase('add_new_expense');?>
 		</a> 		
@@ -54,7 +54,7 @@
 								             <li class="divider"></li>
 								                        
 								             <!--Reverse Batch Link -->
-								             <li>
+								             <li class="reverse_expense">
 								                 <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?finance/expense/reverse/<?=$row->expense_id?>');">
 								                     <i class="fa fa-refresh"></i>
 														<?php echo get_phrase('reverse');?>

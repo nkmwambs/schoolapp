@@ -124,7 +124,7 @@
                                                             	<span class="caret"></span>
                                                             </button>
 															<ul class="dropdown-menu">
-																<li>
+																<li class="edit_class_routine">
                                                                 	<a href="#collapse<?php echo $row['class_id'];?>" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_class_routine/<?php echo $row2['class_routine_id'];?>');">
                                                                     <i class="entypo-pencil"></i>
                                                                         <?php echo get_phrase('edit');?>
@@ -132,7 +132,7 @@
 		                                                         </li>
 
 		                                                         <?php if($d == date("w",strtotime($attendance_date))+1){?>
-			                                                         <li>
+			                                                         <li class="mark_routine_attended">
 	                                                                	<a href="#collapse<?php echo $row['class_id'];?>" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_class_routine_attendance/<?php echo $row2['class_routine_id'];?>/<?php echo $attendance_date;?>');">
 		                                                                    <i class="entypo-check"></i>
 		                                                                        <?php echo get_phrase('mark_attended');?>
@@ -140,7 +140,7 @@
 			                                                         </li>
 		                                                         <?php }?>
 
-		                                                         <li>
+		                                                         <li class="delete_class_routine">
 		                                                            <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?class_routine/class_routine/delete/<?php echo $row2['class_routine_id'];?>');">
 		                                                                <i class="entypo-trash"></i>
 		                                                                    <?php echo get_phrase('delete');?>
@@ -170,7 +170,7 @@
 
 			<!----CREATION FORM STARTS---->
 			<div class="tab-pane box" id="add" style="padding: 5px">
-                <div class="box-content">
+                <div class="box-content add_class_routine">
                 	<?php echo form_open(base_url() . 'index.php?class_routine/class_routine/create' , array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><?php echo get_phrase('class');?></label>

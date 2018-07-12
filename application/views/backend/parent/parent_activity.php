@@ -9,7 +9,7 @@
             </div>
 			<div class="panel-body">
 
-				<div class="btn btn-primary btn-icon" onclick="showAjaxModal('<?=base_url();?>index.php?modal/popup/modal_activity_add');"><i class="fa fa-plus-circle"></i><?=get_phrase('add_activity');?></div>
+				<div class="btn btn-primary btn-icon add_activity" onclick="showAjaxModal('<?=base_url();?>index.php?modal/popup/modal_activity_add');"><i class="fa fa-plus-circle"></i><?=get_phrase('add_activity');?></div>
 				<hr/>
 				<table class="table table-striped" id="table_export">
 					<thead>
@@ -37,23 +37,23 @@
 	                                    <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 
 	                                        <!-- STUDENT MARKSHEET LINK  -->
-	                                        <li>
+	                                        <li class="edit_activity">
 	                                            <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_activity_edit/<?php echo $activity->activity_id;?>');">
 	                                                <i class="fa fa-edit"></i>
 	                                                    <?php echo get_phrase('edit');?>
 	                                                </a>
 	                                        </li>
 
-																					<li class="divider"></li>
+											<li class="divider edit_activity"></li>
 
-	                                        <li>
+	                                        <li class="mark_targeted_participants">
 	                                            <a href="<?=base_url();?>index.php?parents/parent_add_activity/<?php echo $activity->activity_id;?>"  id="<?php echo $activity->activity_id;?>">
 	                                                <i class="fa fa-eye"></i>
 	                                                    <?php echo get_phrase('targeted_participants');?>
 	                                                </a>
 	                                        </li>
 
-	                                        <li class="divider"></li>
+	                                        <li class="divider mark_targeted_participants"></li>
 
 	                                        <li>
 	                                            <a href="#" onclick="show_attendance(this);" id="<?php echo $activity->activity_id;?>">
@@ -77,7 +77,7 @@
 
 						<div class="row">
 							<div class="col-sm-12">
-								<div class="btn btn-info pull-right" id="mark_attendance"><?=get_phrase("mark_attendance");?></div>
+								<div class="btn btn-info pull-right mark_attendance" id="mark_attendance"><?=get_phrase("mark_attendance");?></div>
 							</div>
 
 							<div class="col-sm-12">

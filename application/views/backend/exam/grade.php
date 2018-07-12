@@ -46,16 +46,16 @@
                                 <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 
                                     <!-- EDITING LINK -->
-                                    <li>
+                                    <li class="edit_grade">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_grade/<?php echo $row['grade_id'];?>');">
                                             <i class="entypo-pencil"></i>
                                                 <?php echo get_phrase('edit');?>
                                             </a>
                                                     </li>
-                                    <li class="divider"></li>
+                                    <li class="divider edit_grade"></li>
 
                                     <!-- DELETION LINK -->
-                                    <li>
+                                    <li class="delete_grade">
                                         <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?exam/grade/delete/<?php echo $row['grade_id'];?>');">
                                             <i class="entypo-trash"></i>
                                                 <?php echo get_phrase('delete');?>
@@ -74,7 +74,7 @@
 
 			<!----CREATION FORM STARTS---->
 			<div class="tab-pane box" id="add" style="padding: 5px">
-                <div class="box-content">
+                <div class="box-content  add_grade">
                 	<?php echo form_open(base_url() . 'index.php?exam/grade/create' , array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><?php echo get_phrase('name');?></label>

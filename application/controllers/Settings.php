@@ -377,4 +377,56 @@ class Settings extends CI_Controller
             redirect(base_url() . 'index.php?settings/school_settings/', 'refresh');				
 	}
 
+	function user_profiles($param1 = '' , $param2 = ''){
+        if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');
+		
+		if($param1=="create"){
+			
+			$msg = get_phrase('failure');
+				
+			$data['name'] = $this->input->post('name');
+			$data['description'] = $this->input->post('description');
+			
+			$this->db->insert("profile",$data);
+			
+			if($this->db->affected_rows() > 0){
+				$msg = get_phrase('success');
+			}
+			
+			$this->session->set_flashdata('flash_message' , $msg);
+            redirect(base_url() . 'index.php?settings/user_profiles/', 'refresh');
+		}
+		
+        $page_data['page_name']  = 'user_profiles';
+		$page_data['page_view']  = 'settings';
+        $page_data['page_title'] = get_phrase('user_profiles');
+        $this->load->view('backend/index', $page_data);			
+	}
+	
+	function entitlement($param1="",$param2=""){
+		if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');
+		
+        $page_data['page_name']  = 'entitlement';
+		$page_data['profile_id']  = $param1;
+		$page_data['page_view']  = 'settings';
+        $page_data['page_title'] = get_phrase('entitlement');
+        $this->load->view('backend/index', $page_data);
+	}
+	
+	function update_entitlement($param1="",$param2="",$param3=""){
+			
+		if($param3 === 'true'){
+			$data['entitlement_id'] = $param1;
+			$data['profile_id'] = $param2;
+			$this->db->insert("access",$data);
+		}else{
+			$this->db->where(array("entitlement_id"=>$param1,"profile_id"=>$param2));
+			$this->db->delete("access");
+		}	
+			
+		//echo "Update Successful";
+	}
+
 }	

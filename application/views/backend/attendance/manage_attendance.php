@@ -77,7 +77,7 @@
                         </select>
 
                     </td>
-                    <td align="center"><input type="submit" value="<?php echo get_phrase('manage_attendance');?>" class="btn btn-info"/></td>
+                    <td align="center"><input type="submit" value="<?php echo get_phrase('manage_attendance');?>" class="btn btn-info show_class_attendance"/></td>
                 </tr>
             </form>
 		</tbody>
@@ -107,7 +107,7 @@
                 <p><?php echo $date.'-'.$month.'-'.$year;?></p>
             </div>
             <a href="#" id="update_attendance_button" onclick="return update_attendance()"
-                class="btn btn-info">
+                class="btn btn-info update_class_attendance">
                     Update Attendance
             </a>
         </div>

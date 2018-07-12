@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row show_dormitory">
 	<div class="col-md-12">
     
     	<!--CONTROL TABS START-->
@@ -50,16 +50,16 @@
                                     <li class="divider"></li>
                                     
                                     <!-- EDITING LINK -->
-                                    <li>
+                                    <li class="edit_dormitory">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_dormitory/<?php echo $row['dormitory_id'];?>');">
                                             <i class="entypo-pencil"></i>
                                                 <?php echo get_phrase('edit');?>
                                             </a>
                                                     </li>
-                                    <li class="divider"></li>
+                                    <li class="divider edit_dormitory"></li>
                                     
                                     <!-- DELETION LINK -->
-                                    <li>
+                                    <li class="delete_dormitory">
                                         <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?dormitory/dormitory/delete/<?php echo $row['dormitory_id'];?>');">
                                             <i class="entypo-trash"></i>
                                                 <?php echo get_phrase('delete');?>
@@ -78,7 +78,7 @@
             
 			<!----CREATION FORM STARTS---->
 			<div class="tab-pane box" id="add" style="padding: 5px">
-                <div class="box-content">
+                <div class="box-content add_dormitory">
                 	<?php echo form_open(base_url() . 'index.php?dormitory/dormitory/create' , array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><?php echo get_phrase('dormitory_name');?></label>

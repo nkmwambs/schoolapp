@@ -77,7 +77,7 @@ $check_attendance = $this->db->get_where("activity_attendance",array("activity_i
 <div class="row">
 	<div class="col-sm-12">
 		<a href="<?php echo base_url();?>index.php?parents/parent_activity_attendance_print/<?php echo $record->activity_id;?>"
-						class="btn btn-primary" target="_blank">
+						class="btn btn-primary print_activty_attendance" target="_blank">
 						<?php echo get_phrase('print_activty_attendance');?>
 			</a>
 	</div>

@@ -46,7 +46,7 @@
 								             <li class="divider"></li>
 								                        
 								             <!--Reverse Batch Link -->
-								             <li>
+								             <li class="reverse_expense">
 								                 <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?finance/expense/reverse/<?=$row->expense_id?>');">
 								                     <i class="fa fa-refresh"></i>
 														<?php echo get_phrase('reverse');?>

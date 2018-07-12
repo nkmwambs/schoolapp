@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row show_books">
 	<div class="col-md-12">
     
     	<!------CONTROL TABS START------>
@@ -50,16 +50,16 @@
                                 <ul class="dropdown-menu dropdown-default pull-right" role="menu">
                                     
                                     <!-- EDITING LINK -->
-                                    <li>
+                                    <li class="edit_book">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_book/<?php echo $row['book_id'];?>');">
                                             <i class="entypo-pencil"></i>
                                                 <?php echo get_phrase('edit');?>
                                             </a>
                                                     </li>
-                                    <li class="divider"></li>
+                                    <li class="divider edit_book"></li>
                                     
                                     <!-- DELETION LINK -->
-                                    <li>
+                                    <li class="delete_book">
                                         <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?Books/book/delete/<?php echo $row['book_id'];?>');">
                                             <i class="entypo-trash"></i>
                                                 <?php echo get_phrase('delete');?>
@@ -79,7 +79,7 @@
             
 			<!----CREATION FORM STARTS---->
 			<div class="tab-pane box" id="add" style="padding: 5px">
-                <div class="box-content">
+                <div class="box-content add_book">
                 	<?php echo form_open(base_url() . 'index.php?Books/book/create' , array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><?php echo get_phrase('name');?></label>

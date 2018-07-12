@@ -21,7 +21,7 @@
 								
 		<div class="panel-body" style="overflow: auto;">
 						
-			<div class="tab-content">
+			<div class="tab-content create_budget_item">
 						
 				<div class="tab-pane" id="new-budget-item">
 					<div class="row">

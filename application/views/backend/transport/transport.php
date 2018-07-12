@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row show_transport">
 	<div class="col-md-12">
     
     	<!---CONTROL TABS START-->
@@ -52,16 +52,16 @@
                                     <li class="divider"></li>
                                     
                                     <!-- EDITING LINK -->
-                                    <li>
+                                    <li class="edit_transport">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_transport/<?php echo $row['transport_id'];?>');">
                                             <i class="entypo-pencil"></i>
                                                 <?php echo get_phrase('edit');?>
                                             </a>
                                                     </li>
-                                    <li class="divider"></li>
+                                    <li class="divider edit_transport"></li>
                                     
                                     <!-- DELETION LINK -->
-                                    <li>
+                                    <li class="delete_transport">
                                         <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?transport/transport/delete/<?php echo $row['transport_id'];?>');">
                                             <i class="entypo-trash"></i>
                                                 <?php echo get_phrase('delete');?>
@@ -80,7 +80,7 @@
             
 			<!--CREATION FORM STARTS-->
 			<div class="tab-pane box" id="add" style="padding: 5px">
-                <div class="box-content">
+                <div class="box-content add_transport">
                 	<?php echo form_open(base_url() . 'index.php?transport/transport/create' , array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><?php echo get_phrase('route_name');?></label>

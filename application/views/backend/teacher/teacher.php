@@ -1,6 +1,6 @@
 
             <a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_teacher_add/');"
-            	class="btn btn-primary pull-right">
+            	class="btn btn-primary pull-right add_teacher">
                 <i class="entypo-plus-circled"></i>
             	<?php echo get_phrase('add_new_teacher');?>
                 </a>
@@ -31,16 +31,16 @@
                                     <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 
                                         <!-- teacher EDITING LINK -->
-                                        <li>
+                                        <li class="edit_teacher">
                                         	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_teacher_edit/<?php echo $row['teacher_id'];?>');">
                                             	<i class="entypo-pencil"></i>
 													<?php echo get_phrase('edit');?>
                                                	</a>
                                         				</li>
-                                        <li class="divider"></li>
+                                        <li class="divider edit_teacher"></li>
 
                                         <!-- teacher DELETION LINK -->
-                                        <li>
+                                        <li class="delete_teacher">
                                         	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?teacher/teacher/delete/<?php echo $row['teacher_id'];?>');">
                                             	<i class="entypo-trash"></i>
 													<?php echo get_phrase('delete');?>

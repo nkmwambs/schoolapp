@@ -43,16 +43,16 @@
                                 <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 
                                     <!-- EDITING LINK -->
-                                    <li>
+                                    <li class="edit_class">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_class/<?php echo $row['class_id'];?>');">
                                             <i class="entypo-pencil"></i>
                                                 <?php echo get_phrase('edit');?>
                                             </a>
                                                     </li>
-                                    <li class="divider"></li>
+                                    <li class="divider edit_class"></li>
 
                                     <!-- DELETION LINK -->
-                                    <li>
+                                    <li class="delete_class">
                                         <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?classes/classes/delete/<?php echo $row['class_id'];?>');">
                                             <i class="entypo-trash"></i>
                                                 <?php echo get_phrase('delete');?>
@@ -73,7 +73,7 @@
 			<div class="tab-pane box" id="add" style="padding: 5px">
                 <div class="box-content">
                 	<?php echo form_open(base_url() . 'index.php?classes/classes/create' , array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
-                        <div class="padded">
+                        <div class="padded add_class">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label"><?php echo get_phrase('name');?></label>
                                 <div class="col-sm-5">
@@ -103,7 +103,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group add_class">
                               <div class="col-sm-offset-3 col-sm-5">
                                   <button type="submit" class="btn btn-info"><?php echo get_phrase('add_class');?></button>
                               </div>
