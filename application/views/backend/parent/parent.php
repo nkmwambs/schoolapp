@@ -1,6 +1,6 @@
 
             <a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_parent_add/');" 
-                class="btn btn-primary pull-right add_parent">
+                class="btn btn-primary pull-right <?=get_access_class("add_parent",$this->session->login_type,"parent")?>">
                 <i class="entypo-plus-circled"></i>
                 <?php echo get_phrase('add_new_parent');?>
                 </a> 
@@ -54,13 +54,13 @@
                                     <ul class="dropdown-menu dropdown-default pull-right" role="menu">
                                         
                                         <!-- teacher EDITING LINK -->
-                                        <li class="edit_parent">
+                                        <li class="<?=get_access_class("edit_parent",$this->session->login_type,"parent")?>">
                                             <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_parent_edit/<?php echo $row['parent_id'];?>');">
                                                 <i class="entypo-pencil"></i>
                                                     <?php echo get_phrase('edit');?>
                                                 </a>
                                         </li>
-                                        <li class="divider edit_parent"></li>
+                                        <li class="divider <?=get_access_class("edit_parent",$this->session->login_type,"parent")?>"></li>
                                         
                                         <li>
                                             <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_beneficiaries/<?php echo $row['parent_id'];?>/<?php echo $row['care_type'];?>');">
@@ -72,18 +72,18 @@
                                         
                                         <?php if($row['care_type'] === "secondary"){?>
                                         
-                                        <li class="assign_beneficiary">
+                                        <li class="<?=get_access_class("assign_beneficiary",$this->session->login_type,"parent")?>">
                                             <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_assign_beneficiaries/<?php echo $row['parent_id'];?>/<?php echo $row['care_type'];?>');">
                                                 <i class="fa fa-link"></i>
                                                     <?php echo get_phrase('assign_beneficiary');?>
                                                 </a>
                                         </li>
-                                        <li class="divider assign_beneficiary"></li>
+                                        <li class="divider <?=get_access_class("assign_beneficiary",$this->session->login_type,"parent")?>"></li>
                                         
                                         <?php }?>
                                         
                                         <!-- teacher DELETION LINK -->
-                                        <li class="delete_parent">
+                                        <li class="<?=get_access_class("delete_parent",$this->session->login_type,"parent")?>">
                                             <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?admin/parent/delete/<?php echo $row['parent_id'];?>');">
                                                 <i class="entypo-trash"></i>
                                                     <?php echo get_phrase('delete');?>

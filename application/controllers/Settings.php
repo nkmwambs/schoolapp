@@ -387,6 +387,7 @@ class Settings extends CI_Controller
 				
 			$data['name'] = $this->input->post('name');
 			$data['description'] = $this->input->post('description');
+			$data['login_type_id'] = $this->input->post('login_type_id');
 			
 			$this->db->insert("profile",$data);
 			
@@ -429,4 +430,63 @@ class Settings extends CI_Controller
 		//echo "Update Successful";
 	}
 
+	function promote_to_user($param1="",$param2=""){
+		if($param1=="teacher"){
+			$teacher = $this->db->get_where("teacher",array("teacher_id"=>$param2))->result_array();
+			extract($teacher[0]);
+			
+			$name_array = explode(" ", $name);
+			
+			$data['firstname'] = array_shift($name_array);
+			$data['lastname'] = implode(" ", $name_array);
+			$data['email'] = $email;
+			$data['password'] = "default";
+			$data['phone'] = $phone;
+			$data['login_type_id'] = $this->db->get_where("login_type",array("name"=>"teacher"))->row()->login_type_id;
+			$data['profile_id'] = 0;
+			$data['type_user_id'] = $teacher_id;
+			$data['auth'] = 1;
+			
+			$msg = get_phrase("failed");
+			
+			/**Check if exists**/
+			$exists = $this->db->get_where("user",array("email"=>$email))->num_rows();
+			if($exists == 0) {
+				$this->db->insert("user",$data);
+				$msg = get_phrase("success");
+			}
+			
+			if($param1=="admin"){
+			$admin = $this->db->get_where("admin",array("admin_id"=>$param2))->result_array();
+			extract($admin[0]);
+			
+			$name_array = explode(" ", $name);
+			
+			$data['firstname'] = array_shift($name_array);
+			$data['lastname'] = implode(" ", $name_array);
+			$data['email'] = $email;
+			$data['password'] = "default";
+			$data['phone'] = $phone;
+			$data['login_type_id'] = $this->db->get_where("login_type",array("name"=>"admin"))->row()->login_type_id;
+			$data['profile_id'] = 0;
+			$data['type_user_id'] = $admin_id;
+			$data['auth'] = 1;
+			
+			$msg = get_phrase("failed");
+			
+			/**Check if exists**/
+			$exists = $this->db->get_where("user",array("email"=>$email))->num_rows();
+			if($exists == 0) {
+				$this->db->insert("user",$data);
+				$msg = get_phrase("success");
+			}
+						
+			$this->session->set_flashdata('flash_message' , $msg);
+            redirect(base_url() . 'index.php?admin/admin/', 'refresh');
+			
+			
+		}
+	}
+}
+	
 }	

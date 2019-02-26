@@ -327,9 +327,22 @@ class Finance extends CI_Controller
 			$this->db->update("invoice",$data);
 			
 			foreach($this->input->post('detail_amount_due') as $detail_id=>$amount_due){
+				//Check if record exists
+								
 				$this->db->where(array("detail_id"=>$detail_id,"invoice_id"=>$param2));
-				$data8['amount_due'] = $amount_due;
-				$this->db->update("invoice_details",$data8);
+				if($this->db->get('invoice_details')->num_rows() > 0){
+					$data8['amount_due'] = $amount_due;
+					$this->db->update("invoice_details",$data8);
+				}else{
+					$data8['invoice_id'] = $param2;
+					$data8['detail_id'] = $detail_id;
+					$data8['amount_due'] = $amount_due;
+					$data8['amount_paid'] = 0;
+					$data8['amount_paid'] = $amount_due;
+					$this->db->insert("invoice_details",$data8);
+				}
+				
+				
 			}
 			//exit;
 			$this->session->set_flashdata('flash_message' , get_phrase('edit_successful'));

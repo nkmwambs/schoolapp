@@ -37,8 +37,8 @@
 // The following values will probably need to be changed.
 $db['default']['dsn'] = 'mysql:host=localhost;dbname=schoolapp';
 $db['default']['hostname'] = "localhost";
-$db['default']['username'] = "root";
-$db['default']['password'] = "";
+$db['default']['username'] = "compatl8_root";
+$db['default']['password'] = "@Compassion123";
 $db['default']['database'] = "schoolapp";
 
 

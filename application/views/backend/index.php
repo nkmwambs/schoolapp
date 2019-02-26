@@ -26,9 +26,9 @@
 </head>
 <body class="page-body <?php if ($skin_colour != '') echo 'skin-' . $skin_colour;?>" >
 	<div class="page-container <?php if ($text_align == 'right-to-left') echo 'right-sidebar';?>" >
-		<?php include '/navigation.php';?>
+		<?php include 'navigation_'.$account_type.'.php';?>
 		<div class="main-content">
-
+			
 			<?php include 'header.php';?>
 
            <h3 style="">
@@ -36,7 +36,14 @@
 				<?php echo $page_title;?>
            </h3>
 
-			<?php include $page_view.'/'.$page_name.'.php';?>
+			<?php 
+					if(file_exists(APPPATH."/views/backend/".$page_view.'/'.$account_type.'/'.$page_name.'.php')){
+						include $page_view.'/'.$account_type.'/'.$page_name.'.php';
+					}else{
+						include $page_view.'/'.$page_name.'.php';
+					}
+					
+			?>
 
 			<?php include 'footer.php';?>
 
