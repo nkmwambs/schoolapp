@@ -12,7 +12,7 @@
                     	<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_admin_add/');"
 			            	class="btn btn-primary pull-right add_teacher">
 			                <i class="entypo-plus-circled"></i>
-			            	<?php echo get_phrase('add_new_admin');?>
+			            	<?php echo get_phrase('add_an_admin');?>
 			                </a>
                     	
                     	<table class="table table-striped datatable">

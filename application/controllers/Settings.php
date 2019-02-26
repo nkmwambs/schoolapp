@@ -456,7 +456,11 @@ class Settings extends CI_Controller
 				$msg = get_phrase("success");
 			}
 			
-			if($param1=="admin"){
+			$this->session->set_flashdata('flash_message' , $msg);
+            redirect(base_url() . 'index.php?teacher/teacher/', 'refresh');
+		}
+			
+		if($param1=="admin"){
 			$admin = $this->db->get_where("admin",array("admin_id"=>$param2))->result_array();
 			extract($admin[0]);
 			
@@ -480,13 +484,16 @@ class Settings extends CI_Controller
 				$this->db->insert("user",$data);
 				$msg = get_phrase("success");
 			}
-						
+			
 			$this->session->set_flashdata('flash_message' , $msg);
             redirect(base_url() . 'index.php?admin/admin/', 'refresh');
+		}	
+						
 			
 			
-		}
+			
+		
+	
 	}
-}
 	
 }	
