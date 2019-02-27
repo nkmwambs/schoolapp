@@ -184,26 +184,68 @@ class Student extends CI_Controller
           }
 
           if ($param2 == 'delete') {
-              $this->db->where('student_id', $param3);
-        $data['active'] = 0;
+             	$this->db->where('student_id', $param3);
+        		$data['active'] = 0;
 
-        $this->db->update('student',$data);
-              //$this->db->delete('student');
-              $this->session->set_flashdata('flash_message' , get_phrase('student_suspended'));
+        		$this->db->update('student',$data);
+
+              	$this->session->set_flashdata('flash_message' , get_phrase('student_suspended'));
               redirect(base_url() . 'index.php?student/student_information/' . $param1, 'refresh');
           }
 
-      if($param2==='unsuspend'){
-              $this->db->where('student_id', $param3);
-        $data['active'] = 1;
-
-        $this->db->update('student',$data);
-              //$this->db->delete('student');
-              $this->session->set_flashdata('flash_message' , get_phrase('student_reinstated'));
-              redirect(base_url() . 'index.php?student/student_information/' . $param1, 'refresh');
+      if($param2==='reinstate'){
+            
+        	$data['active'] = 1;			
+			$this->db->where('student_id', $param3);
+        	$this->db->update('student',$data);
+			
+			$data2['status'] = 0;
+			$this->db->where('student_id', $param3);
+            $this->db->update('transition_detail',$data2);
+            
+            $this->session->set_flashdata('flash_message' , get_phrase('student_reinstated'));
+            redirect(base_url() . 'index.php?student/student_information/' . $param1, 'refresh');
       }
     }
-
+	
+	function transition($param1 = '', $student_id = ""){
+		
+		$student = $this->db->get_where('student',array('student_id'=>$student_id))->row();
+		
+		$data['transition_id'] = $this->input->post('transition_id');
+		$data['transition_date'] = $this->input->post('transition_date');
+		$data['student_id'] = $student_id;//$this->input->post('student_id');
+		$data['reason'] = $this->input->post('reason');
+		
+		//Check if a transition exists
+		$transition_exists = $this->db->get_where('transition_detail',array('student_id'=>$student_id,'status'=>1));
+		
+		$msg = get_phrase('action_failed');
+		
+		if($param1 == 'add'){
+			if($transition_exists->num_rows() == 0){
+				$this->db->insert('transition_detail',$data);
+				
+				$data2['active'] = 0;
+				$this->db->where(array('student_id'=>$student_id));
+				$this->db->update('student',$data2);
+				
+				$msg = get_phrase('action_successful');
+			}
+		}
+		
+		if($param1 == 'edit'){
+			if($transition_exists->num_rows() > 0){
+				$this->db->where(array('student_id'=>$student_id));
+				$this->db->update('transition_detail',$data);
+				$msg = get_phrase('action_successful');
+			}	
+		}	
+		
+		$this->session->set_flashdata('flash_message' , $msg);
+        redirect(base_url() . 'index.php?student/student_information/' . $student->class_id, 'refresh');
+	}
+	
     function student_information($class_id = '')
     {
       if ($this->session->userdata('active_login') != 1)

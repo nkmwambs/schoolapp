@@ -39,7 +39,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
             <li>
             	<a href="#suspended" data-toggle="tab">
                     <span class="visible-xs"><i class="entypo-users"></i></span>
-                    <span class="hidden-xs"><?php echo get_phrase('suspended_students');?></span>
+                    <span class="hidden-xs"><?php echo get_phrase('transitioned_students');?></span>
                 </a>
             </li>
         <?php
@@ -138,9 +138,9 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
 
                                         <!-- STUDENT SUSPEND LINK -->
                                         <li class=" <?=get_access_class("suspend_student",$this->session->login_type,"student");?>">
-                                            <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?student/student/<?php echo $class_id;?>/delete/<?php echo $row['student_id'];?>');">
+                                            <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_transition_student/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-trash"></i>
-                                                    <?php echo get_phrase('suspend');?>
+                                                    <?php echo get_phrase('transition');?>
                                                 </a>
                                         </li>
                                     </ul>
@@ -162,21 +162,28 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                             <th width="80"><div><?php echo get_phrase('roll');?></div></th>
                             <th width="80"><div><?php echo get_phrase('photo');?></div></th>
                             <th><div><?php echo get_phrase('name');?></div></th>
-                            <th class="span3"><div><?php echo get_phrase('address');?></div></th>
-                            <th><div><?php echo get_phrase('email');?></div></th>
+                            <th class="span3"><div><?php echo get_phrase('transition_type');?></div></th>
+                            <th><div><?php echo get_phrase('transition_date');?></div></th>
+                            <th><div><?php echo get_phrase('reason');?></div></th>
                             <th><div><?php echo get_phrase('options');?></div></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                                $suspended_students   =   $this->db->get_where('student' , array('class_id'=>$class_id,"active"=>0))->result_array();
+                        <?php	
+                        		$this->db->select(array('transition.name as transition_type','roll','student.student_id',
+                        		'student.name','transition_date','reason'));
+
+                        		$this->db->join('transition_detail','transition_detail.student_id = student.student_id');
+                        		$this->db->join('transition','transition.transition_id=transition_detail.transition_id');
+                                $suspended_students   =   $this->db->get_where('student' , array('student.class_id'=>$class_id,"student.active"=>0))->result_array();
                                 foreach($suspended_students as $row):?>
                         <tr>
                             <td><?php echo $row['roll'];?></td>
                             <td><img src="<?php echo $this->crud_model->get_image_url('student',$row['student_id']);?>" class="img-circle" width="30" /></td>
                             <td><?php echo $row['name'];?></td>
-                            <td><?php echo $row['address'];?></td>
-                            <td><?php echo $row['email'];?></td>
+                            <td><?php echo ucfirst($row['transition_type']);?></td>
+                            <td><?php echo $row['transition_date'];?></td>
+                            <td><?php echo $row['reason'];?></td>
                             <td>
 
                                 <div class="btn-group">
@@ -196,9 +203,9 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
 
                                         <!-- STUDENT UNSUSPEND LINK -->
                                         <li class="unsuspend_student">
-                                            <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?admin/student/<?php echo $class_id;?>/unsuspend/<?php echo $row['student_id'];?>');">
+                                            <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?student/student/<?php echo $class_id;?>/reinstate/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-cw"></i>
-                                                    <?php echo get_phrase('unsuspend_');?>
+                                                    <?php echo get_phrase('reinstate');?>
                                                 </a>
                                         </li>
                                     </ul>
