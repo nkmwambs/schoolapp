@@ -3,6 +3,12 @@
 //$year = '2017';
 ?>
 
+<style>
+	.chk_month{
+		display:none;
+	}
+</style>
+
 <div class="row">
 	<div class="col-sm-12">
 	<div class="panel panel-primary" id="">
@@ -113,18 +119,18 @@
 											<th colspan="12"><?=get_phrase('monthly_spread');?></th>
 										</tr>
 										<tr>
-											<th><?=get_phrase('January');?></th>
-											<th><?=get_phrase('February');?></th>
-											<th><?=get_phrase('March');?></th>
-											<th><?=get_phrase('April');?></th>
-											<th><?=get_phrase('May');?></th>
-											<th><?=get_phrase('June');?></th>
-											<th><?=get_phrase('July');?></th>
-											<th><?=get_phrase('August');?></th>
-											<th><?=get_phrase('September');?></th>
-											<th><?=get_phrase('October');?></th>
-											<th><?=get_phrase('November');?></th>
-											<th><?=get_phrase('December');?></th>
+											<th><input type="checkbox" class="chk_month" id="chk_Jan" name=""/> <?=get_phrase('January');?></th>
+											<th><input type="checkbox" class="chk_month"  id="chk_Feb" name=""/> <?=get_phrase('February');?></th>
+											<th><input type="checkbox" class="chk_month"  id="chk_Mar" name=""/> <?=get_phrase('March');?></th>
+											<th><input type="checkbox" class="chk_month"  id="chk_Apr" name=""/> <?=get_phrase('April');?></th>
+											<th><input type="checkbox" class="chk_month"  id="chk_May" name=""/> <?=get_phrase('May');?></th>
+											<th><input type="checkbox" class="chk_month"  id="chk_Jun" name=""/> <?=get_phrase('June');?></th>
+											<th><input type="checkbox" class="chk_month"  id="chk_Jul" name=""/> <?=get_phrase('July');?></th>
+											<th><input type="checkbox" class="chk_month"  id="chk_Aug" name=""/> <?=get_phrase('August');?></th>
+											<th><input type="checkbox" class="chk_month"  id="chk_Sep" name=""/> <?=get_phrase('September');?></th>
+											<th><input type="checkbox" class="chk_month"  id="chk_Oct" name=""/> <?=get_phrase('October');?></th>
+											<th><input type="checkbox" class="chk_month"  id="chk_Nov" name=""/> <?=get_phrase('November');?></th>
+											<th><input type="checkbox" class="chk_month"  id="chk_Sec" name=""/> <?=get_phrase('December');?></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -437,8 +443,9 @@
 
 <script>
 	
+	
 	$(document).ready(function(){
-
+	
     $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
         localStorage.setItem('activeTab', $(e.target).attr('href'));
     });
@@ -509,13 +516,33 @@
 		
 		
 		$('#clear_spread').click(function(){
+			
+			//Show checkboxes for month selection
+			$(".chk_month").css('display','block');
+			
 			$('.spread').each(function(index){
 				$(this).val('0');
 			});
 		});
 		
 
-
+$('.chk_month').click(function(){
+	var total = $("#total").val();
+	var chk_month_selected = $('.chk_month').filter(':checked').length;
+	var monthly_spread = parseFloat(total)/parseFloat(chk_month_selected);
+	
+	$.each($('.chk_month'),function(i,el){
+		var chk_id = $(this).attr('id').split('_');
+		
+		if($(this).is(':checked')){
+			$("#"+chk_id[1]).val(monthly_spread);
+		}else{
+			$("#"+chk_id[1]).val(0);
+		}
+	});
+	
+	//alert(monthly_spread);
+});
 
 $('#frm_schedule').submit(function(ev){	
 			$('#error_msg').html();

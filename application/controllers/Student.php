@@ -121,6 +121,7 @@ class Student extends CI_Controller
               $data['dormitory_id']   = $this->input->post('dormitory_id');
               $data['transport_id']   = $this->input->post('transport_id');
               $data['roll']           = $this->input->post('roll');
+			  $data['upi_number']           = $this->input->post('upi_number');
               $this->db->insert('student', $data);
               $student_id = $this->db->insert_id();
 
