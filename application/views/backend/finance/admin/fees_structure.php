@@ -46,14 +46,21 @@ class="btn btn-primary pull-right add_fees_structure">
                         <li class="divider edit_fee_structure"></li>
                         
                         <!-- Add Fees Structure Details -->
-                         <li class="add_fee_structure_item">
+                         <!-- <li class="add_fee_structure_item">
                         	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_fees_structure_details_add/<?php echo $row['fees_id'];?>');">
                             	<i class="entypo-book-open"></i>
 									<?php echo get_phrase('add_item');?>
                                	</a>
+                        </li> -->
+                        <!-- <li class="divider add_fee_structure_item"></li> -->
+
+						<li class="add_fee_structure_item">
+                        	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_fees_structure_multi_details_add/<?php echo $row['fees_id'];?>');">
+                            	<i class="entypo-book-open"></i>
+									<?php echo get_phrase('add_items');?>
+                               	</a>
                         </li>
-                        <li class="divider add_fee_structure_item"></li>
-                        
+                        <li class="divider add_fee_structure_item"></li>                        
                         
                         <!-- VIEW FEES STRUCTURE DETAILS -->
  

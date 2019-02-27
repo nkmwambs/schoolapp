@@ -155,6 +155,26 @@ class Finance extends CI_Controller
             $this->session->set_flashdata('flash_message' , get_phrase('data_added_successfully'));
             redirect(base_url() . 'index.php?finance/fees_structure');
         }
+				
+		if($param1=='create_multiple_fields'){
+			$income_category_id = $this->input->post('income_category_id');
+			$name = $this->input->post('name');
+			$amount = $this->input->post('amount');
+			$fees_id = $param2;
+			
+			for($i=0;$i<count($income_category_id);$i++){
+				$data['income_category_id'] = $income_category_id[$i];
+				$data['name'] = $name[$i];
+				$data['amount'] = $amount[$i];
+				$data['fees_id'] = $fees_id;
+				
+				$this->db->insert('fees_structure_details',$data);
+			}
+			
+			$this->session->set_flashdata('flash_message' , get_phrase('data_created'));
+            redirect(base_url() . 'index.php?finance/fees_structure');
+		}
+		
         if ($param1 == 'edit') {
             $data['name']   =   $this->input->post('name');
 			$data['income_category_id']   =   $this->input->post('income_category_id');
