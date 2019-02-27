@@ -519,6 +519,7 @@
 			
 			//Show checkboxes for month selection
 			$(".chk_month").css('display','block');
+			//$(".chk_month").prop('checked',false);
 			
 			$('.spread').each(function(index){
 				$(this).val('0');
