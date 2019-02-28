@@ -1,3 +1,9 @@
+<style>
+	.add_row{
+		color:green;
+	}
+</style>
+
 <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-primary" data-collapsed="0">
@@ -76,7 +82,42 @@
 								?>
 							</select>
 						</div>
-					</div>                 
+					</div> 
+					
+					
+					
+					<div id="field_rows">
+						<div class="form-group">
+							<label for="" style="text-align: center;" class="control-label col-sm-4"><?=get_phrase('income_category');?></label>
+							<label for="" style="text-align: center;"  class="control-label col-sm-4"><?=get_phrase('description');?></label>
+							<label for="" style="text-align: center;"  class="control-label col-sm-4"><?=get_phrase('amount');?></label>
+						</div>
+						
+						<div class="form-group">
+							<div class="col-sm-4">
+								<select class="form-control" id="" name="income_category_id[]" >
+									<option value=""><?=get_phrase('select_category')?></option>
+									<?php
+										$income_categories = $this->db->get('income_categories')->result_object();
+										
+										foreach($income_categories as $income_category){									
+									?>
+										<option value="<?=$income_category->income_category_id;?>"><?=$income_category->name;?></option>
+									
+									<?php
+										} 
+									?>
+								</select>
+							</div>
+							<div class="col-sm-4"><input type="text" class="form-control" id="" name="category_name[]" /></div>
+							<div class="col-sm-3"><input type="number" class="form-control" id="" name="amount[]" /></div>
+							<div class="col-sm-1 add_row" onclick="javascript:add_row_event(this);" style="cursor: pointer;" title="<?=get_phrase('add_row');?>">
+								<i class="fa fa-plus-circle"></i>
+							</div>
+						</div>	
+					</div>
+					
+					                
 
                     <div class="form-group">
 						<div class="col-sm-offset-3 col-sm-5">
@@ -97,4 +138,26 @@
 		
 		$('#name').val('class_'+class_name+'_term_'+term+'_year_'+yr);
 	});
+	
+	function add_row_event(el){
+		
+		if($(el).hasClass('add_row')){
+			//Clone form_group
+			var form_field = $(el).parent().clone();
+			form_field.find('input,select').val('');
+			//Append to the field_rows div
+			form_field.appendTo('#field_rows');
+			
+			//Remove fa fa-plus-circle from prvious row
+			$(el).toggleClass('add_row remove_row');
+			$(el).css('color','red');
+			$(el).prop('title','<?=get_phrase('Remove Row');?>');
+			$(el).html('<i class="fa fa-minus-circle"></i>');
+		}else{
+			$(el).parent().remove();
+		}
+		
+		
+		
+	}
 </script>

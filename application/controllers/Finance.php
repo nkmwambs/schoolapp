@@ -45,6 +45,23 @@ class Finance extends CI_Controller
 			
 			if($chk===0){
 				$this->db->insert('fees_structure' , $data);
+				
+				if($this->input->post('income_category_id')){
+					$income_category_id = $this->input->post('income_category_id');
+					$name = $this->input->post('category_name');
+					$amount = $this->input->post('amount');
+					$fees_id = $this->db->insert_id();
+					
+					for($i=0;$i<count($income_category_id);$i++){
+						$data2['income_category_id'] = $income_category_id[$i];
+						$data2['name'] = $name[$i];
+						$data2['amount'] = $amount[$i];
+						$data2['fees_id'] = $fees_id;
+						
+						$this->db->insert('fees_structure_details',$data2);
+					}			
+				}
+		    	
             	$this->session->set_flashdata('flash_message' , get_phrase('data_added_successfully'));	
 			}else{
 				$this->session->set_flashdata('flash_message' , get_phrase('record_already_exists'));
