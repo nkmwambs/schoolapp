@@ -334,12 +334,14 @@ class Settings extends CI_Controller
 		
         if ($param1 == 'create') {
             $data['name']   =   $this->input->post('name');
+			$data['opening_balance']   =   $this->input->post('opening_balance');
             $this->db->insert('income_categories' , $data);
             $this->session->set_flashdata('flash_message' , get_phrase('data_added_successfully'));
             redirect(base_url() . 'index.php?settings/income_category');
         }
         if ($param1 == 'edit') {
             $data['name']   =   $this->input->post('name');
+			$data['opening_balance']   =   $this->input->post('opening_balance');
 			//$data['income_category_id'] = $this->input->post('income_category_id');
             $this->db->where('income_category_id' , $param2);
             $this->db->update('income_categories' , $data);
@@ -353,10 +355,16 @@ class Settings extends CI_Controller
             redirect(base_url() . 'index.php?settings/income_category');
         }
 
-        $page_data['page_name']  = 'income_category';
+        $page_data['page_name']  = 'school_settings';
 		$page_data['page_view']  = 'settings';
         $page_data['page_title'] = get_phrase('income_category');
         $this->load->view('backend/index', $page_data);			
+	}
+
+	function update_income_category_opening_balance($income_category_id =""){
+		$this->db->where(array('income_category_id'=>$income_category_id));
+		$data['opening_balance'] = $this->input->post('opening_balance');
+		$this->db->update('income_categories',$data);
 	}
 
 	function opening_balances($param1="",$param2=""){

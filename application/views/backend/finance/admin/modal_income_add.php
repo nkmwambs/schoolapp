@@ -1,7 +1,3 @@
-<?php
-//print_r($this->crud_model->next_cashbook_date());
-?>
-
 <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-primary" data-collapsed="0">

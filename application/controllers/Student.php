@@ -57,7 +57,7 @@ class Student extends CI_Controller
 		
 		if($param1 == "mass_promotion"){
 			
-			$this->db->where(array("class_id"=>$param2));
+			$this->db->where(array("class_id"=>$param2,'active'=>1));
 			$data['class_id'] = $new_class->row()->class_id;
 			
 			$this->db->update("student",$data);

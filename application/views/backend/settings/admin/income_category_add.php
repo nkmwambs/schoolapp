@@ -18,6 +18,14 @@
 							<input type="text" class="form-control" name="name" data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>" value="" autofocus>
 						</div>
 					</div>
+					
+					<div class="form-group">
+						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('opening_balance');?></label>
+                        
+						<div class="col-sm-6">
+							<input type="text" class="form-control" name="opening_balance" data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>" value="" autofocus>
+						</div>
+					</div>
                     
                     <div class="form-group">
 						<div class="col-sm-offset-3 col-sm-5">

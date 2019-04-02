@@ -29,7 +29,7 @@
 					<div class="well">
 						<?php 
 						
-							if(count($routine_attendance)>0){ echo count($routine_attendance). " ".get_phrase('session(s)_attended_today');
+							if($routine_attendance->num_rows() > 0){ echo $routine_attendance->num_rows(). " ".get_phrase('session(s)_attended_today');
 							}else{ echo get_phrase("no_session_attended_today"); }
 						?>	
 					</div>
@@ -44,7 +44,12 @@
                                 <div class="panel-heading">
                                 		<h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#accordion-test-2" href="#collapse<?php echo $row['class_id'];?>">
-                                        <i class="entypo-rss"></i> Class <?php echo $row['name'];?>
+                                        <?php
+                                    		$this->db->join('class_routine',"class_routine.class_routine_id=class_routine_attendance.class_routine_id");
+                                    	 	$class_routine_attendance_by_class = $this->db->get_where("class_routine_attendance",
+                                    	 		array("class_id"=>$row['class_id'],"attendance_date"=>date('Y-m-d')))->num_rows();
+                                    	?>                                      
+                                        <i class="entypo-rss"></i> Class <?php echo $row['name'];?> <span class="badge badge-primary"><?=$class_routine_attendance_by_class;?></span>
                                     </a>
                                     </h4>
                                 </div>
@@ -79,7 +84,7 @@
 																$teacher_id = $this->crud_model->get_type_name_by_id('subject',$row2['subject_id'],teacher_id);
 																
 																$color = "btn-primary";
-																foreach($routine_attendance as $attendance){
+																foreach($routine_attendance->result_object() as $attendance){
 																	if($row2['class_routine_id'] === $attendance->class_routine_id){
 																		$color = "btn-success";	
 																	}

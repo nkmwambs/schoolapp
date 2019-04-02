@@ -135,18 +135,18 @@
 									</thead>
 									<tbody>
 										<tr>
-											<td><input type="text" style="min-width: 80px;" class="form-control spread" class="months spread" name="months[]" id="Jan" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control spread" class="months spread" name="months[]" id="Feb" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control spread" class="months spread" name="months[]" id="Mar" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control spread" class="months spread" name="months[]" id="Apr" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control spread" class="months spread" name="months[]" id="May" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control spread" class="months spread" name="months[]" id="Jun" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control spread" class="months spread" name="months[]" id="Jul" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control spread" class="months spread" name="months[]" id="Aug" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control spread" class="months spread" name="months[]" id="Sep" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control spread" class="months spread" name="months[]" id="Oct" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control spread" class="months spread" name="months[]" id="Nov" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control spread" class="months spread" name="months[]" id="Dec" value="0" required="required"/></td>
+											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Jan" value="0" required="required"/></td>
+											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Feb" value="0" required="required"/></td>
+											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Mar" value="0" required="required"/></td>
+											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Apr" value="0" required="required"/></td>
+											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="May" value="0" required="required"/></td>
+											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Jun" value="0" required="required"/></td>
+											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Jul" value="0" required="required"/></td>
+											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Aug" value="0" required="required"/></td>
+											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Sep" value="0" required="required"/></td>
+											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Oct" value="0" required="required"/></td>
+											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Nov" value="0" required="required"/></td>
+											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Dec" value="0" required="required"/></td>
 										</tr>
 									</tbody>
 								</table>
@@ -158,7 +158,7 @@
 								</div>
 								
 							</div>
-							<button type="submit" class="btn btn-primary btn-icon"><i class="fa fa-plus"></i><?=get_phrase('create');?></button>
+							<button type="submit" id="create" class="btn btn-primary btn-icon"><i class="fa fa-plus"></i><?=get_phrase('create');?></button>
 							<div id="clear_spread" class="btn btn-danger btn-icon"><i class="fa fa-refresh"></i><?php echo get_phrase('clear_spread');?></div>
 						</form>
 				</div>
@@ -371,12 +371,15 @@
 				                    <ul class="dropdown-menu dropdown-default pull-left" role="menu">
 				                        <!-- Add Sub Account -->
 				                      
+				                        
+				                        
 				                        <li>
-				                        	<a href="#" id="" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_budget/<?php echo $rows->budget_id;?>');">
+				                        	<a href="#" class="edit_budget" id="editBudget_<?php echo $rows->budget_id;?>">
 				                            	<i class="entypo-pencil"></i>
 													<?php echo get_phrase('edit_');?>
 				                               	</a>
 				                        </li>
+				                        
 				                        <li class="divider"></li>
 				                        
 				                        <li>
@@ -587,6 +590,55 @@ $('#frm_schedule').submit(function(ev){
 
 		
 	
+	});
+	
+	$(".edit_budget").on('click',function(ev){
+		
+		var id = $(this).attr('id');
+		
+		var id_array = id.split("_");
+		
+		var budget_id = id_array[1];
+		
+		var url = "<?=base_url();?>index.php?finance/edit_budget/"+budget_id;
+		
+		$.ajax({
+			url:url,
+			beforeSend:function(){
+				$("overlay").css('display','block');
+			},
+			success:function(resp){
+				
+				var obj = JSON.parse(resp);
+				
+				$("#expense_category_id").val(obj[0].expense_category_id);
+				$("#description").val(obj[0].description);
+				$("#qty").val(obj[0].qty);
+				$("#fy").val(obj[0].fy);
+				$("#unitcost").val(obj[0].unitcost);
+				$("#total").val(obj[0].total);
+				$("#often").val(obj[0].often);
+				
+				var cnt = 0;
+				$.each($(".spread"),function(i,el){
+					$(this).val(obj[cnt].amount);
+					cnt++;
+				})
+				
+				$("#create").prop('id','edit');
+				$("#edit").html('<i class="fa fa-pencil"></i><?=get_phrase('edit');?>');
+				
+				$("#frm_schedule").prop('action','<?=base_url();?>index.php?finance/budget/edit_item/'+obj[0].budget_id);
+				
+				//alert($("#frm_schedule").attr('action'));
+				
+				$("overlay").css('display','none');
+			},
+			error:function(){
+				
+			}
+		});
+		
 	});
 	
 </script>

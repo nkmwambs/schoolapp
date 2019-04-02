@@ -136,7 +136,7 @@ class Class_Routine extends CI_Controller
 
       $query = "SELECT * FROM class_routine_attendance WHERE attendance_date BETWEEN '".$first_date."' AND '".$last_date."' ";
 
-      $data['routine_attendance'] = $this->db->query($query)->result_object();
+      $data['routine_attendance'] = $this->db->query($query);
       $data['attendance_date'] = $param1;
       echo $this->load->view("backend/class_routine/show_class_routine",$data,true);
     }

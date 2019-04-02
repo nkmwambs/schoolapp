@@ -66,7 +66,12 @@
                                 <div class="panel-heading">
                                 		<h4 class="panel-title">
                                     <a data-toggle="collapse" data-parent="#accordion-test-2" href="#collapse<?php echo $row['class_id'];?>">
-                                        <i class="entypo-rss"></i> Class <?php echo $row['name'];?>
+                                    	<?php
+                                    		$this->db->join('class_routine',"class_routine.class_routine_id=class_routine_attendance.class_routine_id");
+                                    	 	$class_routine_attendance_by_class = $this->db->get_where("class_routine_attendance",
+                                    	 		array("class_id"=>$row['class_id'],"attendance_date"=>date('Y-m-d')))->num_rows();
+                                    	?>
+                                        <i class="entypo-rss"></i> Class <?php echo $row['name'];?> <span class="badge badge-primary"><?=$class_routine_attendance_by_class;?></span>
                                     </a>
                                     </h4>
                                 </div>

@@ -33,8 +33,7 @@ $this->db->where($str);
 $this->db->where(array("method"=>"2"));
 $deposit_in_transit = 0;
 $deposit_in_transit_obj = $this->db->select("SUM(amount) as amount")->get("payment");
-if($deposit_in_transit_obj->num_rows() > 0 ) $deposit_in_transit = $deposit_in_transit_obj->row()->amount;
-
+if($deposit_in_transit_obj->row()) $deposit_in_transit = $deposit_in_transit_obj->row()->amount;
 
 /** Outstanding Cheques in statement**/
 
@@ -42,7 +41,7 @@ $this->db->where($str);
 $this->db->where(array("method"=>"2"));
 $outstanding_cheque = 0;
 $outstanding_cheque_obj = $this->db->select("SUM(amount) as amount")->get("expense");
-if($outstanding_cheque_obj->num_rows() > 0) $outstanding_cheque = $outstanding_cheque_obj->row()->amount;
+if($outstanding_cheque_obj->row()->amount) $outstanding_cheque = $outstanding_cheque_obj->row()->amount;
 
 /** Cashbook Balance i statement **/
 

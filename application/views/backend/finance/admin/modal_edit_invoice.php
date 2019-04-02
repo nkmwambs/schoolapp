@@ -52,7 +52,7 @@
                                 	$this->db->select(array('fees_structure_details.detail_id','fees_structure_details.name',
                                 	'fees_structure_details.amount'));
                                 	$this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
-                                	$details = $this->db->get_where("fees_structure_details",array('yr'=>2018,'class_id'=>1,'term'=>1))->result_object();
+                                	$details = $this->db->get_where("fees_structure_details",array('yr'=>$invoice->yr,'class_id'=>$invoice->class_id,'term'=>$invoice->term))->result_object();
                                 	//print_r($details);
                                 	$balance = 0;	
 									$amount_paid = 0;

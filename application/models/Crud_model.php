@@ -122,7 +122,9 @@ class Crud_model extends CI_Model {
     }
 
     //////////GRADES/////////////
-    function get_grades() {
+    function get_grades($obtained_mark="") {
+    	$string = "mark_from >= $obtained_mark OR mark_to <= $obtained_mark";
+    	$this->db->where($string);
         $query = $this->db->get('grade');
         return $query->result_array();
     }
@@ -632,9 +634,10 @@ class Crud_model extends CI_Model {
 			
 			if($reconcile->num_rows() > 0){
 				$last_reconcile_month = $this->db->select_max("month")->get("reconcile")->row()->month;
-				if($last_transaction->t_date < $last_reconcile_month){
-					$start_date = date("Y-m-01",strtotime('+1 month',strtotime($last_reconcile_month)));
-					$end_date = date("Y-m-t",strtotime('+1 month',strtotime($last_reconcile_month)));
+				if(strtotime($last_transaction->t_date) < strtotime($last_reconcile_month) || 
+				strtotime($last_transaction->t_date) == strtotime($last_reconcile_month)){
+					$start_date = date("Y-m-01",strtotime('first day of next month',strtotime($last_reconcile_month)));
+					$end_date = date("Y-m-t",strtotime('first day of next month',strtotime($last_reconcile_month)));
 				}
 				
 				

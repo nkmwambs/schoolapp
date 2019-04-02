@@ -107,3 +107,11 @@
 		</table>		
 	</div>
 </div>
+
+<div class="row">
+	<div class="col-xs-6">
+		<?php
+			//print_r($sudent_collect);
+		?>
+	</div>
+</div>

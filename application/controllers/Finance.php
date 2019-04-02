@@ -368,7 +368,13 @@ class Finance extends CI_Controller
 								
 				$this->db->where(array("detail_id"=>$detail_id,"invoice_id"=>$param2));
 				if($this->db->get('invoice_details')->num_rows() > 0){
+					
+					$this->db->where(array("detail_id"=>$detail_id,"invoice_id"=>$param2));
+					$amount_paid = $this->db->get('invoice_details')->row()->amount_paid;
+					
+					$this->db->where(array("detail_id"=>$detail_id,"invoice_id"=>$param2));
 					$data8['amount_due'] = $amount_due;
+					$data8['balance'] = $amount_due - $amount_paid;
 					$this->db->update("invoice_details",$data8);
 				}else{
 					$data8['invoice_id'] = $param2;
@@ -1178,6 +1184,38 @@ class Finance extends CI_Controller
 		//$this->cash_book($param2);
 	}
 	
+	function student_collection_tally($year = 2018,$term = 2){
+		
+		// $this->db->select(array('student.name as student','class.name as class_name','yr','term',
+		// 'income_categories.name as income_category'));
+// 		
+		$this->db->select(array('student.name as student','income_categories.name category',
+		'invoice_details.amount_due','invoice_details.amount_paid','invoice_details.balance'));
+		
+		//$this->db->select_sum('invoice_details.amount_paid');
+		
+		//$this->db->group_by(array('income_categories.name','term','yr','class_name','term'));		
+		
+		//$this->db->where(array('yr'=>$year,'term'=>$term));
+		
+		$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');
+		$this->db->join('income_categories','income_categories.income_category_id = fees_structure_details.income_category_id');
+		$this->db->join('invoice','invoice.invoice_id = invoice_details.invoice_id');
+		//$this->db->join('class','class.class_id = invoice.class_id');
+		$this->db->join('student','student.student_id = invoice.student_id');
+		$ungrouped_payments = $this->db->get('invoice_details')->result_object();
+		
+		$payments = array();
+		
+		foreach($ungrouped_payments as $row){
+			$payments[$row->student][$row->category]['due'] = $row->amount_due;
+			$payments[$row->student][$row->category]['paid'] = $row->amount_paid;
+			$payments[$row->student][$row->category]['balance'] = $row->balance;
+		}
+		
+		return $payments;
+	}
+	
 	function financial_report($param1=""){
         if ($this->session->userdata('active_login') != 1)
             redirect('login', 'refresh');		
@@ -1187,7 +1225,9 @@ class Finance extends CI_Controller
 		if($param1==="scroll") $t_date = $this->input->post('t_date'); 
 		
 		if($param1==="") $t_date = date('Y-m-01');
-
+		
+		
+		$page_data['sudent_collect'] = $this->student_collection_tally();
         $page_data['page_name']  = 'financial_report';
 		$page_data['current_date'] = $t_date;
 		$page_data['page_view'] = "finance";
@@ -1225,7 +1265,37 @@ class Finance extends CI_Controller
 			endfor;
 
 			$this->session->set_flashdata('flash_message', 'Record Created');
-            redirect(base_url() . 'index.php?admin/budget/', 'refresh');
+            redirect(base_url() . 'index.php?finance/budget/', 'refresh');
+		}
+		
+		if($param == 'edit_item'){
+			$data['expense_category_id'] = $this->input->post('expense_category_id');
+			$data['description'] = $this->input->post('description');
+			$data['fy'] = $this->input->post('fy');
+			$data['qty'] = $this->input->post('qty');
+			$data['unitcost'] = $this->input->post('unitcost');
+			$data['often'] = $this->input->post('often');
+			$data['total'] = $this->input->post('total');
+			
+			$this->db->where(array('budget_id'=>$param2));
+			
+			$this->db->update('budget',$data);
+			
+			
+			$months = $this->input->post('months');
+			
+			for($i=0;$i<count($months);$i++):
+				$month = $i+1;
+				$data2['amount'] = $months[$i];
+				
+				$this->db->where(array('month'=>$month,'budget_id'=>$param2));
+				
+				$this->db->update('budget_schedule',$data2);
+			
+			endfor;
+
+			$this->session->set_flashdata('flash_message', 'Record Edited');
+            redirect(base_url() . 'index.php?finance/budget/', 'refresh');			
 		}
 		
 		if($param==='delete_item'){
@@ -1254,6 +1324,13 @@ class Finance extends CI_Controller
 		$page_data['page_view'] = 'finance';
         $page_data['page_title'] = get_phrase('budget');
         $this->load->view('backend/index', $page_data);		
+	}
+
+	function edit_budget($budget_id = ""){
+		$this->db->select(array('budget.budget_id','expense_category_id','description','fy','qty','unitcost','often',
+		'total','budget_schedule_id','month','amount'));
+		$this->db->join('budget_schedule','budget_schedule.budget_id=budget.budget_id');
+		echo json_encode($this->db->get_where('budget',array('budget.budget_id'=>$budget_id))->result_object());
 	}
 
 	function validate_cheque_number($cheque_number){

@@ -17,12 +17,12 @@ $income = $this->db->get_where('payment',array('batch_number'=>$param2))->row();
 <hr/>
 
 <div class="row"  id="receipt_print">
-	<div class="col-md-12">
+	<div class="col-xs-12">
 		<div class="panel panel-primary" data-collapsed="0">
         	<div class="panel-heading">
             	<div class="panel-title" >
             		<i class="entypo-plus-circled"></i>
-					<?php echo get_phrase('view_batch');?>
+					<?php echo get_phrase('receipt');?> <?=get_phrase('serial')?>: <?=$income->batch_number;?>
             	</div>
             </div>
 			<div class="panel-body">
@@ -30,38 +30,28 @@ $income = $this->db->get_where('payment',array('batch_number'=>$param2))->row();
                 <?php echo form_open('' , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
 	
 					<div class="form-group">
-						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('payee');?></label>
-                        
-						<div class="col-sm-6">
-							<input type="text" class="form-control"  value="<?=$income->payee;?>" readonly="readonly"/>
-						</div>
+						<label class="col-sm-3 control-label" style="text-align:left; font-weight: bold;"><?php echo get_phrase('payee');?></label>
+                        <label class="col-sm-3 control-label" style="text-align: left;"><?=$income->payee;?></label>
+						
+					
+						<label class="col-sm-3 control-label" style="text-align:left; font-weight: bold;"><?php echo get_phrase('date');?></label>
+                        <label class="col-sm-3 control-label" style="text-align: left;"><?=date("jS F Y",strtotime($income->t_date));?></label>
+						
 					</div>
 					
 					<div class="form-group">
-						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
+						<label class="col-sm-3 control-label" style="text-align:left; font-weight: bold;"><?php echo get_phrase('method');?></label>
+                        <label class="col-sm-3 control-label" style="text-align: left;"><?=$this->db->get_where('accounts',array('accounts_id'=>$income->method))->row()->name;?></label>
                         
-						<div class="col-sm-6">
-							<input type="text" class="form-control"  readonly="readonly" value="<?=$income->t_date;?>"/>
-						</div>
-					</div>
-					
-					<div class="form-group">
-						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('description');?></label>
-                        
-						<div class="col-sm-6">
-							<input type="text" class="form-control" readonly="readonly" value="<?=$income->description;?>"/>
-						</div> 
-					</div>
-
-					<div class="form-group">
-                        <label class="col-sm-3 control-label"><?php echo get_phrase('method');?></label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" readonly="readonly" value="<?=$this->db->get_where('accounts',array('accounts_id'=>$income->method))->row()->name;?>"/>
-                        </div>
                     </div>
                     
+                    <div class="form-group">
+						<label class="col-sm-3 control-label" style="text-align:left; font-weight: bold;"><?php echo get_phrase('description');?></label>
+                        <label class="col-sm-9 control-label" style="text-align: left;"><?=$income->description;?></label>
+                     </div>   
+                    
 					
-					<table class="table table-bordered" id="tbl_details">
+					<table class="table" id="tbl_details">
 						
 							<?php
 								//$details = $this->db->get_where('income_details',array('income_id'=>$income->income_id))->result_object();
@@ -71,7 +61,7 @@ $income = $this->db->get_where('payment',array('batch_number'=>$param2))->row();
 							?>
 								<thead>
 									<tr>
-									<th><?=get_phrase('date');?></th>
+									<!-- <th><?=get_phrase('date');?></th> -->
 									<th><?=get_phrase('details');?></th>
 									<th><?=get_phrase('amount');?></th>
 								</tr>
@@ -82,8 +72,8 @@ $income = $this->db->get_where('payment',array('batch_number'=>$param2))->row();
 									foreach($details as $row){
 							?>
 									<tr>
-										<td><?=$row->t_date;?></td>
-										<td><?=$this->db->get_where("income_categories",array("income_category_id"=>$row->detail_id))->row()->name;?></td>
+										<!-- <td><?=$row->t_date;?></td> -->
+										<td><?=$this->db->get_where("fees_structure_details",array("detail_id"=>$row->detail_id))->row()->name;?></td>
 										<td><?=$row->amount;?></td>
 									</tr>
 							<?php			
@@ -92,7 +82,7 @@ $income = $this->db->get_where('payment',array('batch_number'=>$param2))->row();
 								</tbody>
 								</tbody>
 								<tfoot>
-									<tr><td><?=get_phrase('total');?></td><td colspan="2"><input readonly="readonly" type="text" class="form-control"  value="<?=$income->amount;?>"/></td></tr>
+									<tr style="font-weight: bold;"><td><?=get_phrase('total');?></td><td colspan="2"><?=$income->amount;?></td></tr>
 								</tfoot>
 						
 							<?php			
@@ -128,7 +118,7 @@ $income = $this->db->get_where('payment',array('batch_number'=>$param2))->row();
 								</tbody>
 								</tbody>
 								<tfoot>
-									<tr><td colspan="3"><?=get_phrase('total');?></td><td colspan="2"><input readonly="readonly" type="text" class="form-control"  value="<?=$income->amount;?>"/></td></tr>
+									<tr style="font-weight: bold;"><td colspan="3"><?=get_phrase('total');?></td><td colspan="2"><?=$income->amount;?></td></tr>
 								</tfoot>
 							<?php		
 								}
@@ -144,28 +134,3 @@ $income = $this->db->get_where('payment',array('batch_number'=>$param2))->row();
     </div>
 </div>
 
-<script type="text/javascript">
-
-    // print invoice function
-    function PrintElem(elem)
-    {
-        Popup($(elem).html());
-    }
-
-    function Popup(data)
-    {
-        var mywindow = window.open('', 'Receipt', 'height=400,width=600');
-        mywindow.document.write('<html><head><title>Receipt</title>');
-        mywindow.document.write('<link rel="stylesheet" href="<?php echo FCPATH;?>assets/css/neon-theme.css" type="text/css" />');
-        mywindow.document.write('<link rel="stylesheet" href="<?php echo FCPATH;?>assets/js/datatables/responsive/css/datatables.responsive.css" type="text/css" />');
-        mywindow.document.write('</head><body >');
-        mywindow.document.write(data);
-        mywindow.document.write('</body></html>');
-
-        mywindow.print();
-        mywindow.close();
-
-        return true;
-    }
-
-</script>

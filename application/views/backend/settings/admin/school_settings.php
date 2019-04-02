@@ -145,6 +145,7 @@
 						        <tr>
 						            <th><div>#</div></th>
 						            <th><div><?php echo get_phrase('name');?></div></th>
+						            <th><div><?php echo get_phrase('opening_balance');?></div></th>
 						            <th><div><?php echo get_phrase('options');?></div></th>
 						        </tr>
 						    </thead>
@@ -157,6 +158,7 @@
 						        <tr>
 						            <td><?php echo $count++;?></td>
 						            <td><?php echo $row['name'];?></td>
+						            <td><input type="text" id="openingbalance_<?=$row['income_category_id']?>" class="form-control opening_balance" value="<?php echo $row['opening_balance'];?>" /></td>
 						            <td>
 						                
 						                <div class="btn-group">
@@ -364,6 +366,20 @@
 		
 		$(".dataTables_wrapper select").select2({
 			minimumResultsForSearch: -1
+		});
+	});
+	
+	$(".opening_balance").on('change',function(){
+		var income_category_id = $(this).attr('id').split("_")[1];
+		
+		var url = "<?=base_url();?>index.php?settings/update_income_category_opening_balance/"+income_category_id;
+		
+		var data = {'opening_balance':$(this).val()};
+		
+		$.ajax({
+			url:url,
+			type:"POST",
+			data:data
 		});
 	});
 		

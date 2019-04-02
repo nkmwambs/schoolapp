@@ -111,4 +111,67 @@
 		
 		});
 	});	
-   </script> 
+
+
+	function PrintElem(elem)
+    {
+    	var string = '<div class="row">';
+    		string += '<div class="col-xs-12" style="text-align:center;">';
+    		string += '<img src="<?=base_url();?>uploads/logo.png" width="80"/>';
+    		string += '</div>';
+    		string += '<div class="col-xs-12" style="text-align:center;">';
+    		string += '<?=$this->db->get_where('settings' , array('type'=>'system_name'))->row()->description;?>';
+    		string += '</div>';
+    		string += '<div class="col-xs-12" style="text-align:center;">';
+    		string += 'P.O. Box <?=$this->db->get_where('settings' , array('type'=>'address'))->row()->description;?>';
+    		string += '</div>';
+    		string += '<div class="col-xs-12" style="text-align:center;">';
+    		string += 'Mobile Number: <?=$this->db->get_where('settings' , array('type'=>'phone'))->row()->description;?>';
+    		string += '</div>';
+    		string += '<div class="col-xs-12" style="text-align:center;">';
+    		string += 'Email: <?=$this->db->get_where('settings' , array('type'=>'system_email'))->row()->description;?>';
+    		string += '</div>';
+    		string += '</div>';
+    		string += '<hr />';
+    			
+        $(elem).printThis({ 
+		    debug: false,              
+		    importCSS: true,             
+		    importStyle: true,         
+		    printContainer: false,       
+		    loadCSS: "<?=base_url();?>assets/css/bootstrap.css", 
+		    pageTitle: "Print Report",             
+		    removeInline: false,        
+		    printDelay: 333,            
+		    header: string,             
+		    formValues: true          
+		});
+    }
+
+
+</script>
+
+<style>
+	#overlay {
+    position: fixed; /* Sit on top of the page content */
+    display: none; /* Hidden by default */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0; 
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer; /* Add a pointer on hover */
+}
+
+#overlay img{
+	display: block;
+	margin-top:25%;
+	margin-left: auto;
+    margin-right: auto;
+} 
+</style>
+
+<div id="overlay"><img src='<?php echo base_url()."uploads/preloader4.gif";?>'/></div>

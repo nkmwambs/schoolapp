@@ -4,7 +4,7 @@ $edit_data		=	$this->db->get_where('class_routine' , array('class_routine_id' =>
 <div class="tab-pane box active" id="edit" style="padding: 5px">
     <div class="box-content">
         <?php foreach($edit_data as $row):?>
-        <?php echo form_open(base_url() . 'index.php?class_routine/class_routine/do_update/'.$row['class_routine_id'] , array('class' => 'form-horizontal validatable','target'=>'_top'));?>
+        <?php echo form_open(base_url() . 'index.php?Class_Routine/class_routine/do_update/'.$row['class_routine_id'] , array('class' => 'form-horizontal validatable','target'=>'_top'));?>
                 <div class="form-group">
                     <label class="col-sm-3 control-label"><?php echo get_phrase('class');?></label>
                     <div class="col-sm-5">

@@ -181,6 +181,7 @@ class Parents extends CI_Controller
     function parent_activity_attendance_print($activity_id) {
         if ($this->session->userdata('active_login') != 1)
             redirect('login', 'refresh');
+		
         $activity     = $this->db->get_where('activity' , array('activity_id' => $activity_id))->row();
 
         $page_data['activity'] =   $activity;

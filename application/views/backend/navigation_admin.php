@@ -83,7 +83,10 @@
 						    ?>
                             <li class="<?php if ($page_name == 'student_information' && $page_name == 'student_marksheet' && $class_id == $row['class_id']) echo 'active'; ?> ">
                                 <a href="<?php echo base_url(); ?>index.php?student/student_information/<?php echo $row['class_id']; ?>">
-                                    <span><?php echo get_phrase('class'); ?> <?php echo $row['name']; ?></span>
+                                	<?php
+                                		 $students_count   =   $this->db->get_where('student' , array('class_id'=>$row['class_id'],"active"=>1))->num_rows();
+                                	?>
+                                    <span><?php echo get_phrase('class'); ?> <?php echo $row['name']; ?></span> <span class="badge badge-info"><?=$students_count;?></span>
                                 </a>
                             </li>
                         <?php endforeach; ?>
@@ -175,7 +178,7 @@
 
         <!-- CLASS ROUTINE -->
         <li class="<?php if ($page_name == 'class_routine') echo 'active'; ?> class_routine show_class_routine">
-            <a href="<?php echo base_url(); ?>index.php?class_routine/class_routine">
+            <a href="<?php echo base_url(); ?>index.php?Class_Routine/class_routine">
                 <i class="entypo-target"></i>
                 <span><?php echo get_phrase('class_routine'); ?></span>
             </a>

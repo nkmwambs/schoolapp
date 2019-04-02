@@ -6,7 +6,7 @@ $notes = "";
 if($routine_attendance->num_rows()>0){
 	$notes = $routine_attendance->row()->notes;
 }
-//echo $param2." ".$param;
+//echo $param2;
 ?>
 <div class="row">
 	<div class="col-md-12">
@@ -19,7 +19,7 @@ if($routine_attendance->num_rows()>0){
             </div>
 			<div class="panel-body">
 				
-				 <?php echo form_open(base_url() . 'index.php?admin/create_routine_attendance/'.$param2 , array("id"=>"frm_mark_routine",'class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
+				 <?php echo form_open(base_url() . 'index.php?Class_Routine/create_routine_attendance/'.$param2 , array("id"=>"frm_mark_routine",'class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
 	
 					<div class="form-group">
 						<label for="field-1" class="col-sm-4 control-label"><?php echo get_phrase('attendance_date');?></label>
@@ -67,14 +67,13 @@ if($routine_attendance->num_rows()>0){
 			return false;
 		} 
 		
-		//$("#routine_form").submit();
-		
 			var url = $("#frm_mark_routine").attr("action");
 			var data  = $("#frm_mark_routine").serializeArray();
 			
 			$.ajax({
 				url:url,
 				data:data,
+				type:"POST",
 				beforeSend:function(){
 					$('#routine_schedule').html('<div style="text-align:center;"><img style="width:60px;height:60px;" src="<?php echo base_url();?>uploads/preloader4.gif" /></div>');
 				},
@@ -86,7 +85,7 @@ if($routine_attendance->num_rows()>0){
 				}
 			});
 			
-			//ev.preventDefault();
+
 	});
 </script>
 		

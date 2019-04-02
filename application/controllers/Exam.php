@@ -186,6 +186,7 @@ class Exam extends CI_Controller
     function tabulation_sheet_print_view($class_id , $exam_id) {
         if ($this->session->userdata('active_login') != 1)
             redirect(base_url(), 'refresh');
+			
         $page_data['class_id'] = $class_id;
         $page_data['exam_id']  = $exam_id;
         $this->load->view('backend/exam/tabulation_sheet_print_view' , $page_data);
