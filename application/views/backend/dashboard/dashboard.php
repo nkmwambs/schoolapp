@@ -23,6 +23,59 @@
 
 <p></p>
 
+<div class="row">
+	<div class="col-xs-12">
+			
+		<div class="col-xs-3">
+			<div class="tile-title tile-primary">
+					
+				<div class="icon">
+					<a href="<?=base_url();?>index.php?finance/student_payments">
+						<i class="glyphicon glyphicon-leaf"></i>
+					</a>	
+				</div>
+						
+				<div class="title">
+					<h3>Take Student Payment</h3>
+					<p>shortcut to record student fees payment.</p>
+				</div>
+			</div>
+		</div>
+		
+		
+		<div class="col-xs-3">
+			<div class="tile-title tile-info">
+					
+				<div class="icon">
+					<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_income_add/');" >
+						<i class="glyphicon glyphicon-gift"></i>
+					</a>	
+				</div>
+						
+				<div class="title">
+					<h3>Take Other income</h3>
+					<p>shortcut to record other income.</p>
+				</div>
+			</div>
+		</div>
+				
+		<div class="col-xs-3">
+			<div class="tile-title tile-red">
+					
+				<div class="icon">
+					<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_expense_add/');" >
+						<i class="glyphicon glyphicon-link"></i>
+					</a>	
+				</div>
+						
+				<div class="title">
+					<h3>Record expenses</h3>
+					<p>shortcut to record expenses.</p>
+				</div>
+			</div>
+		</div>		
+	</div>
+</div>
 
 
 <p></p>
