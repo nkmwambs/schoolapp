@@ -1,4 +1,4 @@
-<p></p>
+<!-- <p></p>
 
 <div class="row">
 	<div class="col-xs-12 <?=get_access_class('show_updates',$this->session->login_type,'dasboard');?>">
@@ -19,7 +19,7 @@
 		?>
 			<div class="btn btn-block <?=$color;?>" style="text-align: center;"><?=$update_notice;?></div>
 	</div>
-</div>
+</div> -->
 
 <p></p>
 
