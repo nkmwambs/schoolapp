@@ -7,7 +7,7 @@
 |
 | For complete instructions please consult the "Database Connection"
 | page of the User Guide.
-|
+| ******************************************************************
 | -------------------------------------------------------------------
 | EXPLANATION OF VARIABLES
 | -------------------------------------------------------------------
@@ -35,11 +35,11 @@
 */
 
 // The following values will probably need to be changed.
-$db['default']['dsn'] = 'mysql:host=localhost;dbname=schoolapp';
+$db['default']['dsn'] = 'mysql:host=localhost;dbname=vinegar1_schoolapp2';
 $db['default']['hostname'] = "localhost";
-$db['default']['username'] = "compatl8_root";
+$db['default']['username'] = "vinegar1_school";
 $db['default']['password'] = "@Compassion123";
-$db['default']['database'] = "schoolapp";
+$db['default']['database'] = "vinegar1_schoolapp2";
 
 
 // The following values can probably stay the same.
