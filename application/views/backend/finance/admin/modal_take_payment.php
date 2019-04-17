@@ -103,7 +103,8 @@ $row = $edit_data[0];
 										
 										endforeach;
 									?>
-									<tr><td>Totals</td><td><?php echo number_format($tot_due,2);?></td><td><?php echo number_format($tot_paid,2);?></td><td><?php echo number_format($tot_bal,2);?></td><td><input type="text" class="form-control" name="total_payment" id="total_payment" value="0" readonly="readonly" placeholder="<?php echo get_phrase('enter_payment_amount');?>"/></td></tr>
+									<tr><td>Overpayment</td><td colspan="3"><input type="text" class="form-control overpay" name="overpayment_description" readonly="readonly" /></td><td><input type="text" onkeyup="return get_total_payment();" name="overpayment" class="form-control paying overpay" value="0" readonly="readonly"/></td></tr>
+									<tr><td>Totals</td><td><?php echo number_format($tot_due,2);?></td><td><?php echo number_format($tot_paid,2);?></td><td id="total_balance"><?php echo $tot_bal;?></td><td><input type="text" class="form-control" name="total_payment" id="total_payment" value="0" readonly="readonly" placeholder="<?php echo get_phrase('enter_payment_amount');?>"/></td></tr>
 								</tbody>
 							</table>
 		                </div>
@@ -180,6 +181,14 @@ $row = $edit_data[0];
 		});
 		
 		$('#total_payment').val(tot);
+		
+		if(parseInt(tot) == parseInt($("#total_balance").html())){
+			//alert($("#total_balance").html());
+			$(".overpay").removeAttr('readonly');	
+		}else if(parseInt(tot) < parseInt($("#total_balance").html())){
+			$(".overpay").val(0);
+			$(".overpay").prop("readonly","readonly");
+		}
 	}
 	
 	

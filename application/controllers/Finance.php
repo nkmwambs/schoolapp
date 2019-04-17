@@ -496,6 +496,19 @@ class Finance extends CI_Controller
 			$data1['amount'] = array_sum($take_payment);
             $this->db->insert('cashbook' , $data1);
 			
+			//Check if there is an overpayment
+			if($this->input->post('overpayment') > 0){
+				
+				$student_id = $this->db->get_where('invoice',array('invoice_id'=>$param2))->row()->student_id;
+				
+				$overpay['student_id'] = $student_id;
+				$overpay['amount'] = $this->input->post('overpayment');
+				$overpay['amount_due'] = $this->input->post('overpayment');
+				$overpay['description'] = $this->input->post('overpayment_description');
+				
+				$this->db->insert('overpay',$overpay);
+			}
+			
 			
 			//exit;
             $this->session->set_flashdata('flash_message' , get_phrase('payment_successfull'));
@@ -999,7 +1012,7 @@ class Finance extends CI_Controller
         $this->load->view('backend/index', $page_data); 
     }	
 
-	function check_batch_number($param1="",$table="income"){
+	function check_batch_number($param1="",$table=""){
 		$batch_obj = $this->db->get_where($table,array("batch_number"=>$param1));
 		
 		$batch_record = "";
@@ -1184,36 +1197,45 @@ class Finance extends CI_Controller
 		//$this->cash_book($param2);
 	}
 	
-	function student_collection_tally($year = 2018,$term = 2){
+	function student_collection_tally($year = "",$term = ""){
 		
 		// $this->db->select(array('student.name as student','class.name as class_name','yr','term',
 		// 'income_categories.name as income_category'));
 // 		
-		$this->db->select(array('student.name as student','income_categories.name category',
-		'invoice_details.amount_due','invoice_details.amount_paid','invoice_details.balance'));
+		$this->db->select(array('student.name as student','student.student_id as student_id','income_categories.name category',
+		'invoice_details.amount_due','invoice_details.amount_paid','invoice_details.balance','roll','class.name as class'));
 		
 		//$this->db->select_sum('invoice_details.amount_paid');
 		
 		//$this->db->group_by(array('income_categories.name','term','yr','class_name','term'));		
 		
-		//$this->db->where(array('yr'=>$year,'term'=>$term));
+		$this->db->where(array('yr'=>$year,'term'=>$term));
 		
 		$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');
 		$this->db->join('income_categories','income_categories.income_category_id = fees_structure_details.income_category_id');
 		$this->db->join('invoice','invoice.invoice_id = invoice_details.invoice_id');
-		//$this->db->join('class','class.class_id = invoice.class_id');
+		$this->db->join('class','class.class_id = invoice.class_id');
 		$this->db->join('student','student.student_id = invoice.student_id');
 		$ungrouped_payments = $this->db->get('invoice_details')->result_object();
 		
 		$payments = array();
 		
 		foreach($ungrouped_payments as $row){
-			$payments[$row->student][$row->category]['due'] = $row->amount_due;
-			$payments[$row->student][$row->category]['paid'] = $row->amount_paid;
-			$payments[$row->student][$row->category]['balance'] = $row->balance;
+			$payments[$row->student_id]['fees'][$row->category]['due'] = $row->amount_due;
+			$payments[$row->student_id]['fees'][$row->category]['paid'] = $row->amount_paid;
+			$payments[$row->student_id]['fees'][$row->category]['balance'] = $row->balance;
+			$payments[$row->student_id]['student']['name'] = $row->student;
+			$payments[$row->student_id]['student']['class'] = $row->class;
+			$payments[$row->student_id]['student']['roll'] = $row->roll;
 		}
 		
-		return $payments;
+		$page_data['payments'] = $payments;
+        $page_data['page_name']  = __FUNCTION__;
+		$page_data['current_date'] = $t_date;
+		$page_data['page_view'] = "finance";
+        $page_data['page_title'] = get_phrase(__FUNCTION__);
+        $this->load->view('backend/index', $page_data);
+
 	}
 	
 	function financial_report($param1=""){
@@ -1227,7 +1249,7 @@ class Finance extends CI_Controller
 		if($param1==="") $t_date = date('Y-m-01');
 		
 		
-		$page_data['sudent_collect'] = $this->student_collection_tally();
+		//$page_data['sudent_collect'] = $this->student_collection_tally();
         $page_data['page_name']  = 'financial_report';
 		$page_data['current_date'] = $t_date;
 		$page_data['page_view'] = "finance";

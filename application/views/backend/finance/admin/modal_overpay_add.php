@@ -88,7 +88,7 @@
 <script>
 	$("#batch_number").change(function(){
 		var batch_number = $(this).val();
-		var url = "<?=base_url();?>index.php?finance/check_batch_number/"+batch_number;
+		var url = "<?=base_url();?>index.php?finance/check_batch_number/"+batch_number+"/payment";
 		
 		$.ajax({
 			url:url,

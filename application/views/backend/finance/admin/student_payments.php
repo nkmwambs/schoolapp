@@ -25,6 +25,21 @@
     $cancelled_invoices = $this->db->get('invoice')->result_array();
 	
 ?>
+
+<hr/>
+
+<div class="row">
+	<div class="col-xs-12">
+		<a href="<?=base_url();?>index.php?finance/student_collection_tally/<?=date('Y');?>/<?=get_term_number(date('w'));?>" class="btn btn-default"> <i class="fa fa-list"></i> Payment tally sheet</a>
+		<?php
+			$count_to_notify = $this->db->get_where('invoice',array('status'=>'unpaid'))->num_rows();
+		?>
+		<div class="btn btn-default"><i class="fa fa-mobile"></i> SMS balances <span class="badge badge-primary"><?=$count_to_notify;?></span></div>
+		<div class="btn btn-default"><i class="fa fa-envelope"></i> Email balances <span class="badge badge-primary"><?=$count_to_notify;?></span></div>
+	</div>
+</div>
+
+<p></p>
 <div class="row">
 	<div class="col-md-12">
 			
@@ -394,7 +409,7 @@
 				
 				<div class="tab-pane" id="overpay_notes">
 					
-					<div class="row">
+					<!-- <div class="row">
 						
 						<div class="col-sm-12">
 							<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_overpay_add/');" 
@@ -404,7 +419,7 @@
 							</a> 
 							
 						</div>
-					</div>
+					</div> -->
 					
 					<hr/>
 					
