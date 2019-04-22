@@ -1,5 +1,6 @@
 <?php
 $class = $this->db->get_where('class' , array('class_id' => $class_id));
+
 ?>
 
 <hr />
@@ -118,6 +119,10 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                        <li class="divider <?=get_access_class("edit_student",$this->session->login_type,"student");?>"></li>
 
                                         <!-- STUDENT PROMOTE LINK -->
+                                        <?php
+										
+                                        	if($this->school_model->highest_class_numeric() !== $class_id){
+                                        ?>
                                         <li class="<?=get_access_class("promote_student",$this->session->login_type,"student");?>">
                                             <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?student/student_promote/single_promotion/<?php echo $class_id;?>/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-fast-forward"></i>
@@ -126,7 +131,12 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                         </li>
                                         
                                        <li class="divider <?=get_access_class("promote_student",$this->session->login_type,"student");?>"></li>
-
+										
+										 <?php
+											}
+											
+                                        	if($this->school_model->lowest_class_numeric() !== $class_id){
+                                        ?>
                                         <!-- STUDENT DEMOTE LINK -->
                                         <li class=" <?=get_access_class("demote_student",$this->session->login_type,"student");?>">
                                             <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?student/student_promote/single_demotion/<?php echo $class_id;?>/<?php echo $row['student_id'];?>');">
@@ -134,8 +144,12 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                                     <?php echo get_phrase('demote');?>
                                                 </a>
                                         </li>
+                                        
+                                       
                                         <li class="divider <?=get_access_class("demote_student",$this->session->login_type,"student");?>"></li>
-
+										<?php
+											}
+										?>	
                                         <!-- STUDENT SUSPEND LINK -->
                                         <li class=" <?=get_access_class("suspend_student",$this->session->login_type,"student");?>">
                                             <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_transition_student/<?php echo $row['student_id'];?>');">

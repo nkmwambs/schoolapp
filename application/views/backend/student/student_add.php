@@ -61,8 +61,8 @@
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('class');?></label>
 
 						<div class="col-sm-5">
-							<select name="class_id" class="form-control" data-validate="required" id="class_id"
-								data-message-required="<?php echo get_phrase('value_required');?>"
+							<select name="class_id" class="form-control" id="class_id"
+								data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>"
 									onchange="return get_class_sections(this.value)">
                               <option value=""><?php echo get_phrase('select');?></option>
                               <?php
@@ -93,7 +93,7 @@
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('roll');?></label>
 
 						<div class="col-sm-5">
-							<input type="text" class="form-control" name="roll" value="" >
+							<input type="text" class="form-control"  data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>"  name="roll" value="" >
 						</div>
 					</div>
 					
@@ -117,7 +117,7 @@
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('gender');?></label>
 
 						<div class="col-sm-5">
-							<select name="sex" class="form-control selectboxit">
+							<select name="sex"  class="form-control" data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>">
                               <option value=""><?php echo get_phrase('select');?></option>
                               <option value="male"><?php echo get_phrase('male');?></option>
                               <option value="female"><?php echo get_phrase('female');?></option>
