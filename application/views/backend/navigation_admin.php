@@ -272,13 +272,13 @@
                 </li>
                 <li class="<?php if ($page_name == 'student_payments') echo 'active'; ?> students_income">
                     <a href="<?php echo base_url(); ?>index.php?finance/student_payments">
-                        <span><i class="fa fa-money"></i> <?php echo get_phrase('students_income'); ?></span>
+                        <span><i class="fa fa-money"></i> <?php echo get_phrase('invoices'); ?></span>
                     </a>
                 </li>
 				
 				<li class="<?php if ($page_name == 'income') echo 'active'; ?> other_income">
                     <a href="<?php echo base_url(); ?>index.php?finance/income">
-                        <span><i class="fa fa-credit-card"></i> <?php echo get_phrase('other_income'); ?></span>
+                        <span><i class="fa fa-building-o"></i> <?php echo get_phrase('school_incomes'); ?></span>
                     </a>
                 </li>
 					

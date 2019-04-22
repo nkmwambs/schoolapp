@@ -1,3 +1,12 @@
+<hr />
+<p></p>
+<div class="row">
+	<div class="col-xs-12" style="text-align: center;font-weight: bold;font-size: 18pt;">
+		<?=get_phrase('month_expense');?>: <?=date('F Y',$month_stamp);?>
+	</div>
+</div>
+<p></p>
+
 <div class="row">
 	<div class="col-sm-12">
 		<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_expense_add/');" 
@@ -12,7 +21,7 @@
 
 <div class="row" id="expense_placeholder">
 	<div class="col-sm-1">
-		<a id="prev_year" title="<?=date('Y',strtotime("-1 Year"))?>" href="#"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>
+		<a  href="<?=base_url();?>index.php?finance/scroll_expense/<?=strtotime('first day of last month',$month_stamp);?>"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>
 	</div>
 	
 	<div class="col-sm-10">
@@ -73,7 +82,7 @@
 	</div>	
 	
 	<div class="col-sm-1">
-		<a id="next_year" title="<?=date('Y',strtotime("+1 Year"))?>" href="#"><i style="font-size: 145pt;" class="fa fa-angle-right"></i></a>
+		<a  href="<?=base_url();?>index.php?finance/scroll_income/<?=strtotime('first day of next month',$month_stamp);?>"><i style="font-size: 145pt;" class="fa fa-angle-right"></i></a>
 	</div>
 </div>
 

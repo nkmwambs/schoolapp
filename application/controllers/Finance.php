@@ -687,6 +687,20 @@ class Finance extends CI_Controller
 
 	/** Expense Management **/
 	
+	function scroll_expense($month_stamp = ""){
+        if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');		
+		
+		
+		$page_data['month_stamp']  = $month_stamp;
+		$page_data['page_name']  = 'expense';
+		$page_data['page_view'] = "finance";
+		$page_data['expenses'] = $this->db->get_where('expense',
+		array('month(t_date)'=>date('m',$month_stamp)))->result_object();
+        $page_data['page_title'] = get_phrase('expenses');
+        $this->load->view('backend/index', $page_data);
+	}
+	
 	function expense($param1 = '' , $param2 = '')
     {
         if ($this->session->userdata('active_login') != 1)
@@ -805,9 +819,11 @@ class Finance extends CI_Controller
             redirect(base_url() . 'index.php?finance/expense', 'refresh');
 		}
 
+        $page_data['month_stamp'] = strtotime($this->current_transaction_month());
         $page_data['page_name']  = 'expense';
 		$page_data['page_view'] = "finance";
-		$page_data['expenses'] = $this->db->get('expense')->result_object();
+		$page_data['expenses'] = $this->db->get_where('expense',
+		array('month(t_date)'=>date('m',strtotime($this->current_transaction_month()))))->result_object();
         $page_data['page_title'] = get_phrase('expenses');
         $this->load->view('backend/index', $page_data); 
     }
@@ -826,15 +842,7 @@ class Finance extends CI_Controller
 		echo $overpay;
 	}
 
-	function income_scroll($param1=""){
-		$this->db->where(array("YEAR(t_date)"=>date("Y",$param1)));
-    	$this->db->order_by('timestamp' , 'desc');
-    	$payments = $this->db->get('payment')->result_object();
-		$data['payments'] = $payments;
-		$data['timestamp'] = $param1;
-		
-		echo $this->load->view("backend/finance/scroll_income",$data,true);
-	}
+
 	
 	function expense_scroll($param1=""){
 		$this->db->where(array("YEAR(t_date)"=>date("Y",$param1)));
@@ -909,7 +917,29 @@ class Finance extends CI_Controller
         $page_data['invoices'] = $this->db->get_where('invoice',array('yr'=>date('Y')))->result_array();
         $this->load->view('backend/index', $page_data); 
     }
-
+	
+	// function income_scroll($param1=""){
+		// $this->db->where(array("YEAR(t_date)"=>date("Y",$param1)));
+    	// $this->db->order_by('timestamp' , 'desc');
+    	// $payments = $this->db->get('payment')->result_object();
+		// $data['payments'] = $payments;
+		// $data['timestamp'] = $param1;
+// 		
+		// echo $this->load->view("backend/finance/scroll_income",$data,true);
+	// }
+	
+	function scroll_income($month = ""){
+        if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');
+		
+		$page_data['month_stamp'] = $month;
+		$page_data['page_name']  = 'income';
+		$page_data['page_view'] = "finance";
+		$page_data['payments'] = $this->db->get_where('payment',
+		array('month(t_date)'=>date('m',$month)))->result_object();
+        $page_data['page_title'] = get_phrase('income');
+        $this->load->view('backend/index', $page_data); 			
+	}
 		
 	function income($param1 = '' , $param2 = '')
     {
@@ -1033,10 +1063,12 @@ class Finance extends CI_Controller
             $this->session->set_flashdata('flash_message' , get_phrase('record_reversed_successful'));
             redirect(base_url() . 'index.php?finance/income', 'refresh');
 		}
-
+		
+		$page_data['month_stamp'] = strtotime($this->current_transaction_month());
         $page_data['page_name']  = 'income';
 		$page_data['page_view'] = "finance";
-		$page_data['payments'] = $this->db->get('payment')->result_object();
+		$page_data['payments'] = $this->db->get_where('payment',
+		array('month(t_date)'=>date('m',strtotime($this->current_transaction_month()))))->result_object();
         $page_data['page_title'] = get_phrase('income');
         $this->load->view('backend/index', $page_data); 
     }	
