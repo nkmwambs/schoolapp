@@ -36,7 +36,7 @@
 
 <div class="row">
 	<div class="col-xs-12">
-		<a href="<?=base_url();?>index.php?finance/student_collection_tally/<?=date('Y');?>/<?=get_term_number(date('w'));?>" class="btn btn-default"> <i class="fa fa-list"></i> Payment tally sheet</a>
+		<a href="<?=base_url();?>index.php?finance/student_collection_tally/<?=date('Y');?>" class="btn btn-default"> <i class="fa fa-list"></i> Payment tally sheet</a>
 		<?php
 			$count_to_notify = $this->db->get_where('invoice',array('status'=>'unpaid'))->num_rows();
 		?>

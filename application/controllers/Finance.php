@@ -1332,21 +1332,24 @@ class Finance extends CI_Controller
 		//$this->cash_book($param2);
 	}
 	
-	function student_collection_tally($year = "",$term = "" , $filter = ""){
-			
+	function student_collection_tally($year,$filter = ""){
+		
+		$this->db->select_sum('invoice_details.amount_due');	
+		$this->db->select_sum('invoice_details.amount_paid');
+		$this->db->select_sum('invoice_details.balance');
 		$this->db->select(array('student.name as student','student.student_id as student_id','income_categories.name category',
-		'invoice_details.amount_due','invoice_details.amount_paid','invoice_details.balance','roll','class.name as class'));
-			
+		'roll','class.name as class'));
 		
-		
-		
+		$this->db->group_by('student.student_id');	
+		$this->db->group_by('income_categories.name');
+
 		
 		if($filter == 'filter'){
 			$str = " invoice.balance".$this->input->post('operator').$this->input->post('filter_amount');
 			$this->db->where($str);
-			$this->db->where(array('invoice.yr'=>$year,'invoice.term'=>$term,'invoice.status'=>'unpaid'));			
+			$this->db->where(array('yr'=>$year, 'invoice.status'=>'unpaid'));			
 		}else{
-			$this->db->where(array('yr'=>$year,'term'=>$term,'invoice.status'=>'unpaid'));
+			$this->db->where(array('yr'=>$year, 'invoice.status'=>'unpaid'));
 		}
 		
 		$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');
@@ -1373,7 +1376,7 @@ class Finance extends CI_Controller
         $page_data['page_name']  	= __FUNCTION__;
 		$page_data['current_date'] 	= $t_date;
 		$page_data['page_view'] 	= "finance";
-        $page_data['page_title'] 	= get_phrase(__FUNCTION__);
+        $page_data['page_title'] 	= get_phrase(__FUNCTION__)." (".get_phrase('unpaid_invoices').")";
         $this->load->view('backend/index', $page_data);
 
 	}
