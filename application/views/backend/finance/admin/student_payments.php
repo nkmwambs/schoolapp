@@ -121,6 +121,7 @@
                 			<th>#</th>
                     		<th><div><?php echo get_phrase('student');?></div></th>
                     		<th><div><?php echo get_phrase('year');?></div></th>
+                    		<th><div><?php echo get_phrase('term');?></div></th>
                             <th><div><?php echo get_phrase('fee_structure_total');?></div></th>
                             <th><div><?php echo get_phrase('payable_amount');?></div></th>
                             <th><div><?php echo get_phrase('balance');?></div></th>
@@ -138,6 +139,7 @@
                         	<td><?php echo $count++;?></td>
 							<td><?php echo $this->crud_model->get_type_name_by_id('student',$row['student_id']);?></td>
 							<td><?php echo $row['yr'];?></td>
+							<td><?php echo $row['term'];?></td>
 							<td><?php echo $row['amount'];?></td>
                             <td><?php echo $row['amount_due'];?></td>
                             <?php
@@ -227,6 +229,7 @@
 			                			<th>#</th>
 			                    		<th><div><?php echo get_phrase('student');?></div></th>
 			                    		<th><div><?php echo get_phrase('year');?></div></th>
+			                    		<th><div><?php echo get_phrase('term');?></div></th>
 			                            <th><div><?php echo get_phrase('fee_structure_total');?></div></th>
 			                            <th><div><?php echo get_phrase('payable_amount');?></div></th>
 			                            <th><div><?php echo get_phrase('balance');?></div></th>
@@ -246,6 +249,7 @@
 			                        	<td><?php echo $count++;?></td>
 										<td><?php echo $this->crud_model->get_type_name_by_id('student',$row3['student_id']);?></td>
 										<td><?php echo $row3['yr'];?></td>
+										<td><?php echo $row3['term'];?></td>
 										<td><?php echo $row3['amount'];?></td>
 			                            <td><?php echo $row3['amount_due'];?></td>
 			                            <?php
@@ -594,12 +598,18 @@
                                     <li class="divider"></li>
 
                                     <!-- Re-Claim LINK -->
+                                    <?php
+                                    if($row['carry_forward'] == 0){
+                                    ?>
                                     <li class="reclaim_cancelled_invoice">
                                         <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?finance/invoice/reclaim/<?php echo $row['invoice_id'];?>');">
                                             <i class="entypo-reply"></i>
                                                 <?php echo get_phrase('reclaim_invoice');?>
                                             </a>
-                                                    </li>
+                                     </li>
+                                     <?php
+									}
+                                    ?>
                                 </ul>
                             </div>
         					</td>
