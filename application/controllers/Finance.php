@@ -30,6 +30,19 @@ class Finance extends CI_Controller
 	 * Fees structure Management
 	 */
 	 
+	 function scroll_fees_structure($year = ""){
+	 	if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');
+		
+		
+		$page_data['fees'] =  $this->db->get_where('fees_structure',array('yr'=>$year))->result_array();
+		$page_data['year'] = $year;
+		$page_data['page_name']  = 'fees_structure';
+		$page_data['page_view'] = "finance";
+        $page_data['page_title'] = get_phrase('fees_structure');
+        $this->load->view('backend/index', $page_data);	
+	 }
+	 
 	 function fees_structure($param1 = '', $param2 = ''){
         if ($this->session->userdata('active_login') != 1)
             redirect('login', 'refresh');
@@ -128,6 +141,9 @@ class Finance extends CI_Controller
             $this->session->set_flashdata('flash_message' , get_phrase('data_deleted'));
             redirect(base_url() . 'index.php?finance/fees_structure');
         }
+		
+		$page_data['fees'] =  $this->db->get_where('fees_structure',array('yr'=>date('Y')))->result_array();
+		$page_data['year'] = date('Y');
 		$page_data['page_name']  = 'fees_structure';
 		$page_data['page_view'] = "finance";
         $page_data['page_title'] = get_phrase('fees_structure');

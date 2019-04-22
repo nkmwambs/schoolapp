@@ -33,7 +33,7 @@
 	                                        <select name="class_id" class="form-control get_ajax_details"  id="fees_structure_class" >
 	                                        	<option value=""><?php echo get_phrase('select_class');?></option>
 	                                        	<?php 
-	                                        		$classes = $this->db->get('class')->result_array();
+	                                        		$classes = $this->db->order_by('name_numeric')->get('class')->result_array();
 	                                        		foreach ($classes as $row):
 	                                        	?>
 	                                        	<option value="<?php echo $row['class_id'];?>"><?php echo $row['name'];?></option>
