@@ -1195,19 +1195,22 @@ class Finance extends CI_Controller
 		//$this->cash_book($param2);
 	}
 	
-	function student_collection_tally($year = "",$term = ""){
-		
-		// $this->db->select(array('student.name as student','class.name as class_name','yr','term',
-		// 'income_categories.name as income_category'));
-// 		
+	function student_collection_tally($year = "",$term = "" , $filter = ""){
+			
 		$this->db->select(array('student.name as student','student.student_id as student_id','income_categories.name category',
 		'invoice_details.amount_due','invoice_details.amount_paid','invoice_details.balance','roll','class.name as class'));
+			
 		
-		//$this->db->select_sum('invoice_details.amount_paid');
 		
-		//$this->db->group_by(array('income_categories.name','term','yr','class_name','term'));		
 		
-		$this->db->where(array('yr'=>$year,'term'=>$term));
+		
+		if($filter == 'filter'){
+			$str = " invoice.balance".$this->input->post('operator').$this->input->post('filter_amount');
+			$this->db->where($str);
+			$this->db->where(array('invoice.yr'=>$year,'invoice.term'=>$term));			
+		}else{
+			$this->db->where(array('yr'=>$year,'term'=>$term));
+		}
 		
 		$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');
 		$this->db->join('income_categories','income_categories.income_category_id = fees_structure_details.income_category_id');
@@ -1227,11 +1230,13 @@ class Finance extends CI_Controller
 			$payments[$row->student_id]['student']['roll'] = $row->roll;
 		}
 		
-		$page_data['payments'] = $payments;
-        $page_data['page_name']  = __FUNCTION__;
-		$page_data['current_date'] = $t_date;
-		$page_data['page_view'] = "finance";
-        $page_data['page_title'] = get_phrase(__FUNCTION__);
+		$page_data['year'] 			= $year;
+		$page_data['term'] 			= $term;
+		$page_data['payments'] 		= $payments;
+        $page_data['page_name']  	= __FUNCTION__;
+		$page_data['current_date'] 	= $t_date;
+		$page_data['page_view'] 	= "finance";
+        $page_data['page_title'] 	= get_phrase(__FUNCTION__);
         $this->load->view('backend/index', $page_data);
 
 	}
