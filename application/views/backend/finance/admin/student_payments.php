@@ -122,6 +122,7 @@
                     		<th><div><?php echo get_phrase('student');?></div></th>
                     		<th><div><?php echo get_phrase('year');?></div></th>
                     		<th><div><?php echo get_phrase('term');?></div></th>
+                    		<th><div><?php echo get_phrase('class');?></div></th>
                             <th><div><?php echo get_phrase('fee_structure_total');?></div></th>
                             <th><div><?php echo get_phrase('payable_amount');?></div></th>
                             <th><div><?php echo get_phrase('balance');?></div></th>
@@ -140,6 +141,7 @@
 							<td><?php echo $this->crud_model->get_type_name_by_id('student',$row['student_id']);?></td>
 							<td><?php echo $row['yr'];?></td>
 							<td><?php echo $row['term'];?></td>
+							<td><?php echo $this->crud_model->get_type_name_by_id('class',$row['class_id']);?></td>
 							<td><?php echo $row['amount'];?></td>
                             <td><?php echo $row['amount_due'];?></td>
                             <?php
@@ -230,6 +232,7 @@
 			                    		<th><div><?php echo get_phrase('student');?></div></th>
 			                    		<th><div><?php echo get_phrase('year');?></div></th>
 			                    		<th><div><?php echo get_phrase('term');?></div></th>
+			                    		<th><div><?php echo get_phrase('class');?></div></th>
 			                            <th><div><?php echo get_phrase('fee_structure_total');?></div></th>
 			                            <th><div><?php echo get_phrase('payable_amount');?></div></th>
 			                            <th><div><?php echo get_phrase('balance');?></div></th>
@@ -250,6 +253,7 @@
 										<td><?php echo $this->crud_model->get_type_name_by_id('student',$row3['student_id']);?></td>
 										<td><?php echo $row3['yr'];?></td>
 										<td><?php echo $row3['term'];?></td>
+										<td><?php echo $this->crud_model->get_type_name_by_id('class',$row['class_id']);?></td>
 										<td><?php echo $row3['amount'];?></td>
 			                            <td><?php echo $row3['amount_due'];?></td>
 			                            <?php
@@ -553,14 +557,16 @@
 					<table class="table table-bordered datatable example">
 					    <thead>
 					        <tr>
-					            <th><div>#</div></th>
-					            <th><div><?php echo get_phrase('student');?></div></th>
-					            <th><div><?php echo get_phrase('year');?></div></th>
-					            <th><div><?php echo get_phrase('term');?></div></th>
-					            <th><div><?php echo get_phrase('method');?></div></th>
-					            <th><div><?php echo get_phrase('amount');?></div></th>
-					            <th><div><?php echo get_phrase('date');?></div></th>
-					            <th></th>
+					        	<th><div>#</div></th>
+						        <th><div><?php echo get_phrase('student');?></div></th>
+	                    		<th><div><?php echo get_phrase('year');?></div></th>
+	                    		<th><div><?php echo get_phrase('term');?></div></th>
+	                    		<th><div><?php echo get_phrase('class');?></div></th>
+	                            <th><div><?php echo get_phrase('fee_structure_total');?></div></th>
+	                            <th><div><?php echo get_phrase('payable_amount');?></div></th>
+	                            <th><div><?php echo get_phrase('balance');?></div></th>
+	                    		<th><div><?php echo get_phrase('date');?></div></th>
+	                    		<th><div><?php echo get_phrase('options');?></div></th>
 					        </tr>
 					    </thead>
 					    <tbody>
@@ -573,6 +579,8 @@
                         	<td><?php echo $count++;?></td>
 							<td><?php echo $this->crud_model->get_type_name_by_id('student',$row['student_id']);?></td>
 							<td><?php echo $row['yr'];?></td>
+							<td><?php echo $row['term'];?></td>
+							<td><?php echo $this->crud_model->get_type_name_by_id('class',$row['class_id']);?></td>
 							<td><?php echo $row['amount'];?></td>
                             <td><?php echo $row['amount_due'];?></td>
                             <?php
