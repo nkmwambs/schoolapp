@@ -5,7 +5,9 @@ $payment_method = array("1"=>"Cash","2"=>"Bank");
 $month_start = date("Y-m-d",$current);
 $month_end = date("Y-m-t",$current);
 
-$str = "(cleared = '0' OR ( t_date BETWEEN '".$month_start."' AND  '".$month_end."' AND cleared = '0' ) OR (t_date < '".$month_start."' AND cleared = '1' AND clearedMonth BETWEEN '".$month_start."' AND '".$month_end."' ))";
+$str = " (( t_date <= '".$month_end."' AND cleared = '0' ) OR 
+(t_date <= '".$month_end."' AND cleared = 1 AND clearedMonth > '".$month_end."' )) ";
+
 
 $str_this_month_cleared = " cleared = '1' AND clearedMonth BETWEEN '".$month_start."' AND  '".$month_end."' ";
 

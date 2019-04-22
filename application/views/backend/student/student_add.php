@@ -66,7 +66,7 @@
 									onchange="return get_class_sections(this.value)">
                               <option value=""><?php echo get_phrase('select');?></option>
                               <?php
-								$classes = $this->db->get('class')->result_array();
+								$classes = $this->db->order_by('name_numeric')->get('class')->result_array();
 								foreach($classes as $row):
 									?>
                             		<option value="<?php echo $row['class_id'];?>">

@@ -7,45 +7,6 @@ $row = $edit_data[0];
 
 <div class="row">
 	<div class="col-md-12">
-        <!-- <div class="panel panel-default panel-shadow" data-collapsed="0">
-            <div class="panel-heading">
-                <div class="panel-title"><?php echo get_phrase('payment_history');?></div>
-            </div>
-            <div class="panel-body">
-                
-                <table class="table table-bordered">
-                	<thead>
-                		<tr>
-                			<td>#</td>
-                			<td><?php echo get_phrase('amount');?></td>
-                			<td><?php echo get_phrase('item');?></td>
-                		</tr>
-                	</thead>
-                	<tbody>
-                	<?php 
-                		$count = 1;
-						//$this->db->group_by(array('timestamp','detail_id'));
-                		$details = $this->db->get_where('invoice_details' , array('invoice_id' => $row['invoice_id']))->result_array();
-						$payments = $this->db->get_where("payment",array("invoice_id"=>$row['invoice_id']))->row();
-                		foreach ($details as $row2):
-							
-                	?>
-                		<tr>
-                			<td><?php echo $count++;?></td>
-                			<td><?php echo $row2['amount_paid'];?></td>                			
-                			<td><?php echo $this->db->get_where('fees_structure_details',array('detail_id'=>$row2['detail_id']))->row()->name;?></td>
-                		</tr>
-                	<?php endforeach;?>
-                	</tbody>
-                </table>
-                
-            </div>
-        </div> -->
-    </div>
-</div>
-
-<div class="row">
-	<div class="col-md-12">
 		<div class="panel panel-default panel-shadow" data-collapsed="0">
 			<div class="panel-heading">
                 <div class="panel-title"><?php echo get_phrase('take_payment');?></div>
@@ -130,7 +91,7 @@ $row = $edit_data[0];
                             <select name="method" class="form-control">
                                 <option value="1"><?php echo get_phrase('cash');?></option>
                                 <option value="2"><?php echo get_phrase('check');?></option>
-                                <!--<option value="3"><?php echo get_phrase('card');?></option>-->
+
                             </select>
                         </div>
                     </div>
@@ -138,15 +99,12 @@ $row = $edit_data[0];
                     <div class="form-group">
 	                    <label class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
 	                    <div class="col-sm-6">
-	                        <input type="text" class="datepicker form-control" data-start-date="<?php echo $this->crud_model->next_cashbook_date()->start_date;?>" data-end-date="<?php echo $this->crud_model->next_cashbook_date()->end_date;?>" data-format="yyyy-mm-dd" name="timestamp" 
+	                        <input type="text" class="datepicker form-control" readonly="readonly" data-start-date="<?php echo $this->crud_model->next_cashbook_date()->start_date;?>" data-end-date="<?php echo $this->crud_model->next_cashbook_date()->end_date;?>" data-format="yyyy-mm-dd" name="timestamp" 
 	                            value=""/>
 	                    </div>
 					</div>
 
                     <input type="hidden" name="invoice_id" value="<?php echo $row['invoice_id'];?>">
-                    <!-- <input type="hidden" name="student_id" value="<?php echo $row['student_id'];?>">
-                    <input type="hidden" name="yr" value="<?php echo $row['yr'];?>">
-                    <input type="hidden" name="term" value="<?php echo $row['term'];?>"> -->
 
 		            <div class="form-group">
 		                <div class="col-sm-5">

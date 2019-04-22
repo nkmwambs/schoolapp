@@ -34,6 +34,8 @@ class Settings extends CI_Controller
 			
 			$data['name']=$this->input->post('term');
 			$data['name_number']=$this->input->post('term_number');
+			$data['start_month']=$this->input->post('start_month');
+			$data['end_month']=$this->input->post('end_month');
 			
 			$this->db->insert('terms',$data);
 			
@@ -45,6 +47,8 @@ class Settings extends CI_Controller
 			
 			$data['name'] = $this->input->post('term');
 			$data['term_number'] = $this->input->post('term_number');
+			$data['start_month']=$this->input->post('start_month');
+			$data['end_month']=$this->input->post('end_month');
 			
 			$this->db->update('terms',$data);
 			
@@ -152,6 +156,14 @@ class Settings extends CI_Controller
 
             $data['description'] = $this->input->post('text_align');
             $this->db->where('type' , 'text_align');
+            $this->db->update('settings' , $data);
+			
+			$data['description'] = $this->input->post('system_start_date');
+            $this->db->where('type' , 'system_start_date');
+            $this->db->update('settings' , $data);
+			
+			$data['description'] = $this->input->post('sidebar-collapsed');
+            $this->db->where('type' , 'sidebar-collapsed');
             $this->db->update('settings' , $data);
 			
             $this->session->set_flashdata('flash_message' , get_phrase('data_updated')); 

@@ -104,6 +104,29 @@
                   </div>
                   
                   <div class="form-group">
+                      <label  class="col-sm-3 control-label"><?php echo get_phrase('system_start_date');?></label>
+                      <div class="col-sm-9">
+                          <input type="text" class="form-control datepicker" readonly="readonly" data-format='yyyy-mm-dd' name="system_start_date" 
+                              value="<?php echo $this->db->get_where('settings' , array('type' =>'system_start_date'))->row()->description;?>">
+                      </div>
+                  </div>
+                  
+                   <div class="form-group">
+                      <label  class="col-sm-3 control-label"><?php echo get_phrase('sidebar_collapsed');?></label>
+                      <div class="col-sm-9">
+                      	<?php
+                      		$option = $this->db->get_where('settings' , 
+                      			array('type' =>'sidebar-collapsed'))->row()->description;
+                      	?>
+                      	<select class="form-control" name="sidebar-collapsed">
+                      		<option value="yes" <?php if ($option == 'yes') echo "selected";?> ><?=get_phrase('yes');?></option>
+                      		<option value="no" <?php if ($option == 'no') echo "selected";?> ><?=get_phrase('no');?></option>
+                      	</select>
+                          
+                      </div>
+                  </div>
+                  
+                  <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-9">
                         <button type="submit" class="btn btn-info"><?php echo get_phrase('save');?></button>
                     </div>

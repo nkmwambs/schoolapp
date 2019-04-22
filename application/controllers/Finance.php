@@ -436,9 +436,7 @@ class Finance extends CI_Controller
 			$last_payment_id = $this->db->insert_id();
 			
 			//Update Invoice Details
-			
-			//$invoice_details = $this->db->get_where('invoice_details',array('invoice_id'=>$this->input->post('invoice_id')))->result_object();
-			
+
 			foreach($take_payment as $key=>$value){
 				if($value > 0){
 					
@@ -1238,23 +1236,369 @@ class Finance extends CI_Controller
 
 	}
 	
-	function financial_report($param1=""){
+	function month_fees_income_by_income_category($category_id = "", $start_month = ""){
+		
+		$this->db->where(array('payment.t_date>='=>date('Y-m-01',strtotime($start_month))));		
+		$this->db->where(array('payment.t_date<='=>date('Y-m-t',strtotime($start_month))));
+		$this->db->where(array('fees_structure_details.income_category_id'=>$category_id));		
+		$this->db->join('student_payment_details','student_payment_details.payment_id=payment.payment_id');
+		$this->db->join('fees_structure_details','fees_structure_details.detail_id=student_payment_details.detail_id');
+		
+		$total_income = $this->db->select_sum('student_payment_details.amount')->get('payment')->row()->amount;
+		
+		return $total_income;
+	}
+
+	function to_date_fees_income_by_income_category($income_category_id){
+		
+		$system_start_date = $this->db->get_where('settings',
+		array('type'=>'system_start_date'))->row()->description; 
+		
+		$last_reconciled_date = $this->db->select_max('month')->get('reconcile')->row()->month;
+		
+		$this->db->where(array('payment.t_date>='=>date('Y-m-01',strtotime($system_start_date))));		
+		$this->db->where(array('payment.t_date<='=>date('Y-m-t',strtotime($last_reconciled_date))));
+		$this->db->where(array('fees_structure_details.income_category_id'=>$income_category_id));		
+		$this->db->join('student_payment_details','student_payment_details.payment_id=payment.payment_id');
+		$this->db->join('fees_structure_details','fees_structure_details.detail_id=student_payment_details.detail_id');
+		
+		$total_income = $this->db->select_sum('student_payment_details.amount')->get('payment')->row()->amount;
+		
+		return $total_income;
+	}
+
+	function to_date_other_income_by_income_category($income_category_id){
+
+		$system_start_date = $this->db->get_where('settings',
+		array('type'=>'system_start_date'))->row()->description; 
+		
+		$last_reconciled_date = $this->db->select_max('month')->get('reconcile')->row()->month;
+		
+		$this->db->where(array('t_date>='=>date('Y-m-01',strtotime($system_start_date))));		
+		$this->db->where(array('t_date<='=>date('Y-m-t',strtotime($last_reconciled_date))));
+		$this->db->where(array('other_payment_details.income_category_id'=>$income_category_id));
+		$this->db->join('other_payment_details','other_payment_details.payment_id=payment.payment_id');
+		$total_income = $this->db->select_sum('payment.amount')->get('payment')->row()->amount;
+		
+		return $total_income;
+	}
+	
+	function month_other_income_by_income_category($category_id = "", $start_month = ""){
+		
+		$this->db->where(array('t_date>='=>date('Y-m-01',strtotime($start_month))));		
+		$this->db->where(array('t_date<='=>date('Y-m-t',strtotime($start_month))));
+		$this->db->where(array('other_payment_details.income_category_id'=>$category_id));
+		$this->db->join('other_payment_details','other_payment_details.payment_id=payment.payment_id');
+		$total_income = $this->db->select_sum('payment.amount')->get('payment')->row()->amount;
+		
+		return $total_income;
+	}
+
+	function sum_income_by_income_category($category_id = "", $start_month = ""){
+		return $this->month_fees_income_by_income_category($category_id,$start_month) + 
+		$this->month_other_income_by_income_category($category_id,$start_month);
+	}
+	
+	function to_date_sum_income_by_income_category($income_category_id){
+		return $this->to_date_fees_income_by_income_category($income_category_id) + 
+		$this->to_date_other_income_by_income_category($income_category_id);
+	}	
+	
+	function expense_by_income_category($income_category_id,$month_start_date){
+		
+		$this->db->where(array('expense.t_date>='=>date('Y-m-01',strtotime($month_start_date))));		
+		$this->db->where(array('expense.t_date<='=>date('Y-m-t',strtotime($month_start_date))));
+		$this->db->where(array('expense_category.income_category_id'=>$income_category_id));
+		$this->db->join('expense_category','expense_category.expense_category_id=expense_details.expense_category_id');
+		$this->db->join('expense','expense.expense_id=expense_details.expense_id');
+		$month_expense = $this->db->select_sum('expense_details.cost')->get('expense_details')->row()->cost;
+		
+		return $month_expense;
+	}
+	
+	function to_date_expense_by_income_category($income_category_id){
+		
+		$system_start_date = $this->db->get_where('settings',
+		array('type'=>'system_start_date'))->row()->description; 
+		
+		$last_reconciled_date = $this->last_reconciled_month();
+		
+		$this->db->where(array('expense.t_date>='=>date('Y-m-01',strtotime($system_start_date))));		
+		$this->db->where(array('expense.t_date<='=>date('Y-m-t',strtotime($last_reconciled_date))));
+		$this->db->where(array('expense_category.income_category_id'=>$income_category_id));
+		$this->db->join('expense_category','expense_category.expense_category_id=expense_details.expense_category_id');
+		$this->db->join('expense','expense.expense_id=expense_details.expense_id');
+		$month_expense = $this->db->select_sum('expense_details.cost')->get('expense_details')->row()->cost;
+		
+		return $month_expense;
+	}
+	
+	function system_start_date(){
+		return $month_start_date = $this->db->get_where('settings',
+		array('type'=>'system_start_date'))->row()->description; 
+	}
+	
+	function last_reconciled_month(){
+		return $this->db->select_max('month')->get('reconcile')->row()->month;
+	}
+	
+	function current_transaction_month(){
+		
+		$month_start_date = $this->system_start_date(); 
+		
+		//Check if there is any reconciliation done
+		$reconciliation_count = $this->db->get('reconcile')->num_rows();
+		
+		if($reconciliation_count > 0){
+			$month_start_date = '2019-05-01';
+		}
+			
+		return $month_start_date;
+	}
+	
+	function to_date_opening_balance_by_income_category($month_start_date){
+		
+		$income_categories = $this->db->get('income_categories')->result_object();
+		
+		$income_category_ids = array_column($income_categories, 'income_category_id');
+		$system_opening_balance = array_column($income_categories, 'opening_balance');
+		
+		$system_set_opening_balance = array_combine($income_category_ids, $system_opening_balance);
+		
+		$opening_balance = array();
+		
+		foreach($system_set_opening_balance as $income_category_id => $opening_amount){
+			
+			$opening_balance[$income_category_id] = $opening_amount + 
+			($this->to_date_sum_income_by_income_category($income_category_id) - 
+			$this->to_date_expense_by_income_category($income_category_id));
+		}
+		
+		
+		return $opening_balance;
+	}
+	
+	function year_expense_to_date($income_category_id,$month_start_date){
+		
+		$this->db->where(array('expense.t_date>='=>date('Y-m-01',strtotime('first day of january',$month_start_date))));		
+		$this->db->where(array('expense.t_date<='=>date('Y-m-t',strtotime($month_start_date))));
+		$this->db->where(array('expense_category.income_category_id'=>$income_category_id));
+		$this->db->join('expense_category','expense_category.expense_category_id=expense_details.expense_category_id');
+		$this->db->join('expense','expense.expense_id=expense_details.expense_id');
+		$expense_to_date = $this->db->select_sum('expense_details.cost')->get('expense_details')->row()->cost;
+		
+		return $expense_to_date;
+	
+	}
+	
+	function year_income_to_date($income_category_id,$month_start_date){
+		
+		$this->db->where(array('payment.t_date>='=>date('Y-m-01',strtotime('first day of january',$month_start_date))));		
+		$this->db->where(array('payment.t_date<='=>date('Y-m-t',strtotime($month_start_date))));
+		$this->db->where(array('fees_structure_details.income_category_id'=>$income_category_id));		
+		
+		$this->db->join('payment','payment.payment_id=student_payment_details.payment_id');
+		$this->db->join('fees_structure_details','fees_structure_details.detail_id=student_payment_details.detail_id');
+		
+		$total_income_to_date = $this->db->select_sum('student_payment_details.amount')->get('student_payment_details')->row()->amount;
+		
+		return $total_income_to_date;			
+	}
+	
+	function year_projected_income($income_category_id,$month_start_date){
+		
+		$this->db->where(array('yr'=>date('Y',strtotime($month_start_date))));
+		$this->db->where(array('income_category_id'=>$income_category_id));
+		
+		$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');
+		$this->db->join('invoice','invoice.invoice_id=invoice_details.invoice_id');
+		$project_income = $this->db->select_sum('invoice_details.amount_due')->get('invoice_details')->row()->amount_due;
+		
+		return $project_income;
+	}
+	
+	function budget_to_date($month_start_date,$income_category_id){
+		
+		$current_month_count = date('w',$month_start_date) + 1;
+		
+		$this->db->where(array('budget_schedule.month<='=>$current_month_count));
+		$this->db->where(array('budget.fy'=>date('Y')));
+		$this->db->where(array('expense_category.income_category_id'=>$income_category_id));
+		
+		$this->db->join('budget','budget.budget_id=budget_schedule.budget_id');
+		$this->db->join('expense_category','expense_category.expense_category_id=budget.expense_category_id');		
+		$expense_to_date = $this->db->select_sum('budget_schedule.amount')->get('budget_schedule')->row()->amount;
+		
+		return $expense_to_date;
+	}	
+
+	function variance_grid($month_start_date = ""){
+		
+		$variances = array();
+		
+		$income_categories = $this->db->get('income_categories')->result_object();
+		
+		$category_labels = array_column($income_categories, 'name');
+		$income_category_ids = array_column($income_categories, 'income_category_id');
+		$categories = array_combine($income_category_ids, $category_labels);
+		
+		$month_expense = array();
+		$expense_to_date = array();
+		$budget_to_date = array();
+		
+		foreach($income_category_ids as $income_category_id){
+			$month_expense[$income_category_id] = $this->expense_by_income_category($income_category_id,$month_start_date);
+			$expense_to_date[$income_category_id] = $this->year_expense_to_date($income_category_id, $month_start_date);
+			$budget_to_date[$income_category_id] = $this->budget_to_date($month_start_date,$income_category_id);
+		}
+		
+		
+		$variances['categories'] 		= $categories;
+		$variances['month_expense'] 	= $month_expense;
+		$variances['expense_to_date'] 	= $expense_to_date;
+		$variances['budget_to_date'] 	= $budget_to_date;
+		
+		return $variances;
+	}
+
+	function income_variance_grid($month_start_date = ""){
+			
+		$variances = array();
+		
+		$income_categories = $this->db->get('income_categories')->result_object();
+		
+		$category_labels = array_column($income_categories, 'name');
+		$income_category_ids = array_column($income_categories, 'income_category_id');
+		$categories = array_combine($income_category_ids, $category_labels);
+
+		$income_to_date = array();
+		$projected_income = array();
+		
+		foreach($income_category_ids as $income_category_id){
+			$income_to_date[$income_category_id] = $this->year_income_to_date($income_category_id, $month_start_date);
+			$projected_income[$income_category_id] = $this->year_projected_income($income_category_id, $month_start_date);
+		}
+		
+		
+		$variances['categories'] 		= $categories;
+		$variances['income_to_date'] 	= $income_to_date;
+		$variances['projected_income'] 	= $projected_income;
+		
+		return $variances;	
+	}
+
+	function income_variance_report($start_month_date = ""){
+
         if ($this->session->userdata('active_login') != 1)
             redirect('login', 'refresh');		
 		
-		$t_date = date('Y-m-d');
 		
-		if($param1==="scroll") $t_date = $this->input->post('t_date'); 
+		if($start_month_date == "") {
+			$start_month_date = $this->current_transaction_month();	
+		}else{
+			$start_month_date = date('Y-m-01',$start_month_date);
+		}
 		
-		if($param1==="") $t_date = date('Y-m-01');
-		
-		
-		//$page_data['sudent_collect'] = $this->student_collection_tally();
-        $page_data['page_name']  = 'financial_report';
-		$page_data['current_date'] = $t_date;
+		$page_data['t_date'] = $start_month_date;
+		$page_data['variances'] = $this->income_variance_grid($start_month_date);		
+        $page_data['page_name']  = 'income_variance_report';
 		$page_data['page_view'] = "finance";
-        $page_data['page_title'] = get_phrase('financial_report');
+        $page_data['page_title'] = get_phrase('income_variance');
         $this->load->view('backend/index', $page_data);
+			
+	}
+	
+	function fund_balances($month_start_date = ""){
+		
+		$fund_balances = array();
+		
+		$income_categories = $this->db->get('income_categories')->result_object();
+		
+		$category_labels = array_column($income_categories, 'name');
+		$income_category_ids = array_column($income_categories, 'income_category_id');
+		$categories = array_combine($income_category_ids, $category_labels);
+		
+		$opening_balances = array();
+		$month_income = array();
+		$month_expense = array();
+		
+		if($month_start_date == "") $month_start_date = $this->current_transaction_month();
+		
+		$reconciliation_count = $this->db->get('reconcile')->num_rows();
+		$opening_balances = array_column($income_categories, 'opening_balance');
+		
+		
+		if($reconciliation_count > 0 && 
+			(
+				strtotime($month_start_date) > strtotime($this->system_start_date()) && 
+				
+					strtotime('last day of next month',strtotime($this->last_reconciled_month())) ==  
+						strtotime('last day of this month',strtotime($month_start_date))	
+			)){
+			
+			$opening_balances = $this->to_date_opening_balance_by_income_category($month_start_date);
+		
+		}elseif(strtotime($month_start_date) == strtotime($this->system_start_date()) ){
+			$opening_balances = array_combine($income_category_ids, $opening_balances);
+		}else{
+			$null_value = array();
+			foreach($income_category_ids as $id){
+				$null_value[$id] = 0;
+			}
+			$opening_balances = array_combine($income_category_ids, $null_value);
+		} 
+		
+		foreach($income_category_ids as $income_category_id){
+			$month_income[$income_category_id] = $this->sum_income_by_income_category($income_category_id,$month_start_date);
+			$month_expense[$income_category_id] = $this->expense_by_income_category($income_category_id,$month_start_date);
+		}
+		
+		$fund_balances['categories'] = $categories;
+		$fund_balances['opening_balances'] = $opening_balances;
+		$fund_balances['month_income'] = $month_income;
+		$fund_balances['month_expense'] = $month_expense;
+		
+		return $fund_balances;
+	}
+	
+	function fund_balance_report($start_month_date = ""){
+        if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');		
+		
+		
+		if($start_month_date == "") {
+			$start_month_date = $this->current_transaction_month();	
+		}else{
+			$start_month_date = date('Y-m-01',$start_month_date);
+		}
+		
+		$page_data['t_date'] = $start_month_date;
+		$page_data['fund_balances'] = $this->fund_balances($start_month_date);		
+        $page_data['page_name']  = 'fund_balance_report';
+		$page_data['page_view'] = "finance";
+        $page_data['page_title'] = get_phrase('fund_balance');
+        $this->load->view('backend/index', $page_data);
+	}
+	
+	
+	
+	function expense_variance_report($start_month_date = ""){
+        if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');		
+		
+		
+		if($start_month_date == "") {
+			$start_month_date = $this->current_transaction_month();	
+		}else{
+			$start_month_date = date('Y-m-01',$start_month_date);
+		}
+		
+		$page_data['t_date'] = $start_month_date;
+		$page_data['variances'] = $this->variance_grid($start_month_date);		
+        $page_data['page_name']  = 'expense_variance_report';
+		$page_data['page_view'] = "finance";
+        $page_data['page_title'] = get_phrase('expense_variance');
+        $this->load->view('backend/index', $page_data);		
 	}
 	
 	public function budget($param="",$param2=""){

@@ -31,7 +31,7 @@ $start_date = $this->db->get_where("settings",array("type"=>"system_start_date")
                   <div class="form-group">
                         <label class="col-sm-3 control-label"><?php echo get_phrase('start_date');?></label>
                         <div class="col-sm-5">
-                            <input type="text" class="form-control datepicker" readonly="readonly" name="system_start_date" value="<?=$start_date;?>" data-format="yyyy-mm-dd"/>
+                            <input type="text" class="form-control" readonly="readonly" name="system_start_date" value="<?=$start_date;?>" data-format="yyyy-mm-dd"/>
                         </div>
                  </div>
                  

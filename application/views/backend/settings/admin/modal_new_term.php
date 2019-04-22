@@ -28,6 +28,22 @@
 						</div>
 					</div>
 					
+					<div class="form-group">
+						<label class="control-label col-xs-4"><?php echo get_phrase('start_month');?></label>
+						
+						<div class="col-xs-8">
+							<input type="number" class="form-control" id="start_month" name="start_month" />
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="control-label col-xs-4"><?php echo get_phrase('end_month');?></label>
+						
+						<div class="col-xs-8">
+							<input type="number" class="form-control" id="end_month" name="end_month" />
+						</div>
+					</div>
+					
 
 						<div class="col-xs-offset-6 col-xs-6">
 							<button type="submit" class="btn btn-primary btn-icon"><i class="entypo-plus-squared"></i><?php echo get_phrase('add');?></button>

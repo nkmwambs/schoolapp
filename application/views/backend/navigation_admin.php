@@ -235,14 +235,7 @@
             </ul>
         </li>
 
-        <!-- PAYMENT -->
-        <!-- <li class="<?php //if ($page_name == 'invoice') echo 'active'; ?> ">
-            <a href="<?php //echo base_url(); ?>index.php?admin/invoice">
-                <i class="entypo-credit-card"></i>
-                <span><?php //echo get_phrase('payment'); ?></span>
-            </a>
-        </li> -->
-
+        
         <!-- ACCOUNTING -->
         <li class="<?php
         if (	$page_name == 'income' ||
@@ -254,7 +247,10 @@
 				$page_name == 'cash_book'||
 				$page_name == 'financial_report'||
 				$page_name == 'fees_structure' ||
-				$page_name == 'monthly_reconciliation'
+				$page_name == 'monthly_reconciliation' ||
+				$page_name == 'fund_balance_report' ||
+				$page_name == 'expense_variance_report' ||
+				$page_name == 'income_variance_report'
 				)
                 echo 'opened active';
         ?> accounting">
@@ -308,11 +304,41 @@
                     </a>
                 </li>
                 
-                <li class="<?php if ($page_name == 'financial_report') echo 'active'; ?> financial_report">
-                    <a href="<?php echo base_url(); ?>index.php?finance/financial_report">
+                <li class="<?php if (
+                						$page_name == 'fund_balance_report' ||
+										$page_name == 'expense_variance_report' ||
+										$page_name == 'income_variance_report'
+									) 
+                					echo 'active'; ?> financial_report">
+                                        
+                    <a href="#">
                         <span><i class="fa fa-filter"></i> <?php echo get_phrase('financial_report'); ?></span>
                     </a>
+                    
+                     <ul>
+                        <li class="<?php if ($page_name == 'fund_balance_report') echo 'active'; ?>">
+                        	<a href="<?php echo base_url(); ?>index.php?finance/fund_balance_report" class="">
+                                <span><i class="entypo-globe"></i><?php echo get_phrase('fund_balance'); ?></span>
+                            </a>
+                        </li>
+
+                        <li class="<?php if ($page_name == 'expense_variance_report') echo 'active'; ?>">
+                        	<a href="<?php echo base_url(); ?>index.php?finance/expense_variance_report"  class="">
+                                    <span><i class="entypo-progress-3"></i><?php echo get_phrase('expense_variance'); ?></span>
+                            </a>
+                        </li>
+                        
+                        <li class="<?php if ($page_name == 'income_variance_report') echo 'active'; ?>">
+                        	<a href="<?php echo base_url(); ?>index.php?finance/income_variance_report"  class="">
+                                    <span><i class="entypo-tag"></i><?php echo get_phrase('income_variance'); ?></span>
+                            </a>
+                        </li>
+                        
+                     </ul>  
+                    
                 </li>
+                
+                
             </ul>
         </li>
 

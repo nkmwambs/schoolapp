@@ -21,6 +21,8 @@
 								<th><?php echo get_phrase('action');?></th>
 								<th><?php echo get_phrase('term_number');?></th>
 								<th><?php echo get_phrase('terms');?></th>
+								<th><?php echo get_phrase('start_month');?></th>
+								<th><?php echo get_phrase('end_month');?></th>
 								
 							</tr>
 						</thead>
@@ -57,6 +59,8 @@
 								</td>
 								<td><?php echo $rows->term_number;?></td>
 								<td><?php echo $rows->name;?></td>
+								<td><?php echo $rows->start_month;?></td>
+								<td><?php echo $rows->end_month;?></td>
 								
 							</tr>
 							<?php
