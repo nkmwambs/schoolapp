@@ -1344,9 +1344,9 @@ class Finance extends CI_Controller
 		if($filter == 'filter'){
 			$str = " invoice.balance".$this->input->post('operator').$this->input->post('filter_amount');
 			$this->db->where($str);
-			$this->db->where(array('invoice.yr'=>$year,'invoice.term'=>$term));			
+			$this->db->where(array('invoice.yr'=>$year,'invoice.term'=>$term,'invoice.status'=>'unpaid'));			
 		}else{
-			$this->db->where(array('yr'=>$year,'term'=>$term));
+			$this->db->where(array('yr'=>$year,'term'=>$term,'invoice.status'=>'unpaid'));
 		}
 		
 		$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');
