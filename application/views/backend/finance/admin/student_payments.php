@@ -1,26 +1,32 @@
 <?php
 	$this->db->where('status' , 'unpaid');
+	$this->db->where('yr' , $year);
     $this->db->order_by('creation_timestamp' , 'desc');
     $unpaid_invoices = $this->db->get('invoice')->result_array();
 	
 	
 	$this->db->where('status' , 'paid');
+	$this->db->where('yr' , $year);
     $this->db->order_by('creation_timestamp' , 'desc');
     $paid_invoices = $this->db->get('invoice')->result_array();
 	
 	$this->db->where('status' , 'excess');
+	$this->db->where('yr' , $year);
     $this->db->order_by('creation_timestamp' , 'desc');
     $overpaid_invoices = $this->db->get('invoice')->result_array();
 	
 	$this->db->where('status' , 'active');
+	//$this->db->where('yr' , $year);
     $this->db->order_by('creation_timestamp' , 'desc');
     $overpay_notes = $this->db->get('overpay')->result_array();
 	
 	$this->db->where('status' , 'cleared');
+	//$this->db->where('yr' , $year);
     $this->db->order_by('creation_timestamp' , 'desc');
     $cleared_overpay_notes = $this->db->get('overpay')->result_array();
 	
 	$this->db->where('status' , 'cancelled');
+	$this->db->where('yr' , $year);
     $this->db->order_by('creation_timestamp' , 'desc');
     $cancelled_invoices = $this->db->get('invoice')->result_array();
 	
@@ -40,8 +46,19 @@
 </div>
 
 <p></p>
+
 <div class="row">
-	<div class="col-md-12">
+	<div class="col-xs-12" style="text-align: center;font-weight: bold;font-size: 18pt;">
+		<?=get_phrase('year');?> <?=$year;?>
+	</div>
+</div>
+<p></p>
+
+<div class="row">
+	<div class="col-xs-1">
+		<a href="<?=base_url();?>index.php?finance/scroll_student_payments/<?=$year - 1;?>"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>
+	</div>
+	<div class="col-md-10">
 			
 			<ul class="nav nav-tabs bordered">
 				<li class="active">
@@ -595,6 +612,9 @@
 			</div>
 			
 			
+	</div>
+	<div class="col-xs-1">
+		<a href="<?=base_url();?>index.php?finance/scroll_student_payments/<?=$year + 1;?>"><i style="font-size: 145pt;" class="fa fa-angle-right"></i></a>
 	</div>
 </div>
 

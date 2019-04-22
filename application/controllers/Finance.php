@@ -856,6 +856,20 @@ class Finance extends CI_Controller
 		echo $this->load->view("backend/finance/scroll_paid_invoices",$data,true);
 	}
 	
+	function scroll_student_payments($year = ""){
+       if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');
+	   
+	   
+	   	$page_data['year'] = $year;
+        $page_data['page_name']  = 'student_payments';
+        $page_data['page_view'] = "finance";
+        $page_data['page_title'] = get_phrase('student_payments');
+        $this->db->order_by('creation_timestamp', 'desc');
+        $page_data['invoices'] = $this->db->get_where('invoice',array('yr'=>$year))->result_array();
+        $this->load->view('backend/index', $page_data); 	   		
+	}
+	
 	function student_payments($param1 = '' , $param2 = '')
     {
        if ($this->session->userdata('active_login') != 1)
@@ -890,8 +904,9 @@ class Finance extends CI_Controller
         $page_data['page_name']  = 'student_payments';
         $page_data['page_view'] = "finance";
         $page_data['page_title'] = get_phrase('student_payments');
+		$page_data['year'] = date('Y');
         $this->db->order_by('creation_timestamp', 'desc');
-        $page_data['invoices'] = $this->db->get('invoice')->result_array();
+        $page_data['invoices'] = $this->db->get_where('invoice',array('yr'=>date('Y')))->result_array();
         $this->load->view('backend/index', $page_data); 
     }
 
