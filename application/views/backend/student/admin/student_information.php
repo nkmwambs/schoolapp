@@ -177,6 +177,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                             <th width="80"><div><?php echo get_phrase('photo');?></div></th>
                             <th><div><?php echo get_phrase('name');?></div></th>
                             <th class="span3"><div><?php echo get_phrase('transition_type');?></div></th>
+                            <th><?=get_phrase('transition_status');?></th>
                             <th><div><?php echo get_phrase('transition_date');?></div></th>
                             <th><div><?php echo get_phrase('reason');?></div></th>
                             <th><div><?php echo get_phrase('options');?></div></th>
@@ -185,17 +186,18 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                     <tbody>
                         <?php	
                         		$this->db->select(array('transition.name as transition_type','roll','student.student_id',
-                        		'student.name','transition_date','reason'));
+                        		'student.name','transition_date','reason','transition_detail.status'));
 
-                        		$this->db->join('transition_detail','transition_detail.student_id = student.student_id');
                         		$this->db->join('transition','transition.transition_id=transition_detail.transition_id');
-                                $suspended_students   =   $this->db->get_where('student' , array('student.class_id'=>$class_id,"student.active"=>0))->result_array();
+                                $this->db->join('student','student.student_id=transition_detail.student_id');
+                                $suspended_students   =   $this->db->get_where('transition_detail' , array('student.class_id'=>$class_id))->result_array();
                                 foreach($suspended_students as $row):?>
                         <tr>
                             <td><?php echo $row['roll'];?></td>
                             <td><img src="<?php echo $this->crud_model->get_image_url('student',$row['student_id']);?>" class="img-circle" width="30" /></td>
                             <td><?php echo $row['name'];?></td>
                             <td><?php echo ucfirst($row['transition_type']);?></td>
+                            <td><?=$row['status'] == 1?get_phrase('active'):get_phrase('inactive'); ?></td>
                             <td><?php echo $row['transition_date'];?></td>
                             <td><?php echo $row['reason'];?></td>
                             <td>
@@ -216,12 +218,19 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                         <li class="divider"></li>
 
                                         <!-- STUDENT UNSUSPEND LINK -->
+                                        <?php
+                                        if($row['status'] == 1){
+                                        ?>
                                         <li class="unsuspend_student">
                                             <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?student/student/<?php echo $class_id;?>/reinstate/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-cw"></i>
                                                     <?php echo get_phrase('reinstate');?>
                                                 </a>
                                         </li>
+                                        
+                                        <?php
+										}
+                                        ?>
                                     </ul>
                                 </div>
 

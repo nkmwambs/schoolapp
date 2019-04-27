@@ -202,7 +202,17 @@ class Student extends CI_Controller
 			$data2['status'] = 0;
 			$this->db->where('student_id', $param3);
             $this->db->update('transition_detail',$data2);
+			
+			//Reactivate the last cancelled invoice
+			$check_cancelled_invoice_on_transition = $this->db->get_where('invoice',array('student_id'=>$param3,'status'=>'cancelled','transitioned'=>1));
             
+			if($check_cancelled_invoice_on_transition->num_rows() > 0){
+				$this->db->where(array('invoice_id'=>$check_cancelled_invoice_on_transition->row()->invoice_id));
+				$update['status'] = 'unpaid';
+				$update['transitioned'] = 0;
+				$this->db->update('invoice',$update);
+			}
+			
             $this->session->set_flashdata('flash_message' , get_phrase('student_reinstated'));
             redirect(base_url() . 'index.php?student/student_information/' . $param1, 'refresh');
       }
@@ -229,6 +239,16 @@ class Student extends CI_Controller
 				$data2['active'] = 0;
 				$this->db->where(array('student_id'=>$student_id));
 				$this->db->update('student',$data2);
+				
+				//Check if student has active invoice
+				$count_unpaid_invoice = $this->db->get_where('invoice',array('student_id'=>$student_id,'status'=>'unpaid'))->num_rows();
+				
+				if($count_unpaid_invoice > 0){
+					$this->db->where(array('student_id'=>$student_id,'status'=>'unpaid'));
+					$data4['status'] = 'cancelled';
+					$data4['transitioned'] = 1;
+					$this->db->update('invoice',$data4);
+				}
 				
 				$msg = get_phrase('action_successful');
 			}
