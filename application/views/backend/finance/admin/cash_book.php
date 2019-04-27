@@ -9,35 +9,19 @@ if(isset($current)){
 
 <hr>
 <div class="row">
-	<div class="col-sm-2 add_contra_entry">
-			<button id="contra" class="btn btn-success btn-icon" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_contras');"><i class="fa fa-tasks"></i><?=get_phrase('contra_entries');?></button>
+	<div class="col-sm-3 add_contra_entry">
+			<!-- <button id="contra" class="btn btn-success btn-icon" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_contras');"><i class="fa fa-tasks"></i><?=get_phrase('contra_entries');?></button> -->
+			<a href="<?=base_url();?>index.php?finance/create_transaction" class="btn btn-success btn-icon float-left">
+				<i class="fa fa-tasks"></i><?=get_phrase('create_a_transaction');?>
+			</a> 
 	</div>
 	
-	<div class="col-sm-2 create_bank_reconciliation_statement">
-			<a href="<?=base_url();?>index.php?finance/reconcile/<?=$t_date;?>" id="reconcile" class="btn btn-success btn-icon"><i class="fa fa-book"></i><?=get_phrase('bank_reconciliation');?></a>
+	<div class="col-sm-3 create_bank_reconciliation_statement">
+			<a href="<?=base_url();?>index.php?finance/reconcile/<?=$t_date;?>" id="reconcile" class="btn btn-success btn-icon float-left"><i class="fa fa-book"></i><?=get_phrase('bank_reconciliation');?></a>
 	</div>	
 	
-	<div class="col-sm-8">
-		<?php echo form_open(base_url() . 'index.php?finance/cash_book/scroll' , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
-		<div class="form-group">
-				
-		<label class="col-sm-2 control-label">Choose Month</label>							
-					<div class="col-sm-8">
-						<div class="input-group">
-							<input type="text" name="t_date" class="form-control datepicker" data-format="yyyy-mm-dd">
-											
-							<div class="input-group-addon">
-								<a href="#"><i class="entypo-calendar"></i></a>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-2">
-						<button type="submit" class="btn btn-info"><?php echo get_phrase('Choose');?></button>
-					</div>
-		</div>
+	<div class="col-sm-6">
 		
-		
-	<?php echo form_close();?>
 	</div>
 </div>
 
@@ -54,8 +38,8 @@ if(isset($current)){
 			<thead>
 				<tr>
 					<th colspan="4">&nbsp;</th>
-					<th colspan="3"><?=get_phrase('bank');?></th>
-					<th colspan="3"><?=get_phrase('cash');?></th>
+					<th colspan="3"><?=get_phrase('bank');?> <br/> <?=get_phrase('balance_brought_forward');?>: <?=number_format($bank_balance,2);?></th>
+					<th colspan="3"><?=get_phrase('cash');?> <br/> <?=get_phrase('balance_brought_forward');?>: <?=number_format($cash_balance,2);?></th>
 				</tr>
 				
 				<tr>
@@ -76,7 +60,7 @@ if(isset($current)){
 				
 			</thead>
 			<tbody>
-				<tr>
+				<!-- <tr>
 					<td colspan="4"><?=get_phrase('balance_brought_forward');?></td>
 					
 					<td colspan="2">&nbsp;</td>
@@ -84,7 +68,7 @@ if(isset($current)){
 					
 					<td colspan="2">&nbsp;</td>
 					<td><?=number_format($cash_balance,2);?></td>
-				</tr>
+				</tr> -->
 				<?php
 					
 					$sum_bank_income = 0;
@@ -207,9 +191,7 @@ if(isset($current)){
 	
 	jQuery(document).ready(function($)
 	{
-		
-
-		var datatable = $("#table_export").dataTable({
+		var datatable = $(".datatable").dataTable({
 			"sPaginationType": "bootstrap",
 			"sDom": "<'row'<'col-xs-3 col-left'l><'col-xs-9 col-right'<'export-data'T>f>r>t<'row'<'col-xs-3 col-left'i><'col-xs-9 col-right'p>>",
 			"oTableTools": {

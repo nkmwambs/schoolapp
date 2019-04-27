@@ -42,10 +42,11 @@
 		?>
 		<div class="btn btn-default"><i class="fa fa-mobile"></i> SMS balances <span class="badge badge-primary"><?=$count_to_notify;?></span></div>
 		<div class="btn btn-default"><i class="fa fa-envelope"></i> Email balances <span class="badge badge-primary"><?=$count_to_notify;?></span></div>
+		<a href="<?php echo base_url(); ?>index.php?finance/create_invoice" class="btn btn-primary"><i class="fa fa-money"></i> Create Invoice</a>
 	</div>
 </div>
 
-<p></p>
+<hr />
 
 <div class="row">
 	<div class="col-xs-12" style="text-align: center;font-weight: bold;font-size: 18pt;">

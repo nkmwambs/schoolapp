@@ -251,23 +251,23 @@ class Finance extends CI_Controller
 
 /******MANAGE BILLING / INVOICES WITH STATUS*****/
 	
-	// function next_serial_number(){
-// 		
-// 			
-		// $this->db->select_max('batch_number');
-		// $max_serial_number = $this->db->get('cashbook')->row()->batch_number + 1;
-// 		
-		// $current_transaction_month = strtotime($this->current_transaction_month());
-		// $last_reconciled_month = strtotime($this->last_reconciled_month());
-		// $count_of_transactions_in_current_transacting_month = $this->db->get_where('cashbook',
-		// array('t_date>='=>$this->current_transaction_month()))->num_rows();
-// 		
-		// if($current_transaction_month > $last_reconciled_month && $count_of_transactions_in_current_transacting_month == 0){
-			// $max_serial_number = date('y').date('m',$current_transaction_month).'01';
-		// }				
-// 		
-		// return $max_serial_number;
-	// }
+	function next_serial_number(){
+		
+			
+		$this->db->select_max('batch_number');
+		$max_serial_number = $this->db->get('cashbook')->row()->batch_number + 1;
+		
+		$current_transaction_month = strtotime($this->current_transaction_month());
+		$last_reconciled_month = strtotime($this->last_reconciled_month());
+		$count_of_transactions_in_current_transacting_month = $this->db->get_where('cashbook',
+		array('t_date>='=>$this->current_transaction_month()))->num_rows();
+		
+		if($current_transaction_month > $last_reconciled_month && $count_of_transactions_in_current_transacting_month == 0){
+			$max_serial_number = date('y').date('m',strtotime('+1 month',$current_transaction_month)).'01';
+		}				
+		
+		return $max_serial_number;
+	}
 
     function invoice($param1 = '', $param2 = '', $param3 = '')
     {
@@ -555,7 +555,7 @@ class Finance extends CI_Controller
 					
 			//Enter Income into the Cash Book
 			$data1['t_date'] = $this->input->post('timestamp');//date('Y-m-d');
-			$data1['batch_number'] = $this->crud_model->next_serial_number();
+			$data1['batch_number'] = $this->crud_model->populate_batch_number($this->input->post('timestamp'));
 
 			$student_id = $this->db->get_where("invoice",array("invoice_id"=>$this->input->post('invoice_id')))->row()->student_id;
 						
@@ -833,7 +833,7 @@ class Finance extends CI_Controller
 			
 			//Enter Income into the Cash Book
 			$data1['t_date'] = $this->input->post('t_date');
-			$data1['batch_number'] = $this->crud_model->next_serial_number();
+			$data1['batch_number'] = $this->crud_model->populate_batch_number($this->input->post('t_date'));
 			$data1['description'] = $this->input->post('description');
 			$data1['transaction_type'] = '2';
 			$data1['account'] = $this->input->post('method');
@@ -873,7 +873,7 @@ class Finance extends CI_Controller
 			$expense = $this->db->get_where('expense',array('expense_id'=>$param2))->row();
 
             $data['payee']        =   $this->db->get_where('settings',array('type'=>'system_name'))->row()->description;    
-			$data['batch_mumber']        =   $this->crud_model->next_serial_number();
+			$data['batch_mumber']        =   $this->crud_model->populate_batch_number($date);
 			$data['t_date']        =   date('Y-m-d');			
             $data['description']         =   get_phrase('reversal:_batch').' - '.$expense->batch_number;			
             $data['method']              =   $expense->method;				    	
@@ -900,7 +900,7 @@ class Finance extends CI_Controller
 			
 			//Enter Income into the Cash Book
 			$data1['t_date'] = date('Y-m-d');
-			$data1['batch_number'] = $this->crud_model->next_serial_number();
+			$data1['batch_number'] = $this->crud_model->populate_batch_number(date('Y-m-d'));
 			$data1['description'] = get_phrase('reversal:_batch').' - '.$expense->batch_number;
 			$data1['transaction_type'] = '2';
 			$data1['account'] = $expense->method;
@@ -912,11 +912,11 @@ class Finance extends CI_Controller
             redirect(base_url() . 'index.php?finance/expense', 'refresh');
 		}
 
-        $page_data['month_stamp'] = strtotime($this->crud_model->current_transaction_month());
+        $page_data['month_stamp'] = strtotime($this->current_transaction_month());
         $page_data['page_name']  = 'expense';
 		$page_data['page_view'] = "finance";
 		$page_data['expenses'] = $this->db->get_where('expense',
-		array('month(t_date)'=>date('m',strtotime($this->crud_model->current_transaction_month()))))->result_object();
+		array('month(t_date)'=>date('m',strtotime($this->current_transaction_month()))))->result_object();
         $page_data['page_title'] = get_phrase('expenses');
         $this->load->view('backend/index', $page_data); 
     }
@@ -1077,7 +1077,7 @@ class Finance extends CI_Controller
 			
 			//Enter Income into the Cash Book
 			$data1['t_date'] = $this->input->post('t_date');
-			$data1['batch_number'] = $this->crud_model->next_serial_number();
+			$data1['batch_number'] = $this->crud_model->populate_batch_number($this->input->post('t_date'));
 			$data1['description'] = $this->input->post('description');
 			$data1['transaction_type'] = '1';
 			$data1['account'] = $this->input->post('method');
@@ -1117,7 +1117,7 @@ class Finance extends CI_Controller
 			$income = $this->db->get_where('payment',array('payment_id'=>$param2))->row();
 
             $data['payee']        =   $this->db->get_where('settings',array('type'=>'system_name'))->row()->description;    
-			$data['batch_mumber']        =   $this->crud_model->next_serial_number();
+			$data['batch_mumber']        =   $this->crud_model->populate_batch_number($date);
 			$data['t_date']        =   date('Y-m-d');			
             $data['description']         =   get_phrase('reversal:_batch').' - '.$income->batch_number;			
             $data['method']              =   $income->method;				    	
@@ -1145,7 +1145,7 @@ class Finance extends CI_Controller
 			
 			//Enter Income into the Cash Book
 			$data1['t_date'] = date('Y-m-d');
-			$data1['batch_number'] = $this->crud_model->next_serial_number();
+			$data1['batch_number'] = $this->crud_model->populate_batch_number(date('Y-m-d'));
 			$data1['description'] = get_phrase('reversal:_batch').' - '.$income->batch_number;
 			$data1['transaction_type'] = '1';
 			$data1['account'] = $income->method;
@@ -1157,11 +1157,11 @@ class Finance extends CI_Controller
             redirect(base_url() . 'index.php?finance/income', 'refresh');
 		}
 		
-		$page_data['month_stamp'] = strtotime($this->crud_model->current_transaction_month());
+		$page_data['month_stamp'] = strtotime($this->current_transaction_month());
         $page_data['page_name']  = 'income';
 		$page_data['page_view'] = "finance";
 		$page_data['payments'] = $this->db->get_where('payment',
-		array('month(t_date)'=>date('m',strtotime($this->crud_model->current_transaction_month()))))->result_object();
+		array('month(t_date)'=>date('m',strtotime($this->current_transaction_month()))))->result_object();
         $page_data['page_title'] = get_phrase('income');
         $this->load->view('backend/index', $page_data); 
     }	
@@ -1485,7 +1485,7 @@ class Finance extends CI_Controller
 		$system_start_date = $this->db->get_where('settings',
 		array('type'=>'system_start_date'))->row()->description; 
 		
-		$last_reconciled_date = $this->crud_model->last_reconciled_month();
+		$last_reconciled_date = $this->last_reconciled_month();
 		
 		$this->db->where(array('expense.t_date>='=>date('Y-m-01',strtotime($system_start_date))));		
 		$this->db->where(array('expense.t_date<='=>date('Y-m-t',strtotime($last_reconciled_date))));
@@ -1502,31 +1502,31 @@ class Finance extends CI_Controller
 		array('type'=>'system_start_date'))->row()->description; 
 	}
 	
-	// function last_reconciled_month(){
-// 		
-		// $last_reconcile_date = date('Y-m-01',strtotime('-1 month',strtotime($this->db->get_where('settings' , array('type'=>'system_start_date'))->row()->description))); 
-// 		
-		// if($this->db->get('reconcile')->num_rows() > 0){
-			// $last_reconcile_date = $this->db->select_max('month')->get('reconcile')->row()->month;
-		// }
-// 		
-		// return $last_reconcile_date;
-	// }
+	function last_reconciled_month(){
+		
+		$last_reconcile_date = date('Y-m-01',strtotime('-1 month',strtotime($this->db->get_where('settings' , array('type'=>'system_start_date'))->row()->description))); 
+		
+		if($this->db->get('reconcile')->num_rows() > 0){
+			$last_reconcile_date = $this->db->select_max('month')->get('reconcile')->row()->month;
+		}
+		
+		return $last_reconcile_date;
+	}
 	
-	// function current_transaction_month(){
-// 		
-		// $month_start_date = $this->system_start_date(); 
-// 		
-		// //Check if there is any reconciliation done
-		// $reconciliation_count = $this->db->get('reconcile')->num_rows();
-// 		
-		// if($reconciliation_count > 0){
-			// $max_reconcile_date = $this->db->select_max('month')->get('reconcile')->row()->month;
-			// $month_start_date = date('Y-m-01',strtotime('first day of next month',strtotime($max_reconcile_date)));
-		// }
-// 			
-		// return $month_start_date;
-	// }
+	function current_transaction_month(){
+		
+		$month_start_date = $this->system_start_date(); 
+		
+		//Check if there is any reconciliation done
+		$reconciliation_count = $this->db->get('reconcile')->num_rows();
+		
+		if($reconciliation_count > 0){
+			$max_reconcile_date = $this->db->select_max('month')->get('reconcile')->row()->month;
+			$month_start_date = date('Y-m-01',strtotime('first day of next month',strtotime($max_reconcile_date)));
+		}
+			
+		return $month_start_date;
+	}
 	
 	function to_date_opening_balance_by_income_category($month_start_date){
 		
@@ -1666,7 +1666,7 @@ class Finance extends CI_Controller
 		
 		
 		if($start_month_date == "") {
-			$start_month_date = $this->crud_model->current_transaction_month();	
+			$start_month_date = $this->current_transaction_month();	
 		}else{
 			$start_month_date = date('Y-m-01',$start_month_date);
 		}
@@ -1694,7 +1694,7 @@ class Finance extends CI_Controller
 		$month_income = array();
 		$month_expense = array();
 		
-		if($month_start_date == "") $month_start_date = $this->crud_model->current_transaction_month();
+		if($month_start_date == "") $month_start_date = $this->current_transaction_month();
 		
 		$reconciliation_count = $this->db->get('reconcile')->num_rows();
 		$opening_balances = array_column($income_categories, 'opening_balance');
@@ -1704,7 +1704,7 @@ class Finance extends CI_Controller
 			(
 				strtotime($month_start_date) > strtotime($this->system_start_date()) && 
 				
-					strtotime('last day of next month',strtotime($this->crud_model->last_reconciled_month())) ==  
+					strtotime('last day of next month',strtotime($this->last_reconciled_month())) ==  
 						strtotime('last day of this month',strtotime($month_start_date))	
 			)){
 			
@@ -1739,7 +1739,7 @@ class Finance extends CI_Controller
 		
 		
 		if($start_month_date == "") {
-			$start_month_date = $this->crud_model->current_transaction_month();	
+			$start_month_date = $this->current_transaction_month();	
 		}else{
 			$start_month_date = date('Y-m-01',$start_month_date);
 		}
@@ -1760,7 +1760,7 @@ class Finance extends CI_Controller
 		
 		
 		if($start_month_date == "") {
-			$start_month_date = $this->crud_model->current_transaction_month();	
+			$start_month_date = $this->current_transaction_month();	
 		}else{
 			$start_month_date = date('Y-m-01',$start_month_date);
 		}

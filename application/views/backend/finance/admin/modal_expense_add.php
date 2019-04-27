@@ -28,6 +28,14 @@
 					</div>
 					
 					<div class="form-group">
+						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('serial_number');?></label>
+                        
+						<div class="col-sm-6">
+							<input type="text" class="form-control" readonly="readonly" value="<?=$next_serial_number;?>" required="required">
+						</div> 
+					</div>
+					
+					<div class="form-group">
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('description');?></label>
                         
 						<div class="col-sm-6">

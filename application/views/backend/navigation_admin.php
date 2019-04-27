@@ -250,7 +250,8 @@
 				$page_name == 'monthly_reconciliation' ||
 				$page_name == 'fund_balance_report' ||
 				$page_name == 'expense_variance_report' ||
-				$page_name == 'income_variance_report'
+				$page_name == 'income_variance_report' ||
+				$page_name == 'create_transaction'
 				)
                 echo 'opened active';
         ?> accounting">
@@ -265,18 +266,18 @@
                     </a>
                 </li>
 
-                <li class="<?php if ($page_name == 'create_invoice') echo 'active'; ?> create_invoice">
+                <!-- <li class="<?php if ($page_name == 'create_invoice') echo 'active'; ?> create_invoice">
                     <a href="<?php echo base_url(); ?>index.php?finance/create_invoice">
                         <span><i class="fa fa-bookmark"></i> <?php echo get_phrase('create_invoice'); ?></span>
                     </a>
-                </li>
+                </li> -->
                 <li class="<?php if ($page_name == 'student_payments') echo 'active'; ?> students_income">
                     <a href="<?php echo base_url(); ?>index.php?finance/student_payments">
                         <span><i class="fa fa-money"></i> <?php echo get_phrase('invoices'); ?></span>
                     </a>
                 </li>
 				
-				<li class="<?php if ($page_name == 'income') echo 'active'; ?> other_income">
+				<!-- <li class="<?php if ($page_name == 'income') echo 'active'; ?> other_income">
                     <a href="<?php echo base_url(); ?>index.php?finance/income">
                         <span><i class="fa fa-building-o"></i> <?php echo get_phrase('school_incomes'); ?></span>
                     </a>
@@ -286,7 +287,7 @@
                     <a href="<?php echo base_url(); ?>index.php?finance/expense">
                         <span><i class="fa fa-credit-card"></i> <?php echo get_phrase('school_expenses'); ?></span>
                     </a>
-                </li>
+                </li> -->
                 <li class="<?php if ($page_name == 'cash_book') echo 'active'; ?> cash_book">
                     <a href="<?php echo base_url(); ?>index.php?finance/cash_book">
                         <span><i class="fa fa-book"></i> <?php echo get_phrase('cash_book'); ?></span>

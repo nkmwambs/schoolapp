@@ -91,5 +91,6 @@ class Admin extends CI_Controller
         $page_data['page_title'] = get_phrase('manage_administrator');
         $this->load->view('backend/index', $page_data);
     }
+
    
 }

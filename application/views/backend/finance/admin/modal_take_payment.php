@@ -103,6 +103,14 @@ $row = $edit_data[0];
 	                            value=""/>
 	                    </div>
 					</div>
+					
+					<div class="form-group">
+						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('serial_number');?></label>
+                        
+						<div class="col-sm-6">
+							<input type="text" class="form-control" readonly="readonly" value="<?=$this->crud_model->next_serial_number();?>" required="required">
+						</div> 
+				</div>
 
                     <input type="hidden" name="invoice_id" value="<?php echo $row['invoice_id'];?>">
 

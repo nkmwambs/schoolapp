@@ -38,7 +38,25 @@
                                     Action <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-default pull-right" role="menu">
-
+                                	
+                                	 <!-- EDITING LINK -->
+                                    <!-- <li class="add_schemes_of_work">
+                                        <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_add_schemes_of_work/<?=$row['class_id'];?>/<?php echo $row['subject_id'];?>');">
+                                            <i class="entypo-plus"></i>
+                                                <?php echo get_phrase('add_schemes_of_work');?>
+                                            </a>
+                                                    </li>
+                                    <li class="divider add_schemes_of_work"></li> -->
+									
+									<!-- ADD SCHEMES OF WORK LINK -->
+                                    <li class="schemes_of_work">
+                                        <a href="<?php echo base_url();?>index.php?subject/list_schemes_of_work/<?=$row['class_id'];?>/<?php echo $row['subject_id'];?>">
+                                            <i class="entypo-book"></i>
+                                                <?php echo get_phrase('schemes_of_work');?>
+                                            </a>
+                                                    </li>
+                                    <li class="divider schemes_of_work"></li>
+									
                                     <!-- EDITING LINK -->
                                     <li class="edit_subject">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_subject/<?php echo $row['subject_id'];?>');">
