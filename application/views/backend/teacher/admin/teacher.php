@@ -50,53 +50,53 @@
                                     <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 										
 										<!-- Promote a Teacher to A user -->
-                                        <li class="promote_teacher_to_user">
+                                        <li class="<?=get_access_class("promote_teacher_to_user",$this->session->login_type,"teacher");?>">
                                         	<a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?settings/promote_to_user/teacher/<?php echo $row['teacher_id'];?>');">
                                             	<i class="fa fa-thumbs-up"></i>
 													<?php echo get_phrase('promote_to_user');?>
                                                	</a>
                                         </li>
-                                        <li class="divider promote_teacher_to_user"></li>
+                                        <li class="divider <?=get_access_class("promote_teacher_to_user",$this->session->login_type,"teacher");?>"></li>
                                         
                                         <?php
                                         	if($user->num_rows()>0){
                                         ?>
                                         
                                         <!-- Reset Password -->
-                                        <li class="reset_password">
+                                        <li class="<?=get_access_class("reset_teacher_password",$this->session->login_type,"teacher");?>">
                                         	<a href="#" onclick="showAjaxModal('<?=base_url();?>index.php?modal/popup/modal_change_password/teacher/<?php echo $row['teacher_id'];?>');">
                                             	<i class="fa fa-reply"></i>
 													<?php echo get_phrase('change_password');?>
                                                	</a>
                                         </li>
-                                        <li class="divider reset_password"></li>
+                                        <li class="divider <?=get_access_class("reset_teacher_password",$this->session->login_type,"teacher");?>"></li>
                                         
                                          <!-- Assign Profile -->
-                                        <li class="assign_profile">
+                                        <li class="<?=get_access_class("assign_profile",$this->session->login_type,"teacher");?>">
                                         	<a href="#" onclick="showAjaxModal('<?=base_url();?>index.php?modal/popup/modal_assign_profile/teacher/<?php echo $row['teacher_id'];?>');">
                                             	<i class="fa fa-link"></i>
 													<?php echo get_phrase('change_profile');?>
                                                	</a>
                                         </li>
-                                        <li class="divider assign_profile"></li>
+                                        <li class="divider <?=get_access_class("assign_profile",$this->session->login_type,"teacher");?>"></li>
                                         
                                         <?php		
                                         	}
                                         ?>
 										
                                         <!-- teacher EDITING LINK -->
-                                        <li class="edit_teacher">
+                                        <li class="<?=get_access_class("edit_teacher",$this->session->login_type,"teacher");?>">
                                         	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_teacher_edit/<?php echo $row['teacher_id'];?>');">
                                             	<i class="fa fa-pencil"></i>
 													<?php echo get_phrase('edit');?>
                                                	</a>
                                         </li>
-                                        <li class="divider edit_teacher"></li>
+                                        <li class="divider <?=get_access_class("edit_teacher",$this->session->login_type,"teacher");?>"></li>
                                         
                                         <!-- teacher DELETION LINK -->
-                                        <li class="delete_teacher">
+                                        <li class="<?=get_access_class("delete_teacher",$this->session->login_type,"teacher");?>">
                                         	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?teacher/teacher/delete/<?php echo $row['teacher_id'];?>');">
-                                            	<i class="fa fa-trash"></i>
+                                            	<i class="fa fa-trash-o"></i>
 													<?php echo get_phrase('delete');?>
                                              </a>
                                         </li>

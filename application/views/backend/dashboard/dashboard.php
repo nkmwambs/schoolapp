@@ -1,83 +1,5 @@
-<!-- <p></p>
-
-<div class="row">
-	<div class="col-xs-12 <?=get_access_class('show_updates',$this->session->login_type,'dasboard');?>">
-
-		<?php
-			$current_version = $this->db->get_where('settings',array('type'=>'version'))
-					->row()->description;
-			$new_version = $this->config->item('version');
-			
-			$update_notice = "System is up to date";
-			$color = 'btn-success';
-				
-			if($current_version < $new_version){
-				$update_notice = "Updates Available!";
-				$color = 'btn-info';
-			
-			}
-		?>
-			<div class="btn btn-block <?=$color;?>" style="text-align: center;"><?=$update_notice;?></div>
-	</div>
-</div> -->
-
-<p></p>
-
-<!-- <div class="row">
-	<div class="col-xs-12">
-			
-		<div class="col-xs-3">
-			<div class="tile-title tile-primary">
-					
-				<div class="icon">
-					<a href="<?=base_url();?>index.php?finance/student_payments">
-						<i class="glyphicon glyphicon-leaf"></i>
-					</a>	
-				</div>
-						
-				<div class="title">
-					<h3>Take Student Payment</h3>
-					<p>shortcut to record student fees payment.</p>
-				</div>
-			</div>
-		</div>
-		
-		
-		<div class="col-xs-3">
-			<div class="tile-title tile-info">
-					
-				<div class="icon">
-					<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_income_add/');" >
-						<i class="glyphicon glyphicon-gift"></i>
-					</a>	
-				</div>
-						
-				<div class="title">
-					<h3>Take Other income</h3>
-					<p>shortcut to record other income.</p>
-				</div>
-			</div>
-		</div>
-				
-		<div class="col-xs-3">
-			<div class="tile-title tile-red">
-					
-				<div class="icon">
-					<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_expense_add/');" >
-						<i class="glyphicon glyphicon-link"></i>
-					</a>	
-				</div>
-						
-				<div class="title">
-					<h3>Record expenses</h3>
-					<p>shortcut to record expenses.</p>
-				</div>
-			</div>
-		</div>		
-	</div>
-</div> -->
 <hr />
-<div class="row">
+<div class="row  <?=get_access_class('create_transaction','admin','dashboard');?>">
 	<div class="col-xs-12">
 		<div class="col-xs-3">
 			<a href="<?=base_url();?>index.php?finance/create_transaction" class="btn btn-success btn-icon float-left">
@@ -87,13 +9,13 @@
 	</div>
 </div>
 
-<hr />
+<hr class="<?=get_access_class('create_transaction','admin','dashboard');?>"/>
 
 <div class="row">
 	<div class="col-xs-12">
-            <div class="col-md-3">
+            <div class="col-md-3 <?=get_access_class('student_count','admin','dashboard');?>">
             
-                <div class="tile-stats tile-red">
+                <div class="tile-stats tile-red <?=get_access_class('student_count','admin','dashboard');?>">
                     <div class="icon"><i class="fa fa-group"></i></div>
                     <?php
                     	$students = $this->db->get_where('student',array('active'=>1))->num_rows();
@@ -106,9 +28,9 @@
                 </div>
                 
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3  <?=get_access_class('teachers_count','admin','dashboard');?>">
             
-                <div class="tile-stats tile-green">
+                <div class="tile-stats tile-green <?=get_access_class('teachers_count','admin','dashboard');?>">
                     <div class="icon"><i class="entypo-users"></i></div>
                     <?php
                     	$teacher = $this->db->get_where('teacher',array('status'=>1))->num_rows();
@@ -121,9 +43,9 @@
                 </div>
                 
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 <?=get_access_class('parents_count','admin','dashboard');?>">
             
-                <div class="tile-stats tile-aqua">
+                <div class="tile-stats tile-aqua <?=get_access_class('parents_count','admin','dashboard');?>">
                     <div class="icon"><i class="entypo-user"></i></div>
                     <?php
                     	$this->db->where('student.active',1);
@@ -138,9 +60,9 @@
                 </div>
                 
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 <?=get_access_class('today_students_attendance','admin','dashboard');?>">
             
-                <div class="tile-stats tile-blue">
+                <div class="tile-stats tile-blue <?=get_access_class('today_students_attendance','admin','dashboard');?>">
                     <div class="icon"><i class="entypo-chart-bar"></i></div>
                     <?php 
 							$check	=	array(	'date' => date('Y-m-d') , 'status' => '1' );
@@ -162,9 +84,9 @@
 <div class="row">
 	<div class="col-xs-12">
 		
-		<div class="col-sm-3">
+		<div class="col-sm-3 <?=get_access_class('unpaid_invoices_count','admin','dashboard');?>">
 			
-				<div class="tile-stats tile-primary">
+				<div class="tile-stats tile-primary <?=get_access_class('unpaid_invoices_count','admin','dashboard');?>">
 					<div class="icon"><i class="entypo-suitcase"></i></div>
 					<?php
 						$unpaid_invoices = $this->db->get_where('invoice',array('status'=>'unpaid'))->num_rows();
@@ -177,9 +99,9 @@
 				
 			</div>
 			
-			<div class="col-sm-3">
+			<div class="col-sm-3 <?=get_access_class('total_fees_balance','admin','dashboard');?>">
 			
-				<div class="tile-stats tile-red">
+				<div class="tile-stats tile-red <?=get_access_class('total_fees_balance','admin','dashboard');?>">
 					<div class="icon"><i class="entypo-gauge"></i></div>
 					
 					<?php
@@ -196,8 +118,8 @@
 			
 			<div class="col-sm-3">
 			
-				<div class="tile-stats tile-plum">
-					<div class="icon"><i class="entypo-mail"></i></div>
+				<div class="tile-stats tile-plum <?=get_access_class('total_fees_received','admin','dashboard');?>">
+					<div class="icon"><i class="entypo-mail <?=get_access_class('total_fees_received','admin','dashboard');?>"></i></div>
 					<?php
 						$fees_paid = $this->db->select_sum('amount_paid')->get_where('invoice',
 						array('yr'=>date('Y')))->row()->amount_paid;
@@ -210,9 +132,9 @@
 				
 			</div>
 			
-			<div class="col-sm-3">
+			<div class="col-sm-3 <?=get_access_class('total_invoices_cleared','admin','dashboard');?>">
 			
-				<div class="tile-stats tile-brown">
+				<div class="tile-stats tile-brown <?=get_access_class('total_invoices_cleared','admin','dashboard');?>">
 					<div class="icon"><i class="entypo-suitcase"></i></div>
 					<?php
 						$cleared_invoices = $this->db->get_where('invoice',array('status'=>'paid','yr'=>date("Y")))->num_rows();
@@ -231,9 +153,9 @@
 
 <div class="row">
 	<div class="col-xs-12">
-		<div class="col-sm-3">
+		<div class="col-sm-3 <?=get_access_class('years_expense_to_date','admin','dashboard');?>">
 			
-				<div class="tile-stats tile-cyan">
+				<div class="tile-stats tile-cyan <?=get_access_class('years_expense_to_date','admin','dashboard');?>">
 					<div class="icon"><i class="entypo-paper-plane"></i></div>
 					<?php
 						$expense = $this->db->select_sum('amount')->get_where('expense',
@@ -247,9 +169,9 @@
 				
 			</div>
 			
-			<div class="col-sm-3">
+			<div class="col-sm-3 <?=get_access_class('budget_to_date','admin','dashboard');?>">
 			
-				<div class="tile-stats tile-purple">
+				<div class="tile-stats tile-purple <?=get_access_class('budget_to_date','admin','dashboard');?>">
 					<div class="icon"><i class="entypo-gauge"></i></div>
 					<?php
 					
@@ -266,9 +188,9 @@
 				
 			</div>
 			
-			<div class="col-sm-3">
+			<div class="col-sm-3  <?=get_access_class('percent_class_attendance','admin','dashboard');?>">
 			
-				<div class="tile-progress tile-primary">
+				<div class="tile-progress tile-primary  <?=get_access_class('percent_class_attendance','admin','dashboard');?>">
 					
 					<div class="tile-header">
 						<h3>Attendance</h3>
@@ -293,9 +215,9 @@
 			
 			</div>
 			
-			<div class="col-sm-3">
+			<div class="col-sm-3 <?=get_access_class('percent_lesson_covered','admin','dashboard');?>">
 			
-				<div class="tile-progress tile-red">
+				<div class="tile-progress tile-red <?=get_access_class('percent_lesson_covered','admin','dashboard');?>">
 					
 					<div class="tile-header">
 						<h3>Lessons</h3>
@@ -335,7 +257,7 @@
 
 <div class="row">
 	<div class="col-xs-12">
-    	<div class="row">
+    	<div class="row <?=get_access_class('event_schedule','admin','dashboard');?>">
             <!-- CALENDAR-->
             <div class="col-md-12 col-xs-12">    
                 <div class="panel panel-primary " data-collapsed="0">

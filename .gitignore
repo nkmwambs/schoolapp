@@ -1,0 +1,9 @@
+.editorconfig
+.project
+composer.json
+contributing.md
+license.txt
+readme.rst
+/tests
+/application/**/config/config.php
+/application/**/config/database.php
