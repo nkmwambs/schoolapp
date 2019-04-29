@@ -62,21 +62,21 @@ class Admin extends CI_Controller
             $data['name']        = $this->input->post('name');
             $data['birthday']    = $this->input->post('birthday');
             $data['sex']         = $this->input->post('sex');
-            $data['address']     = $this->input->post('address');
+            $data['level']     = $this->input->post('level');
             $data['phone']       = $this->input->post('phone');
             $data['email']       = $this->input->post('email');
 
-            $this->db->where('teacher_id', $param2);
-            $this->db->update('teacher', $data);
-            move_uploaded_file($_FILES['userfile']['tmp_name'], 'uploads/teacher_image/' . $param2 . '.jpg');
+            $this->db->where('admin_id', $param2);
+            $this->db->update('admin', $data);
+            move_uploaded_file($_FILES['userfile']['tmp_name'], 'uploads/admin_image/' . $param2 . '.jpg');
             $this->session->set_flashdata('flash_message' , get_phrase('data_updated'));
-            redirect(base_url() . 'index.php?teacher/teacher/', 'refresh');
+            redirect(base_url() . 'index.php?admin/administrator/', 'refresh');
         } else if ($param1 == 'personal_profile') {
             $page_data['personal_profile']   = true;
-            $page_data['current_teacher_id'] = $param2;
+            $page_data['current_admin_id'] = $param2;
         } else if ($param1 == 'edit') {
-            $page_data['edit_data'] = $this->db->get_where('teacher', array(
-                'teacher_id' => $param2
+            $page_data['edit_data'] = $this->db->get_where('admin', array(
+                'admin_id' => $param2
             ))->result_array();
         }
         if ($param1 == 'delete') {

@@ -20,9 +20,9 @@
                     			<tr>
                     				<th><?=get_phrase('name');?></th>
                     				<th><?=get_phrase('email');?></th>
-                    				<th><?=get_phrase('birthdate');?></th>
-                    				<th><?=get_phrase('gender');?></th>
                     				<th><?=get_phrase('phone');?></th>
+                    				<th><?php echo get_phrase("promoted_user");?></th>
+                    				<th><?php echo get_phrase("user_profile");?></th>
                     				<th><?=get_phrase('level');?></th>
                     				<th><?=get_phrase('action');?></th>
                     			</tr>
@@ -35,9 +35,25 @@
                     				<tr>
                     					<td><?=$row->name;?></td>
                     					<td><?=$row->email;?></td>
-                    					<td><?=$row->birthday;?></td>
-                    					<td><?=ucfirst($row->sex);?></td>
                     					<td><?=$row->phone;?></td>
+                    					<?php
+				                            	$promoted = get_phrase("no");
+												$profile = get_phrase("none");
+				                            	$user = $this->db->get_where("user",array("email"=>$row->email));
+				                            	if($user->num_rows()>0){
+				                            		$promoted = get_phrase("yes");
+													
+													if($user->row()->profile_id > 0){
+														$profile = $this->db->get_where("profile",array("profile_id"=>$user->row()->profile_id))->row()->name;	
+													}
+													
+				                            	}
+									
+										?>
+                    					
+                    					<td><?=$promoted;?></td>
+                    					<td><?=$profile;?></td>
+                    					
                     					<td><?=ucfirst($row->level);?></td>
                     					<td>
                     						<div class="btn-group">
@@ -66,7 +82,7 @@
 			                                        <!-- teacher DELETION LINK -->
 			                                        <li class="delete_teacher">
 			                                        	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?admin/admin/delete/<?php echo $row->admin_id;?>');">
-			                                            	<i class="fa fa-trash"></i>
+			                                            	<i class="fa fa-trash-o"></i>
 																<?php echo get_phrase('delete');?>
 			                                             </a>
 			                                        </li>
