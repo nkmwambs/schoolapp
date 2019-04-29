@@ -62,7 +62,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
         <div class="tab-content">
             <div class="tab-pane active" id="home">
 
-                <table class="table table-bordered datatable" id="table_export">
+                <table class="table table-bordered datatable table-responsive-xs" id="table_export">
                     <thead>
                         <tr>
                             <th width="80"><div><?php echo get_phrase('roll');?></div></th>
@@ -169,7 +169,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
             </div>
 
 
-            <div class="tab-pane" id="suspended">
+            <div class="tab-pane table-responsive-xs" id="suspended">
             	<table class="table table-bordered datatable" id="table_export">
                     <thead>
                         <tr>
@@ -335,6 +335,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
 
 
 		var datatable = $("#table_export").dataTable({
+			responsive:true,
 			"sPaginationType": "bootstrap",
 			"sDom": "<'row'<'col-xs-3 col-left'l><'col-xs-9 col-right'<'export-data'T>f>r>t<'row'<'col-xs-3 col-left'i><'col-xs-9 col-right'p>>",
 			"oTableTools": {

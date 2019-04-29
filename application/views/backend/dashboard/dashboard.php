@@ -23,7 +23,7 @@
 
 <p></p>
 
-<div class="row">
+<!-- <div class="row">
 	<div class="col-xs-12">
 			
 		<div class="col-xs-3">
@@ -75,10 +75,19 @@
 			</div>
 		</div>		
 	</div>
+</div> -->
+<hr />
+<div class="row">
+	<div class="col-xs-12">
+		<div class="col-xs-3">
+			<a href="<?=base_url();?>index.php?finance/create_transaction" class="btn btn-success btn-icon float-left">
+				<i class="fa fa-tasks"></i><?=get_phrase('create_a_transaction');?>
+			</a> 
+		</div>
+	</div>
 </div>
 
-
-<p></p>
+<hr />
 
 <div class="row">
 	<div class="col-xs-12">
