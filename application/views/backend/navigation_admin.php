@@ -241,7 +241,6 @@
         if (	$page_name == 'income' ||
                 $page_name == 'expense' ||
                 $page_name == 'create_invoice' ||
-                $page_name == 'income'||
                 $page_name == 'student_payments'||
 				$page_name == 'budget'||
 				$page_name == 'cash_book'||

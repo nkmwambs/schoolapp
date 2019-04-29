@@ -21,7 +21,10 @@ if(isset($current)){
 	</div>	
 	
 	<div class="col-sm-6">
-		
+		<div class="btn btn-group">
+			<a href="<?php echo base_url(); ?>index.php?finance/income"" class="btn btn-info"><?=get_phrase('income_list');?></a>
+			<a href="<?php echo base_url(); ?>index.php?finance/expense" class="btn btn-info"><?=get_phrase('expense_list');?></a>
+		</div>
 	</div>
 </div>
 
