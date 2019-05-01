@@ -351,6 +351,7 @@ class Finance extends CI_Controller
 					$cnt++;
 				}
 			}
+			
             if ($cnt===0) {
                 foreach ($this->input->post('student_id') as $id) {
                 	$invoice_found = $this->db->get_where("invoice",array("student_id"=>$id,"yr"=>$this->input->post('yr'),"term"=>$this->input->post('term')));
@@ -384,7 +385,7 @@ class Finance extends CI_Controller
 						}
 						
 						//Check if there is an unpaid invoice
-						$unpaid_invoice = $this->db->get_where('invoice',array('status'=>'unpaid'));
+						$unpaid_invoice = $this->db->get_where('invoice',array('status'=>'unpaid','student_id'=>$id));
 						if($unpaid_invoice->num_rows() > 0){
 							$unpaid_invoice_details = $this->db->get_where('invoice_details',
 							array('invoice_id'=>$unpaid_invoice->row()->invoice_id))->result_object();
