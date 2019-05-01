@@ -49,7 +49,7 @@ $parent_entitlement = $this->db->get_where("entitlement",array("derivative_id"=>
 						if($children->num_rows() > 0){
 							echo "<span class='fa fa-plus collapsible' id='span_".$parent->name."'></span>";
 							echo "<ul style='list-style: none;' class='sub-entitlement child_".$parent->name."'>";
-							echo "<li>".$checkbox.' '.get_phrase('view').' '.$parent->name."</li>";
+							echo "<li>".$checkbox.' '.get_phrase('view').' '.$parent->name." <i class='fa fa-key'></i></li>";
 							foreach($children->result_object() as $child){
 								
 								$checked_child = "";
