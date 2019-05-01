@@ -66,7 +66,7 @@
                 </li>
 
                 <!-- STUDENT INFORMATION -->
-                <li class="<?php if ($page_name == 'student_information' || $page_name == 'student_marksheet') echo 'opened active'; ?> <?=get_access_class('all_student_information','admin','student');?>">
+                <li class="<?php if ($page_name == 'student_information' || $page_name == 'student_marksheet') echo 'opened active'; ?> <?=get_access_class('all_student_information','admin','student');?> <?=get_access_class('student','admin');?>">
                     <a href="#">
                         <span><i class="fa fa-list"></i> <?php echo get_phrase('student_information'); ?></span>
                     </a>
@@ -81,7 +81,7 @@
                         foreach ($classes as $row):
                         										
 						    ?>
-                            <li class="<?php if ($page_name == 'student_information' && $page_name == 'student_marksheet' && $class_id == $row['class_id']) echo 'active'; ?> ">
+                            <li class="<?php if ($page_name == 'student_information' && $page_name == 'student_marksheet' && $class_id == $row['class_id']) echo 'active'; ?> <?=get_access_class('class_numeric_'.$row['name_numeric'].'_students','admin','student');?>">
                                 <a href="<?php echo base_url(); ?>index.php?student/student_information/<?php echo $row['class_id']; ?>">
                                 	<?php
                                 		 $students_count   =   $this->db->get_where('student' , array('class_id'=>$row['class_id'],"active"=>1))->num_rows();
@@ -116,7 +116,7 @@
                 <span><?php echo get_phrase('parent'); ?></span>
             </a>
             <ul>
-                <li class="<?php if ($page_name == 'parent') echo 'active'; ?> <?=get_access_class('view_parents','admin','parent');?>">
+                <li class="<?php if ($page_name == 'parent') echo 'active'; ?> <?=get_access_class('view_parents','admin','parent');?> <?=get_access_class('parent','admin');?>">
                     <a href="<?php echo base_url(); ?>index.php?parents/parent">
                         <span><i class="fa fa-user-md"></i> <?php echo get_phrase('view_parent'); ?></span>
                     </a>
@@ -143,7 +143,7 @@
                 <span><?php echo get_phrase('class'); ?></span>
             </a>
             <ul>
-                <li class="<?php if ($page_name == 'class') echo 'active'; ?> <?=get_access_class('manage_classes','admin','classes');?>">
+                <li class="<?php if ($page_name == 'class') echo 'active'; ?> <?=get_access_class('manage_classes','admin','classes');?> <?=get_access_class('classes','admin');?>">
                     <a href="<?php echo base_url(); ?>index.php?classes/classes">
                         <span><i class="fa fa-star-o"></i> <?php echo get_phrase('manage_classes'); ?></span>
                     </a>
@@ -164,10 +164,10 @@
             </a>
             <ul>
                 <?php
-                $classes = $this->db->get('class')->result_array();
+                $classes = $this->db->order_by("name_numeric","asc")->get('class')->result_array();
                 foreach ($classes as $row):
                     ?>
-                    <li class="<?php if ($page_name == 'subject' && $class_id == $row['class_id']) echo 'active'; ?> <?=get_access_class($row['name'].'_subjects','admin','subject');?>">
+                    <li class="<?php if ($page_name == 'subject' && $class_id == $row['class_id']) echo 'active'; ?> <?=get_access_class('class_numeric_'.$row['name_numeric'].'_subjects','admin','subject');?>">
                         <a href="<?php echo base_url(); ?>index.php?subject/subject/<?php echo $row['class_id']; ?>">
                             <span><?php echo get_phrase('class'); ?> <?php echo $row['name']; ?></span>
                         </a>
@@ -227,7 +227,7 @@
                         <span><i class="fa fa-mobile"></i> <?php echo get_phrase('send_marks_by_sms'); ?></span>
                     </a>
                 </li>
-                <li class="<?php if ($page_name == 'tabulation_sheet') echo 'active'; ?> <?=get_access_class('tabulation_sheet','admin','examination');?>">
+                <li class="<?php if ($page_name == 'tabulation_sheet') echo 'active'; ?> <?=get_access_class('tabulation_sheet','admin','examination');?> <?=get_access_class('examination','admin');?>">
                     <a href="<?php echo base_url(); ?>index.php?exam/tabulation_sheet">
                         <span><i class="fa fa-rss"></i> <?php echo get_phrase('tabulation_sheet'); ?></span>
                     </a>

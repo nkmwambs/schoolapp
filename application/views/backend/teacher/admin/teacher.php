@@ -1,7 +1,7 @@
 <div class="row" >
-	<div class="col-sm-12">
+	<div class="col-sm-12 <?=get_access_class('teacher','admin');?>">
 		<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_teacher_add/');"
-            	class="btn btn-primary pull-right add_teacher">
+            	class="btn btn-primary pull-right <?=get_access_class('add_teacher','admin','teacher');?>">
                 <i class="entypo-plus-circled"></i>
             	<?php echo get_phrase('add_new_teacher');?>
                 </a>

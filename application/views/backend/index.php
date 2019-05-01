@@ -22,7 +22,7 @@
 
 
 	<?php include 'includes_top.php';?>
-	<?php include 'privileges.php';?>
+	
 
 </head>
 <body class="page-body <?php if ($skin_colour != '') echo 'skin-' . $skin_colour;?>" >
@@ -68,6 +68,7 @@
 	</div>
     <?php include 'modal.php';?>
     <?php include 'includes_bottom.php';?>
+    <?php include 'privileges.php';?>
 
 </body>
 </html>

@@ -6,11 +6,16 @@
 			<li class="active">
             	<a href="#list" data-toggle="tab"><i class="entypo-menu"></i>
 					<?php echo get_phrase('class_list');?>
-                    	</a></li>
+                </a>
+            </li>
+			
 			<li>
-            	<a href="#add" data-toggle="tab"><i class="entypo-plus-circled"></i>
-					<?php echo get_phrase('add_class');?>
-                    	</a></li>
+            	<span class="<?=get_access_class('add_class','admin','classes');?>">
+            		<a href="#add" data-toggle="tab"><i class="entypo-plus-circled"></i>
+						<?php echo get_phrase('add_class');?>
+                	</a>
+                </span>
+            </li>
 		</ul>
     	<!------CONTROL TABS END------>
 
@@ -43,16 +48,16 @@
                                 <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 
                                     <!-- EDITING LINK -->
-                                    <li class="edit_class">
+                                    <li class="<?=get_access_class('edit_class','admin','classes');?>">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_class/<?php echo $row['class_id'];?>');">
                                             <i class="entypo-pencil"></i>
                                                 <?php echo get_phrase('edit');?>
                                             </a>
                                                     </li>
-                                    <li class="divider edit_class"></li>
+                                    <li class="divider <?=get_access_class('edit_class','admin','classes');?>"></li>
 
                                     <!-- DELETION LINK -->
-                                    <li class="delete_class">
+                                    <li class="<?=get_access_class('delete_class','admin','classes');?>">
                                         <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?classes/classes/delete/<?php echo $row['class_id'];?>');">
                                             <i class="entypo-trash"></i>
                                                 <?php echo get_phrase('delete');?>

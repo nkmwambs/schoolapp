@@ -21,6 +21,7 @@ $parent_entitlement = $this->db->get_where("entitlement",array("derivative_id"=>
 		<ul style="list-style: none;">
 			<?php
 				foreach($parent_entitlement as $parent){
+					//print_r($parent);
 					$checked = "";
 					foreach($access as $row){
 						
@@ -33,17 +34,22 @@ $parent_entitlement = $this->db->get_where("entitlement",array("derivative_id"=>
 					
 					$checkbox = "";
 					
-					if($children->num_rows() == 0){
+					//if($children->num_rows() == 0){
 						$checkbox = '<input type="checkbox" '.$checked.' id="parent-'.$profile_id.'-'.$parent->entitlement_id.'-'.$parent->name.'" />';	
-					}
+					//}
 				?>
-					<li id="parent_<?=$parent->name;?>"><?=$checkbox;?><?=ucwords(str_replace("_", " ", $parent->name));?>
-					
+					<li id="parent_<?=$parent->name;?>"><?=$children->num_rows() == 0?$checkbox:"";?><?=ucwords(str_replace("_", " ", $parent->name));?>
+						
 					<?php
-
+							// id_obj = $(this).attr("id").split("-");
+							// level = id_obj[0];
+							// profile_id = id_obj[1];
+							// entitlement_id = id_obj[2];
+							// entitlement_name = id_obj[3];	
 						if($children->num_rows() > 0){
 							echo "<span class='fa fa-plus collapsible' id='span_".$parent->name."'></span>";
 							echo "<ul style='list-style: none;' class='sub-entitlement child_".$parent->name."'>";
+							echo "<li>".$checkbox.' '.get_phrase('view').' '.$parent->name."</li>";
 							foreach($children->result_object() as $child){
 								
 								$checked_child = "";
@@ -55,7 +61,7 @@ $parent_entitlement = $this->db->get_where("entitlement",array("derivative_id"=>
 								}
 								
 					?>
-								<li><input type="checkbox" <?=$checked_child;?> id="child-<?=$profile_id."-".$child->entitlement_id."-".$child->name."-".$parent->name;?>" /><?=ucwords(str_replace("_", " ", $child->name));?>
+								<li><input type="checkbox" <?=$checked_child;?> id="child-<?=$profile_id."-".$child->entitlement_id."-".$child->name."-".$parent->name;?>" /><?=ucwords(str_replace("_", " ", $child->name));?></li>
 					<?php
 							}
 							echo "</ul>";
