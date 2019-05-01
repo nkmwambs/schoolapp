@@ -167,7 +167,7 @@
                 $classes = $this->db->get('class')->result_array();
                 foreach ($classes as $row):
                     ?>
-                    <li class="<?php if ($page_name == 'subject' && $class_id == $row['class_id']) echo 'active'; ?> ">
+                    <li class="<?php if ($page_name == 'subject' && $class_id == $row['class_id']) echo 'active'; ?> <?=get_access_class($row['name'].'_subjects','admin','subject');?>">
                         <a href="<?php echo base_url(); ?>index.php?subject/subject/<?php echo $row['class_id']; ?>">
                             <span><?php echo get_phrase('class'); ?> <?php echo $row['name']; ?></span>
                         </a>
