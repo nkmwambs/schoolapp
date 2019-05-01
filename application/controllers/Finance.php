@@ -403,7 +403,7 @@ class Finance extends CI_Controller
 							
 							//Cancel a carried forward invoice
 							
-							$this->db->where(array('invoice_id'=>$unpaid_invoice->row()->invoice_id));
+							$this->db->where(array('invoice_id'=>$unpaid_invoice->row()->invoice_id,'student_id'=>$id));
 							$invoice_status['status'] = 'cancelled';
 							$invoice_status['carry_forward'] = 1;
 							$this->db->update('invoice',$invoice_status);
