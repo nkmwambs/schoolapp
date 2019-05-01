@@ -10,7 +10,7 @@
                     <div class="panel-body">
                     	
                     	<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_admin_add/');"
-			            	class="btn btn-primary pull-right add_teacher">
+			            	class="btn btn-primary pull-right <?=get_access_class('add_administrator','admin','administrator')?>">
 			                <i class="entypo-plus-circled"></i>
 			            	<?php echo get_phrase('add_new_admin');?>
 			                </a>
@@ -62,25 +62,25 @@
 			                                    </button>
 			                                    <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 													
-													<!-- Promote a Teacher to A user -->
-			                                        <li class="promote_admin_to_user">
+													<!-- Promote a Admin to A user -->
+			                                        <li class="<?=get_access_class('promote_admin_to_user','admin','administrator')?>">
 			                                        	<a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?settings/promote_to_user/admin/<?php echo $row->admin_id;?>');">
 			                                            	<i class="fa fa-thumbs-up"></i>
 																<?php echo get_phrase('promote_to_user');?>
 			                                               	</a>
 			                                        </li>
-			                                        <li class="divider promote_teacher_to_user"></li>
+			                                        <li class="divider <?=get_access_class('promote_admin_to_user','admin','administrator')?>"></li>
 			                                        
-			                                        <li class="edit_admin">
+			                                        <li class="<?=get_access_class('edit_admin','admin','administrator')?>">
 			                                        	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_admin_edit/<?php echo $row->admin_id;?>');">
 			                                            	<i class="fa fa-pencil"></i>
 																<?php echo get_phrase('edit');?>
 			                                               	</a>
 			                                        </li>
-			                                        <li class="divider edit_teacher"></li>
+			                                        <li class="divider <?=get_access_class('edit_admin','admin','administrator')?>"></li>
 			                                        
 			                                        <!-- teacher DELETION LINK -->
-			                                        <li class="delete_teacher">
+			                                        <li class="<?=get_access_class('delete_admin','admin','administrator')?>">
 			                                        	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?admin/admin/delete/<?php echo $row->admin_id;?>');">
 			                                            	<i class="fa fa-trash-o"></i>
 																<?php echo get_phrase('delete');?>
