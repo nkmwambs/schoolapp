@@ -18,7 +18,7 @@ $profiles = $this->db->get_where("profile",array("login_type_id"=>$login_type_id
 					
                 <?php
                 	if($profiles->num_rows()>0){
-                	 echo form_open(base_url() . 'index.php?account/assign_profile/admin/'.$param3 , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
+                	 echo form_open(base_url() . 'index.php?account/assign_profile/'.$param2.'/'.$param3 , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
 					
 					<div class="form-group">
 						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('new_password');?></label>

@@ -102,21 +102,60 @@ class Account extends CI_Controller
 	
 	function assign_profile($param1="",$param2=""){
 			
-		$data['profile_id'] = $this->input->post('profile_id');
+		/**Check if exists**/
+		$id = $param1.'_id';
+		//$check_if_exists = $this->db->get_where($param1,array($id=>$param2))->num_rows();
 		
 		$login_type_id = $this->db->get_where("login_type",array("name"=>$param1))->row()->login_type_id;
 		
-		$this->db->where(array('type_user_id'=> $param2,"login_type_id"=>$login_type_id));
+		$exists = $this->db->get_where("user",array("type_user_id"=>$param2,'login_type_id'=>$login_type_id))->num_rows();
 		
-		$this->db->update('user', $data);
-		
-		if($this->db->affected_rows() > 0 ){
-			$this->session->set_flashdata('flash_message', get_phrase('profile_updated'));
+		if($exists == 0) {
+			
+			$record = $this->db->get_where($param1,array($id=>$param2))->row();
+			//extract($record);
+			
+			$name_array = explode(" ", $record->name);
+			
+			$data['firstname'] = array_shift($name_array);
+			$data['lastname'] = implode(" ", $name_array);
+			$data['email'] = $record->email;
+			$data['password'] = "default";
+			$data['phone'] = $record->phone;
+			$data['login_type_id'] = $login_type_id;//$this->db->get_where("login_type",array("name"=>$param1))->row()->login_type_id;
+			$data['profile_id'] = $this->input->post('profile_id');
+			$data['type_user_id'] = $param2;
+			$data['auth'] = 1;
+			
+			//$msg = get_phrase("failed");
+			
+			
+				$this->db->insert("user",$data);
+				//$msg = get_phrase("success");
 		}else{
-			$this->session->set_flashdata('flash_message', get_phrase('update_failure'));
+			
+				
+			//Asign A Profile
+			$data['profile_id'] = $this->input->post('profile_id');
+			
+			//$login_type_id = $this->db->get_where("login_type",array("name"=>$param1))->row()->login_type_id;
+			
+			$this->db->where(array('type_user_id'=> $param2,"login_type_id"=>$login_type_id));
+			
+			$this->db->update('user', $data);
+			
+			
 		}
 		
-		redirect(base_url() . 'index.php?'.$param1.'/'.$param1.'/', 'refresh');
+		if($this->db->affected_rows() > 0 ){
+				$this->session->set_flashdata('flash_message', get_phrase('profile_updated'));
+			}else{
+				$this->session->set_flashdata('flash_message', get_phrase('update_failure'));
+		}
+		
+		$link = $param1 == 'admin'?"admin/administrator":"teacher/teacher";
+		
+		redirect(base_url() .'index.php?'.$link.'/', 'refresh');
 	}
 
 }

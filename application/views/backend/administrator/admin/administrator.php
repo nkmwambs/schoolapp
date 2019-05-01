@@ -79,7 +79,17 @@
 			                                        </li>
 			                                        <li class="divider <?=get_access_class('edit_admin','admin','administrator')?>"></li>
 			                                        
-			                                        <!-- teacher DELETION LINK -->
+			                                         <!-- Assign Profile -->
+			                                        <li class="<?=get_access_class("assign_profile",$this->session->login_type,"administrator");?>">
+			                                        	<a href="#" onclick="showAjaxModal('<?=base_url();?>index.php?modal/popup/modal_assign_profile/admin/<?php echo $row->admin_id;?>');">
+			                                            	<i class="fa fa-link"></i>
+																<?php echo get_phrase('change_profile');?>
+			                                               	</a>
+			                                        </li>
+			                                        <li class="divider <?=get_access_class("assign_profile",$this->session->login_type,"administrator");?>"></li>
+			                                        
+			                                        
+			                                        <!-- Admin DELETION LINK -->
 			                                        <li class="<?=get_access_class('delete_admin','admin','administrator')?>">
 			                                        	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?admin/admin/delete/<?php echo $row->admin_id;?>');">
 			                                            	<i class="fa fa-trash-o"></i>
