@@ -364,7 +364,7 @@ class Student extends CI_Controller
 	
 	function get_class_students_mass($class_id="", $yr = "", $term = "" )
     {
-        $students_array = $this->db->get_where('student', array('class_id' => $class_id,'active'=>1))->result_array();
+        $students_array = $this->db->order_by('name')->get_where('student', array('class_id' => $class_id,'active'=>1))->result_array();
 		// $yr = "2018";
 		// $term = "1";
 		// $class_id = "1";
