@@ -275,6 +275,18 @@ class Finance extends CI_Controller
             redirect(base_url(), 'refresh');
         
         if ($param1 == 'create') {
+            
+			//Cancel any previous unpaid invoice
+			// $unpaid_invoice = $this->db->get_where('invoice',array('status'=>'unpaid','student_id'=>$this->input->post('student_id')));
+// 			
+			// if($unpaid_invoice->num_rows() > 0){
+				// $this->db->where(array('invoice_id'=>$unpaid_invoice->row()->invoice_id));
+				// $cancel_status['status'] = 'cancelled';
+				// $cancel_status['carry_forward'] = 1;
+				// $this->db->update('invoice',$cancel_status);
+			// }
+			
+				
             $data['student_id']         = $this->input->post('student_id');
 			$data['class_id']         = $this->input->post('class_id');
             $data['yr']              = $this->input->post('yr');
@@ -325,16 +337,7 @@ class Finance extends CI_Controller
 				
 			}
 			
-			//Cancel any previous unpaid invoice
-			$unpaid_invoice = $this->db->get_where('invoice',array('status'=>'unpaid','student_id'=>$this->input->post('student_id')));
 			
-			if($unpaid_invoice->num_rows() > 0){
-				$this->db->where(array('invoice_id'=>$unpaid_invoice->row()->invoice_id));
-				$cancel_status['status'] = 'cancelled';
-				$cancel_status['carry_forward'] = 1;
-				$this->db->update('invoice',$cancel_status);
-			}
-
             $this->session->set_flashdata('flash_message' , get_phrase('invoice_created_successfully'));
             redirect(base_url() . 'index.php?finance/create_invoice', 'refresh');
         }
@@ -356,30 +359,30 @@ class Finance extends CI_Controller
                 foreach ($this->input->post('student_id') as $id) {
                 	
 					//Check if there is an unpaid invoice
-						$unpaid_invoice = $this->db->get_where('invoice',array('status'=>'unpaid','student_id'=>$id));
-						if($unpaid_invoice->num_rows() > 0){
-							$unpaid_invoice_details = $this->db->get_where('invoice_details',
-							array('invoice_id'=>$unpaid_invoice->row()->invoice_id))->result_object();
-							
-							foreach($unpaid_invoice_details as $detail){
-								//if($value > 0){
-									$data3['invoice_id'] = $invoice_id;
-									$data3['detail_id'] = $detail->detail_id;
-									$data3['amount_due'] = $detail->balance;
-									$data3['balance'] = $detail->balance;
-									$this->db->insert('invoice_details',$data3);
-								//}
-											
-							}
-							
-							//Cancel a carried forward invoice
-							
-							$this->db->where(array('invoice_id'=>$unpaid_invoice->row()->invoice_id));
-							$invoice_status['status'] = 'cancelled';
-							$invoice_status['carry_forward'] = 1;
-							$this->db->update('invoice',$invoice_status);
-							
-						}
+						// $unpaid_invoice = $this->db->get_where('invoice',array('status'=>'unpaid','student_id'=>$id));
+						// if($unpaid_invoice->num_rows() > 0){
+							// $unpaid_invoice_details = $this->db->get_where('invoice_details',
+							// array('invoice_id'=>$unpaid_invoice->row()->invoice_id))->result_object();
+// 							
+							// foreach($unpaid_invoice_details as $detail){
+								// //if($value > 0){
+									// $data3['invoice_id'] = $invoice_id;
+									// $data3['detail_id'] = $detail->detail_id;
+									// $data3['amount_due'] = $detail->balance;
+									// $data3['balance'] = $detail->balance;
+									// $this->db->insert('invoice_details',$data3);
+								// //}
+// 											
+							// }
+// 							
+							// //Cancel a carried forward invoice
+// 							
+							// $this->db->where(array('invoice_id'=>$unpaid_invoice->row()->invoice_id));
+							// $invoice_status['status'] = 'cancelled';
+							// $invoice_status['carry_forward'] = 1;
+							// $this->db->update('invoice',$invoice_status);
+// 							
+						// }
 					
 					
                 	$invoice_found = $this->db->get_where("invoice",array("student_id"=>$id,"yr"=>$this->input->post('yr'),"term"=>$this->input->post('term')));
