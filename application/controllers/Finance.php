@@ -354,6 +354,34 @@ class Finance extends CI_Controller
 			
             if ($cnt===0) {
                 foreach ($this->input->post('student_id') as $id) {
+                	
+					//Check if there is an unpaid invoice
+						$unpaid_invoice = $this->db->get_where('invoice',array('status'=>'unpaid','student_id'=>$id));
+						if($unpaid_invoice->num_rows() > 0){
+							$unpaid_invoice_details = $this->db->get_where('invoice_details',
+							array('invoice_id'=>$unpaid_invoice->row()->invoice_id))->result_object();
+							
+							foreach($unpaid_invoice_details as $detail){
+								//if($value > 0){
+									$data3['invoice_id'] = $invoice_id;
+									$data3['detail_id'] = $detail->detail_id;
+									$data3['amount_due'] = $detail->balance;
+									$data3['balance'] = $detail->balance;
+									$this->db->insert('invoice_details',$data3);
+								//}
+											
+							}
+							
+							//Cancel a carried forward invoice
+							
+							$this->db->where(array('invoice_id'=>$unpaid_invoice->row()->invoice_id));
+							$invoice_status['status'] = 'cancelled';
+							$invoice_status['carry_forward'] = 1;
+							$this->db->update('invoice',$invoice_status);
+							
+						}
+					
+					
                 	$invoice_found = $this->db->get_where("invoice",array("student_id"=>$id,"yr"=>$this->input->post('yr'),"term"=>$this->input->post('term')));
 					if($invoice_found->num_rows() === 0){
 	                    $data['student_id']         = $id;
@@ -384,31 +412,7 @@ class Finance extends CI_Controller
 										
 						}
 						
-						//Check if there is an unpaid invoice
-						$unpaid_invoice = $this->db->get_where('invoice',array('status'=>'unpaid','student_id'=>$id));
-						if($unpaid_invoice->num_rows() > 0){
-							$unpaid_invoice_details = $this->db->get_where('invoice_details',
-							array('invoice_id'=>$unpaid_invoice->row()->invoice_id))->result_object();
-							
-							foreach($unpaid_invoice_details as $detail){
-								//if($value > 0){
-									$data3['invoice_id'] = $invoice_id;
-									$data3['detail_id'] = $detail->detail_id;
-									$data3['amount_due'] = $detail->balance;
-									$data3['balance'] = $detail->balance;
-									$this->db->insert('invoice_details',$data3);
-								//}
-											
-							}
-							
-							//Cancel a carried forward invoice
-							
-							$this->db->where(array('invoice_id'=>$unpaid_invoice->row()->invoice_id,'student_id'=>$id));
-							$invoice_status['status'] = 'cancelled';
-							$invoice_status['carry_forward'] = 1;
-							$this->db->update('invoice',$invoice_status);
-							
-						}
+						
 					}
                 }
 				
