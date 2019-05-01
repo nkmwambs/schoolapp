@@ -40,32 +40,37 @@ $row = $edit_data[0];
 								</thead>
 								<tbody>
 									<?php
-										$invoice_details = $this->db->get_where('invoice_details',array('invoice_id'=>$row['invoice_id']))->result_object();
-										
-										$tot_due = 0;
-										$tot_paid = 0;
-										$tot_bal = 0;
-										
+										$this->db->select(array('fees_structure_details.detail_id','fees_structure_details.name',
+	                                	'fees_structure_details.amount','invoice_details.amount_due','invoice_details.amount_paid','invoice_details.balance'));
+	                                	
+										$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');									
+	                                	$this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
+	                                	$invoice_details = $this->db->get_where("invoice_details",array('invoice_details.invoice_id'=>$row['invoice_id']))->result_object();
+																				
 										foreach($invoice_details as $inv):
 									?>
 										<tr>
-											<td><?php echo $this->db->get_where('fees_structure_details',array('detail_id'=>$inv->detail_id))->row()->name;?></td>
-											<td><?php echo $inv->amount_due;?></td>
-											<td><?php echo $inv->amount_paid;?></td>
-											<td><?php echo  $inv->balance;?></td>
+											<td><?php echo $inv->name;?></td>
+											<td><?php echo number_format($inv->amount_due,2);?></td>
+											<td><?php echo number_format($inv->amount_paid,2);?></td>
+											<td><?php echo number_format($inv->balance,2);?></td>
 											<td><input type="text" onkeyup="return get_total_payment();" class="form-control paying" name="take_payment[<?php echo $inv->detail_id;?>]" id="" value="0"/></td>
 										</tr>
 									
 									<?php
 										
-										$tot_due += $inv->amount_due;
-										$tot_paid += $inv->amount_paid;
-										$tot_bal += $inv->balance;
-										
 										endforeach;
+										$tot_due = array_sum(array_column($invoice_details, 'amount_due'));
+										$tot_paid = array_sum(array_column($invoice_details, 'amount_paid'));
+										$tot_bal  = array_sum(array_column($invoice_details, 'balance'));
 									?>
 									<tr><td>Overpayment</td><td colspan="3"><input type="text" class="form-control overpay" name="overpayment_description" readonly="readonly" /></td><td><input type="text" onkeyup="return get_total_payment();" name="overpayment" class="form-control paying overpay" value="0" readonly="readonly"/></td></tr>
-									<tr><td>Totals</td><td><?php echo number_format($tot_due,2);?></td><td><?php echo number_format($tot_paid,2);?></td><td id="total_balance"><?php echo $tot_bal;?></td><td><input type="text" class="form-control" name="total_payment" id="total_payment" value="0" readonly="readonly" placeholder="<?php echo get_phrase('enter_payment_amount');?>"/></td></tr>
+									<tr>
+										<td>Totals</td><td><?php echo number_format($tot_due,2);?></td>
+										<td><?php echo number_format($tot_paid,2);?></td>
+										<td id="total_balance"><?php echo number_format($tot_bal,2);?></td>
+										<td><input type="text" class="form-control" name="total_payment" id="total_payment" value="0" readonly="readonly"/></td>
+									</tr>
 								</tbody>
 							</table>
 		                </div>
@@ -162,7 +167,7 @@ $row = $edit_data[0];
 		var detail_balance = $(this).parent().prev().html();
 		var detail_paying = $(this).val();
 		
-		if(parseInt(detail_paying) > parseInt(detail_balance)){
+		if(parseInt(detail_paying) > parseInt(accounting.unformat(detail_balance))){
 			alert("<?=get_phrase("paying_more_than_balance");?>");
 			$(this).val("0");
 			get_total_payment();

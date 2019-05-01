@@ -524,7 +524,7 @@ $(".get_ajax_details").change(function(){
     		});
     		$('#mass_amount_due').val(total_payable);
     		
-    		$('#mass_chk_'+id).prop('checked',false);
+    		//$('#mass_chk_'+id).prop('checked',false);
     	
     }  
     

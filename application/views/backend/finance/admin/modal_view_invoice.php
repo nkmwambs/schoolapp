@@ -80,41 +80,40 @@ foreach ($edit_data as $row):
             </thead>
             <tbody>
             	<?php
-					$invoice_details = $this->db->get_where('invoice_details',array('invoice_id'=>$row['invoice_id']))->result_object();
-										
-					$tot_due = 0;
-					$tot_paid = 0;
-					$tot_bal = 0;
+					//$invoice_details = $this->db->get_where('invoice_details',array('invoice_id'=>$row['invoice_id']))->result_object();
+					$this->db->select(array('fees_structure_details.detail_id','fees_structure_details.name',
+	                'fees_structure_details.amount','invoice_details.amount_due','invoice_details.amount_paid','invoice_details.balance'));
+	                                	
+					$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');									
+	                $this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
+	                $invoice_details = $this->db->get_where("invoice_details",array('invoice_details.invoice_id'=>$row['invoice_id']))->result_object();
+					
 										
 					foreach($invoice_details as $inv):
 				?>
 					<tr>
-						<td><?php echo $this->db->get_where('fees_structure_details',array('detail_id'=>$inv->detail_id))->row()->name;?></td>
+						<td><?php echo $inv->name;?></td>
 						<td><?php echo $inv->amount_due;?></td>
-							<?php
-								$paid = 0;
-												
-								if($this->db->get_where('payment',array('invoice_id'=>$inv->invoice_id))->num_rows()>0){
-									$payment_id  =  $this->db->get_where('payment',array('invoice_id'=>$inv->invoice_id))->row()->payment_id; //,'detail_id'=>$inv->detail_id
-									$paid = $this->db->select_sum('amount')->get_where('student_payment_details',array('payment_id'=>$payment_id,'detail_id'=>$inv->detail_id))->row()->amount;
-								} 
-												
-								$detail_bal = $inv->amount_due-$paid;
-					?>
-						<td><?php echo $paid;?></td>
-						<td><?php echo $detail_bal;?></td>
+						
+						<td><?php echo $inv->amount_paid;?></td>
+						<td><?php echo $inv->balance;?></td>
 						
 					</tr>
 									
 					<?php
-										
-						$tot_due += $inv->amount_due;
-						$tot_paid += $paid;
-						$tot_bal += $detail_bal;
-										
+																			
 						endforeach;
+						
+						$tot_due = array_sum(array_column($invoice_details, 'amount_due'));
+						$tot_paid = array_sum(array_column($invoice_details, 'amount_paid'));
+						$tot_bal  = array_sum(array_column($invoice_details, 'balance'));
 					?>
-						<tr><td>Totals</td><td><?php echo number_format($tot_due,2);?></td><td><?php echo number_format($tot_paid,2);?></td><td><?php echo number_format($tot_bal,2);?></td></tr>
+						<tr>
+							<td><?=get_phrase('total')?></td>
+							<td><?php echo number_format($tot_due,2);?></td>
+							<td><?php echo number_format($tot_paid,2);?></td>
+							<td><?php echo number_format($tot_bal,2);?></td>
+						</tr>
             </tbody>
           	
 		</table>
@@ -134,33 +133,44 @@ foreach ($edit_data as $row):
             </thead>
             <tbody>
                 <?php
-                $payment  = $this->db->get_where("payment",array("invoice_id"=>$row['invoice_id']));
-				if($payment->num_rows()>0){
-					$payment_id = $payment->row()->payment_id;
-	                $payment_history = $this->db->get_where('student_payment_details', array('payment_id' => $payment_id))->result_array();
-	                foreach ($payment_history as $row2):
-	                    ?>
+                $this->db->select(array('payment.invoice_id','payment.t_date','student_payment_details.amount','student_payment_details.detail_id',
+				'fees_structure_details.name','payment.method'));
+				
+				
+				$this->db->join('payment','payment.payment_id=student_payment_details.payment_id');
+				$this->db->join('fees_structure_details','fees_structure_details.detail_id=student_payment_details.detail_id');
+				$payment_history = $this->db->get_where('student_payment_details', array('payment.invoice_id' => $row['invoice_id']));
+// 				
+				
+				if($payment_history->num_rows()>0){
+	            	
+	            $payment = $payment_history->result_array(); 
+					 
+	            foreach ($payment as $line){
+	            
+	            ?>
 	                    <tr>
-	                        <td><?php echo $row2['t_date']; ?></td>
-	                        <td><?php echo $row2['amount']; ?></td>
-	                        <td><?php echo $this->db->get_where('fees_structure_details',array('detail_id'=>$row2['detail_id']))->row()->name;?></td>
+	                        <td><?php echo $line['t_date']; ?></td>
+	                        <td><?php echo $line['amount']; ?></td>
+	                        <td><?php echo $line['name'];?></td>
 	                        <td>
 	                            <?php 
-	                                if ($payment->row()->method == 1)
+	                                if ($line['method'] == 1)
 	                                    echo get_phrase('cash');
-	                                if ($payment->row()->method == 2)
-	                                    echo get_phrase('check');
-	                                if ($payment->row()->method == 3)
-	                                    echo get_phrase('card');
-	                                if ($payment->row()->method == 'paypal')
-	                                    echo 'paypal';
+	                                if ($line['method'] == 2)
+	                                    echo get_phrase('bank');
+	                                // if ($line['method'] == 3)
+	                                    // echo get_phrase('card');
+	                                // if ($line['method'] == 'paypal')
+	                                    // echo 'paypal';
 	                            ?>
 	                        </td>
 	                        
 	                    </tr>
                 <?php 
-                		endforeach; 
-                	}
+					}
+                }
+
                 ?>
             </tbody>
             <tbody>

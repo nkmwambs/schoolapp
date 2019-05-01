@@ -43,6 +43,9 @@
 	
 	<script src="<?php echo base_url();?>assets/js/printThis.js"></script>
 	
+	<!--Accounting JS-->
+	<script src="<?php echo base_url();?>assets/js/accounting.min.js"></script>
+	
 <!-- SHOW TOASTR NOTIFIVATION -->
 <?php if ($this->session->flashdata('flash_message') != ""):?>
 

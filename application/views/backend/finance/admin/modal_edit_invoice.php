@@ -50,49 +50,27 @@
                                 
                                 <?php
                                 	$this->db->select(array('fees_structure_details.detail_id','fees_structure_details.name',
-                                	'fees_structure_details.amount'));
+                                	'fees_structure_details.amount','invoice_details.amount_due','invoice_details.amount_paid'));
+                                	
+									$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');									
                                 	$this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
-                                	$details = $this->db->get_where("fees_structure_details",array('yr'=>$invoice->yr,'class_id'=>$invoice->class_id,'term'=>$invoice->term))->result_object();
-                                	//print_r($details);
-                                	$balance = 0;	
-									$amount_paid = 0;
+                                	$details = $this->db->get_where("invoice_details",array('invoice_details.invoice_id'=>$param2))->result_object();
                                 	
 									foreach($details as $detail){
-                                		//$fees_details = $this->db->get_where("fees_structure_details",array("detail_id"=>$detail->detail_id))->row();
+
                                 ?>
                                 	<tr>
                                 		<td><input type="checkbox" class="overpay" id="overpay_<?=$detail->detail_id;?>"/></td>
 	                               		<td><?=$detail->name;?></td>
-                                		<td><?=$detail->amount;?></td>
-                                		<?php
-                                			$inv = $this->db->get_where("invoice_details",array("invoice_id"=>$param2,"detail_id"=>$detail->detail_id)); 
-                                		?>
-                                		<td><?=$amount_due = $inv->num_rows() > 0?$inv->row()->amount_due:0;?></td>
-                                						
-                                		<?php
-											$paid = 0;
-																					
-											if($this->db->get_where('payment',array('invoice_id'=>$param2))->num_rows()>0){
-												$payment = $this->db->get_where('payment',array('invoice_id'=>$param2))->row();//,'detail_id'=>$detail->detail_id
-												
-												if($this->db->get_where('student_payment_details',array('payment_id'=>$payment->payment_id,'detail_id'=>$detail->detail_id))->num_rows() > 0){
-													$paid = $this->db->select_sum('amount')->get_where('student_payment_details',array('payment_id'=>$payment->payment_id,'detail_id'=>$detail->detail_id))->row()->amount;	
-												}
-												
-												
-											} 
-																					
-											$detail_bal = $amount_due - $paid;
-										?>
-										<td class="paid" id="paid_<?=$detail->detail_id;?>"><?=$paid;?></td>
-                                						
+                                		<td><?=number_format($detail->amount,2);?></td>
+                                		<td><?=number_format($detail->amount_due,2);?></td>
+										<td class="paid" id="paid_<?=$detail->detail_id;?>"><?=number_format($detail->amount_paid,2);?></td>			
                                 		<td>
-                                			<input type="text" class="form-control detail_amount_due" value="<?=$amount_due;?>" id="due_<?=$detail->detail_id;?>" name="detail_amount_due[<?=$detail->detail_id;?>]" />
+                                			<input type="text" class="form-control detail_amount_due" value="<?=$detail->amount_due;?>" id="due_<?=$detail->detail_id;?>" name="detail_amount_due[<?=$detail->detail_id;?>]" />
                                 		</td>
                                 	</tr>	
                                 	<?php
-                                		$balance+=$detail_bal; 
-										//$amount_paid+=$paid;
+                                		
 										}
                                 	?>
                                 </tbody>
@@ -105,25 +83,19 @@
                     	<label class="col-sm-3 control-label"><?php echo get_phrase('paid');?></label>
                         <div class="col-sm-9">
                         <?php
-                       		$tot_paid = 0;
-                        	$payment_obj = $this->db->get_where('payment',array('invoice_id'=>$param2));
-							if($payment_obj->num_rows()>0){
-								$payment_id = $payment_obj->row()->payment_id;
-	                        	$invoice_paid_object = $this->db->select_sum('amount')->get_where('student_payment_details',array('payment_id'=>$payment_id));
-								
-									if($invoice_paid_object->num_rows() > 0){
-										$tot_paid = $invoice_paid_object->row()->amount;
-									}
-							}	
+                       		
+							$sum_paid = array_sum(array_column($details, 'amount_paid'));
+							$sum_due = array_sum(array_column($details, 'amount_due'));
+							$sum_balance = $sum_due - $sum_paid;
                         ?>
-                        	<input type="text" class="form-control" id="amount_paid" name="amount_paid" value="<?=$tot_paid;?>" readonly="readonly" placeholder="<?php echo get_phrase('enter_payable_amount');?>"/>
+                        	<input type="text" class="form-control" id="amount_paid" name="amount_paid" value="<?=$sum_paid;?>" readonly="readonly"/>
                         </div>
                    	</div>    	                                
 	                    		
 	                <div class="form-group">
                     	<label class="col-sm-3 control-label"><?php echo get_phrase('balance');?></label>
                         <div class="col-sm-9">
-                         	<input type="text" class="form-control" id="balance" name="balance" value="<?=$balance;?>" readonly="readonly" placeholder="<?php echo get_phrase('enter_payable_amount');?>"/>
+                         	<input type="text" class="form-control" id="balance" name="balance" value="<?=$sum_balance;?>" readonly="readonly"/>
                         </div>
                     </div>   
 	                    
