@@ -381,33 +381,9 @@ class Finance extends CI_Controller
             if ($cnt===0) {
                 foreach ($this->input->post('student_id') as $id) {
                 	
-					//Check if there is an unpaid invoice
-						// $unpaid_invoice = $this->db->get_where('invoice',array('status'=>'unpaid','student_id'=>$id));
-						// if($unpaid_invoice->num_rows() > 0){
-							// $unpaid_invoice_details = $this->db->get_where('invoice_details',
-							// array('invoice_id'=>$unpaid_invoice->row()->invoice_id))->result_object();
-// 							
-							// foreach($unpaid_invoice_details as $detail){
-								// //if($value > 0){
-									// $data3['invoice_id'] = $invoice_id;
-									// $data3['detail_id'] = $detail->detail_id;
-									// $data3['amount_due'] = $detail->balance;
-									// $data3['balance'] = $detail->balance;
-									// $this->db->insert('invoice_details',$data3);
-								// //}
-// 											
-							// }
-// 							
-							// //Cancel a carried forward invoice
-// 							
-							// $this->db->where(array('invoice_id'=>$unpaid_invoice->row()->invoice_id));
-							// $invoice_status['status'] = 'cancelled';
-							// $invoice_status['carry_forward'] = 1;
-							// $this->db->update('invoice',$invoice_status);
-// 							
-						// }
-					
-					
+					//Cancel a previous invoice
+					$this->cancel_previous_invoice($id,$this->input->post('yr'),$this->input->post('term'));
+										
                 	$invoice_found = $this->db->get_where("invoice",array("student_id"=>$id,"yr"=>$this->input->post('yr'),"term"=>$this->input->post('term')));
 					if($invoice_found->num_rows() === 0){
 	                    $data['student_id']         = $id;
@@ -542,12 +518,13 @@ class Finance extends CI_Controller
 			foreach($take_payment as $key=>$value){
 				if($value > 0){
 					
-					$detail = $this->db->get_where("invoice_details",array("detail_id"=>$key))->row();
+					$detail = $this->db->get_where("invoice_details",
+						array("detail_id"=>$key,'invoice_id'=>$this->input->post('invoice_id')))->row();
 												
 					$paid_to_date  = $detail->amount_paid + $value;
 					
 					$data_invoice['amount_paid']   	=   $paid_to_date;
-					$data_invoice['balance'] 		= 	$detail->amount_due - $paid_to_date;
+					$data_invoice['balance'] 		= 	$detail->balance - $paid_to_date;
 					$data_invoice['detail_id'] 		=  $key;
 					$data_invoice['last_payment_id']  		=   $last_payment_id;
 		            
