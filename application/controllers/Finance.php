@@ -242,7 +242,8 @@ class Finance extends CI_Controller
 
         if ($this->session->userdata('active_login') != 1)
             redirect('login', 'refresh');
-     
+     	
+		//$page_data['term'] = $this->min_term();
 	    $page_data['page_name']  = 'create_invoice';
 		$page_data['page_view'] = "finance";
         $page_data['page_title'] = get_phrase('create_invoice');
@@ -268,6 +269,36 @@ class Finance extends CI_Controller
 // 		
 		// return $max_serial_number;
 	// }
+	
+	function max_term(){
+		return $this->db->select_max('term_number')->get('terms')->row()->term_number;
+	}
+	
+	function min_term(){
+		return $this->db->select_min('term_number')->get('terms')->row()->term_number;
+	}
+	
+	function cancel_previous_invoice($student_id,$year,$term){
+			
+			if($term == $this->min_term()){
+				$year -= 1;
+				$term = $this->max_term();
+			}else{
+				$term -= 1;
+			}
+			
+			//Cancel any previous unpaid invoice
+			$unpaid_invoice = $this->db->get_where('invoice',
+				array('status'=>'unpaid','student_id'=>$student_id,'yr'=>$year,'term'=>$term));
+			
+			if($unpaid_invoice->num_rows() > 0){
+				$this->db->where(array('invoice_id'=>$unpaid_invoice->row()->invoice_id));
+				$cancel_status['status'] = 'cancelled';
+				$cancel_status['carry_forward'] = 1;
+				$this->db->update('invoice',$cancel_status);
+			}
+			
+	}
 
     function invoice($param1 = '', $param2 = '', $param3 = '')
     {
@@ -276,16 +307,8 @@ class Finance extends CI_Controller
         
         if ($param1 == 'create') {
             
-			//Cancel any previous unpaid invoice
-			// $unpaid_invoice = $this->db->get_where('invoice',array('status'=>'unpaid','student_id'=>$this->input->post('student_id')));
-// 			
-			// if($unpaid_invoice->num_rows() > 0){
-				// $this->db->where(array('invoice_id'=>$unpaid_invoice->row()->invoice_id));
-				// $cancel_status['status'] = 'cancelled';
-				// $cancel_status['carry_forward'] = 1;
-				// $this->db->update('invoice',$cancel_status);
-			// }
-			
+			//Cancel a previous invoice
+			$this->cancel_previous_invoice($this->input->post('student_id'),$this->input->post('yr'),$this->input->post('term'));
 				
             $data['student_id']         = $this->input->post('student_id');
 			$data['class_id']         = $this->input->post('class_id');
