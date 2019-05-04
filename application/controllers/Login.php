@@ -116,41 +116,43 @@ class Login extends CI_Controller {
         $new_password           =   substr( md5( rand(100000000,20000000000) ) , 0,7);
 
         // Checking credential for admin
-        $query = $this->db->get_where('admin' , array('email' => $email));
+        
+        $query = $this->db->get_where('user',array('email'=>$email));
+        //$query = $this->db->get_where('admin' , array('email' => $email));
         if ($query->num_rows() > 0)
         {
-            $reset_account_type     =   'admin';
+            $reset_account_type     =   $this->db->get_where('login_type',array('login_type_id'=>$query->row()->login_type_id))->row()->name;
             $this->db->where('email' , $email);
-            $this->db->update('admin' , array('password' => $new_password));
+            $this->db->update('user' , array('password' => $new_password));
             $resp['status']         = 'true';
         }
-        // Checking credential for student
-        $query = $this->db->get_where('student' , array('email' => $email));
-        if ($query->num_rows() > 0)
-        {
-            $reset_account_type     =   'student';
-            $this->db->where('email' , $email);
-            $this->db->update('student' , array('password' => $new_password));
-            $resp['status']         = 'true';
-        }
-        // Checking credential for teacher
-        $query = $this->db->get_where('teacher' , array('email' => $email));
-        if ($query->num_rows() > 0)
-        {
-            $reset_account_type     =   'teacher';
-            $this->db->where('email' , $email);
-            $this->db->update('teacher' , array('password' => $new_password));
-            $resp['status']         = 'true';
-        }
-        // Checking credential for parent
-        $query = $this->db->get_where('parent' , array('email' => $email));
-        if ($query->num_rows() > 0)
-        {
-            $reset_account_type     =   'parent';
-            $this->db->where('email' , $email);
-            $this->db->update('parent' , array('password' => $new_password));
-            $resp['status']         = 'true';
-        }
+        // // Checking credential for student
+        // $query = $this->db->get_where('student' , array('email' => $email));
+        // if ($query->num_rows() > 0)
+        // {
+            // $reset_account_type     =   'student';
+            // $this->db->where('email' , $email);
+            // $this->db->update('student' , array('password' => $new_password));
+            // $resp['status']         = 'true';
+        // }
+        // // Checking credential for teacher
+        // $query = $this->db->get_where('teacher' , array('email' => $email));
+        // if ($query->num_rows() > 0)
+        // {
+            // $reset_account_type     =   'teacher';
+            // $this->db->where('email' , $email);
+            // $this->db->update('teacher' , array('password' => $new_password));
+            // $resp['status']         = 'true';
+        // }
+        // // Checking credential for parent
+        // $query = $this->db->get_where('parent' , array('email' => $email));
+        // if ($query->num_rows() > 0)
+        // {
+            // $reset_account_type     =   'parent';
+            // $this->db->where('email' , $email);
+            // $this->db->update('parent' , array('password' => $new_password));
+            // $resp['status']         = 'true';
+        // }
 
         // send new password to user email
         $this->email_model->password_reset_email($new_password , $reset_account_type , $email);
