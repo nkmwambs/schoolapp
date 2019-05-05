@@ -24,11 +24,11 @@ class Email_model extends CI_Model {
 	
 	function password_reset_email($new_password = '' , $account_type = '' , $email = '')
 	{
-		$query			=	$this->db->get_where($account_type , array('email' => $email));
+		$query			=	$this->db->get_where('user' , array('email' => $email));
 		if($query->num_rows() > 0)
 		{
 			
-			$email_msg	=	"Your account type is : ".$account_type."<br />";
+			$email_msg	=	"Your account type is : ".ucfirst($account_type)."<br />";
 			$email_msg	.=	"Your password is : ".$new_password."<br />";
 			
 			$email_sub	=	"Password reset request";
@@ -70,7 +70,7 @@ class Email_model extends CI_Model {
 		$this->email->to($to);
 		$this->email->subject($sub);
 		
-		$msg	=	$msg."<br /><br /><br /><br /><br /><br /><br /><hr /><center><a href=\"http://codecanyon.net/item/fps-school-management-system-pro/6087521?ref=joyontaroy\">&copy; 2013 FPS School Management System Pro</a></center>";
+		$msg	=	$msg."<br /><br /><br /><br /><br /><br /><br /><hr /><center><a href=\"https://techsys-kenya.com/school-management-system-pro\">&copy; 2013 School Management System Pro</a></center>";
 		$this->email->message($msg);
 		
 		$this->email->send();
