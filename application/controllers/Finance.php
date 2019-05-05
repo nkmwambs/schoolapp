@@ -1893,25 +1893,32 @@ class Finance extends CI_Controller
 		if ($this->session->userdata('active_login') != 1)
             redirect('login', 'refresh');	
 		
-		
-		
 		if($this->input->post('page_to_show')){
 			$page = "";
 			
 			$data = array();
 		
 			$page_to_show = $this->input->post('page_to_show');
-				
-			if($page_to_show == "other_income"){
-				$page = "modal_income_add";
-			}elseif($page_to_show == "expense"){
-				$page = "modal_expense_add";
-			}elseif($page_to_show == "contra"){
-				$page = "modal_contras";
-			}elseif($page_to_show == "fees_income"){
-				$page = "active_invoices";
-				
-			}	
+							
+			switch($page_to_show):
+				case "other_income":
+					$page = "modal_income_add";
+					break;
+				case "expense":
+					$page = "modal_expense_add";
+					break;
+				case 'contra':
+					$page = "modal_contras";
+					break;	
+				case 'fees_income':
+					$page = "active_invoices";
+					break;
+				case 'tranfer_funds':
+					$page = 'tranfer_funds';
+					break;
+				default:
+					$page = "active_invoices";
+			endswitch;		
 			
 			redirect(base_url() . 'index.php?finance/create_transaction/'.$page."/".$page_to_show,'refresh');
 		}
@@ -1925,6 +1932,106 @@ class Finance extends CI_Controller
         $page_data['page_name']  = 'create_transaction';
 		$page_data['page_view'] = "finance";
         $page_data['page_title'] = get_phrase('create_transaction');
+        $this->load->view('backend/index', $page_data);			
+	}
+	
+	function create_transfer_income_transaction($input_array){
+			$res = $this->db->get("payment")->row()->serial;
+            
+            $data['payee']        	=   $this->school_model->system_title(); 
+			$data['serial']        	=   $res+1; 
+			$data['batch_number']   =   $this->crud_model->next_serial_number();
+			$data['t_date']        	=   $input_array['t_date'];		
+            $data['description']    =   get_phrase('funds_transfer');			
+            $data['method']         =   "3";	
+			$data['payment_type']   =   "3";
+            $data['amount']         =   $this->input->post('amount');
+            $data['timestamp']      =   strtotime($input_array['t_date']);
+            $this->db->insert('payment' , $data);
+			
+			$payment_id = $this->db->insert_id();
+			
+			$data2['payment_id'] = $payment_id;
+			$data2['qty'] = 1;
+			$data2['description'] = get_phrase('funds_transfer');
+			$data2['unitcost'] = $input_array['amount'];
+			$data2['cost'] = $input_array['amount'];
+			$data2['income_category_id'] = $input_array['account_to'];
+				
+			$this->db->insert('other_payment_details' , $data2);
+	}
+	
+	function create_transfer_expense_transaction($input_array){
+			$data['payee']        	=   $this->school_model->system_title();  
+			$data['batch_number']   =   $this->crud_model->next_serial_number();  
+			$data['t_date']        	=   $input_array['t_date'];		
+            $data['description']    =   get_phrase('funds_transfer');		
+            $data['method']         =   "3";	
+			$data['cheque_no']      =   "0";			    	
+            $data['amount']         =   $input_array['amount'];
+            $data['timestamp']      =   strtotime($input_array['t_date']);
+            $this->db->insert('expense' , $data);
+			
+			$expense_id = $this->db->insert_id();
+			
+			$data2['expense_id'] = $expense_id;
+			$data2['qty'] = 1;
+			$data2['description'] = get_phrase('funds_transfer');
+			$data2['unitcost'] = $input_array['amount'];
+			$data2['cost'] = $input_array['amount'];
+			$data2['expense_category_id'] = $input_array['account_from'];
+				
+			$this->db->insert('expense_details' , $data2);
+			
+			
+	}
+	
+	function funds_transfer(){
+		
+		$this->create_transfer_income_transaction($_POST);				
+		$this->create_transfer_expense_transaction($_POST);
+		
+		$data1['t_date'] = $this->input->post('t_date');
+		$data1['batch_number'] = $this->crud_model->next_serial_number();
+		$data1['description'] = get_phrase('funds_transfer');
+		$data1['transaction_type'] = '5';
+		$data1['account'] = '3';
+		$data1['amount'] = $this->input->post('amount');
+        $this->db->insert('cashbook' , $data1);
+		
+		$this->session->set_flashdata('flash_message' , get_phrase('funds_transferred_successfully'));		
+		redirect(base_url() . 'index.php?finance/cash_book','refresh');
+	}
+	
+	function year_funds_transfers(){
+		
+		$this->db->select(array('cashbook.batch_number','cashbook.t_date','cashbook.amount',
+		'income_categories.name as account_to','expense_category.name as account_from'));
+		
+		
+		
+		$this->db->join('payment','payment.batch_number=cashbook.batch_number');
+		$this->db->join('other_payment_details','other_payment_details.payment_id=payment.payment_id');
+		$this->db->join('income_categories','income_categories.income_category_id=other_payment_details.income_category_id');
+		
+		$this->db->join('expense','expense.batch_number=cashbook.batch_number');
+		$this->db->join('expense_details','expense_details.expense_id=expense.expense_id');
+		$this->db->join('expense_category','expense_category.expense_category_id=expense_details.expense_category_id');
+		
+		$transfer = $this->db->get_where('cashbook',array('transaction_type'=>5))->result_object();
+		
+		return $transfer;
+	}
+	
+	function funds_transfers_report(){
+		if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');
+		
+		
+		$page_data['transfers'] = $this->year_funds_transfers();
+        $page_data['page_name']  = 'funds_transfers_report';
+		$page_data['page_view'] = "finance";
+        $page_data['page_title'] = get_phrase('funds_transfers');
         $this->load->view('backend/index', $page_data);			
 	}
 	

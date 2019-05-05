@@ -250,6 +250,7 @@
 				$page_name == 'fund_balance_report' ||
 				$page_name == 'expense_variance_report' ||
 				$page_name == 'income_variance_report' ||
+				$page_name == 'funds_transfers' ||
 				$page_name == 'create_transaction'
 				)
                 echo 'opened active';
@@ -307,7 +308,8 @@
                 <li class="<?php if (
                 						$page_name == 'fund_balance_report' ||
 										$page_name == 'expense_variance_report' ||
-										$page_name == 'income_variance_report'
+										$page_name == 'income_variance_report' ||
+										$page_name == 'funds_transfers'
 									) 
                 					echo 'active'; ?> <?=get_access_class('financial_report','admin','accounting');?>">
                                         
@@ -331,6 +333,12 @@
                         <li class="<?php if ($page_name == 'income_variance_report') echo 'active'; ?> <?=get_access_class('income_variance_report','admin','accounting');?>">
                         	<a href="<?php echo base_url(); ?>index.php?finance/income_variance_report"  class="">
                                     <span><i class="entypo-tag"></i><?php echo get_phrase('income_variance'); ?></span>
+                            </a>
+                        </li>
+                        
+                        <li class="<?php if ($page_name == 'funds_transfers') echo 'active'; ?> <?=get_access_class('funds_transfers','admin','accounting');?>">
+                        	<a href="<?php echo base_url(); ?>index.php?finance/funds_transfers_report"  class="">
+                                    <span><i class="entypo-shuffle"></i><?php echo get_phrase('funds_transfers'); ?></span>
                             </a>
                         </li>
                         

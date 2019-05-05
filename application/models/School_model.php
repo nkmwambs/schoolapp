@@ -20,5 +20,13 @@ class School_model extends CI_Model {
 		
 		return $this->db->get_where('class',array('name_numeric'=>$numeric))->row()->class_id;
     }
+	
+	function income_categories(){
+		return $this->db->get('income_categories')->result_object();
+	}
+	
+	function system_title(){
+		return $this->db->get_where('settings' , array('type'=>'system_title'))->row()->description;
+	}
    
 }
