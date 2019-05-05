@@ -24,11 +24,11 @@ class Email_model extends CI_Model {
 	
 	function password_reset_email($new_password = '' , $account_type = '' , $email = '')
 	{
-		$query			=	$this->db->get_where($account_type , array('email' => $email));
+		$query			=	$this->db->get_where('user' , array('email' => $email));
 		if($query->num_rows() > 0)
 		{
 			
-			$email_msg	=	"Your account type is : ".$account_type."<br />";
+			$email_msg	=	"Your account type is : ".ucfirst($account_type)."<br />";
 			$email_msg	.=	"Your password is : ".$new_password."<br />";
 			
 			$email_sub	=	"Password reset request";
