@@ -28,5 +28,25 @@ class School_model extends CI_Model {
 	function system_title(){
 		return $this->db->get_where('settings' , array('type'=>'system_title'))->row()->description;
 	}
+	
+	function funds_transfer_by_batch_number($batch_number){
+		
+		$this->db->select(array('cashbook.batch_number','cashbook.t_date','cashbook.amount',
+		'income_categories.name as account_to','expense_category.name as account_from'));
+		
+		
+		
+		$this->db->join('payment','payment.batch_number=cashbook.batch_number');
+		$this->db->join('other_payment_details','other_payment_details.payment_id=payment.payment_id');
+		$this->db->join('income_categories','income_categories.income_category_id=other_payment_details.income_category_id');
+		
+		$this->db->join('expense','expense.batch_number=cashbook.batch_number');
+		$this->db->join('expense_details','expense_details.expense_id=expense.expense_id');
+		$this->db->join('expense_category','expense_category.expense_category_id=expense_details.expense_category_id');
+		
+		$transfer = $this->db->get_where('cashbook',array('cashbook.batch_number'=>$batch_number))->row();
+		
+		return $transfer;
+	}
    
 }

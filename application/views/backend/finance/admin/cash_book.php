@@ -63,15 +63,7 @@ if(isset($current)){
 				
 			</thead>
 			<tbody>
-				<!-- <tr>
-					<td colspan="4"><?=get_phrase('balance_brought_forward');?></td>
-					
-					<td colspan="2">&nbsp;</td>
-					<td><?=number_format($bank_balance,2);?></td>
-					
-					<td colspan="2">&nbsp;</td>
-					<td><?=number_format($cash_balance,2);?></td>
-				</tr> -->
+				
 				<?php
 					
 					$sum_bank_income = 0;
@@ -99,6 +91,10 @@ if(isset($current)){
 							
 							<?php if(($rows->transaction_type==='3' ||$rows->transaction_type==='4')){ ?>
 								onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_contra/<?=$rows->batch_number?>');"
+							<?php } ?>
+							
+							<?php if(($rows->transaction_type==='5')){ ?>
+								onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_funds_transfer/<?=$rows->batch_number?>');"
 							<?php } ?>
 							
 							
