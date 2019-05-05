@@ -117,10 +117,12 @@ class Account extends CI_Controller
 			
 			$name_array = explode(" ", $record->name);
 			
+			$password = substr( md5( rand(100000000,20000000000) ) , 0,7);
+			
 			$data['firstname'] = array_shift($name_array);
 			$data['lastname'] = implode(" ", $name_array);
 			$data['email'] = $record->email;
-			$data['password'] = "default";
+			$data['password'] = md5($password);
 			$data['phone'] = $record->phone;
 			$data['login_type_id'] = $login_type_id;//$this->db->get_where("login_type",array("name"=>$param1))->row()->login_type_id;
 			$data['profile_id'] = $this->input->post('profile_id');
@@ -131,7 +133,10 @@ class Account extends CI_Controller
 			
 			
 				$this->db->insert("user",$data);
-				//$msg = get_phrase("success");
+				
+				$login_type = $record->name;
+				
+				$this->email_model->account_opening_email($login_type, $record->email, $password);
 		}else{
 			
 				
