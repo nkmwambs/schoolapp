@@ -82,6 +82,7 @@
 											<th><?=get_phrase('date');?></th>
 											<th><?=get_phrase('account');?></th>
 											<th><?=get_phrase('amount');?></th>
+											
 										</tr>
 									</thead>
 									<?php
@@ -116,6 +117,7 @@
 								            <th><div>#</div></th>
 								            <th><div><?php echo get_phrase('name');?></div></th>
 								            <th><div><?php echo get_phrase('opening_balance');?></div></th>
+								            <th><?=get_phrase('fees_carry_forward_category');?></th>
 								            <th><div><?php echo get_phrase('options');?></div></th>
 								        </tr>
 								    </thead>
@@ -123,12 +125,14 @@
 								        <?php 
 								        	$count = 1;
 								        	$incomes = $this->db->get('income_categories')->result_array();
+											//print_r($incomes);
 								        	foreach ($incomes as $row):
 								        ?>
 								        <tr>
 								            <td><?php echo $count++;?></td>
 								            <td><?php echo $row['name'];?></td>
 								            <td><input type="text" id="openingbalance_<?=$row['income_category_id']?>" class="form-control opening_balance" value="<?php echo $row['opening_balance'];?>" /></td>
+								            <td><input type="radio" id="default_<?=$row['income_category_id']?>" name="defaut_category" class="default_category" value="1" <?=$row['default_category']== '1'?'checked':'';?> /></td>
 								            <td>
 								                
 								                <div class="btn-group">
@@ -137,7 +141,7 @@
 								                    </button>
 								                    <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 								                        
-								                        <!-- teacher EDITING LINK -->
+								                        <!--  EDITING LINK -->
 								                        <li>
 								                        	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/income_category_edit/<?php echo $row['income_category_id'];?>');">
 								                            	<i class="entypo-pencil"></i>
@@ -146,7 +150,7 @@
 								                        				</li>
 								                        <li class="divider"></li>
 								                        
-								                        <!-- teacher DELETION LINK -->
+								                        <!--  DELETION LINK -->
 								                        <li>
 								                        	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?settings/income_category/delete/<?php echo $row['income_category_id'];?>');">
 								                            	<i class="entypo-trash"></i>
@@ -315,6 +319,20 @@
 		var url = "<?=base_url();?>index.php?settings/update_income_category_opening_balance/"+income_category_id;
 		
 		var data = {'opening_balance':$(this).val()};
+		
+		$.ajax({
+			url:url,
+			type:"POST",
+			data:data
+		});
+	});
+	
+	$(".default_category").on('click',function(){
+		var income_category_id = $(this).attr('id').split("_")[1];
+		
+		var url = "<?=base_url();?>index.php?settings/update_default_category/"+income_category_id;
+		
+		var data = {'default_category':$(this).val()};
 		
 		$.ajax({
 			url:url,

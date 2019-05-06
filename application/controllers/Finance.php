@@ -459,7 +459,7 @@ class Finance extends CI_Controller
 					$data8['detail_id'] = $detail_id;
 					$data8['amount_due'] = $amount_due;
 					$data8['amount_paid'] = 0;
-					$data8['amount_paid'] = $amount_due;
+					$data8['balance'] = $amount_due;
 					$this->db->insert("invoice_details",$data8);
 				}
 				
@@ -2037,8 +2037,22 @@ class Finance extends CI_Controller
         $this->load->view('backend/index', $page_data);			
 	}
 	
+	function add_invoice_item_row($term = 1,$year = 2019,$class = 1){
+		$this->db->select(array('fees_structure_details.name','fees_structure_details.detail_id',
+		'fees_structure_details.income_category_id','fees_structure_details.amount'));
+		$this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
+		$fees = $this->db->get_where('fees_structure_details',
+		array("term"=>$term,"yr"=>$year,"class_id"=>$class))->result_object();		
+	
+		echo json_encode($fees);
+	}
+	
+	function get_fees_structure_detail_amount($detail_id){
+		echo $this->db->get_where('fees_structure_details',array('detail_id'=>$detail_id))->row()->amount;
+	}
+	
 	function show_transaction_page(){
-		
+	
 	}
 		
 }

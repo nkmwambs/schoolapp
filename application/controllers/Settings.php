@@ -378,7 +378,16 @@ class Settings extends CI_Controller
 		$data['opening_balance'] = $this->input->post('opening_balance');
 		$this->db->update('income_categories',$data);
 	}
-
+	
+	function update_default_category($income_category_id =""){
+		//Check if another category is set as default and unset it
+		$this->db->update('income_categories',array('default_category'=>0),array('default_category'=>1));
+		
+		$this->db->where(array('income_category_id'=>$income_category_id));
+		$data['default_category'] = $this->input->post('default_category');
+		$this->db->update('income_categories',$data);
+	}
+	
 	function opening_balances($param1="",$param2=""){
 			
 			$this->db->where(array('name'=>'cash'));

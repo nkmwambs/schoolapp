@@ -13,11 +13,11 @@
 			<div class="col-xs-6">
 				<select id="transaction_type" name="page_to_show" class="form-control">
 					<option value="">Select</option>
-					<option value="fees_income" <?php if($page_to_show == 'fees_income') echo "selected";?> ><?=get_phrase('student_fees_receipt');?></option>
-					<option value="other_income" <?php if($page_to_show == 'other_income') echo "selected";?>><?=get_phrase('other_income_receipt');?></option>
-					<option value="expense" <?php if($page_to_show == 'expense') echo "selected";?>><?=get_phrase('expense');?></option>
-					<option value="tranfer_funds" <?php if($page_to_show == 'tranfer_funds') echo "selected";?>><?=get_phrase('funds_transfer');?></option>
-					<option value="contra" <?php if($page_to_show == 'contra') echo "selected";?>><?=get_phrase('contra_entry');?></option>
+					<option class="<?=get_access_class('take_student_payment','admin','accounting');?>" value="fees_income" <?php if($page_to_show == 'fees_income') echo "selected";?> ><?=get_phrase('student_fees_receipt');?></option>
+					<option class="<?=get_access_class('take_other_income','admin','accounting');?>" value="other_income" <?php if($page_to_show == 'other_income') echo "selected";?>><?=get_phrase('other_income_receipt');?></option>
+					<option class="<?=get_access_class('make_expense','admin','accounting');?>" value="expense" <?php if($page_to_show == 'expense') echo "selected";?>><?=get_phrase('expense');?></option>
+					<option class="<?=get_access_class('tranfer_funds','admin','accounting');?>" value="tranfer_funds" <?php if($page_to_show == 'tranfer_funds') echo "selected";?>><?=get_phrase('funds_transfer');?></option>
+					<option class="<?=get_access_class('raise_contra_entry','admin','accounting');?>" value="contra" <?php if($page_to_show == 'contra') echo "selected";?>><?=get_phrase('contra_entry');?></option>
 				</select>
 			</div>
 			

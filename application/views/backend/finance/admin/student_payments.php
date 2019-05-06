@@ -145,10 +145,8 @@
 							<td><?php echo $this->crud_model->get_type_name_by_id('class',$row['class_id']);?></td>
 							<td><?php echo $row['amount'];?></td>
                             <td><?php echo $row['amount_due'];?></td>
-                            <?php
-                            	$bal = $row['amount_due'] - $row['amount_paid']; 
-                            ?>
-                            <td><?php echo $bal;?></td>
+                            
+                            <td><?php echo $row['balance'];?></td>
 							<td><?php echo date('d M,Y', $row['creation_timestamp']);?></td>
 							<td>
                             <div class="btn-group">
@@ -157,15 +155,15 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 
-                                    <?php if ($bal != 0):?>
+                                    <?php if ($row['balance'] != 0):?>
 
-                                    <li class="take_student_payment">
+                                    <li class="<?=get_access_class('take_student_payment','admin','accounting');?>">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_take_payment/<?php echo $row['invoice_id'];?>');">
                                             <i class="entypo-bookmarks"></i>
                                                 <?php echo get_phrase('take_payment');?>
                                         </a>
                                     </li>
-                                    <li class="divider take_student_payment"></li>
+                                    <li class="divider <?=get_access_class('take_student_payment','admin','accounting');?>"></li>
                                     <?php endif;?>
                                     
                                     <!-- VIEWING INVOICE LINK -->
@@ -178,16 +176,16 @@
                                     <li class="divider"></li>
                                     
                                     <!-- EDIT INVOICE LINK -->
-                                    <li class="edit_invoice">
+                                    <li class="<?=get_access_class('edit_invoice','admin','accounting');?>">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_invoice/<?php echo $row['invoice_id'];?>');">
                                             <i class="entypo-pencil"></i>
                                                 <?php echo get_phrase('edit_invoice');?>
                                             </a>
                                                     </li>
-                                    <li class="divider edit_invoice"></li>
+                                    <li class="divider <?=get_access_class('edit_invoice','admin','accounting');?>"></li>
 
                                     <!-- DELETION LINK -->
-                                    <li class="delete_or_cancel_invoice">
+                                    <li class="<?=get_access_class('delete_or_cancel_invoice','admin','accounting');?>">
                                     	<?php
                                     	if($this->db->get_where("payment",array("invoice_id"=>$row['invoice_id']))->num_rows() === 0){	
                                     	?>

@@ -1,5 +1,14 @@
 <?php
 	$invoice = $this->db->get_where("invoice",array("invoice_id"=>$param2))->row();
+	
+	$this->db->select(array('fees_structure_details.detail_id','fees_structure_details.name',
+    'fees_structure_details.amount','invoice_details.amount_due','invoice_details.amount_paid'));
+                                	
+	$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');									
+    $this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
+    $details = $this->db->get_where("invoice_details",array('invoice_details.invoice_id'=>$param2))->result_object();
+    
+
 	echo form_open(base_url() . 'index.php?finance/invoice/edit_invoice/'.$param2 , array('id'=>'frm_single_invoice_edit','class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));
 ?>
 	<div class="row">
@@ -10,6 +19,8 @@
               	</div>
 	            
 	            <div class="panel-body">
+	            	<div class="btn btn-info" id="add_item"><?=get_phrase('add_item');?></div>
+	            	<hr />
 	                                
 	            	<input type="hidden" name="class_id" id="class_id" value="<?=$invoice->class_id;?>" />
 
@@ -49,12 +60,6 @@
                                 <tbody id="fee_items">
                                 
                                 <?php
-                                	$this->db->select(array('fees_structure_details.detail_id','fees_structure_details.name',
-                                	'fees_structure_details.amount','invoice_details.amount_due','invoice_details.amount_paid'));
-                                	
-									$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');									
-                                	$this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
-                                	$details = $this->db->get_where("invoice_details",array('invoice_details.invoice_id'=>$param2))->result_object();
                                 	
 									foreach($details as $detail){
 
@@ -115,6 +120,100 @@
 				
 <script>
 
+	$("#add_item").on('click',function(){
+		
+		//Remove the button to allow only adding one row
+		$(this).remove();
+		
+		var row = "";
+		
+		var url = "<?=base_url();?>index.php?finance/add_invoice_item_row/";
+		
+		var used_categories = JSON.parse('<?=json_encode(array_column($details, 'name'));?>');
+		//alert(used_categories[0]);
+		
+		$.ajax({
+			url:url,
+			success:function(resp){
+				
+				var obj = JSON.parse(resp);
+				
+				var select_options = "<option><?=get_phrase('select');?></option>";
+				
+				$.each(obj,function(i,elem){
+					
+					if($.inArray(elem.name,used_categories) == -1){
+						select_options += "<option value='"+elem.detail_id+"'>"+elem.name+"</option>";
+					}
+					
+					
+				});
+				
+				row = '<tr>'+
+					'<td><input type="checkbox" disabled id=""/></td>'+
+					'<td><select onchange="get_fees_structure_detail_amount(this)" class="form-control">'+select_options+'</select></td>'+
+					'<td id="td_detail_amount"></td>'+
+					'<td id="invoice_amount"></td>'+
+					'<td id="paid_amount"></td>'+
+					'<td id="adjusted_amount"></td>'+
+				'</tr>';
+				
+				$("#fee_items").append(row);
+			},
+			error:function(){
+				alert('Error occurred!');
+			}
+		});
+	});
+	
+	function get_fees_structure_detail_amount(elem){
+		var detail_id = $(elem).val();
+		//alert('get_fees_structure_detail_amount');
+		$.ajax({
+			url:"<?=base_url();?>index.php?finance/get_fees_structure_detail_amount/"+detail_id,
+			success:function(resp){
+				$('#td_detail_amount').html(resp);
+				$("#invoice_amount").html(resp);
+				$("#paid_amount").html("0");
+				$("#adjusted_amount").html('<input id="due_'+detail_id+'" type="text" onchange="calculate_balance(this);" class="form-control detail_amount_due" name="detail_amount_due['+detail_id+']" value="'+resp+'" />');
+				
+				$("#balance").val(sum_balance("#due_"+detail_id));
+				$("#amount_due").val(sum_amount_due("#due_"+detail_id));
+				
+			},
+			error:function(){
+				alert('Error occurred!');
+			}
+		});
+	}
+	/**Only used when adding a new item in the invoice**/
+	function sum_amount_due(elem){
+		var sum  = (parseFloat('<?=$sum_due;?>') + parseFloat($(elem).val()));
+		
+		return sum;
+	}
+	
+	/**Only used when adding a new item in the invoice**/
+	
+	function sum_balance(elem){
+		var sum  = (parseFloat('<?=$sum_balance;?>') + parseFloat($(elem).val()));
+		
+		return sum;
+	}
+	
+	// function sum_adjusted_amount(){
+		// var sum  = 0;
+		// $.each($(".detail_amount_due"),function(i,elem){
+			// sum= parseFloat(sum) + parseFloat($(elem).val());
+		// });
+// 		
+		// return sum;
+	// }
+	
+	function calculate_balance(elem){
+		$("#balance").val(sum_balance(elem));
+		$("#amount_due").val(sum_amount_due(elem));
+	}
 	
 	$(".detail_amount_due").change(function(){
 		var detail_paid = $(this).parent().prev().html();
@@ -128,10 +227,10 @@
 			amount_due += +parseInt($(el).val());
 		});
 		
-		var paid  = 0;
-		$.each($(".paid"),function(i,el){
-			paid += parseInt($(el).html());
-		});
+		var paid  = <?=$sum_paid;?>;
+		// $.each($(".paid"),function(i,el){
+			// paid += parseInt($(el).html());
+		// });
 		
 		//alert(parseInt(changed_detail_due)-parseInt(detail_paid));
 		
@@ -141,7 +240,7 @@
 			return false;
 		}
 		
-		var balance = amount_due - paid;
+		var balance = amount_due - parseInt(paid);
 		
 		$("#amount_due").val(amount_due);
 		$("#balance").val(balance);
