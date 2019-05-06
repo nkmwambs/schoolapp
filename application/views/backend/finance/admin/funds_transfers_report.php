@@ -3,15 +3,25 @@
 //print_r($transfers);
 ?>
 <div class="row">
-	<div class="col-sm-12">
+	<div class="col-xs-12" style="text-align: center;font-weight: bold;font-size: 18pt;">
+		<?=get_phrase('year');?> <?=$year;?>
+	</div>
+</div>
+<p></p>
+
+<div class="row">
+	<div class="col-xs-1">
+		<a href="<?=base_url();?>index.php?finance/funds_transfers_report/<?=$year - 1;?>"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>
+	</div>
+	<div class="col-sm-10">
 		<table class="table table-bordered datatable">
 			<thead>
 				<tr>
-					<th>Transfer Date</th>
-					<th>Batch Number</th>
+					<th><?=get_phrase('transfer_date')?></th>
+					<th><?=get_phrase('batch_number')?></th>
 					<th>Transfer From</th>
-					<th>Transfer To</th>
-					<th>Amount</th>
+					<th><?=get_phrase('transfer_to')?></th>
+					<th><?=get_phrase('amount')?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -30,6 +40,9 @@
 				?>
 			</tbody>
 		</table>
+	</div>
+	<div class="col-xs-1">
+		<a href="<?=base_url();?>index.php?finance/funds_transfers_report/<?=$year + 1;?>"><i style="font-size: 145pt;" class="fa fa-angle-right"></i></a>
 	</div>
 </div>
 

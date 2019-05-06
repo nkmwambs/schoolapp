@@ -2003,7 +2003,7 @@ class Finance extends CI_Controller
 		redirect(base_url() . 'index.php?finance/cash_book','refresh');
 	}
 	
-	function year_funds_transfers(){
+	function year_funds_transfers($year){
 		
 		$this->db->select(array('cashbook.batch_number','cashbook.t_date','cashbook.amount',
 		'income_categories.name as account_to','expense_category.name as account_from'));
@@ -2018,17 +2018,19 @@ class Finance extends CI_Controller
 		$this->db->join('expense_details','expense_details.expense_id=expense.expense_id');
 		$this->db->join('expense_category','expense_category.expense_category_id=expense_details.expense_category_id');
 		
-		$transfer = $this->db->get_where('cashbook',array('transaction_type'=>5))->result_object();
+		$transfer = $this->db->get_where('cashbook',array('transaction_type'=>5,'YEAR(cashbook.t_date)'=>$year))->result_object();
 		
 		return $transfer;
 	}
 	
-	function funds_transfers_report(){
+	function funds_transfers_report($year = ''){
 		if ($this->session->userdata('active_login') != 1)
             redirect('login', 'refresh');
 		
+		$year = $year==""?date('Y'):$year;
 		
-		$page_data['transfers'] = $this->year_funds_transfers();
+		$page_data['year'] = $year;
+		$page_data['transfers'] = $this->year_funds_transfers($year);
         $page_data['page_name']  = 'funds_transfers_report';
 		$page_data['page_view'] = "finance";
         $page_data['page_title'] = get_phrase('funds_transfers');
