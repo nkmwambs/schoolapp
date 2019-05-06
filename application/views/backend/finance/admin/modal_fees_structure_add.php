@@ -4,6 +4,10 @@
 	}
 </style>
 
+<?php
+$default_category_obj = $this->db->get_where('income_categories',
+							array('default_category'=>1));
+?>
 <div class="row">
 	<div class="col-md-12">
 		<div class="panel panel-primary" data-collapsed="0">
@@ -15,7 +19,13 @@
             </div>
 			<div class="panel-body">
 				
-                <?php echo form_open(base_url() . 'index.php?finance/fees_structure/create/' , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
+                <?php echo form_open(base_url() . 'index.php?finance/fees_structure/create/' , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));
+                	if($default_category_obj->num_rows() == 0){
+                ?>
+                	<div class="well">A default income category is not selected in <a href="<?=base_url();?>index.php?settings/school_settings#v-income">settings</a></div>
+                <?php		
+                	}else{
+                ?>
 	
 					
 					<input type="hidden" readonly class="form-control" id="name" name="name" data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>" value="" autofocus>
@@ -51,7 +61,7 @@
 							<select name="yr" id="yr" class="form-control select2"  required="required">
 								<option disabled selected value=""><?=get_phrase('select');?></option>
 											<?php 
-												$fy = range(date('Y')-5, date('Y')+5);
+												$fy = range(date('Y')-3, date('Y')+3);
 													
 												foreach($fy as $yr):
 											?>
@@ -93,12 +103,21 @@
 							<label for="" style="text-align: center;"  class="control-label col-sm-4"><?=get_phrase('amount');?></label>
 						</div>
 						
+						<?php
+							$default_category = $default_category_obj->row();
+						?>
+						
+						<input type="hidden" value="<?=$default_category->income_category_id;?>" name="income_category_id[]" />
+						<input type="hidden" class="form-control" id="" name="category_name[]" value="<?=get_phrase('balance_brought_forward');?>" />
+						<input type="hidden" class="form-control" id="" name="amount[]" value="0" />
+						
 						<div class="form-group">
 							<div class="col-sm-4">
 								<select class="form-control" id="" name="income_category_id[]" >
 									<option value=""><?=get_phrase('select_category')?></option>
 									<?php
-										$income_categories = $this->db->get('income_categories')->result_object();
+										
+										$income_categories = $this->db->get_where('income_categories',array('default_category'=>0))->result_object();
 										
 										foreach($income_categories as $income_category){									
 									?>
@@ -124,7 +143,10 @@
 							<button type="submit" class="btn btn-info"><?php echo get_phrase('add_fees_structure');?></button>
 						</div>
 					</div>
-                <?php echo form_close();?>
+                <?php 
+                }	
+                	echo form_close();
+                ?>
             </div>
         </div>
     </div>

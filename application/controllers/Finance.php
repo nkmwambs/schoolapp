@@ -685,6 +685,17 @@ class Finance extends CI_Controller
 			
 	}
 	
+	function default_income_category_fees_structure_detail($term="",$year="",$class=""){
+		//Default category structure item
+		$this->db->select(array('fees_structure_details.detail_id','fees_structure_details.name'));
+		$this->db->join('fees_structure_details','fees_structure_details.income_category_id=income_categories.income_category_id');
+		$this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
+		$default_category_detail = $this->db->get_where('income_categories',
+		array('default_category'=>1,'yr'=>$year,'term'=>$term,'class_id'=>$class))->row();
+		
+		return $default_category_detail;
+	}
+	
 	function get_fees_items($term="",$year="",$class="",$student=""){
 		
 		$fees = $this->db->get_where('fees_structure',array("term"=>$term,"yr"=>$year,"class_id"=>$class));
@@ -705,13 +716,18 @@ class Finance extends CI_Controller
 					
 					if($invoice_count === 0){
 						foreach($details as $row):
+							$amount = $row->amount;
+							
+							if($this->default_income_category_fees_structure_detail($term,$year,$class)->detail_id == $row->detail_id){
+								$amount = $this->db->get_where('invoice',array('student_id'=>$student,'status'=>'unpaid'))->row()->balance;
+							}
 							
 							$body .= "<tr>
 							<td><input type='checkbox' 
 							onchange='return get_full_amount(".$row->detail_id.")' 
 							id='chk_".$row->detail_id."'/></td>
 							<td>".$row->name."</td>
-							<td id='full_amount_".$row->detail_id."'>".$row->amount."</td>
+							<td id='full_amount_".$row->detail_id."'>".$amount."</td>
 							<td><input type='text' 
 							onkeyup='return get_payable_amount(".$row->detail_id.")' 
 							class='form-control payable_items' id='payable_".$row->detail_id."' 
@@ -721,31 +737,7 @@ class Finance extends CI_Controller
 							<tr>";
 						endforeach;
 						
-						//Check if there is unpaid invoice for other terms
-						$unpaid_invoices = $this->db->get_where('invoice',array('student_id'=>$student,'status'=>'unpaid'));
 						
-						if($unpaid_invoices->num_rows()>0){
-							$invoice_id = $unpaid_invoices->row()->invoice_id;
-							
-							$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');
-							$invoice_details = $this->db->get_where('invoice_details',
-							array('invoice_id'=>$invoice_id))->result_object();
-							
-							foreach($invoice_details as $u_row){
-								$body .= "<tr>
-								<td><input type='checkbox' disabled='disabled'
-								onchange='return get_full_amount(".$u_row->detail_id.")' 
-								id='chk_".$u_row->detail_id."'/></td>
-								<td>".$u_row->name." (b/f)</td>
-								<td id='full_amount_".$u_row->detail_id."'>".$u_row->balance."</td>
-								<td><input type='text' readonly='readonly'  
-								class='form-control payable_items' id='payable_".$u_row->detail_id."' 
-								name='payable[".$u_row->detail_id."]' value='".$u_row->balance."' /></td>
-								<td><input type='text' class='form-control charge_overpay' 
-								value='0' readonly='readonly' name='charge_overpay[".$u_row->detail_id."]' /></td>
-								<tr>";	
-							}
-						}
 						
 					}else{
 						
