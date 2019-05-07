@@ -1,10 +1,10 @@
 <ul class="list-inline links-list pull-right">
-	<!-- <li>
+	<li>
 		<div class="search">
 			<input type="text" class="form-control input-sm" maxlength="64" placeholder="Search" />
 				 <button type="submit" class="btn btn-primary btn-sm">Search</button>
 		</div>				
-	</li> -->
+	</li>
 	<li>			
 		<div class="btn-group pull-right">
 			<button class="btn btn-default" title="<?=get_phrase('back');?>" onclick="javascript:go_back();"><i class="fa fa-backward"></i></button>
