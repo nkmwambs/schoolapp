@@ -46,6 +46,7 @@ if ( ! function_exists('get_phrase'))
 	}
 }
 
+
 // ------------------------------------------------------------------------
 /* End of file language_helper.php */
 /* Location: ./system/helpers/language_helper.php */

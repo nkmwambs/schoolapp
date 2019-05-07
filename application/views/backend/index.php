@@ -41,12 +41,9 @@
 		           </div>
 		           
 		            <div class="col-xs-6 pull-right;">
-								  								  		
-						<div class="btn-group pull-right">
-							<button class="btn btn-default" title="<?=get_phrase('back');?>" onclick="javascript:go_back();"><i class="fa fa-backward"></i></button>
-							<button class="btn btn-default" title="<?=get_phrase('forward');?>" onclick="javascript:go_forward();"><i class="fa fa-forward"></i></button>
-						</div>
-				  </div> 		
+						<?php include 'lower_header.php'?>	  								  		
+						
+				 	</div> 		
 				</div>
 			</div>
 			  
