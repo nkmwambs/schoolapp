@@ -29,7 +29,7 @@ class Search extends CI_Controller
 
  	function search_results(){		
  		
-		$data['results'] = $this->crud_model->grep_db('schoolapp',explode(" ", $this->input->post('search_string')));
+		$data['results'] = $this->crud_model->grep_db($this->db->database,explode(" ", $this->input->post('search_string')));
  		echo $this->load->view('backend/search/admin/result',$data,true);
  	}
 }
