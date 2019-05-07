@@ -136,9 +136,23 @@ class Finance extends CI_Controller
             redirect(base_url() . 'index.php?finance/fees_structure');
         }
         if ($param1 == 'delete') {
-            $this->db->where('fees_id' , $param2);
-            $this->db->delete('fees_structure');
-            $this->session->set_flashdata('flash_message' , get_phrase('data_deleted'));
+           	//Check if there is an invoice for the fees structure
+           	$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');
+           	$count_invoice_details = $this->db->get_where('invoice_details',array('fees_id'=>$param2))->num_rows();
+			
+			$msg = get_phrase('deleted_failed');
+			
+			if($count_invoice_details == 0){
+				$this->db->delete('fees_structure_details',array('fees_id'=>$param2));
+				$this->db->delete('fees_structure',array('fees_id'=>$param2));
+				
+				if($this->db->affected_rows() > 0){
+					$msg = get_phrase('data_deleted');
+				}
+			}
+		
+			
+            $this->session->set_flashdata('flash_message' , $msg);
             redirect(base_url() . 'index.php?finance/fees_structure');
         }
 		
