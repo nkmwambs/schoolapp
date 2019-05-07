@@ -1,62 +1,77 @@
-<ul class="list-inline links-list pull-right">
-	<li>
-		<div class="search">
-			<input type="text" class="form-control input-sm" maxlength="64" placeholder="Search" />
-				 <button type="submit" class="btn btn-primary btn-sm">Search</button>
-		</div>				
-	</li>
-	<li>			
-		<div class="btn-group pull-right">
-			<button class="btn btn-default" title="<?=get_phrase('back');?>" onclick="javascript:go_back();"><i class="fa fa-backward"></i></button>
-			<button class="btn btn-default" title="<?=get_phrase('forward');?>" onclick="javascript:go_forward();"><i class="fa fa-forward"></i></button>
+<div class="row">
+	<div class="col-xs-12">
+		<div id="custom-search-input">
+			<div class="input-group col-md-12">
+			   <input id="search_box" type="text" class="form-control input-lg" placeholder="<?=get_phrase('search_text_here');?>" />
+			   		<span class="input-group-btn">
+			            <button class="btn btn-info btn-lg" id="searching" type="button">
+			               <i class="glyphicon glyphicon-search"></i>
+			            </button>
+			        </span>
+			</div>
 		</div>
-	</li>
-</ul>
+	</div>
+</div>
+				
+<hr />
 
+<script>
+	$("#searching").on('click',function(){
+		if($("#search_box").val()!==""){
+			var url = "<?=base_url();?>index.php?search/search_results";
+			var str_data = {'search_string':$("#search_box").val()};
+			
+			$.ajax({
+				url:url,
+				type:"POST",
+				data:str_data,
+				beforeSend:function(){
+					$("#overlay").css('display','block');
+				},
+				success:function(resp){
+					$("#overlay").css('display','none');
+					$("#page_content").html(resp);
+				},
+				error:function(){
+					alert('Error Occurred!');
+					$("#overlay").css('display','none');
+				}
+			});
+		}
+	});
+</script>
 
 <style>
-	#search {
-    float: right;
-    margin-top: 9px;
-    width: 250px;
+#custom-search-input{
+    padding: 3px;
+    border: solid 1px #E4E4E4;
+    border-radius: 6px;
+    background-color: #fff;
 }
 
-.search {
-    padding: 5px 0;
-    width: 230px;
-    height: 30px;
-    position: relative;
-    left: 10px;
-    float: left;
-    line-height: 22px;
+#custom-search-input input{
+    border: 0;
+    box-shadow: none;
 }
 
-    .search input {
-        position: absolute;
-        width: 0px;
-        float: Left;
-        margin-left: 210px;
-        -webkit-transition: all 0.7s ease-in-out;
-        -moz-transition: all 0.7s ease-in-out;
-        -o-transition: all 0.7s ease-in-out;
-        transition: all 0.7s ease-in-out;
-        height: 30px;
-        line-height: 18px;
-        padding: 0 2px 0 2px;
-        border-radius:1px;
-    }
+#custom-search-input button{
+    margin: 2px 0 0 0;
+    background: none;
+    box-shadow: none;
+    border: 0;
+    color: #666666;
+    padding: 0 8px 0 10px;
+    border-left: solid 1px #ccc;
+}
 
-        .search:hover input, .search input:focus {
-            width: 200px;
-            margin-left: 0px;
-        }
+#custom-search-input button:hover{
+    border: 0;
+    box-shadow: none;
+    border-left: solid 1px #ccc;
+}
 
-.btn {
-    height: 30px;
-    position: absolute;
-    right: 0;
-    top: 5px;
-    border-radius:1px;
+#custom-search-input .glyphicon-search{
+    font-size: 23px;
 }
 
 </style>

@@ -725,4 +725,56 @@ class Crud_model extends CI_Model {
 
 	}
 
+	function grep_db($db_name, $search_values)
+		{
+			// Init vars
+			$table_fields = array();
+			$cumulative_results = array();
+			$use_tables = array('student','parent','teacher');
+			
+			// Pull all table columns that have character data types
+			$result = $this->db->query("
+				SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE
+				FROM  `INFORMATION_SCHEMA`.`COLUMNS` 
+				WHERE  `TABLE_SCHEMA` =  '{$db_name}'
+				AND `DATA_TYPE` IN ('varchar', 'char', 'text','longtext')
+				")->result_array();
+			
+			// Build table-keyed columns so we know which to query
+			foreach ( $result  as $o ) 
+			{
+				if(!in_array($o['TABLE_NAME'], $use_tables)) continue;
+				
+				$table_fields[$o['TABLE_NAME']][] = $o['COLUMN_NAME'];			
+			}
+			
+			// Build search query to pull the affected rows
+			// Search Each Row for matches
+			foreach($table_fields as $table_name => $fields)
+			{
+				// Clear search array
+				$search_array = array();
+				
+				// Add a search for each search match
+				foreach($fields as $field)
+				{
+					
+					foreach($search_values as $value) 
+					{
+						$search_array[] = " `{$field}` LIKE '%{$value}%' ";
+					}
+				}
+				// Implode $search_array
+				$search_string = implode (' OR ', $search_array);
+				
+								
+				$query_string = "SELECT * FROM `{$table_name}`  WHERE {$search_string}";
+				
+				
+				$table_results[$table_name] = $this->db->query($query_string)->result_array();		
+				$cumulative_results = array_merge($cumulative_results, $table_results);
+			}
+			
+			return $cumulative_results;
+		}
 }

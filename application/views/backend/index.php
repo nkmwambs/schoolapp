@@ -31,32 +31,43 @@
 		<div class="main-content">
 			
 			<?php include 'header.php';?>
-			<div class="row">
+			
+			<?php include 'lower_header.php'?>
+			<div id="page_content" class="row">  
 				<div class="col-xs-12">
-					<div class="col-xs-6 pull-right;">	
-			           <h3 style="">
-			           	<i class="entypo-right-circled"></i>
-							<?php echo $page_title;?>
-			           </h3>
-		           </div>
-		           
-		            <div class="col-xs-6 pull-right;">
-						<?php include 'lower_header.php'?>	  								  		
-						
-				 	</div> 		
+					
+			
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="col-xs-6 pull-right;">	
+					           <h3 style="">
+					           	<i class="entypo-right-circled"></i>
+									<?php echo $page_title;?>
+					           </h3>
+				           </div>
+				           
+				            <div class="col-xs-6 pull-right;">
+				            	<div class="btn-group pull-right">
+									<button class="btn btn-default" title="<?=get_phrase('back');?>" onclick="javascript:go_back();"><i class="fa fa-backward"></i></button>
+									<button class="btn btn-default" title="<?=get_phrase('forward');?>" onclick="javascript:go_forward();"><i class="fa fa-forward"></i></button>
+								</div>
+									  								  		
+								
+						 	</div> 		
+						</div>
+					</div>
+			
+			
+					<?php 
+							if(file_exists(APPPATH."/views/backend/".$page_view.'/'.$account_type.'/'.$page_name.'.php')){
+								include $page_view.'/'.$account_type.'/'.$page_name.'.php';
+							}else{
+								include $page_view.'/'.$page_name.'.php';
+							}
+							
+					?>
 				</div>
 			</div>
-			  
-
-			<?php 
-					if(file_exists(APPPATH."/views/backend/".$page_view.'/'.$account_type.'/'.$page_name.'.php')){
-						include $page_view.'/'.$account_type.'/'.$page_name.'.php';
-					}else{
-						include $page_view.'/'.$page_name.'.php';
-					}
-					
-			?>
-
 			<?php include 'footer.php';?>
 
 		</div>

@@ -1,3 +1,6 @@
+<?php
+//print_r($this->crud_model->grep_db('schoolapp','James'));
+?>
 <div class="row">
 	<div class="col-xs-12 <?=get_access_class('dashboard','admin');?>">
 		<hr />
