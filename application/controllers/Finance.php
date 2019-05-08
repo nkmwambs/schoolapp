@@ -607,18 +607,26 @@ class Finance extends CI_Controller
         }
 
         if ($param1 == 'delete') {
-            $this->db->where('invoice_id', $param2);
-            $this->db->delete('invoice');
+        	
+			//Check if invoice has payment done
 			
-			//Delete Invoice Details
-			$this->db->where('invoice_id', $param2);
-            $this->db->delete('invoice_details');
+			$check = $this->db->get_where('payment',array('invoice_id'=>invoice_id))->num_rows();
 			
-			//Delete Payments
-			$this->db->where('invoice_id', $param2);
-            $this->db->delete('payment');
+			$msg = get_phrase('delete_failed');
 			
-            $this->session->set_flashdata('flash_message' , get_phrase('data_deleted'));
+			if($check == 0){
+				
+				//Delete Invoice Details
+				$this->db->where('invoice_id', $param2);
+	            $this->db->delete('invoice_details');
+					
+				$this->db->where('invoice_id', $param2);
+	            $this->db->delete('invoice');	
+				
+				$msg = get_phrase('data_deleted');
+			}
+			
+            $this->session->set_flashdata('flash_message' , $msg);
             redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
         }
 		
