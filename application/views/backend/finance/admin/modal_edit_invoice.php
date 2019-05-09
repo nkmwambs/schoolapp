@@ -127,7 +127,7 @@
 		
 		var row = "";
 		
-		var url = "<?=base_url();?>index.php?finance/add_invoice_item_row/";
+		var url = "<?=base_url();?>index.php?finance/add_invoice_item_row/<?=$invoice->term;?>/<?=$invoice->yr;?>/<?=$invoice->class_id;?>";
 		
 		var used_categories = JSON.parse('<?=json_encode(array_column($details, 'name'));?>');
 		//alert(used_categories[0]);

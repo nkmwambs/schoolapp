@@ -2051,7 +2051,7 @@ class Finance extends CI_Controller
         $this->load->view('backend/index', $page_data);			
 	}
 	
-	function add_invoice_item_row($term = 1,$year = 2019,$class = 1){
+	function add_invoice_item_row($term,$year,$class){
 		$this->db->select(array('fees_structure_details.name','fees_structure_details.detail_id',
 		'fees_structure_details.income_category_id','fees_structure_details.amount'));
 		$this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
