@@ -58,6 +58,13 @@ foreach($student_info as $row):?>
                         <td><b><?php echo $row['roll'];?></b></td>
                     </tr>
                     <?php endif;?>
+                    
+                    <?php if($row['upi_number'] != ''):?>
+                    <tr>
+                        <td>UPI Number</td>
+                        <td><b><?php echo $row['upi_number'];?></b></td>
+                    </tr>
+                    <?php endif;?>
 
                     <?php if($row['birthday'] != ''):?>
                     <tr>

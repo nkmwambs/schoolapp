@@ -128,6 +128,14 @@ foreach ( $edit_data as $row):
 							<input type="text" class="form-control" name="roll" value="<?php echo $row['roll'];?>" >
 						</div>
 					</div>
+					
+					<div class="form-group">
+						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('UPI_number');?></label>
+
+						<div class="col-sm-5">
+							<input type="text" class="form-control" name="upi_number" value="<?php echo $row['upi_number'];?>" >
+						</div>
+					</div>
 
 					<div class="form-group">
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('birthday');?></label>
