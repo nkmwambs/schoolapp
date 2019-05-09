@@ -25,6 +25,7 @@
 			            <th><div><?php echo get_phrase('name');?></div></th>
 			            <th><div><?php echo get_phrase('class');?></div></th>
 			            <th><div><?php echo get_phrase('year');?></div></th>
+			            <th><div><?php echo get_phrase('invoice_count');?></div></th>
 			            <th><div><?php echo get_phrase('term');?></div></th>
 			            <th><div><?php echo get_phrase('amount_payable');?></div></th>
 			            <th><div><?php echo get_phrase('options');?></div></th>
@@ -40,6 +41,8 @@
 			            <td><?php echo ucwords(str_replace("_", " ", $row['name']));?></td>
 			            <td><?php echo $this->crud_model->get_class_name($row['class_id']);?></td>
 			            <td><?php echo $row['yr'];?></td>
+			            <?php $count = $this->db->get_where('invoice',array('class_id'=>$row['class_id'],'yr'=>$row['yr']))->num_rows();?>
+			            <td><?=$count;?></td>
 			            <td><?php echo $this->db->get_where('terms',array('term_number'=>$row['term']))->row()->name;?></td>
 			            <td><?=number_format($this->db->select_sum('amount')->get_where('fees_structure_details',array('fees_id'=>$row['fees_id']))->row()->amount,2);?></td>
 			            <td>
@@ -95,7 +98,7 @@
 			                        </li>
 			                        
 			                        <li class="divider add_fees_structure"></li>                     
-			                        
+			                        <?php if($count == 0) {?>
 			                        <!-- DELETION LINK -->
 			                        <li class="delete_fee_structure">
 			                        	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?finance/fees_structure/delete/<?php echo $row['fees_id'];?>');">
@@ -103,6 +106,9 @@
 												<?php echo get_phrase('delete');?>
 			                               	</a>
 			                        </li>
+			                        <?php
+									}
+			                        ?>
 			                    </ul>
 			                </div>
 			                
