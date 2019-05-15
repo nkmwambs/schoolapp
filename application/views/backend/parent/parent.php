@@ -84,7 +84,7 @@
                                         
                                         <!-- teacher DELETION LINK -->
                                         <li class="<?=get_access_class("delete_parent",$this->session->login_type,"parent")?>">
-                                            <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?admin/parent/delete/<?php echo $row['parent_id'];?>');">
+                                            <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?parents/parent/delete/<?php echo $row['parent_id'];?>');">
                                                 <i class="entypo-trash"></i>
                                                     <?php echo get_phrase('delete');?>
                                                 </a>
