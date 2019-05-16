@@ -15,9 +15,10 @@ class Login extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-        //$this->load->model('crud_model');
-        $this->load->database(DB_PREFIX.'_default',true);
-        $this->load->library('session');
+		$this->load->library('session');
+        $this->config->load('localrepositoryvars');
+        $this->load->database($this->config->item('db_prefix').'_default',true);
+        
         /* cache control */
         $this->output->set_header('Last-Modified: ' . gmdate("D, d M Y H:i:s") . ' GMT');
         $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
@@ -74,7 +75,7 @@ class Login extends CI_Controller {
         $query = $this->db->get_where('user', $credential);
         if ($query->num_rows() > 0) {
             
-			//$default_database = $this->load->database('school_default',true);
+			$default_database = $this->load->database('school_default',true);
 			$customer_database = $this->load->database('school_app'.$query->row()->app_id,true);
 			
 			$row = $customer_database->get_where('user',array('email'))->row();
@@ -88,6 +89,10 @@ class Login extends CI_Controller {
             $this->session->set_userdata('login_type_id', $row->login_type_id);
             $this->session->set_userdata('login_profile', $row->profile_id);
             $this->session->set_userdata('profile_id', $row->profile_id);
+			
+			
+			$this->session->set_userdata('dbprefix',
+			$default_database->get_where('settings',array('type'=>'dbprefix'))->row()->description);
 			
 			$this->session->set_userdata('login_type', $login_type);
 			
