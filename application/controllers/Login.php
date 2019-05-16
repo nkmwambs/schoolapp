@@ -91,9 +91,6 @@ class Login extends CI_Controller {
             $this->session->set_userdata('profile_id', $row->profile_id);
 			
 			
-			$this->session->set_userdata('dbprefix',
-			$default_database->get_where('settings',array('type'=>'dbprefix'))->row()->description);
-			
 			$this->session->set_userdata('login_type', $login_type);
 			
 			$this->session->set_userdata('profile', 
@@ -107,7 +104,7 @@ class Login extends CI_Controller {
 			$this->session->set_userdata('type_login_user_id',  $type_table_id);
 			
 			//Switch App database session
-			$this->session->set_userdata('app', DB_PREFIX.'_app'.$query->row()->app_id);
+			$this->session->set_userdata('app', $this->config->item('db_prefix').'_app'.$query->row()->app_id);
 			
             return 'success';
         }
