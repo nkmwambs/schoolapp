@@ -16,7 +16,7 @@ class Login extends CI_Controller {
     function __construct() {
         parent::__construct();
         //$this->load->model('crud_model');
-        $this->load->database('school_default',true);
+        $this->load->database(DB_PREFIX.'_default',true);
         $this->load->library('session');
         /* cache control */
         $this->output->set_header('Last-Modified: ' . gmdate("D, d M Y H:i:s") . ' GMT');
@@ -102,7 +102,7 @@ class Login extends CI_Controller {
 			$this->session->set_userdata('type_login_user_id',  $type_table_id);
 			
 			//Switch App database session
-			$this->session->set_userdata('app', 'school_app'.$query->row()->app_id);
+			$this->session->set_userdata('app', DB_PREFIX.'_app'.$query->row()->app_id);
 			
             return 'success';
         }

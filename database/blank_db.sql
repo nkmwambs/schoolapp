@@ -1037,13 +1037,12 @@ CREATE TABLE `user` (
   `login_type_id` tinyint(10) NOT NULL,
   `profile_id` tinyint(5) NOT NULL,
   `type_user_id` int(100) NOT NULL,
-  `app_id` int(100) NOT NULL DEFAULT '1',
   `auth` tinyint(5) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `user` (`user_id`, `firstname`, `lastname`, `email`, `password`, `phone`, `login_type_id`, `profile_id`, `type_user_id`, `app_id`, `auth`) VALUES
-(1,	'Nicodemus',	'Karisa',	'nkmwambs@gmail.com',	'fbdf9989ea636d6b339fd6b85f63e06e',	'254711808071',	1,	1,	1,	2,	1);
+INSERT INTO `user` (`user_id`, `firstname`, `lastname`, `email`, `password`, `phone`, `login_type_id`, `profile_id`, `type_user_id`, `auth`) VALUES
+(1,	'Nicodemus',	'Karisa',	'nkmwambs@gmail.com',	'fbdf9989ea636d6b339fd6b85f63e06e',	'254711808071',	1,	1,	1,	1);
 
 -- 2019-05-16 22:25:05
