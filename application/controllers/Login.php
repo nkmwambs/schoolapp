@@ -75,8 +75,8 @@ class Login extends CI_Controller {
         $query = $this->db->get_where('user', $credential);
         if ($query->num_rows() > 0) {
             
-			$default_database = $this->load->database('school_default',true);
-			$customer_database = $this->load->database('school_app'.$query->row()->app_id,true);
+			$default_database = $this->load->database($this->config->item('db_prefix').'_default',true);
+			$customer_database = $this->load->database($this->config->item('db_prefix').'_app'.$query->row()->app_id,true);
 			
 			$row = $customer_database->get_where('user',array('email'))->row();
 			
