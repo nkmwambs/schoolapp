@@ -102,7 +102,7 @@ class Login extends CI_Controller {
 			$this->session->set_userdata('type_login_user_id',  $type_table_id);
 			
 			//Switch App database session
-			$this->session->set_userdata('app', 'school_app'.$query->row()->app_id);
+			$this->session->set_userdata('app', DB_PREFIX.'_app'.$query->row()->app_id);
 			
             return 'success';
         }
