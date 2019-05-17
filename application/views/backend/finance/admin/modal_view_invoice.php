@@ -1,6 +1,9 @@
 <?php
 $edit_data = $this->db->get_where('invoice', array('invoice_id' => $param2))->result_array();
 foreach ($edit_data as $row):
+	$this->db->select(array('route_name'));
+	$this->db->join('student','student.transport_id=transport.transport_id');
+	$transport_route = $this->db->get_where('transport',array('student.student_id'=>$row['student_id']));
 ?>
 <center>
     <a onClick="PrintElem('#invoice_print')" class="btn btn-default btn-icon icon-left hidden-print pull-right">
@@ -41,8 +44,16 @@ foreach ($edit_data as $row):
                         $class_id = $this->db->get_where('student' , array('student_id' => $row['student_id']))->row()->class_id;
                         echo get_phrase('class') . ' ' . $this->db->get_where('class', array('class_id' => $class_id))->row()->name;
                     ?><br>
-                    <?php echo 'Admission Number - ' .  $this->db->get_where('student', array('student_id' => $row['student_id']))->row()->roll; ?><br>
+                    <?php echo get_phrase('admission_number').' - ' .  $this->db->get_where('student', array('student_id' => $row['student_id']))->row()->roll; ?><br>
+                	<br />
+                	<?php 
+                		if($transport_route->num_rows()>0):
+                			echo get_phrase('transport_route');?> - <?=$transport_route->row()->route_name;
+                		endif;
+                	?>
                 </td>
+               
+	            
             </tr>
         </table>
         <hr>
@@ -53,15 +64,16 @@ foreach ($edit_data as $row):
                 <td align="right"><?php echo $row['amount_due']; ?></td>
             </tr>
             <tr>
-                <td align="right" width="80%"><h4><?php echo get_phrase('paid_amount'); ?> :</h4></td>
-                <td align="right"><h4><?php echo $row['amount_paid']; ?></h4></td>
+                <td align="right" width="80%"><?php echo get_phrase('paid_amount'); ?> :</td>
+                <td align="right"><?php echo $row['amount_paid']; ?></td>
             </tr>
             <?php if ($row['balance'] != 0):?>
             <tr>
-                <td align="right" width="80%"><h4><?php echo get_phrase('due'); ?> :</h4></td>
-                <td align="right"><h4><?php echo $row['balance']; ?></h4></td>
+                <td align="right" width="80%"><?php echo get_phrase('due'); ?> :</td>
+                <td align="right"><?php echo $row['balance']; ?></td>
             </tr>
             <?php endif;?>
+            
         </table>
         
         <hr>

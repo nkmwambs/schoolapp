@@ -7,3 +7,4 @@ readme.rst
 /tests
 /application/**/config/config.php
 /application/**/config/database.php
+/application/**/config/localrepositoryvars.php
