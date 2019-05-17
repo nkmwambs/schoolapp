@@ -24,8 +24,8 @@ class Crud_model extends CI_Model {
     }
 
     ////////STUDENT/////////////
-    function get_students($class_id) {
-        $query = $this->db->get_where('student', array('class_id' => $class_id));
+    function get_students($class_id,$active = 1) {
+        $query = $this->db->get_where('student', array('class_id' => $class_id,'active'=>$active));
         return $query->result_array();
     }
 

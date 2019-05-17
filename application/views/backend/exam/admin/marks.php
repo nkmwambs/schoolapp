@@ -166,6 +166,7 @@
 
                   <center>
                       <button type="submit" class="btn btn-primary"><?php echo get_phrase('update_marks');?></button>
+                      <div id="btbDelMarks" class="btn btn-primary"><?php echo get_phrase('delete_mark');?></div>
                   </center>
                   <?php echo form_close();?>
 
@@ -193,5 +194,30 @@
       document.getElementById('subject_id_'+class_id).style.display = 'block' ;
 	  document.getElementById('subject_id_'+class_id).setAttribute("name" , "subject_id");
   }
+
+$("#btbDelMarks").on('click',function(){
+	var url = "<?=base_url();?>index.php?exam/delete_marks/<?php echo $class_id;?>/<?php echo $subject_id;?>/<?php echo $exam_id;?>";
+	
+	var cnf = confirm('Are you sure you want to delete?');
+	
+	if(!cnf) {
+		alert("Process Aborted");
+		return false;	
+	}
+	
+	$.ajax({
+		url:url,
+		beforeSend:function(){
+			
+		},
+		success:function(resp){
+			alert(resp);
+			//window.location.reload();
+		},
+		error:function(){
+			alert('Error Occurred!');
+		}
+	});
+});
 
 </script>

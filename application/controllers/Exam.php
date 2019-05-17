@@ -156,6 +156,17 @@ class Exam extends CI_Controller
         $this->load->view('backend/index', $page_data);
     }
 
+	function delete_marks($class_id,$subject_id,$exam_id){
+		// $class_id = $this->input->post('class_id');
+		// $subject_id = $this->input->post('subject_id');
+		// $exam_id = $this->input->post('exam_id');
+		
+		$this->db->where(array('class_id'=>$class_id,'subject_id'=>$subject_id,'exam_id'=>$exam_id));
+		$this->db->delete('mark');
+		
+		echo get_phrase('finished');
+	}
+
     // TABULATION SHEET
     function tabulation_sheet($class_id = '' , $exam_id = '') {
         if ($this->session->userdata('active_login') != 1)

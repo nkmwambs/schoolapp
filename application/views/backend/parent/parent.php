@@ -34,7 +34,7 @@
                             	
                             	<?php 
                             			if($row['care_type'] === "primary"){
-                            				echo $this->db->get_where('student',array('parent_id'=>$row['parent_id']))->num_rows();
+                            				echo $this->db->get_where('student',array('parent_id'=>$row['parent_id'],'active'=>1))->num_rows();
                             			}else{
                             				echo $this->db->get_where('caregiver',array('parent_id'=>$row['parent_id']))->num_rows();
                             			}

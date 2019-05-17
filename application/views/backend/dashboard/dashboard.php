@@ -53,8 +53,8 @@
 		                <div class="tile-stats tile-aqua <?=get_access_class('parents_count','admin','dashboard');?>">
 		                    <div class="icon"><i class="entypo-user"></i></div>
 		                    <?php
-		                    	$this->db->where('student.active',1);
-		                    	$this->db->join('student','student.parent_id=parent.parent_id');
+		                    	// $this->db->where('student.active',1);
+		                    	// $this->db->join('student','student.parent_id=parent.parent_id');
 		                    	$parents = $this->db->get('parent')->num_rows();
 		                    ?>
 		                    <div class="num" data-start="0" data-end="<?php echo $parents;?>" 
