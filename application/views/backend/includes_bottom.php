@@ -84,35 +84,42 @@
 		    minHeight: 300,
 		    minWidth: 300
 		});
+		
+		
+		
+			$(".unique").on('change',function(){
+			var table_name = $(this).attr('data-tablename');
+			var field = $(this).attr('name');
+			var value = $(this).val();
+			var url = "<?=base_url();?>index.php?general/check_duplicate_record/";
+			var data = {'table':table_name,'field':field,'value':value};
+			var elem = $(this);
+			
+			//check if element property required
+			if($(this).attr('required') != 'required' || $(this).attr('data-validate') != 'required' ){
+				$(this).prop('required','required');
+			}
+			
+			$.ajax({
+				url:url,
+				data:data,
+				type:"POST",
+				success:function(resp){
+					
+					elem.parent().find('.duplicate-errror').remove();
+					
+					if(resp != "0"){
+						elem.css('border','1px solid red');
+						elem.parent().append('<div style="color:red;" class="duplicate-errror">Duplicate value found for '+value+'</div>');
+						elem.val("");
+					}
+				}
+			});
+			
+		});
+	
 
 	});
 
-	$(".unique").on('change',function(){
-		var table_name = $(this).attr('data-tablename');
-		var field = $(this).attr('name');
-		var value = $(this).val();
-		var url = "<?=base_url();?>index.php?general/check_duplicate_record/";
-		var data = {'table':table_name,'field':field,'value':value};
-		var elem = $(this);
-		
-		//check if element property required
-		if($(this).attr('required') != 'required' || $(this).attr('data-validate') != 'required' ){
-			$(this).prop('required','required');
-		}
-		
-		$.ajax({
-			url:url,
-			data:data,
-			type:"POST",
-			success:function(resp){
-				if(resp != "0"){
-					elem.parent().find('.duplicate-errror').remove();
-					elem.css('border','1px solid red');
-					elem.parent().append('<div style="color:red;" class="duplicate-errror">Duplicate value found for '+value+'</div>');
-					elem.val("");
-				}
-			}
-		});
-		
-	})
+
 </script>

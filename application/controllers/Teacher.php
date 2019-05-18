@@ -79,4 +79,14 @@ class Teacher extends CI_Controller
         $this->load->view('backend/index', $page_data);
     }
 
+	function teacher_add(){
+		if ($this->session->userdata('active_login') != 1)
+            redirect(base_url(), 'refresh');
+
+        $page_data['page_name']  = 'teacher_add';
+        $page_data['page_view']  = 'teacher';
+        $page_data['page_title'] = get_phrase('add_teacher');
+        $this->load->view('backend/index', $page_data);			
+	}
+
 }
