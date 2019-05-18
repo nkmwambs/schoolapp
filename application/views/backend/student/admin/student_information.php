@@ -110,7 +110,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
 
                                         <!-- STUDENT EDITING LINK -->
                                         <li class="<?=get_access_class("edit_student",$this->session->login_type,"student");?> ">
-                                            <a  href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_student_edit/<?php echo $row['student_id'];?>');">
+                                            <a  href="<?php echo base_url();?>index.php?student/student_edit/<?php echo $row['student_id'];?>" >
                                                 <i class="entypo-pencil"></i>
                                                     <?php echo get_phrase('edit');?>
                                                 </a>

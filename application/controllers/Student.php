@@ -78,6 +78,17 @@ class Student extends CI_Controller
       $page_data['page_title'] = get_phrase('add_student');
       $this->load->view('backend/index', $page_data);
     }
+	
+	function student_edit($student_id){
+	  if ($this->session->userdata('active_login') != 1)
+           redirect('login', 'refresh');
+
+	$page_data['student_id']  	= $student_id;		
+    $page_data['page_name']  	= 'student_edit';
+    $page_data['page_view'] = "student";
+    $page_data['page_title'] 	= get_phrase('edit_student');
+    $this->load->view('backend/index', $page_data);	
+	}
 
 	function student_promote($param1="",$param2="",$param3=""){
 		

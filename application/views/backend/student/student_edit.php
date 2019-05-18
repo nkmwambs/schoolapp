@@ -1,5 +1,5 @@
 <?php
-$edit_data		=	$this->db->get_where('student' , array('student_id' => $param2) )->result_array();
+$edit_data		=	$this->db->get_where('student' , array('student_id' => $student_id) )->result_array();
 foreach ( $edit_data as $row):
 ?>
 <div class="row">
@@ -125,7 +125,7 @@ foreach ( $edit_data as $row):
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('roll');?></label>
 
 						<div class="col-sm-5">
-							<input type="text" class="form-control" name="roll" value="<?php echo $row['roll'];?>" >
+							<input type="text" class="form-control unique" data-tablename="student" name="roll" value="<?php echo $row['roll'];?>" >
 						</div>
 					</div>
 					
@@ -133,7 +133,7 @@ foreach ( $edit_data as $row):
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('UPI_number');?></label>
 
 						<div class="col-sm-5">
-							<input type="text" class="form-control" name="upi_number" value="<?php echo $row['upi_number'];?>" >
+							<input type="text" class="form-control unique" data-tablename="student" name="upi_number" value="<?php echo $row['upi_number'];?>" >
 						</div>
 					</div>
 
