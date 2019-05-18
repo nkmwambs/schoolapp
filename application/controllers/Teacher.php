@@ -69,7 +69,8 @@ class Teacher extends CI_Controller
         if ($param1 == 'delete') {
             $this->db->where('teacher_id', $param2);
             $this->db->delete('teacher');
-            $this->session->set_flashdata('flash_message' , get_phrase('data_deleted'));
+			
+			delete_affected_rows_alert();
             redirect(base_url() . 'index.php?teacher/teacher/', 'refresh');
         }
         $page_data['teachers']   = $this->db->get('teacher')->result_array();
@@ -86,6 +87,17 @@ class Teacher extends CI_Controller
         $page_data['page_name']  = 'teacher_add';
         $page_data['page_view']  = 'teacher';
         $page_data['page_title'] = get_phrase('add_teacher');
+        $this->load->view('backend/index', $page_data);			
+	}
+	
+	function teacher_edit($teacher_id){
+		if ($this->session->userdata('active_login') != 1)
+            redirect(base_url(), 'refresh');
+
+		$page_data['teacher_id']  = $teacher_id;
+        $page_data['page_name']  = 'teacher_edit';
+        $page_data['page_view']  = 'teacher';
+        $page_data['page_title'] = get_phrase('edit_teacher');
         $this->load->view('backend/index', $page_data);			
 	}
 

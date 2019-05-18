@@ -86,7 +86,7 @@
 										
                                         <!-- teacher EDITING LINK -->
                                         <li class="<?=get_access_class("edit_teacher",$this->session->login_type,"teacher");?>">
-                                        	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_teacher_edit/<?php echo $row['teacher_id'];?>');">
+                                        	<a href="<?php echo base_url();?>index.php?teacher/teacher_edit/<?php echo $row['teacher_id'];?>">
                                             	<i class="fa fa-pencil"></i>
 													<?php echo get_phrase('edit');?>
                                                	</a>

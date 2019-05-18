@@ -63,14 +63,14 @@
 
 <?php endif;?>
 
+<span id="buffer"></span>
 
 <!-----  DATA TABLE EXPORT CONFIGURATIONS ---->
 <script type="text/javascript">
 
 	jQuery(document).ready(function($)
 	{
-
-
+		
 		var datatable = $("#table_export").dataTable();
 
 		$(".dataTables_wrapper select").select2({
@@ -85,9 +85,31 @@
 		    minWidth: 300
 		});
 		
+		var attr_name2 = "";
 		
+		$(".unique").on('click',function(){
+			
+			var attr_name1 = $(this).attr('name');
+			
+			if(attr_name1 != attr_name2){
+				attr_name2 = attr_name1;
+				$("#buffer").html($(this).val());
+			}			
+			
+		});
 		
-			$(".unique").on('change',function(){
+		$(".unique").on('mousedown',function(){
+			
+			var attr_name1 = $(this).attr('name');
+			
+			if(attr_name1 != attr_name2){
+				attr_name2 = attr_name1;
+				$("#buffer").html($(this).val());
+			}			
+			
+		});
+		
+		$(".unique").on('change',function(){
 			var table_name = $(this).attr('data-tablename');
 			var field = $(this).attr('name');
 			var value = $(this).val();
@@ -108,10 +130,11 @@
 					
 					elem.parent().find('.duplicate-errror').remove();
 					
-					if(resp != "0"){
+					if(resp != "0" && $("#buffer").html() != value){
 						elem.css('border','1px solid red');
-						elem.parent().append('<div style="color:red;" class="duplicate-errror">Duplicate value found for '+value+'</div>');
-						elem.val("");
+						elem.parent().append('<div class="duplicate-errror"><span style="color:red;">Duplicate value found for <span>'+value+'</span></span></div>');
+						elem.val($("#buffer").html());
+						
 					}
 				}
 			});
