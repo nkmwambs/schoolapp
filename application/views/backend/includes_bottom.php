@@ -55,6 +55,14 @@
 
 <?php endif;?>
 
+<?php if ($this->session->flashdata('error_message') != ""):?>
+
+<script type="text/javascript">
+	toastr.error('<?php echo $this->session->flashdata("error_message");?>');
+</script>
+
+<?php endif;?>
+
 
 <!-----  DATA TABLE EXPORT CONFIGURATIONS ---->
 <script type="text/javascript">

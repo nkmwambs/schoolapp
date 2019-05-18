@@ -17,8 +17,9 @@ class Student extends CI_Controller
     function __construct()
     {
           parent::__construct();
-		      $this->load->database();
+		  $this->load->database();
           $this->load->library('session');
+		  $this->load->model('student_model','students');
           /*cache control*/
           $this->output->set_header('Last-Modified: ' . gmdate("D, d M Y H:i:s") . ' GMT');
           $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
@@ -36,6 +37,35 @@ class Student extends CI_Controller
         if ($this->session->userdata('active_login') == 1)
             redirect(base_url() . 'index.php?student/student_information', 'refresh');
     }
+	
+		public function ajax_list()
+	{
+		$list = $this->students->get_datatables();
+		$data = array();
+		$no = $_POST['start'];
+		foreach ($list as $student) {
+			
+			$row = array();
+			
+			$row[] = "";			
+			$row[] = $student->roll;
+			$row[] = $student->name;
+			$row[] = $student->address;
+			$row[] = $student->email;
+
+			$data[] = $row;
+		}
+
+		$output = array(
+						"draw" => $_POST['draw'],
+						"recordsTotal" => $this->user->count_all(),
+						//"recordsTotal" => $this->user->count_filtered(),
+						"recordsFiltered" => $this->user->count_filtered(),
+						"data" => $data,
+				);
+		//output to json format
+		echo json_encode($output);
+	}
 
     /****MANAGE STUDENTS *****/
     function student_add()
@@ -219,6 +249,16 @@ class Student extends CI_Controller
             redirect(base_url() . 'index.php?student/student_information/' . $param1, 'refresh');
       }
     }
+
+	function all_students(){
+	  if ($this->session->userdata('active_login') != 1)
+           redirect('login', 'refresh');
+
+      $page_data['page_name']  	= 'all_students';
+      $page_data['page_view'] = "student";
+      $page_data['page_title'] 	= get_phrase('students_information');
+      $this->load->view('backend/index', $page_data);	
+	}
 	
 	function transition($param1 = '', $student_id = ""){
 		

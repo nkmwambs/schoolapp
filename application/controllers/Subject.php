@@ -57,7 +57,9 @@ class Subject extends CI_Controller
         if ($param1 == 'delete') {
             $this->db->where('subject_id', $param2);
             $this->db->delete('subject');
-            $this->session->set_flashdata('flash_message' , get_phrase('data_deleted'));
+			
+			delete_affected_rows_alert();
+            
             redirect(base_url() . 'index.php?subject/subject/'.$param3, 'refresh');
         }
      $page_data['class_id']   = $param1;

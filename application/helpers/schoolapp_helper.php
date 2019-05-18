@@ -27,4 +27,52 @@ if ( ! function_exists('get_term_number'))
 		
 		return $term_number;
 	}
-}			
+}	
+
+if(!function_exists('delete_affected_rows_alert')){
+	
+	function delete_affected_rows_alert(){
+		
+		$CI	=&	get_instance();
+		$CI->load->database();
+		
+		if($CI->db->affected_rows() > 0){
+				$CI->session->set_flashdata('flash_message' , get_phrase('data_deleted'));
+			}else{
+				$CI->session->set_flashdata('error_message' , get_phrase('data_not_deleted'));
+		}
+	}
+
+}
+
+if(!function_exists('insert_affected_rows_alert')){
+	
+	function insert_affected_rows_alert(){
+		
+		$CI	=&	get_instance();
+		$CI->load->database();
+		
+		if($CI->db->affected_rows() > 0){
+				$CI->session->set_flashdata('flash_message' , get_phrase('data_inserted'));
+			}else{
+				$CI->session->set_flashdata('error_message' , get_phrase('data_not_inserted'));
+		}
+	}
+
+}
+
+if(!function_exists('update_affected_rows_alert')){
+	
+	function update_affected_rows_alert(){
+		
+		$CI	=&	get_instance();
+		$CI->load->database();
+		
+		if($CI->db->affected_rows() > 0){
+				$CI->session->set_flashdata('flash_message' , get_phrase('data_updated'));
+			}else{
+				$CI->session->set_flashdata('error_message' , get_phrase('data_not_updated'));
+		}
+	}
+
+}		

@@ -43,7 +43,8 @@
         if ($page_name == 'student_add' ||
                 $page_name == 'student_bulk_add' ||
                 $page_name == 'student_information' ||
-                $page_name == 'student_marksheet')
+                $page_name == 'student_marksheet' ||
+				page_name == 'all_students')
             echo 'opened active has-sub';
         ?> <?=get_access_class('student','admin');?>">
             <a href="#">
@@ -71,6 +72,11 @@
                         <span><i class="fa fa-list"></i> <?php echo get_phrase('student_information'); ?></span>
                     </a>
                     <ul>
+                    	<li class="<?php if ($page_name == 'all_students') echo 'active'; ?> <?=get_access_class('all_students','admin','student');?>">
+		                    <a href="<?php echo base_url(); ?>index.php?student/all_students">
+		                        <span><i class="fa fa-users"></i> <?php echo get_phrase('all_students'); ?></span>
+		                    </a>
+		                </li>
                         <?php
                         $classes = $this->db->order_by("name_numeric","asc")->get('class')->result_array();
 						
