@@ -19,7 +19,7 @@ class Student extends CI_Controller
           parent::__construct();
 		  $this->load->database();
           $this->load->library('session');
-		  $this->load->model('student_model','students');
+		  $this->load->model('Student_model','students');
           /*cache control*/
           $this->output->set_header('Last-Modified: ' . gmdate("D, d M Y H:i:s") . ' GMT');
           $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
@@ -38,7 +38,7 @@ class Student extends CI_Controller
             redirect(base_url() . 'index.php?student/student_information', 'refresh');
     }
 	
-		public function ajax_list()
+	public function ajax_list()
 	{
 		$list = $this->students->get_datatables();
 		$data = array();
@@ -58,9 +58,9 @@ class Student extends CI_Controller
 
 		$output = array(
 						"draw" => $_POST['draw'],
-						"recordsTotal" => $this->user->count_all(),
-						//"recordsTotal" => $this->user->count_filtered(),
-						"recordsFiltered" => $this->user->count_filtered(),
+						"recordsTotal" => $this->students->count_all(),
+						"recordsTotal" => $this->students->count_filtered(),
+						"recordsFiltered" => $this->students->count_filtered(),
 						"data" => $data,
 				);
 		//output to json format
@@ -432,4 +432,5 @@ class Student extends CI_Controller
         echo '</div></div>';
     }
 	
+  
 }

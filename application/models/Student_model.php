@@ -13,8 +13,7 @@ class Student_model extends CI_Model {
 	}
 
 	private function _get_datatables_query()
-	{	
-		//$this->db->join('country','country.country_id=user.country_id');	 
+	{	 
 		$this->db->from($this->table);
 
 		$i = 0;

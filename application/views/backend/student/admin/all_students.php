@@ -3,11 +3,12 @@
 	<table class="table table-bordered" id="table_export">
 		<thead>
 	    	<tr>
+	    		<th><?php echo get_phrase('options');?></th>
 	        	<th><?php echo get_phrase('roll');?></th>
 	            <th><?php echo get_phrase('name');?></th>
 	            <th><?php echo get_phrase('address');?></th>
 	            <th><?php echo get_phrase('email');?></th>
-	            <th><?php echo get_phrase('options');?></th>
+	            
 	       </tr>
 		</thead>
 		
@@ -15,9 +16,7 @@
 </form>
 
 <script>
-	$(document).ready(function(){
-		   
-		   
+	$(document).ready(function(){		   
 		var datatable = $('#table_export,table.display').DataTable({
 		       dom: '<Bf><"col-sm-12"rt><ip>',
 		       //sDom:'r',
@@ -32,7 +31,6 @@
 			   processing: true, //Feature control the processing indicator.
 		       serverSide: true, //Feature control DataTables' server-side processing mode.
 		       order: [], //Initial no order.
-		
 		       // Load data for the table's content from an Ajax source
 		       "ajax": {
 		           "url": "<?php echo base_url();?>index.php?student/ajax_list",
@@ -48,8 +46,6 @@
 		
 		       
 		   });
-
-
 
 	});
 </script>                    

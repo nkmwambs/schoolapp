@@ -93,7 +93,7 @@
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('roll');?></label>
 
 						<div class="col-sm-5">
-							<input type="text" class="form-control"  data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>"  name="roll" value="" >
+							<input type="text" class="form-control unique" data-tablename = "student" data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>"  name="roll" value="" >
 						</div>
 					</div>
 					
@@ -101,7 +101,7 @@
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('UPI_number');?></label>
 
 						<div class="col-sm-5">
-							<input type="text" class="form-control" name="upi_number" value="" >
+							<input type="text" class="form-control unique" name="upi_number" data-tablename="student" value="" >
 						</div>
 					</div>
 
