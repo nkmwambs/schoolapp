@@ -302,6 +302,19 @@ class Student extends CI_Controller
 					$data4['transitioned'] = 1;
 					$this->db->update('invoice',$data4);
 				}
+
+				//Check if a student has a parent
+				$this->db->select(array('parent_id'));
+				$this->db->join('student','student.parent_id=parent.parent_id');
+				$active_parent = $this->db->get_where('parent',
+				array('status'=>1,'student_id'=>$student_id));
+				
+				if($active_parent->num_rows() > 0){
+					$parent_id = $active_parent->row()->parent_id;
+					$this->db->where(array('parent_id'=>$parent_id));
+					$data['status'] = 0;
+					$this->db->update('parent',$data);
+				}
 				
 				$msg = get_phrase('action_successful');
 			}
