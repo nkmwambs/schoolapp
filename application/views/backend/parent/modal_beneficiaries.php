@@ -13,17 +13,21 @@
 						<tr>
 							<th><?php echo get_phrase('beneficiary_name');?></th>
 							<th><?php echo get_phrase('roll');?></th>
+							<th><?php echo get_phrase('class');?></th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php
 							if($param3 === "primary"){
-								$beneficiaries  = $this->db->get_where('student',array('parent_id'=>$param2))->result_object();
+								$this->db->select(array('student_id','student.name as name','roll','class.name as class'));
+								$this->db->join('class','class.class_id=student.class_id');
+								$beneficiaries  = $this->db->get_where('student',array('parent_id'=>$param2,'active'=>1))->result_object();
 								foreach($beneficiaries as $row):
 						?>
 								<tr>
 									<td><?=$row->name;?></td>
 									<td><?=$row->roll;?></td>
+									<td><?=$row->class;?></td>
 								</tr>
 						<?php	
 								endforeach;	
@@ -31,12 +35,15 @@
 								$beneficiaries  = $this->db->get_where('caregiver',array('parent_id'=>$param2))->result_object();
 								
 								foreach($beneficiaries as $row):
-									
-									$student = $this->db->get_where('student',array('student_id'=>$row->student_id))->row();
+									$this->db->select(array('student_id','student.name as name','roll','class.name as class'));
+									$this->db->join('class','class.class_id=student.class_id');
+									$student = $this->db->get_where('student',array('student_id'=>$row->student_id,'active'=>1))->row();
+
 						?>
 								<tr>
 									<td><?=$student->name;?></td>
 									<td><?=$student->roll;?></td>
+									<td><?=$student->class;?></td>
 								</tr>				
 						
 						<?php

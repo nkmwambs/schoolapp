@@ -63,7 +63,7 @@
 
 <?php endif;?>
 
-<span id="buffer"></span>
+<span style="display: hidden;" id="buffer"></span>
 
 <!-----  DATA TABLE EXPORT CONFIGURATIONS ---->
 <script type="text/javascript">
