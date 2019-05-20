@@ -320,7 +320,7 @@ class Finance extends CI_Controller
             redirect(base_url(), 'refresh');
         
         if ($param1 == 'create') {
-            
+            $this->db->trans_start();
 			//Cancel a previous invoice
 			$this->cancel_previous_invoice($this->input->post('student_id'),$this->input->post('yr'),$this->input->post('term'));
 				
@@ -330,7 +330,7 @@ class Finance extends CI_Controller
             $data['term']        = $this->input->post('term');
             $data['amount']             = $this->input->post('amount');
             $data['amount_due']        = $this->input->post('amount_due');
-			$data['balance']        = $this->input->post('amount_due');
+			//$data['balance']        = $this->input->post('amount_due');
             $data['status']             = "unpaid";//$this->input->post('status');
             $data['creation_timestamp'] = strtotime($this->input->post('date'));
             
@@ -341,18 +341,25 @@ class Finance extends CI_Controller
 			$structure_ids = $this->input->post('detail_id');
 			$payable_amount = $this->input->post('payable');
 			$charge_overpay = array_sum($this->input->post("charge_overpay"));
+			$ocharge = $this->input->post("charge_overpay");
 			
 			foreach($payable_amount as $key=>$value):
 				if($value > 0){
 					$data2['invoice_id'] 	= $invoice_id;
 					$data2['detail_id'] 	= $key;
-					$data2['amount_due'] 	= $value;
-					$data2['balance']        = $value;
+					
+					if(isset($ocharge[$key])){
+						$data2['amount_due'] 	= $value - $ocharge[$key];
+					}else{
+						$data2['amount_due'] 	= $value;
+					}
+					
 				
 					$this->db->insert('invoice_details',$data2);
 				}
 							
 			endforeach;
+			
 			
 			if($charge_overpay > 0){
 				
@@ -370,12 +377,42 @@ class Finance extends CI_Controller
 					}
 					$this->db->update("overpay",$data8);
 					
+					
+				}
+				
+				$external_count = 0;
+				foreach($ocharge as $overcharge_key => $overcharge_amount){
+					//Create a funds tranfer from reserve account to the account pointed to
+					$to_account_id = $this->db->get_where('fees_structure_details',
+					array('detail_id'=>$overcharge_key))->row()->income_category_id;
+					
+					$from_account_id = $this->db->get_where('income_categories',
+					array('default_category'=>1))->row()->income_category_id;
+					
+					$t_date = $this->crud_model->next_transaction_date()->start_date;
+					
+					$amount = $overcharge_amount;
+					
+					$this->record_internal_funds_transfer($t_date, $amount, $from_account_id, $to_account_id,$external_count);	
+					
+					$external_count++;	
 				}
 				
 			}
 			
+			if ($this->db->trans_status() === FALSE)
+			{
+			        $this->db->trans_rollback();
+					$this->session->set_flashdata('flash_message' , get_phrase('invoice_creation_failed'));
+			}
+			else
+			{
+			        $this->db->trans_commit();
+					$this->session->set_flashdata('flash_message' , get_phrase('invoice_created_successfully'));
+			}
 			
-            $this->session->set_flashdata('flash_message' , get_phrase('invoice_created_successfully'));
+			
+            
             redirect(base_url() . 'index.php?finance/create_invoice', 'refresh');
         }
 
@@ -406,7 +443,7 @@ class Finance extends CI_Controller
 	                    $data['term']        = $this->input->post('term');
 	                    $data['amount']             = $this->input->post('amount');
 	                    $data['amount_due']        = $this->input->post('amount_due');
-						$data['balance']        = $this->input->post('amount_due');
+						//$data['balance']        = $this->input->post('amount_due');
 	                    $data['status']             = 'unpaid';
 	                    $data['creation_timestamp'] = strtotime($this->input->post('date'));
 	                    
@@ -422,7 +459,7 @@ class Finance extends CI_Controller
 								$data2['invoice_id'] = $invoice_id;
 								$data2['detail_id'] = $key;
 								$data2['amount_due'] = $value;
-								$data2['balance'] = $value;
+								//$data2['balance'] = $value;
 								$this->db->insert('invoice_details',$data2);
 							}
 										
@@ -455,28 +492,12 @@ class Finance extends CI_Controller
 			$this->db->where(array("invoice_id"=>$param2));
 			$this->db->update("invoice",$data);
 			
-			foreach($this->input->post('detail_amount_due') as $detail_id=>$amount_due){
-				//Check if record exists
-								
-				$this->db->where(array("detail_id"=>$detail_id,"invoice_id"=>$param2));
-				if($this->db->get('invoice_details')->num_rows() > 0){
+			foreach($this->input->post('detail_amount_due') as $invoice_details_id=>$amount_due){
 					
-					$this->db->where(array("detail_id"=>$detail_id,"invoice_id"=>$param2));
-					$amount_paid = $this->db->get('invoice_details')->row()->amount_paid;
-					
-					$this->db->where(array("detail_id"=>$detail_id,"invoice_id"=>$param2));
+					$this->db->where(array("invoice_details_id"=>$invoice_details_id));
 					$data8['amount_due'] = $amount_due;
-					$data8['balance'] = $amount_due - $amount_paid;
+
 					$this->db->update("invoice_details",$data8);
-				}else{
-					$data8['invoice_id'] = $param2;
-					$data8['detail_id'] = $detail_id;
-					$data8['amount_due'] = $amount_due;
-					$data8['amount_paid'] = 0;
-					$data8['balance'] = $amount_due;
-					$this->db->insert("invoice_details",$data8);
-				}
-				
 				
 			}
 			//exit;
@@ -501,116 +522,13 @@ class Finance extends CI_Controller
                 'invoice_id' => $param2
             ))->result_array();
         }
-        if ($param1 == 'take_payment') {
-        	
-			$this->db->select_max('serial');
-			$res = $this->db->get("payment")->row()->serial;
-						
-			$take_payment = $this->input->post('take_payment');
-			
-			
-			
-			//Create a Payment Record
-			$data_payment['batch_number'] 	= $this->crud_model->next_serial_number();//$this->crud_model->populate_batch_number($this->input->post('timestamp'));
-			$data_payment['serial'] 		=  $res+1;
-			$data_payment['t_date'] 		= $this->input->post('timestamp');
-			$data_payment['invoice_id'] 	= $this->input->post('invoice_id');
-			$data_payment['method']			=   $this->input->post('method');
-			$data_payment['description']	=   $this->input->post('description');
-			$data_payment['payee']			=   $this->input->post('payee');
-			$data_payment['payment_type']	=   "1";//array_sum($take_payment);
-			$data_payment['amount']			=   array_sum($take_payment);
-			$data_payment['timestamp']    	=   strtotime($this->input->post('timestamp'));
-			
-			
-			$this->db->insert('payment' , $data_payment);
-			
-			$last_payment_id = $this->db->insert_id();
-			
-			//Update Invoice Details
-
-			foreach($take_payment as $key=>$value){
-				if($value > 0){
-					
-					$detail = $this->db->get_where("invoice_details",
-						array("detail_id"=>$key,'invoice_id'=>$this->input->post('invoice_id')))->row();
-												
-					$paid_to_date  = $detail->amount_paid + $value;
-					
-					$data_invoice['amount_paid']   	=   $paid_to_date;
-					$data_invoice['balance'] 		= 	$detail->balance - $paid_to_date;
-					$data_invoice['detail_id'] 		=  $key;
-					$data_invoice['last_payment_id']  		=   $last_payment_id;
-		            
-					$this->db->where(array("invoice_id"=> $this->input->post('invoice_id'), "detail_id"=>$key));
-					
-		            $this->db->update('invoice_details' , $data_invoice);
-					
-					//Create Payment details
-					
-					$data_details['payment_id'] 	= $last_payment_id;//$this->input->post('invoice_id');
-					$data_details['detail_id'] 		=  $key;
-					$data_details['amount'] 		= $value;
-					$data_details['t_date'] 		= $this->input->post('timestamp');
-					
-					$this->db->insert("student_payment_details",$data_details);
-								
-		          }	
-			}
-			
-			//Update Invoice Record			
-
-            $data2['amount_paid']   =   $this->input->post('total_payment');
-            $this->db->where('invoice_id' , $param2);
-            $this->db->set('amount_paid', 'amount_paid + ' . $data2['amount_paid'], FALSE);
-            $this->db->set('balance', 'balance - ' . $data2['amount_paid'], FALSE);
-            $this->db->update('invoice');
-			
-			$bal = $this->db->get_where('invoice',array('invoice_id'=>$param2))->row()->balance;
-			
-			if($bal<=0){
-				$data3['status']   =   'paid';
-            	$this->db->where('invoice_id' , $param2);
-				$this->db->update('invoice',$data3);
-			}
-			
-					
-			//Enter Income into the Cash Book
-			$data1['t_date'] = $this->input->post('timestamp');//date('Y-m-d');
-			$data1['batch_number'] = $this->crud_model->next_serial_number();
-
-			$student_id = $this->db->get_where("invoice",array("invoice_id"=>$this->input->post('invoice_id')))->row()->student_id;
-						
-			$data1['description'] = get_phrase('student_payment').' - '.$this->db->get_where('student',array('student_id'=>$student_id))->row()->name;
-			$data1['transaction_type'] = '1'; //1 Means Income and 2 means expenses
-			$data1['account'] = $this->input->post('method');
-			$data1['amount'] = array_sum($take_payment);
-            $this->db->insert('cashbook' , $data1);
-			
-			//Check if there is an overpayment
-			if($this->input->post('overpayment') > 0){
-				
-				$student_id = $this->db->get_where('invoice',array('invoice_id'=>$param2))->row()->student_id;
-				
-				$overpay['student_id'] = $student_id;
-				$overpay['amount'] = $this->input->post('overpayment');
-				$overpay['amount_due'] = $this->input->post('overpayment');
-				$overpay['description'] = $this->input->post('overpayment_description');
-				
-				$this->db->insert('overpay',$overpay);
-			}
-			
-			
-			//exit;
-            $this->session->set_flashdata('flash_message' , get_phrase('payment_successfull'));
-            redirect(base_url() . 'index.php?finance/scroll_cashbook/'.strtotime($this->input->post('timestamp')), 'refresh');
-        }
+        
 
         if ($param1 == 'delete') {
         	
 			//Check if invoice has payment done
 			
-			$check = $this->db->get_where('payment',array('invoice_id'=>invoice_id))->num_rows();
+			$check = $this->db->get_where('transaction',array('invoice_id'=>invoice_id))->num_rows();
 			
 			$msg = get_phrase('delete_failed');
 			
@@ -754,7 +672,7 @@ class Finance extends CI_Controller
 							onkeyup='return get_payable_amount(".$row->detail_id.")' 
 							class='form-control payable_items' id='payable_".$row->detail_id."' 
 							name='payable[".$row->detail_id."]' value='0' /></td>
-							<td><input type='text' class='form-control charge_overpay' 
+							<td><input type='text' onchange='check_overpay_balance(this);' class='form-control charge_overpay' 
 							value='0' name='charge_overpay[".$row->detail_id."]' /></td>
 							<tr>";
 						endforeach;
@@ -777,6 +695,7 @@ class Finance extends CI_Controller
 			}else{
 				$body .= "<tr><td class='col-sm-4'>".get_phrase('no_items_found')."</td></tr>";
 			}	
+			
 		echo $body;	
 	}
 
@@ -822,17 +741,26 @@ class Finance extends CI_Controller
             redirect('login', 'refresh');
             
         if ($param1 == 'create') {
-            $data['payee']        =   $this->input->post('payee'); 
-			$data['batch_number']        =   $this->crud_model->next_serial_number();//$this->crud_model->populate_batch_number($this->input->post('t_date'));   
-			$data['t_date']        =   $this->input->post('t_date');		
-            $data['description']         =   $this->input->post('description');			
-            $data['method']              =   $this->input->post('method');	
-			$data['cheque_no']              =   $this->input->post('cheque_no');			    	
-            $data['amount']              =   $this->input->post('amount');
-            $data['timestamp']           =   strtotime($this->input->post('timestamp'));
-            $this->db->insert('expense' , $data);
 			
-			$expense_id = $this->db->insert_id();
+			$this->db->trans_start();
+			
+			$data['payee']        			=   $this->input->post('payee'); 
+			$data['batch_number']   		=   $this->crud_model->next_batch_number();//$this->crud_model->populate_batch_number($this->input->post('t_date'));   
+			$data['t_date']        			=   $this->input->post('t_date');		
+          	$data['invoice_id']     		= 	0;
+		    $data['description']    		=   $this->input->post('description');			
+            $data['transaction_method_id']  =   $this->input->post('method');	
+			$data['transaction_type_id']	=   2;
+			$data['cheque_no']				= 	$this->input->post('cheque_no');;
+			$data['cleared']				= 	0;
+            $data['amount']         		=   $this->input->post('amount');
+            $data['createddate']      		=   strtotime($this->input->post('t_date'));
+			$data['createdby']				= 	$this->session->login_user_id;
+			$data['lastmodifiedby']				= 	$this->session->login_user_id;
+			
+			$this->db->insert('transaction' , $data);
+			
+			$transaction_id = $this->db->insert_id();
 			
 			$qty = $this->input->post('qty');
 			$desc = $this->input->post('desc');
@@ -841,30 +769,31 @@ class Finance extends CI_Controller
 			$category = $this->input->post('category');
 			
 			foreach($qty as $key=>$val):
-				$data2['expense_id'] = $expense_id;
+				
+				$data2['transaction_id'] = $transaction_id;
 				$data2['qty'] = $qty[$key];
-				$data2['description'] = $desc[$key];
+				$data2['detail_description'] = $desc[$key];
 				$data2['unitcost'] = $unitcost[$key];
 				$data2['cost'] = $cost[$key];
 				$data2['expense_category_id'] = $category[$key];
+				$data2['invoice_details_id'] = 0;
 				
-				$this->db->insert('expense_details' , $data2);
+				$this->db->insert('transaction_detail' , $data2);
 				
 			endforeach;
 			
+			if ($this->db->trans_status() === FALSE)
+			{
+			        $this->db->trans_rollback();
+					$this->session->set_flashdata('flash_message' , get_phrase('process_failed'));
+			}
+			else
+			{
+			        $this->db->trans_commit();
+					$this->session->set_flashdata('flash_message' , get_phrase('data_added_successfully'));
+			}
 			
-			//Enter Income into the Cash Book
-			$data1['t_date'] = $this->input->post('t_date');
-			$data1['batch_number'] = $this->crud_model->next_serial_number();
-			$data1['description'] = $this->input->post('description');
-			$data1['transaction_type'] = '2';
-			$data1['account'] = $this->input->post('method');
-			$data1['amount'] = $this->input->post('amount');;
-            $this->db->insert('cashbook' , $data1);
-			
-			
-            $this->session->set_flashdata('flash_message' , get_phrase('data_added_successfully'));
-            redirect(base_url() . 'index.php?finance/scroll_cashbook/'.strtotime($this->input->post('t_date')), 'refresh');
+            redirect(base_url() . 'index.php?finance/cashbook/scroll/'.strtotime($this->input->post('t_date')), 'refresh');
         }
 	/**
         if ($param1 == 'edit') {
@@ -1064,19 +993,25 @@ class Finance extends CI_Controller
         if ($param1 == 'create') {
        		$res = $this->db->get("payment")->row()->serial;
 			
+			$this->db->trans_start();
         	
-            $data['payee']        	=   $this->input->post('payee'); 
-			$data['serial']        	=   $res+1; 
-			$data['batch_number']   =   $this->crud_model->next_serial_number();//$this->crud_model->populate_batch_number($this->input->post('t_date'));   
-			$data['t_date']        	=   $this->input->post('t_date');		
-            $data['description']    =   $this->input->post('description');			
-            $data['method']         =   $this->input->post('method');	
-			$data['payment_type']   =   "2";
-            $data['amount']         =   $this->input->post('amount');
-            $data['timestamp']      =   strtotime($this->input->post('t_date'));
-            $this->db->insert('payment' , $data);
+            $data['payee']        			=   $this->input->post('payee'); 
+			$data['batch_number']   		=   $this->crud_model->next_batch_number();//$this->crud_model->populate_batch_number($this->input->post('t_date'));   
+			$data['t_date']        			=   $this->input->post('t_date');		
+          	$data['invoice_id']     		= 	0;
+		    $data['description']    		=   $this->input->post('description');			
+            $data['transaction_method_id']  =   $this->input->post('method');	
+			$data['transaction_type_id']	=   1;
+			$data['cheque_no']				= 	0;
+			$data['cleared']				= 	0;
+            $data['amount']         		=   $this->input->post('amount');
+            $data['createddate']      		=   $this->input->post('t_date');
+			$data['createdby']				= 	$this->session->login_user_id;
+			$data['lastmodifiedby']			= 	$this->session->login_user_id;
 			
-			$payment_id = $this->db->insert_id();
+            $this->db->insert('transaction' , $data);
+			
+			$transaction_id = $this->db->insert_id();
 			
 			$qty = $this->input->post('qty');
 			$desc = $this->input->post('desc');
@@ -1085,30 +1020,30 @@ class Finance extends CI_Controller
 			$category = $this->input->post('category');
 			
 			foreach($qty as $key=>$val):
-				$data2['payment_id'] = $payment_id;
+				$data2['transaction_id'] = $transaction_id;
 				$data2['qty'] = $qty[$key];
-				$data2['description'] = $desc[$key];
+				$data2['detail_description'] = $desc[$key];
 				$data2['unitcost'] = $unitcost[$key];
 				$data2['cost'] = $cost[$key];
 				$data2['income_category_id'] = $category[$key];
+				$data2['invoice_details_id'] = 0;
 				
-				$this->db->insert('other_payment_details' , $data2);
+				$this->db->insert('transaction_detail' , $data2);
 				
 			endforeach;
 			
+			if ($this->db->trans_status() === FALSE)
+			{
+			        $this->db->trans_rollback();
+					$this->session->set_flashdata('flash_message' , get_phrase('process_failed'));
+			}
+			else
+			{
+			        $this->db->trans_commit();
+					$this->session->set_flashdata('flash_message' , get_phrase('data_added_successfully'));
+			}
 			
-			//Enter Income into the Cash Book
-			$data1['t_date'] = $this->input->post('t_date');
-			$data1['batch_number'] = $this->crud_model->next_serial_number();
-			$data1['description'] = $this->input->post('description');
-			$data1['transaction_type'] = '1';
-			$data1['account'] = $this->input->post('method');
-			$data1['amount'] = $this->input->post('amount');;
-            $this->db->insert('cashbook' , $data1);
-			
-			
-            $this->session->set_flashdata('flash_message' , get_phrase('data_added_successfully'));
-            redirect(base_url() . 'index.php?finance/scroll_cashbook/'.strtotime($this->input->post('t_date')), 'refresh');
+            redirect(base_url() . 'index.php?finance/cashbook/scroll/'.strtotime($this->input->post('t_date')), 'refresh');
         }
 	/**
         if ($param1 == 'edit') {
@@ -1216,12 +1151,12 @@ class Finance extends CI_Controller
 	}
 
 	function clear_transactions(){
-		$table = $_POST['record_type'];
+		$transaction_type = $_POST['record_type'];
 		$record_id = $_POST["indx"];
 		$month = $_POST['month'];
 		
 		//$check current clear state
-		$record = $this->db->get_where($table,array($table."_id"=>$record_id))->row();
+		$record = $this->db->get_where('transaction',array("transaction_id"=>$record_id))->row();
 		
 		$data['cleared'] = 1;
 		$data['clearedMonth'] = $month;
@@ -1232,8 +1167,8 @@ class Finance extends CI_Controller
 		}
 		
 		
-		$this->db->where(array($table."_id"=>$record_id));
-		$this->db->update($table,$data);
+		$this->db->where(array("transaction_id"=>$record_id));
+		$this->db->update('transaction',$data);
 		
 		if($this->db->affected_rows() > 0){
 			echo "Update Successful";
@@ -1356,17 +1291,48 @@ class Finance extends CI_Controller
 	function contra_entry($param1="",$param2=""){
 		
 		if($param1==='create'){
-			//Enter Income into the Cash Book
+			
+			$this->db->trans_start();
+			
 			$data1['t_date'] = $this->input->post('t_date');
-			$data1['batch_number'] = $this->crud_model->next_serial_number();//$this->crud_model->populate_batch_number(date('Y-m-d'));
+			$data1['batch_number'] = $this->crud_model->next_batch_number();//$this->crud_model->populate_batch_number(date('Y-m-d'));
 			$data1['description'] = $this->input->post('description');
-			$data1['transaction_type'] = $this->input->post('entry_type');
-			$data1['account'] = 0;
+			$data1['transaction_type_id'] = $this->input->post('entry_type');
+			$data1['transaction_method_id'] = 4;
+			$data1['invoice_id'] = 0;
 			$data1['amount'] = $this->input->post('amount');
-            $this->db->insert('cashbook' , $data1);
-
-            $this->session->set_flashdata('flash_message' , get_phrase('data_added_successfully'));
-            redirect(base_url() . 'index.php?finance/scroll_cashbook/'.strtotime($this->input->post('t_date')), 'refresh');			
+			$data1['payee'] = get_phrase('system_generated');
+			$data1['cheque_no'] = 0;
+			$data1['createddate'] = $this->input->post('t_date');
+			$data1['createdby'] = $this->session->login_user_id;
+			$data1['lastmodifiedby'] = $this->session->login_user_id;
+			
+			$this->db->insert('transaction' , $data1);
+			
+			$transaction_id = $this->db->insert_id();
+			
+			$data2['transaction_id'] = $transaction_id;
+			$data2['qty'] = 1;
+			$data2['detail_description'] = get_phrase('contra_entry').': '.$this->db->get_where('transaction_type',array('transaction_type_id'=>$this->input->post('entry_type')))->row()->description;
+			$data2['unitcost'] = $this->input->post('amount');
+			$data2['cost'] = $this->input->post('amount');
+			$data2['income_category_id'] = 0;
+			$data2['invoice_details_id'] = 0;
+				
+			$this->db->insert('transaction_detail' , $data2);
+        
+			if ($this->db->trans_status() === FALSE)
+			{
+			        $this->db->trans_rollback();
+					$this->session->set_flashdata('flash_message' , get_phrase('process_failed'));
+			}
+			else
+			{
+			        $this->db->trans_commit();
+					$this->session->set_flashdata('flash_message' , get_phrase('data_added_successfully'));
+			}
+		
+		    redirect(base_url() . 'index.php?finance/cashbook/scroll/'.strtotime($this->input->post('t_date')), 'refresh');			
 		}
 		
 		
@@ -1453,8 +1419,8 @@ class Finance extends CI_Controller
 		return $total_income;
 	}
 
-	function to_date_other_income_by_income_category($income_category_id){
-
+	
+	function to_date_income_by_income_category($income_category_id){
 		$system_start_date = $this->db->get_where('settings',
 		array('type'=>'system_start_date'))->row()->description; 
 		
@@ -1462,61 +1428,30 @@ class Finance extends CI_Controller
 		
 		$this->db->where(array('t_date>='=>date('Y-m-01',strtotime($system_start_date))));		
 		$this->db->where(array('t_date<='=>date('Y-m-t',strtotime($last_reconciled_date))));
-		$this->db->where(array('other_payment_details.income_category_id'=>$income_category_id));
-		$this->db->join('other_payment_details','other_payment_details.payment_id=payment.payment_id');
-		$total_income = $this->db->select_sum('payment.amount')->get('payment')->row()->amount;
+		$this->db->where(array('transaction_detail.income_category_id'=>$income_category_id));
+		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		$total_income = $this->db->select_sum('transaction_detail.cost')->group_by('transaction_detail.income_category_id')->get('transaction_detail')->row()->cost;
 		
 		return $total_income;
-	}
-	
-	function month_other_income_by_income_category($category_id = "", $start_month = ""){
-		
-		$this->db->where(array('t_date>='=>date('Y-m-01',strtotime($start_month))));		
-		$this->db->where(array('t_date<='=>date('Y-m-t',strtotime($start_month))));
-		$this->db->where(array('other_payment_details.income_category_id'=>$category_id));
-		$this->db->join('other_payment_details','other_payment_details.payment_id=payment.payment_id');
-		$total_income = $this->db->select_sum('payment.amount')->get('payment')->row()->amount;
-		
-		return $total_income;
-	}
-
-	function sum_income_by_income_category($category_id = "", $start_month = ""){
-		return $this->month_fees_income_by_income_category($category_id,$start_month) + 
-		$this->month_other_income_by_income_category($category_id,$start_month);
-	}
-	
-	function to_date_sum_income_by_income_category($income_category_id){
-		return $this->to_date_fees_income_by_income_category($income_category_id) + 
-		$this->to_date_other_income_by_income_category($income_category_id);
 	}	
 	
-	function expense_by_income_category($income_category_id,$month_start_date){
-		
-		$this->db->where(array('expense.t_date>='=>date('Y-m-01',strtotime($month_start_date))));		
-		$this->db->where(array('expense.t_date<='=>date('Y-m-t',strtotime($month_start_date))));
-		$this->db->where(array('expense_category.income_category_id'=>$income_category_id));
-		$this->db->join('expense_category','expense_category.expense_category_id=expense_details.expense_category_id');
-		$this->db->join('expense','expense.expense_id=expense_details.expense_id');
-		$month_expense = $this->db->select_sum('expense_details.cost')->get('expense_details')->row()->cost;
-		
-		return $month_expense;
-	}
 	
 	function to_date_expense_by_income_category($income_category_id){
 		
 		$system_start_date = $this->db->get_where('settings',
 		array('type'=>'system_start_date'))->row()->description; 
 		
-		$last_reconciled_date = $this->crud_model->last_reconciled_month();
+		$last_reconciled_date = $this->crud_model->last_reconciled_month();		
 		
-		$this->db->where(array('expense.t_date>='=>date('Y-m-01',strtotime($system_start_date))));		
-		$this->db->where(array('expense.t_date<='=>date('Y-m-t',strtotime($last_reconciled_date))));
+		$this->db->where(array('transaction.t_date>='=>date('Y-m-01',strtotime($system_start_date))));		
+		$this->db->where(array('transaction.t_date<='=>date('Y-m-t',strtotime($last_reconciled_date))));
+		
 		$this->db->where(array('expense_category.income_category_id'=>$income_category_id));
-		$this->db->join('expense_category','expense_category.expense_category_id=expense_details.expense_category_id');
-		$this->db->join('expense','expense.expense_id=expense_details.expense_id');
-		$month_expense = $this->db->select_sum('expense_details.cost')->get('expense_details')->row()->cost;
+		$this->db->join('expense_category','expense_category.expense_category_id=transaction_detail.expense_category_id');
 		
-		return $month_expense;
+		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		return $month_expense = $this->db->select_sum('transaction_detail.cost')->group_by('expense_category.expense_category_id')->get('transaction_detail')->row()->cost;
+		
 	}
 	
 	function system_start_date(){
@@ -1564,7 +1499,7 @@ class Finance extends CI_Controller
 		foreach($system_set_opening_balance as $income_category_id => $opening_amount){
 			
 			$opening_balance[$income_category_id] = $opening_amount + 
-			($this->to_date_sum_income_by_income_category($income_category_id) - 
+			($this->to_date_income_by_income_category($income_category_id) - 
 			$this->to_date_expense_by_income_category($income_category_id));
 		}
 		
@@ -1574,14 +1509,15 @@ class Finance extends CI_Controller
 	
 	function year_expense_to_date($income_category_id,$month_start_date){
 		
-		$this->db->where(array('expense.t_date>='=>date('Y-m-01',strtotime('first day of january',$month_start_date))));		
-		$this->db->where(array('expense.t_date<='=>date('Y-m-t',strtotime($month_start_date))));
-		$this->db->where(array('expense_category.income_category_id'=>$income_category_id));
-		$this->db->join('expense_category','expense_category.expense_category_id=expense_details.expense_category_id');
-		$this->db->join('expense','expense.expense_id=expense_details.expense_id');
-		$expense_to_date = $this->db->select_sum('expense_details.cost')->get('expense_details')->row()->cost;
+		$this->db->where(array('transaction.t_date>='=>date('Y-m-01',strtotime('first day of january',strtotime($month_start_date)))));		
+		$this->db->where(array('transaction.t_date<='=>date('Y-m-t',strtotime($month_start_date))));
 		
-		return $expense_to_date;
+		$this->db->where(array('expense_category.income_category_id'=>$income_category_id));
+		$this->db->join('expense_category','expense_category.expense_category_id=transaction_detail.expense_category_id');
+		
+		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		return $expense_to_date = $this->db->select_sum('transaction_detail.cost')->group_by('expense_category.expense_category_id')->get('transaction_detail')->row()->cost;
+		
 	
 	}
 	
@@ -1641,7 +1577,7 @@ class Finance extends CI_Controller
 		$budget_to_date = array();
 		
 		foreach($income_category_ids as $income_category_id){
-			$month_expense[$income_category_id] = $this->expense_by_income_category($income_category_id,$month_start_date);
+			$month_expense[$income_category_id] = $this->month_expense_by_income_category($income_category_id,$month_start_date);
 			$expense_to_date[$income_category_id] = $this->year_expense_to_date($income_category_id, $month_start_date);
 			$budget_to_date[$income_category_id] = $this->budget_to_date($month_start_date,$income_category_id);
 		}
@@ -1702,6 +1638,29 @@ class Finance extends CI_Controller
 			
 	}
 	
+	function month_income_by_income_category($category_id = "", $start_month = ""){
+		
+		$this->db->where(array('t_date>='=>date('Y-m-01',strtotime($start_month))));		
+		$this->db->where(array('t_date<='=>date('Y-m-t',strtotime($start_month))));
+		$this->db->where(array('transaction_detail.income_category_id'=>$category_id));
+		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		$total_income = $this->db->select_sum('transaction_detail.cost')->group_by('transaction_detail.income_category_id')->get('transaction_detail')->row()->cost;
+		
+		return $total_income;
+	}
+	
+	function month_expense_by_income_category($income_category_id,$month_start_date){
+		
+		$this->db->where(array('transaction.t_date>='=>date('Y-m-01',strtotime($month_start_date))));		
+		$this->db->where(array('transaction.t_date<='=>date('Y-m-t',strtotime($month_start_date))));
+		
+		$this->db->where(array('expense_category.income_category_id'=>$income_category_id));
+		$this->db->join('expense_category','expense_category.expense_category_id=transaction_detail.expense_category_id');
+		
+		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		return $month_expense = $this->db->select_sum('transaction_detail.cost')->group_by('expense_category.expense_category_id')->get('transaction_detail')->row()->cost;
+		
+	}
 	function fund_balances($month_start_date = ""){
 		
 		$fund_balances = array();
@@ -1743,8 +1702,8 @@ class Finance extends CI_Controller
 		} 
 		
 		foreach($income_category_ids as $income_category_id){
-			$month_income[$income_category_id] = $this->sum_income_by_income_category($income_category_id,$month_start_date);
-			$month_expense[$income_category_id] = $this->expense_by_income_category($income_category_id,$month_start_date);
+			$month_income[$income_category_id] = $this->month_income_by_income_category($income_category_id,$month_start_date);
+			$month_expense[$income_category_id] = $this->month_expense_by_income_category($income_category_id,$month_start_date);
 		}
 		
 		$fund_balances['categories'] = $categories;
@@ -1795,6 +1754,21 @@ class Finance extends CI_Controller
         $this->load->view('backend/index', $page_data);		
 	}
 	
+	function scroll_budget($year){
+		
+		
+		$current_term = $this->input->post('terms_id');
+		$months_in_term_short = $this->crud_model->months_in_a_term_short_name($current_term);
+        
+		$page_data['year']  = $year;
+		$page_data['current_term'] = $current_term;
+		$page_data['months_in_term_short']  = $months_in_term_short;
+        $page_data['page_name']  = 'budget';
+		$page_data['page_view'] = 'finance';
+        $page_data['page_title'] = get_phrase('budget');
+        $this->load->view('backend/index', $page_data);	
+	}
+	
 	public function budget($param="",$param2=""){
         if ($this->session->userdata('active_login') != 1)
             redirect(base_url() . 'index.php?login', 'refresh');
@@ -1804,6 +1778,7 @@ class Finance extends CI_Controller
 			$data['expense_category_id'] = $this->input->post('expense_category_id');
 			$data['description'] = $this->input->post('description');
 			$data['fy'] = $this->input->post('fy');
+			$data['terms_id'] = $this->input->post('terms_id');
 			$data['qty'] = $this->input->post('qty');
 			$data['unitcost'] = $this->input->post('unitcost');
 			$data['often'] = $this->input->post('often');
@@ -1872,18 +1847,28 @@ class Finance extends CI_Controller
             redirect(base_url() . 'index.php?admin/budget/', 'refresh');
 		}
 		
-		if($param==='edit_item'){
-			
-		}
-		
 		$page_data['year']  = date('Y');
+		
 		if($param==="scroll"){
 			$page_data['year']  = $param2;
 		}
+
+		$current_term = $this->crud_model->get_current_term();
+		//$months_in_term = $this->crud_model->months_in_a_term($current_term);
+		$months_in_term_short = $this->crud_model->months_in_a_term_short_name($current_term);
+        
+		$page_data['current_term'] = $current_term;
+		$page_data['months_in_term_short']  = $months_in_term_short;
         $page_data['page_name']  = 'budget';
 		$page_data['page_view'] = 'finance';
         $page_data['page_title'] = get_phrase('budget');
         $this->load->view('backend/index', $page_data);		
+	}
+
+	function change_new_item_budget_month_spread($term_id){
+		$data['months_in_term_short'] = $this->crud_model->months_in_a_term_short_name($term_id);
+		
+		echo $this->load->view('backend/finance/admin/load_new_budget_month_spread',$data,true);
 	}
 
 	function edit_budget($budget_id = ""){
@@ -1916,13 +1901,13 @@ class Finance extends CI_Controller
 							
 			switch($page_to_show):
 				case "other_income":
-					$page = "modal_income_add";
+					$page = "income_add";
 					break;
 				case "expense":
-					$page = "modal_expense_add";
+					$page = "expense_add";
 					break;
 				case 'contra':
-					$page = "modal_contras";
+					$page = "contra_entry";
 					break;	
 				case 'fees_income':
 					$page = "active_invoices";
@@ -1949,72 +1934,86 @@ class Finance extends CI_Controller
         $this->load->view('backend/index', $page_data);			
 	}
 	
-	function create_transfer_income_transaction($input_array){
-			$res = $this->db->get("payment")->row()->serial;
-            
-            $data['payee']        	=   $this->school_model->system_title(); 
-			$data['serial']        	=   $res+1; 
-			$data['batch_number']   =   $this->crud_model->next_serial_number();
-			$data['t_date']        	=   $input_array['t_date'];		
-            $data['description']    =   get_phrase('funds_transfer');			
-            $data['method']         =   "3";	
-			$data['payment_type']   =   "3";
-            $data['amount']         =   $this->input->post('amount');
-            $data['timestamp']      =   strtotime($input_array['t_date']);
-            $this->db->insert('payment' , $data);
-			
-			$payment_id = $this->db->insert_id();
-			
-			$data2['payment_id'] = $payment_id;
-			$data2['qty'] = 1;
-			$data2['description'] = get_phrase('funds_transfer');
-			$data2['unitcost'] = $input_array['amount'];
-			$data2['cost'] = $input_array['amount'];
-			$data2['income_category_id'] = $input_array['account_to'];
-				
-			$this->db->insert('other_payment_details' , $data2);
-	}
-	
-	function create_transfer_expense_transaction($input_array){
-			$data['payee']        	=   $this->school_model->system_title();  
-			$data['batch_number']   =   $this->crud_model->next_serial_number();  
-			$data['t_date']        	=   $input_array['t_date'];		
-            $data['description']    =   get_phrase('funds_transfer');		
-            $data['method']         =   "3";	
-			$data['cheque_no']      =   "0";			    	
-            $data['amount']         =   $input_array['amount'];
-            $data['timestamp']      =   strtotime($input_array['t_date']);
-            $this->db->insert('expense' , $data);
-			
-			$expense_id = $this->db->insert_id();
-			
-			$data2['expense_id'] = $expense_id;
-			$data2['qty'] = 1;
-			$data2['description'] = get_phrase('funds_transfer');
-			$data2['unitcost'] = $input_array['amount'];
-			$data2['cost'] = $input_array['amount'];
-			$data2['expense_category_id'] = $input_array['account_from'];
-				
-			$this->db->insert('expense_details' , $data2);
-			
-			
-	}
+	// function create_transfer_income_transaction($input_array){
+// 			
+			// $data['payee']        			=   $this->school_model->system_title();
+			// $data['batch_number']   		=   $this->crud_model->next_batch_number();//$this->crud_model->populate_batch_number($this->input->post('t_date'));   
+			// $data['t_date']        			=   $input_array['t_date'];		
+          	// $data['invoice_id']     		= 	0;
+		    // $data['description']    		=   get_phrase('funds_transfer').': '.$input_array['description'];			
+            // $data['transaction_method_id']  =   4;	
+			// $data['transaction_type_id']	=   5;
+			// $data['cheque_no']				= 	0;
+			// $data['cleared']				= 	0;
+            // $data['amount']         		=   $input_array['amount'];
+            // $data['createddate']      		=   $input_array['t_date'];
+			// $data['createdby']				= 	$this->session->login_user_id;
+			// $data['lastmodifiedby']			= 	$this->session->login_user_id;
+// 			
+            // $this->db->insert('transaction' , $data);
+// 			
+// 			
+			// $transaction_id = $this->db->insert_id();
+// 			
+			// $data2['payment_id'] = $payment_id;
+			// $data2['qty'] = 1;
+			// $data2['description'] = get_phrase('funds_transfer');
+			// $data2['unitcost'] = $input_array['amount'];
+			// $data2['cost'] = $input_array['amount'];
+			// $data2['income_category_id'] = $input_array['account_to'];
+// 				
+			// $this->db->insert('other_payment_details' , $data2);
+	// }
+// 	
+	// function create_transfer_expense_transaction($input_array){
+			// $data['payee']        	=   $this->school_model->system_title();  
+			// $data['batch_number']   =   $this->crud_model->next_serial_number();  
+			// $data['t_date']        	=   $input_array['t_date'];		
+            // $data['description']    =   get_phrase('funds_transfer');		
+            // $data['method']         =   "3";	
+			// $data['cheque_no']      =   "0";			    	
+            // $data['amount']         =   $input_array['amount'];
+            // $data['timestamp']      =   strtotime($input_array['t_date']);
+            // $this->db->insert('expense' , $data);
+// 			
+			// $expense_id = $this->db->insert_id();
+// 			
+			// $data2['expense_id'] = $expense_id;
+			// $data2['qty'] = 1;
+			// $data2['description'] = get_phrase('funds_transfer');
+			// $data2['unitcost'] = $input_array['amount'];
+			// $data2['cost'] = $input_array['amount'];
+			// $data2['expense_category_id'] = $input_array['account_from'];
+// 				
+			// $this->db->insert('expense_details' , $data2);
+// 			
+// 			
+	// }
 	
 	function funds_transfer(){
+        
+        $t_date = $this->input->post('t_date');
+        $amount = $this->input->post('amount');
+        $from_account_id  = $this->input->post('account_from'); 
+        $to_account_id  = $this->input->post('account_to');
+        $description  = $this->input->post('description');
 		
-		$this->create_transfer_income_transaction($_POST);				
-		$this->create_transfer_expense_transaction($_POST);
+		$this->db->trans_start();
 		
-		$data1['t_date'] = $this->input->post('t_date');
-		$data1['batch_number'] = $this->crud_model->next_serial_number();
-		$data1['description'] = get_phrase('funds_transfer');
-		$data1['transaction_type'] = '5';
-		$data1['account'] = '3';
-		$data1['amount'] = $this->input->post('amount');
-        $this->db->insert('cashbook' , $data1);
+        $this->record_internal_funds_transfer($t_date, $amount, $from_account_id, $to_account_id,$ext_cnt = 0 , $description);
 		
-		$this->session->set_flashdata('flash_message' , get_phrase('funds_transferred_successfully'));		
-		redirect(base_url() . 'index.php?finance/cash_book','refresh');
+		if ($this->db->trans_status() === FALSE)
+			{
+			        $this->db->trans_rollback();
+					$this->session->set_flashdata('flash_message' , get_phrase('process_failed'));
+			}
+			else
+			{
+			        $this->db->trans_commit();
+					$this->session->set_flashdata('flash_message' , get_phrase('funds_transferred_successfully'));
+			}
+		
+		redirect(base_url() . 'index.php?finance/cashbook/scroll/'.strtotime($t_date),'refresh');
 	}
 	
 	function year_funds_transfers($year){
@@ -2068,5 +2067,253 @@ class Finance extends CI_Controller
 	function show_transaction_page(){
 	
 	}
+	
+	/**
+	 * Revamped code for finance transactions using the new transaction tables
+	 * 
+	 */
+	 
+	function record_fees_income($param1 = ""){
 		
+		 if ($param1 == 'take_payment') {
+        	
+						
+			$take_payment = $this->input->post('take_payment');
+						
+			$this->db->trans_start();
+			//Create a Payment Record
+			$data_payment['batch_number'] 			= 	$this->crud_model->next_batch_number();
+			$data_payment['t_date'] 				= 	$this->input->post('timestamp');
+			$data_payment['invoice_id'] 			= 	$this->input->post('invoice_id');
+			$data_payment['transaction_method_id']	=   $this->input->post('method');
+			$data_payment['description']			=   $this->input->post('description');
+			$data_payment['payee']					=   $this->input->post('payee');
+			$data_payment['transaction_type_id']	=   "1";
+			
+			if($this->input->post('overpayment') > 0){
+				$data_payment['amount']	 			=  array_sum($take_payment) + $this->input->post('overpayment');						
+			}else{
+				$data_payment['amount']				=   array_sum($take_payment);
+			}
+			$data_payment['createddate']    		=   strtotime($this->input->post('timestamp'));
+			$data_payment['createdby']    			=   $this->session->login_user_id;
+			$data_payment['lastmodifiedby']			=   $this->session->login_user_id;
+			
+			
+			$this->db->insert('transaction' , $data_payment);
+			
+			$last_transaction_id = $this->db->insert_id();
+			
+			
+			//Update Invoice Details
+
+			foreach($take_payment as $key=>$value){
+				if($value > 0){
+					
+					//Create Transaction details
+					
+					$data_transaction['transaction_id'] 	= $last_transaction_id;
+					$data_transaction['invoice_details_id'] = $key;
+					
+					$this->db->select(array('income_category_id'));
+					$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');
+					$income_category_id = $this->db->get_where('invoice_details',
+					array('invoice_details_id'=>$key))->row()->income_category_id;
+					
+					$data_transaction['income_category_id'] = $income_category_id;
+					
+					$data_transaction['qty']				= 1;
+					
+					$data_transaction['detail_description'] = get_phrase('school_fees_payment_for_').$this->db->get_where('income_categories',
+					array('income_category_id'=>$income_category_id))->row()->name;
+					
+					$data_transaction['unitcost'] 			= $value;
+					$data_transaction['cost'] 				= $value;
+
+					
+					$this->db->insert("transaction_detail",$data_transaction);
+								
+		          }	
+			}
+			
+			//Check if amount fully settled
+			if($this->crud_model->get_invoice_balance($this->input->post('invoice_id')) == 0){
+				$settled_invoice['status'] = 'paid';
+				$this->db->where(array('invoice_id'=>$this->input->post('invoice_id')));
+				$this->db->update('invoice',$settled_invoice);
+			}	
+					
+						
+			//Check if there is an overpayment
+			if($this->input->post('overpayment') > 0){
+				
+				$student_id = $this->db->get_where('invoice',array('invoice_id'=>$this->input->post('invoice_id')))->row()->student_id;
+				
+				$overpay['student_id'] = $student_id;
+				$overpay['transaction_id'] = $last_transaction_id;
+				$overpay['amount'] = $this->input->post('overpayment');
+				$overpay['amount_due'] = $this->input->post('overpayment');
+				$overpay['description'] = $this->input->post('overpayment_description');
+				
+				$this->db->insert('overpay',$overpay);
+				
+				
+				//Insert this to the reverse account by creating a transaction_detail
+				
+				$to_reserve['transaction_id'] 	= $last_transaction_id;
+				$to_reserve['invoice_details_id'] = 0;
+				
+				$to_reserve['income_category_id'] = $this->db->get_where('income_categories',
+				array('default_category'=>1))->row()->income_category_id;
+					
+				$to_reserve['qty']				= 1;
+					
+				$to_reserve['detail_description'] = get_phrase('excess_payment');
+				$to_reserve['unitcost'] = $this->input->post('overpayment');
+				$to_reserve['cost'] = $this->input->post('overpayment');
+				$this->db->insert('transaction_detail',$to_reserve);
+				
+				//Update invoice to excess status
+				$excess_invoice['status'] = 'excess';
+				$this->db->where(array('invoice_id'=>$this->input->post('invoice_id')));
+				$this->db->update('invoice',$excess_invoice);
+				
+			}
+			
+			
+			if ($this->db->trans_status() === FALSE)
+			{
+			        $this->db->trans_rollback();
+					$this->session->set_flashdata('flash_message' , get_phrase('payment_failed'));
+			}
+			else
+			{
+			        $this->db->trans_commit();
+					$this->session->set_flashdata('flash_message' , get_phrase('payment_successfull'));
+			}
+            
+            redirect(base_url() . 'index.php?finance/cashbook/scroll/'.strtotime($this->input->post('timestamp')), 'refresh');
+        }
+	}
+	
+	function record_other_income(){
+		
+	}
+		
+	function record_expenses(){
+		
+	}	
+	
+	
+	function record_internal_funds_transfer($t_date,$amount,$from_account_id,$to_account_id,$external_count = 0,$description = ""){
+		
+		if($external_count == 0){	
+			$data_payment['batch_number'] 			= 	$this->crud_model->next_batch_number();
+			$data_payment['t_date'] 				= 	$t_date;
+			$data_payment['invoice_id'] 			= 	0;
+			$data_payment['transaction_method_id']	=   4;//funds_transfer
+			$data_payment['description']			=   $description==""?get_phrase('internal_funds_transfer'):get_phrase('funds_transfer').': '.$description;
+			$data_payment['payee']					=   get_phrase('system_generated');
+			$data_payment['transaction_type_id']	=   5;
+			$data_payment['amount']					=   0;
+			$data_payment['createddate']    		=   date('Y-m-d h:i:s');
+			$data_payment['createdby']    			=   $this->session->login_user_id;
+			$data_payment['lastmodifiedby']			=   $this->session->login_user_id;	
+				
+			$this->db->insert('transaction' , $data_payment);
+				
+			$this->session->set_userdata('last_transaction_id',$this->db->insert_id());
+		}
+		//Create Transaction details
+		
+		$affected_income_categories = array($from_account_id,$to_account_id);
+		
+		$cnt = 0;
+		foreach($affected_income_categories as $account_id){
+			if($amount > 0){
+				$data_transaction['transaction_id'] 	= $this->session->last_transaction_id;
+				$data_transaction['invoice_details_id'] = 0;						
+				$data_transaction['income_category_id'] = $account_id;
+				$data_transaction['qty']				= 1;
+				$data_transaction['detail_description'] = $description==""?get_phrase('internal_funds_transfer'):get_phrase('funds_transfer').': '.$description;
+				if($cnt == 0){
+					$data_transaction['unitcost'] 			= - $amount;
+					$data_transaction['cost'] 				= - $amount;	
+				}else{
+					$data_transaction['unitcost'] 			= $amount;
+					$data_transaction['cost'] 				= $amount;
+				}
+									
+				$this->db->insert("transaction_detail",$data_transaction);
+					
+			}
+			
+			$cnt++;
+		}
+					
+		
+	}
+	
+	function record_funds_transfer(){
+		
+		
+	}
+	
+	function cashbook($param1 = "" , $param2 = ""){
+		if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');
+		
+		$t_date = date('Y-m-d');
+		
+		if($param1=="scroll") $t_date = date('Y-m-d',$param2); 
+		
+		if($param1=="") {
+			
+			$t_date = date('Y-m-01');
+			
+			$reconcile = $this->db->get("reconcile");
+			
+			$cashbook = $this->db->get("transaction");
+			
+			if($reconcile->num_rows() > 0 && $cashbook->num_rows() > 0){
+				
+				$last_reconcile_month = $this->db->select_max("month")->get("reconcile")->row()->month;
+
+				if(date("Y-m-01",strtotime($last_reconcile_month)) < $t_date ){
+					$t_date = date("Y-m-01",strtotime('+1 month',strtotime($last_reconcile_month)));
+				}
+				
+			}elseif($cashbook->num_rows() == 0){
+				$t_date = $this->db->get_where('settings',array('type'=>'system_start_date'))->row()->description;	
+			}elseif($reconcile->num_rows() === 0){
+				$t_date = $this->db->select_max("t_date")->get("transaction")->row()->t_date;
+			}
+		}
+			
+		$month = date('m',strtotime($t_date));
+		$year = date('Y',strtotime($t_date));
+		
+		$opening_balance = $this->crud_model->opening_account_balance($t_date);
+		
+		//Transactions for the month
+		$this->db->select(array('transaction_id','t_date','batch_number','invoice_id','transaction.description','payee',
+		'transaction.transaction_type_id','transaction_type.description as transaction_type','transaction.transaction_method_id',
+		'cheque_no','amount','cleared','transaction_method.description as transaction_method'));
+		
+		$this->db->join('transaction_type','transaction_type.transaction_type_id=transaction.transaction_type_id');
+		$this->db->join('transaction_method','transaction_method.transaction_method_id=transaction.transaction_method_id');
+		
+		$transactions = $this->db->get_where('transaction',
+		array('Month(t_date)'=>$month,'Year(t_date)'=>$year))->result_object();
+
+		$page_data['cash_balance'] = $opening_balance['cash_balance'];
+		$page_data['bank_balance'] = $opening_balance['bank_balance'];
+        $page_data['page_name']  = 'cashbook';
+		$page_data['page_view'] = "finance";
+        $page_data['page_title'] = get_phrase('cash_book');
+		$page_data['current'] = $t_date;
+		$page_data['transactions'] = $transactions;
+        $this->load->view('backend/index', $page_data); 
+	}
+	
 }

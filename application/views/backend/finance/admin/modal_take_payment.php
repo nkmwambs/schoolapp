@@ -12,7 +12,7 @@ $row = $edit_data[0];
                 <div class="panel-title"><?php echo get_phrase('take_payment');?></div>
             </div>
             <div class="panel-body">
-				<?php echo form_open(base_url() . 'index.php?finance/invoice/take_payment/'.$row['invoice_id'], array(
+				<?php echo form_open(base_url() . 'index.php?finance/record_fees_income/take_payment/'.$row['invoice_id'], array(
 					'class' => 'form-horizontal form-groups-bordered validate','target'=>'_top','id'=>'frm_payment'));?>
 
 		
@@ -41,7 +41,7 @@ $row = $edit_data[0];
 								<tbody>
 									<?php
 										$this->db->select(array('fees_structure_details.detail_id','fees_structure_details.name',
-	                                	'fees_structure_details.amount','invoice_details.amount_due','invoice_details.amount_paid','invoice_details.balance'));
+	                                	'fees_structure_details.amount','invoice_details.invoice_details_id','invoice_details.amount_due','invoice_details.amount_paid','invoice_details.balance'));
 	                                	
 										$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');									
 	                                	$this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
@@ -52,9 +52,9 @@ $row = $edit_data[0];
 										<tr>
 											<td><?php echo $inv->name;?></td>
 											<td><?php echo number_format($inv->amount_due,2);?></td>
-											<td><?php echo number_format($inv->amount_paid,2);?></td>
-											<td><?php echo number_format($inv->balance,2);?></td>
-											<td><input type="text" onkeyup="return get_total_payment();" class="form-control paying" name="take_payment[<?php echo $inv->detail_id;?>]" id="" value="0"/></td>
+											<td><?php echo number_format($this->crud_model->get_invoice_detail_amount_paid($inv->invoice_details_id),2);?></td>
+											<td><?php echo number_format($this->crud_model->get_invoice_detail_balance($inv->invoice_details_id),2);?></td>
+											<td><input type="text" onkeyup="return get_total_payment();" class="form-control paying" name="take_payment[<?php echo $inv->invoice_details_id;?>]" id="" value="0"/></td>
 										</tr>
 									
 									<?php
@@ -64,11 +64,11 @@ $row = $edit_data[0];
 										$tot_paid = array_sum(array_column($invoice_details, 'amount_paid'));
 										$tot_bal  = array_sum(array_column($invoice_details, 'balance'));
 									?>
-									<tr><td>Overpayment</td><td colspan="3"><input type="text" class="form-control overpay" name="overpayment_description" readonly="readonly" /></td><td><input type="text" onkeyup="return get_total_payment();" name="overpayment" class="form-control paying overpay" value="0" readonly="readonly"/></td></tr>
+									<tr><td><?=get_phrase('overpayment');?></td><td colspan="3"><input type="text" class="form-control overpay" name="overpayment_description" readonly="readonly" /></td><td><input type="text" onkeyup="return get_total_payment();" id="overpayment" name="overpayment" class="form-control paying overpay" value="0" readonly="readonly"/></td></tr>
 									<tr>
 										<td>Totals</td><td><?php echo number_format($tot_due,2);?></td>
-										<td><?php echo number_format($tot_paid,2);?></td>
-										<td id="total_balance"><?php echo number_format($tot_bal,2);?></td>
+										<td><?php echo number_format($this->crud_model->get_invoice_amount_paid($param2),2);?></td>
+										<td id="total_balance"><?php echo number_format($this->crud_model->get_invoice_balance($param2),2);?></td>
 										<td><input type="text" class="form-control" name="total_payment" id="total_payment" value="0" readonly="readonly"/></td>
 									</tr>
 								</tbody>
@@ -79,21 +79,21 @@ $row = $edit_data[0];
 		            <div class="form-group">
 		                <label class="col-sm-3 control-label"><?php echo get_phrase('description');?></label>
 		                <div class="col-sm-6">
-		                    <input type="text" class="form-control" name="description" id="description" placeholder="<?php echo get_phrase('description');?>"/>
+		                    <input type="text" required="required" class="form-control" name="description" id="description" placeholder="<?php echo get_phrase('description');?>"/>
 		                </div>
 		            </div>
 		            
 		            <div class="form-group">
 		                <label class="col-sm-3 control-label"><?php echo get_phrase('payee');?></label>
 		                <div class="col-sm-6">
-		                    <input type="text" class="form-control" name="payee" id="payee" placeholder="<?php echo get_phrase('payee');?>"/>
+		                    <input type="text" required="required" class="form-control" name="payee" id="payee" placeholder="<?php echo get_phrase('payee');?>"/>
 		                </div>
 		            </div>
 
 		            <div class="form-group">
                         <label class="col-sm-3 control-label"><?php echo get_phrase('method');?></label>
                         <div class="col-sm-6">
-                            <select name="method" class="form-control">
+                            <select name="method" class="form-control" required="required">
                                 <option value="1"><?php echo get_phrase('cash');?></option>
                                 <option value="2"><?php echo get_phrase('check');?></option>
 
@@ -104,8 +104,11 @@ $row = $edit_data[0];
                     <div class="form-group">
 	                    <label class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
 	                    <div class="col-sm-6">
-	                        <input type="text" class="datepicker form-control" readonly="readonly" data-start-date="<?php echo $this->crud_model->next_cashbook_date()->start_date;?>" data-end-date="<?php echo $this->crud_model->next_cashbook_date()->end_date;?>" data-format="yyyy-mm-dd" name="timestamp" 
-	                            value=""/>
+	                        <input type="text" class="datepicker form-control" readonly="readonly" 
+	                        	data-start-date="<?php echo $this->crud_model->next_transaction_date()->start_date;?>" 
+	                        	data-end-date="<?php echo $this->crud_model->next_transaction_date()->end_date;?>" 
+	                        	data-format="yyyy-mm-dd" name="timestamp" 
+	                            value="" required="required"/>
 	                    </div>
 					</div>
 					
@@ -113,7 +116,7 @@ $row = $edit_data[0];
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('serial_number');?></label>
                         
 						<div class="col-sm-6">
-							<input type="text" class="form-control" readonly="readonly" value="<?=$this->crud_model->next_serial_number();?>" required="required">
+							<input type="text" class="form-control" readonly="readonly" value="<?=$this->crud_model->next_batch_number();?>" required="required">
 						</div> 
 				</div>
 
@@ -151,12 +154,10 @@ $row = $edit_data[0];
 			tot = parseInt(tot)+parseInt(amt);
 		});
 		
-		$('#total_payment').val(tot);
 		
-		if(parseInt(tot) == parseInt($("#total_balance").html())){
-			//alert($("#total_balance").html());
+		if(parseInt(tot) == parseInt(<?=$this->crud_model->get_invoice_balance($param2);?>)){
 			$(".overpay").removeAttr('readonly');	
-		}else if(parseInt(tot) < parseInt($("#total_balance").html())){
+		}else if(parseInt(tot) < parseInt(<?=$this->crud_model->get_invoice_balance($param2);?>)){
 			$(".overpay").val(0);
 			$(".overpay").prop("readonly","readonly");
 		}
@@ -167,7 +168,7 @@ $row = $edit_data[0];
 		var detail_balance = $(this).parent().prev().html();
 		var detail_paying = $(this).val();
 		
-		if(parseInt(detail_paying) > parseInt(accounting.unformat(detail_balance))){
+		if((parseInt(detail_paying) - parseInt($("#overpayment").val())) > parseInt(accounting.unformat(detail_balance))){
 			alert("<?=get_phrase("paying_more_than_balance");?>");
 			$(this).val("0");
 			get_total_payment();

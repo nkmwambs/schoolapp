@@ -13,36 +13,43 @@ $str_this_month_cleared = " cleared = '1' AND clearedMonth BETWEEN '".$month_sta
 
 /**Deposit in Transit Listing **/			
 $this->db->where($str);
-$this->db->where(array("method"=>"2"));
-$bank_income = $this->db->get("payment")->result_object();
+$this->db->where(array("transaction_method_id"=>2,'transaction_type_id'=>1));
+$bank_income = $this->db->get("transaction")->result_object();
 
 /**Cleared this month In Transit Listing **/
 
 $this->db->where($str_this_month_cleared);
-$this->db->where(array("method"=>"2"));
-$in_transit_cleared = $this->db->get("payment")->result_object();
+$this->db->where(array("transaction_method_id"=>2,'transaction_type_id'=>1));
+$in_transit_cleared = $this->db->get("transaction")->result_object();
+
+
+/**Cleared this month In O/C Listing **/
+
+$this->db->where($str_this_month_cleared);
+$this->db->where(array("transaction_method_id"=>2,'transaction_type_id'=>2));
+$oc_cleared = $this->db->get("transaction")->result_object();
 
 /** Outstanding Cheques Listing **/	
 
 //$str = "(cleared = '0' OR ( t_date BETWEEN '".$month_start."' AND  '".$month_end."' ) OR (t_date < '".$month_start."' AND cleared = '1' AND clearedMonth BETWEEN '".$month_start."' AND '".$month_end."' ))";
 $this->db->where($str);
-$this->db->where(array("method"=>"2"));
-$bank_expense = $this->db->get("expense")->result_object();
+$this->db->where(array("transaction_method_id"=>2,'transaction_type_id'=>2));
+$bank_expense = $this->db->get("transaction")->result_object();
 
 /** Deposit in Transit in statement**/
 
 $this->db->where($str);
-$this->db->where(array("method"=>"2"));
+$this->db->where(array("transaction_method_id"=>2,'transaction_type_id'=>1));
 $deposit_in_transit = 0;
-$deposit_in_transit_obj = $this->db->select("SUM(amount) as amount")->get("payment");
+$deposit_in_transit_obj = $this->db->select("SUM(amount) as amount")->get("transaction");
 if($deposit_in_transit_obj->row()) $deposit_in_transit = $deposit_in_transit_obj->row()->amount;
 
 /** Outstanding Cheques in statement**/
 
 $this->db->where($str);
-$this->db->where(array("method"=>"2"));
+$this->db->where(array("transaction_method_id"=>2,'transaction_type_id'=>2));
 $outstanding_cheque = 0;
-$outstanding_cheque_obj = $this->db->select("SUM(amount) as amount")->get("expense");
+$outstanding_cheque_obj = $this->db->select("SUM(amount) as amount")->get("transaction");
 if($outstanding_cheque_obj->row()->amount) $outstanding_cheque = $outstanding_cheque_obj->row()->amount;
 
 /** Cashbook Balance i statement **/
@@ -52,7 +59,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 ?>
 <div class="row">
 	<div class="col-sm-12">
-		<a href="<?=base_url();?>index.php?finance/scroll_cashbook/<?=$current;?>" class="btn btn-success btn-icon"><i class="fa fa-angle-left"></i><?=get_phrase("cashbook");?></a>
+		<a href="<?=base_url();?>index.php?finance/cashbook/scroll/<?=$current;?>" class="btn btn-success btn-icon"><i class="fa fa-angle-left"></i><?=get_phrase("cashbook");?></a>
 		
 		<a href="<?=base_url();?>index.php?finance/monthly_reconciliation" class="btn btn-success btn-icon"><i class="fa fa-angle-left"></i><?=get_phrase("reconciliation_reports");?></a>
 	</div>
@@ -189,15 +196,18 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 					</thead>
 					<tbody>
 						<?php
+							//print_r($bank_income);
 							foreach($bank_income as $row){
 						?>
 							<tr>
 								<td><?=$row->t_date;?></td>
-								<td><?=$row->batch_number;?></td>
+								<td><div class="btn btn-success" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_transaction/<?=$row->batch_number?>');"><?=$row->batch_number?></div></td>
 								<td><?=$row->payee;?></td>
 								<td><?=$row->description;?></td>
-								<td><?=$transaction_type[$row->payment_type];?></td>
-								<td><?=$payment_method[$row->method];?></td>
+								<td><?=$this->db->get_where('transaction_type',
+								array('transaction_type_id'=>$row->transaction_type_id))->row()->description;?></td>
+								<td><?=$this->db->get_where('transaction_method',
+								array('transaction_method_id'=>$row->transaction_method_id))->row()->description;?></td>
 								<td><?=$row->amount;?></td>
 								<?php
 									$btn_label = "Clear";
@@ -205,7 +215,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 										$btn_label = "Unclear";
 									}
 								?>
-								<td><button class="btn btn-primary record_clear" id="<?php echo "payment_".$row->payment_id;?>"><?=$btn_label;?></button></td>
+								<td><button class="btn btn-primary record_clear" id="<?php echo "income_".$row->transaction_id;?>"><?=$btn_label;?></button></td>
 								<td><?=$row->clearedMonth;?></td>
 							</tr>
 						<?php
@@ -236,11 +246,13 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 						?>	
 							<tr>
 								<td><?=$row->t_date;?></td>
-								<td><?=$row->batch_number;?></td>
+								<td><div class="btn btn-success" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_transaction/<?=$row->batch_number?>');"><?=$row->batch_number?></div></td>
 								<td><?=$row->payee;?></td>
 								<td><?=$row->description;?></td>
-								<td><?=$transaction_type[$row->payment_type];?></td>
-								<td><?=$payment_method[$row->method];?></td>
+								<td><?=$this->db->get_where('transaction_type',
+								array('transaction_type_id'=>$row->transaction_type_id))->row()->description;?></td>
+								<td><?=$this->db->get_where('transaction_method',
+								array('transaction_method_id'=>$row->transaction_method_id))->row()->description;?></td>
 								<td><?=$row->amount;?></td>
 								<?php
 									$btn_label = "Clear";
@@ -248,7 +260,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 										$btn_label = "Unclear";
 									}
 								?>
-								<td><button class="btn btn-primary record_unclear" id="<?php echo "payment_".$row->payment_id;?>"><?=$btn_label;?></button></td>
+								<td><button class="btn btn-primary record_unclear" id="<?php echo "income_".$row->transaction_id;?>"><?=$btn_label;?></button></td>
 								<td><?=$row->clearedMonth;?></td>
 							</tr>
 						<?php
@@ -268,6 +280,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 							<th>Batch Number</th>
 							<th>Payee</th>
 							<th>Description</th>
+							<th>Payment Type</th>
 							<th>Payment Method</th>
 							<th>Amount</th>
 							<th>Status</th>
@@ -280,10 +293,13 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 						?>
 							<tr>
 								<td><?=$row->t_date;?></td>
-								<td><?=$row->batch_number;?></td>
+								<td><div class="btn btn-success" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_transaction/<?=$row->batch_number?>');"><?=$row->batch_number?></div></td>
 								<td><?=$row->payee;?></td>
 								<td><?=$row->description;?></td>
-								<td><?=$payment_method[$row->method];?></td>
+								<td><?=$this->db->get_where('transaction_type',
+								array('transaction_type_id'=>$row->transaction_type_id))->row()->description;?></td>
+								<td><?=$this->db->get_where('transaction_method',
+								array('transaction_method_id'=>$row->transaction_method_id))->row()->description;?></td>
 								<td><?=$row->amount;?></td>
 								<?php
 									$btn_label = "Clear";
@@ -291,7 +307,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 										$btn_label = "Unclear";
 									}
 								?>
-								<td><button class="btn btn-primary record_clear" id="expense_<?=$row->expense_id;?>"><?=$btn_label;?></button></td>
+								<td><button class="btn btn-primary record_clear" id="expense_<?=$row->transaction_id;?>"><?=$btn_label;?></button></td>
 								<td><?=$row->clearedMonth;?></td>
 							</tr>
 						<?php
@@ -310,6 +326,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 							<th>Batch Number</th>
 							<th>Payee</th>
 							<th>Description</th>
+							<th>Payment Type</th>
 							<th>Payment Method</th>
 							<th>Amount</th>
 							<th>Status</th>
@@ -317,6 +334,31 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 						</tr>
 					</thead>
 					<tbody>
+						<?php
+							foreach($oc_cleared as $row){
+						?>	
+							<tr>
+								<td><?=$row->t_date;?></td>
+								<td><div class="btn btn-success" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_transaction/<?=$row->batch_number?>');"><?=$row->batch_number?></div></td>
+								<td><?=$row->payee;?></td>
+								<td><?=$row->description;?></td>
+								<td><?=$this->db->get_where('transaction_type',
+								array('transaction_type_id'=>$row->transaction_type_id))->row()->description;?></td>
+								<td><?=$this->db->get_where('transaction_method',
+								array('transaction_method_id'=>$row->transaction_method_id))->row()->description;?></td>
+								<td><?=$row->amount;?></td>
+								<?php
+									$btn_label = "Clear";
+									if($row->cleared == 1){
+										$btn_label = "Unclear";
+									}
+								?>
+								<td><button class="btn btn-primary record_unclear" id="<?php echo "income_".$row->transaction_id;?>"><?=$btn_label;?></button></td>
+								<td><?=$row->clearedMonth;?></td>
+							</tr>
+						<?php
+						}
+						?>	
 					</tbody>
 				</table>	
 			</div>
@@ -341,17 +383,18 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 			var data = {"record_type":record_type,"indx":record_id,"month":'<?=date("Y-m-t",$current);?>'};
 			
 			if($(this).hasClass("record_clear")){
-				if(record_type == 'payment'){
+				if(record_type == 'income'){
 					$(this).html("Unclear").toggleClass("record_unclear record_clear");
 					closest_tr.clone().appendTo("#cleared_in_transit_table > tbody");
 					closest_tr.remove();
 				}else if(record_type == 'expense'){
+					//alert($(this).attr('id'));
 					$(this).html("Unclear").toggleClass("record_unclear record_clear");
 					closest_tr.clone().appendTo("#cleared_outstanding_table > tbody");
 					closest_tr.remove();
 				}
 			}else{
-				if(record_type == 'payment'){
+				if(record_type == 'income'){
 					$(this).html("Clear").toggleClass("record_clear record_unclear");
 					closest_tr.clone().appendTo("#deposit_in_transit_table > tbody");
 					closest_tr.remove();
@@ -367,7 +410,8 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 				data:data,
 				type:"POST",
 				success:function(resp){
-					alert(resp);
+					//alert(resp);
+					location.reload();
 				},
 				error:function(){
 					alert("Error Occurred");

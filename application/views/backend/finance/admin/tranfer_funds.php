@@ -16,14 +16,30 @@
 							<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
 	                        
 							<div class="col-sm-6">
-								<input type="text" class="form-control datepicker" data-start-date="<?php echo $this->crud_model->next_cashbook_date()->start_date;?>" data-end-date="<?php echo $this->crud_model->next_cashbook_date()->end_date;?>" data-format="yyyy-mm-dd" readonly="readonly" name="t_date" id="t_date"/>
+								<input type="text" required="required" class="form-control datepicker" data-start-date="<?php echo $this->crud_model->next_transaction_date()->start_date;?>" data-end-date="<?php echo $this->crud_model->next_transaction_date()->end_date;?>" data-format="yyyy-mm-dd" readonly="readonly" name="t_date" id="t_date"/>
 							</div>
 						</div>
 						
 						<div class="form-group">
+							<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('serial_number');?></label>
+	                        
+							<div class="col-sm-6">
+								<input type="text" class="form-control" required="required" readonly="readonly" value="<?=$this->crud_model->next_batch_number();;?>" required="required">
+							</div> 
+						</div>
+
+						<div class="form-group">
+							<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('description');?></label>
+	                        
+							<div class="col-sm-6">
+								<input type="text" class="form-control" name="description" required="required">
+							</div> 
+						</div>						
+						
+						<div class="form-group">
 							<label for="" class="control-label col-sm-3"><?=get_phrase('from');?></label>
 							<div class="col-sm-6">
-								<select class="form-control select2" name="account_from" id="account_from">
+								<select class="form-control select2" name="account_from" required="required" id="account_from">
 									<option value=""><?=get_phrase('select');?></option>
 									<?php
 									$income_categories = $this->school_model->income_categories();
@@ -40,7 +56,7 @@
 						<div class="form-group">
 							<label for="" class="control-label col-sm-3"><?=get_phrase('to');?></label>
 							<div class="col-sm-6">
-								<select class="form-control select2" name="account_to" id="account_to">
+								<select class="form-control select2" name="account_to" id="account_to" required="required">
 									<option value=""><?=get_phrase('select');?></option>
 									<?php
 									$income_categories = $this->school_model->income_categories();
@@ -58,7 +74,7 @@
 						<div class="form-group">
 							<label for="" class="control-label col-sm-3"><?=get_phrase('amount');?></label>
 							<div class="col-sm-6">
-								<input type="number" class="form-control" name="amount" id="amount"/>
+								<input type="number" class="form-control" name="amount" id="amount" required="required"/>
 							</div>
 						</div>
 						

@@ -13,7 +13,7 @@
 
 <div class="row">
 	<div class="col-xs-1">
-		<a href="<?=base_url();?>index.php?finance/variance_report/<?=strtotime('-1 month',strtotime($t_date));?>"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>
+		<a href="<?=base_url();?>index.php?finance/expense_variance_report/<?=strtotime('-1 month',strtotime($t_date));?>"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>
 	</div>
 	<div class="col-xs-10">
 		<table class="table table-striped datatable">
@@ -57,7 +57,7 @@
 		</table>
 	</div>
 	<div class="col-xs-1">
-		<a href="<?=base_url();?>index.php?finance/variance_report/<?=strtotime('+1 month',strtotime($t_date));?>"><i style="font-size: 145pt;" class="fa fa-angle-right"></i></a>
+		<a href="<?=base_url();?>index.php?finance/expense_variance_report/<?=strtotime('+1 month',strtotime($t_date));?>"><i style="font-size: 145pt;" class="fa fa-angle-right"></i></a>
 	</div>
 </div>
 

@@ -120,7 +120,7 @@
     		string += '<img src="<?=base_url();?>uploads/logo.png" width="80"/>';
     		string += '</div>';
     		string += '<div class="col-xs-12" style="text-align:center;">';
-    		string += '<?=$this->db->get_where('settings' , array('type'=>'system_name'))->row()->description;?>';
+    		string += '<?=$this->db->get_where('settings' , array('type'=>'system_title'))->row()->description;?>';
     		string += '</div>';
     		string += '<div class="col-xs-12" style="text-align:center;">';
     		string += 'P.O. Box <?=$this->db->get_where('settings' , array('type'=>'address'))->row()->description;?>';

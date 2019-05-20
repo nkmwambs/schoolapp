@@ -621,14 +621,14 @@ class Crud_model extends CI_Model {
 		return $open;
 	}
 
-	function budget_expense_summary_by_expense_category($expense_category_id,$fy){
+	function budget_expense_summary_by_expense_category($expense_category_id,$fy,$terms_id){
 		
-		$arr = range(1,12);
+		$arr = $this->months_in_a_term($terms_id);
 		
 		$month_total = array();
 		
 		for($i=1;$i<sizeof($arr)+1;$i++){
-			$cond = "budget.expense_category_id=".$expense_category_id." AND budget_schedule.month=".$i." AND budget.fy=".$fy."";	
+			$cond = "budget.expense_category_id=".$expense_category_id." AND budget_schedule.month=".$i." AND budget.fy=".$fy." AND budget.terms_id=".$terms_id;	
 			$month_total[$i] = $this->db->select_sum('amount')->join('budget','budget_schedule.budget_id=budget.budget_id',"right")->where($cond)->get('budget_schedule')->row()->amount; 
 			
 		}
@@ -636,14 +636,14 @@ class Crud_model extends CI_Model {
 		return $month_total;
 	}
 
-	function budget_income_summary_by_expense_category($income_category_id,$fy){
+	function budget_income_summary_by_expense_category($income_category_id,$fy,$terms_id){
 		
-		$arr = range(1,12);
+		$arr = $this->months_in_a_term($terms_id);
 		
 		$month_total = array();
 		
 		for($i=1;$i<sizeof($arr)+1;$i++){
-			$cond = "expense_category.income_category_id=".$income_category_id." AND budget_schedule.month=".$i." AND budget.fy=".$fy."";	
+			$cond = "expense_category.income_category_id=".$income_category_id." AND budget_schedule.month=".$i." AND budget.fy=".$fy." AND budget.terms_id =".$terms_id;	
 			$this->db->join('budget','budget_schedule.budget_id=budget.budget_id',"right");
 			$this->db->join('expense_category','budget.expense_category_id=expense_category.expense_category_id',"right");
 			$month_total[$i] = $this->db->select_sum('amount')->where($cond)->get('budget_schedule')->row()->amount; 
@@ -653,14 +653,14 @@ class Crud_model extends CI_Model {
 		return $month_total;
 	}
 	
-	function budget_summary_by_expense_category($fy){
+	function budget_summary_by_expense_category($fy,$term_id){
 		
-		$arr = range(1,12);
+		$arr = $this->months_in_a_term($term_id);
 		
 		$month_total = array();
 		
 		for($i=1;$i<sizeof($arr)+1;$i++){
-			$cond = "budget_schedule.month=".$i." AND budget.fy=".$fy."";	
+			$cond = "budget_schedule.month=".$i." AND budget.fy=".$fy." AND budget.terms_id=".$term_id;	
 			$month_total[$i] = $this->db->select_sum('amount')->join('budget','budget_schedule.budget_id=budget.budget_id',"right")->where($cond)->get('budget_schedule')->row()->amount; 
 			
 		}
@@ -777,4 +777,229 @@ class Crud_model extends CI_Model {
 			
 			return $cumulative_results;
 		}
+
+	/**
+	 * Start of Upgraded Finance Model
+	 */
+	 
+	 	function next_batch_number(){
+			
+		$this->db->select_max('batch_number');
+		$max_serial_number = $this->db->get('transaction')->row()->batch_number + 1;
+		
+		$current_transaction_month = strtotime($this->current_transaction_month());
+		$last_reconciled_month = strtotime($this->last_reconciled_month());
+		
+		$count_of_transactions_in_current_transacting_month = $this->db->get_where('transaction',
+		array('t_date>='=>$this->current_transaction_month()))->num_rows();
+		
+		if($current_transaction_month > $last_reconciled_month && 
+			$count_of_transactions_in_current_transacting_month == 0){
+		 	$max_serial_number = date('y').date('m',$current_transaction_month).'01';
+		}				
+ 		
+		return $max_serial_number;
+	}
+		
+		
+	function account_opening_balance($curr_date){
+		
+		$start_date = $this->db->get_where('settings',array('type'=>'system_start_date'))->row()->description;
+		
+		$opening_bank_balance = $this->db->get_where('accounts',array('name'=>'bank'))->row()->opening_balance;
+		
+		$opening_cash_balance = $this->db->get_where('accounts',array('name'=>'cash'))->row()->opening_balance;
+		
+		$bank_balance = 0;
+		
+		$cash_balance = 0;
+		
+		if(strtotime(date('Y-m-01',strtotime($start_date)))===strtotime(date('Y-m-01',strtotime($curr_date)))){
+			
+				$bank_balance = $this->db->get_where('accounts',array('name'=>'bank'))->row()->opening_balance;
+		
+				$cash_balance = $this->db->get_where('accounts',array('name'=>'cash'))->row()->opening_balance;
+		
+		}elseif(strtotime(date('Y-m-01',strtotime($start_date)))<strtotime(date('Y-m-01',strtotime($curr_date)))){
+			
+				$c_date = date('Y-m-01',strtotime($curr_date));
+				
+				//Sum all Bank Income and expenses in previous months before the supplied month and get their difference
+				
+				$month = date('m',strtotime($c_date));
+				$year = date('Y',strtotime($c_date));
+				
+				$bank_income_cond = " ((transaction_type='1' AND account='2') OR transaction_type='3') AND t_date<'".$c_date."'";// AND t_date<='".$c_date."'
+				
+				$bank_income = $this->db->select_sum('amount')->where($bank_income_cond)->get('transaction')->row()->amount;
+				
+				$bank_expense_cond = " ((transaction_type='2' AND account='2') OR transaction_type='4') AND t_date<'".$c_date."'";
+				
+				$bank_expense = $this->db->select_sum('amount')->where($bank_expense_cond)->get('transaction')->row()->amount;
+				
+				$bank_balance = ($opening_bank_balance+$bank_income)-$bank_expense;
+				
+				//Sum all Cash Income and expenses in previous months before the supplied months and get their difference
+				
+				$cash_income_cond = " ((transaction_type='1' AND account='1') OR transaction_type='4') AND t_date<'".$c_date."'";
+				
+				$cash_income = $this->db->select_sum('amount')->where($cash_income_cond)->get('transaction')->row()->amount;
+				
+				$cash_expense_cond = " ((transaction_type='2' AND account='1') OR transaction_type='3') AND t_date<'".$c_date."'";
+				
+				$cash_expense = $this->db->select_sum('amount')->where($cash_expense_cond)->get('transaction')->row()->amount;
+				
+				$cash_balance = ($opening_cash_balance+$cash_income)-$cash_expense;
+		}
+		//Return the Cash and Bank Balances
+		
+		return array('cash_balance'=>$cash_balance,'bank_balance'=>$bank_balance);
+	}
+
+	function next_transaction_date(){
+			
+			//Get Cashbook Object
+			$cashbook_obj = $this->db->get("transaction");
+			
+			$system_start_date = $this->db->get_where("settings",array("type"=>"system_start_date"))->row()->description;
+			$start_date = date("Y-m-01",strtotime($system_start_date));
+			$end_date = date("Y-m-t",strtotime($system_start_date));
+			
+			if($cashbook_obj->num_rows() > 0){
+			
+				/**Get Max data in the Cash Book**/
+				
+				$max_id = $this->db->select_max("transaction_id")->get("transaction")->row()->transaction_id;
+				$last_transaction = $this->db->get_where("transaction",array("transaction_id"=>$max_id))->row();
+				$reconcile = $this->db->get("reconcile");
+				
+				$start_date = $last_transaction->t_date;
+				$end_date = date('Y-m-t',strtotime($last_transaction->t_date));
+				
+				if($reconcile->num_rows() > 0){
+					$last_reconcile_month = $this->db->select_max("month")->get("reconcile")->row()->month;
+					if(strtotime($last_transaction->t_date) < strtotime($last_reconcile_month) || 
+					strtotime($last_transaction->t_date) == strtotime($last_reconcile_month)){
+						$start_date = date("Y-m-01",strtotime('first day of next month',strtotime($last_reconcile_month)));
+						$end_date = date("Y-m-t",strtotime('first day of next month',strtotime($last_reconcile_month)));
+					}
+					
+					
+				}
+			}
+			/**Derive Start and End Dates**/
+			
+			$cashbook_dates['start_date'] = $start_date;
+			$cashbook_dates['end_date'] = $end_date;
+			//$cashbook_dates['extra'] = $max_id;
+			
+			/** Create Date Object**/
+			
+			return (object)$cashbook_dates;
+		}	
+		
+	function get_invoice_detail_balance($invoice_detail_id){
+			
+		//Get details due amount
+		$due_amount = $this->db->get_where('invoice_details',
+		array('invoice_details_id'=>$invoice_detail_id))->row()->amount_due;
+		
+		
+		//Get Sum paid
+		$amount_paid = $this->get_invoice_detail_amount_paid($invoice_detail_id);
+		
+		//Compute balance
+		$balance = $due_amount - $amount_paid;
+		
+		return $balance;
+	}	
+	
+	function get_invoice_detail_amount_paid($invoice_detail_id){
+		
+		$amount_paid = $this->db->select_sum('cost')->get_where('transaction_detail',
+		array('invoice_details_id'=>$invoice_detail_id))->row()->cost;
+		
+		return $amount_paid;
+	}
+	
+	function get_invoice_amount_paid($invoice_id){
+		
+		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		$amount_paid = $this->db->select_sum('cost')->get_where('transaction_detail',
+		array('invoice_id'=>$invoice_id))->row()->cost;
+		
+		return $amount_paid;
+	}
+	
+	function get_invoice_balance($invoice_id){
+		$invoice_due = $this->db->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->amount_due;
+		
+		$balance = $invoice_due - $this->get_invoice_amount_paid($invoice_id);
+		
+		return $balance;
+	} 
+	
+	function get_invoice_payment_history($invoice_id){
+		$this->db->select(array('transaction.invoice_id','transaction.t_date',
+        'transaction_detail.cost','invoice_details.detail_id',
+		'fees_structure_details.name','transaction.transaction_method_id',
+		'transaction_method.description as transaction_method'));			
+				
+		$this->db->join('invoice_details','invoice_details.invoice_details_id=transaction_detail.invoice_details_id');
+ 		$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');
+		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		$this->db->join('transaction_method','transaction_method.transaction_method_id=transaction.transaction_method_id');
+		$payment_history = $this->db->get_where('transaction_detail', array('transaction.invoice_id' => $invoice_id));
+ 		
+		return $payment_history;		
+	}
+	
+	function get_current_term(){
+		$current_transacting_month = $this->current_transaction_month();
+		
+		$month = date('n',$current_transacting_month);
+		
+		$all_terms = $this->db->get('terms')->result_object();	
+		
+		$term_months = array();
+		
+		$current_term = 1;
+		
+		foreach($all_terms as $term){
+			$term_months[$term->terms_id] = range($term->start_month, $term->end_month);//array($term->start_month,$term->end_month);
+			
+			if(in_array($month, $term_months[$term->terms_id])){
+				$current_term = $term->terms_id;
+				break;
+			}
+		}
+		
+		return $current_term;
+		
+	}
+
+	function months_in_a_term($term_id){
+		
+		$term = $this->db->get_where('terms',array('terms_id'=>$term_id))->row();	
+		
+		return range($term->start_month, $term->end_month);
+	}
+
+	function months_in_a_term_short_name($term_id){
+		
+		$arr = array();
+		
+		$short = array('','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
+		
+		$cnt = 0;
+		foreach($this->months_in_a_term($term_id) as $month_number){
+			$arr[$cnt] = $short[$month_number];
+			$cnt++;
+		}
+		
+		return $arr;
+	}
+	 /**
+	  * End of Upgraded Finance Model
+	  */
 }

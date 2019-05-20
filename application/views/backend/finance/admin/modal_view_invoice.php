@@ -61,16 +61,16 @@ foreach ($edit_data as $row):
         <table width="100%" border="0">    
             <tr>
                 <td align="right" width="80%"><?php echo get_phrase('total_amount'); ?> :</td>
-                <td align="right"><?php echo $row['amount_due']; ?></td>
+                <td align="right"><?php echo number_format($row['amount_due'],2); ?></td>
             </tr>
             <tr>
                 <td align="right" width="80%"><?php echo get_phrase('paid_amount'); ?> :</td>
-                <td align="right"><?php echo $row['amount_paid']; ?></td>
+                <td align="right"><?php echo number_format($this->crud_model->get_invoice_amount_paid($row['invoice_id']),2); ?></td>
             </tr>
-            <?php if ($row['balance'] != 0):?>
+            <?php if ($this->crud_model->get_invoice_balance($row['invoice_id']) != 0):?>
             <tr>
-                <td align="right" width="80%"><?php echo get_phrase('due'); ?> :</td>
-                <td align="right"><?php echo $row['balance']; ?></td>
+                <td align="right" width="80%"><?php echo get_phrase('balance'); ?> :</td>
+                <td align="right"><?php echo number_format($this->crud_model->get_invoice_balance($row['invoice_id']),2); ?></td>
             </tr>
             <?php endif;?>
             
@@ -94,7 +94,7 @@ foreach ($edit_data as $row):
             	<?php
 					//$invoice_details = $this->db->get_where('invoice_details',array('invoice_id'=>$row['invoice_id']))->result_object();
 					$this->db->select(array('fees_structure_details.detail_id','fees_structure_details.name',
-	                'fees_structure_details.amount','invoice_details.amount_due','invoice_details.amount_paid','invoice_details.balance'));
+	                'fees_structure_details.amount','invoice_details_id','invoice_details.amount_due','invoice_details.amount_paid','invoice_details.balance'));
 	                                	
 					$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');									
 	                $this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
@@ -105,10 +105,10 @@ foreach ($edit_data as $row):
 				?>
 					<tr>
 						<td><?php echo $inv->name;?></td>
-						<td><?php echo $inv->amount_due;?></td>
+						<td><?php echo number_format($inv->amount_due,2);?></td>
 						
-						<td><?php echo $inv->amount_paid;?></td>
-						<td><?php echo $inv->balance;?></td>
+						<td><?php echo number_format($this->crud_model->get_invoice_detail_amount_paid($inv->invoice_details_id));?></td>
+						<td><?php echo number_format($this->crud_model->get_invoice_detail_balance($inv->invoice_details_id));?></td>
 						
 					</tr>
 									
@@ -117,8 +117,8 @@ foreach ($edit_data as $row):
 						endforeach;
 						
 						$tot_due = array_sum(array_column($invoice_details, 'amount_due'));
-						$tot_paid = array_sum(array_column($invoice_details, 'amount_paid'));
-						$tot_bal  = array_sum(array_column($invoice_details, 'balance'));
+						$tot_paid = $this->crud_model->get_invoice_amount_paid($row['invoice_id']);
+						$tot_bal  = $this->crud_model->get_invoice_balance($row['invoice_id']);
 					?>
 						<tr>
 							<td><?=get_phrase('total')?></td>
@@ -145,14 +145,8 @@ foreach ($edit_data as $row):
             </thead>
             <tbody>
                 <?php
-                $this->db->select(array('payment.invoice_id','payment.t_date','student_payment_details.amount','student_payment_details.detail_id',
-				'fees_structure_details.name','payment.method'));
-				
-				
-				$this->db->join('payment','payment.payment_id=student_payment_details.payment_id');
-				$this->db->join('fees_structure_details','fees_structure_details.detail_id=student_payment_details.detail_id');
-				$payment_history = $this->db->get_where('student_payment_details', array('payment.invoice_id' => $row['invoice_id']));
-// 				
+                
+                $payment_history = $this->crud_model->get_invoice_payment_history($row['invoice_id']);
 				
 				if($payment_history->num_rows()>0){
 	            	
@@ -163,20 +157,9 @@ foreach ($edit_data as $row):
 	            ?>
 	                    <tr>
 	                        <td><?php echo $line['t_date']; ?></td>
-	                        <td><?php echo $line['amount']; ?></td>
+	                        <td><?php echo number_format($line['cost'],2); ?></td>
 	                        <td><?php echo $line['name'];?></td>
-	                        <td>
-	                            <?php 
-	                                if ($line['method'] == 1)
-	                                    echo get_phrase('cash');
-	                                if ($line['method'] == 2)
-	                                    echo get_phrase('bank');
-	                                // if ($line['method'] == 3)
-	                                    // echo get_phrase('card');
-	                                // if ($line['method'] == 'paypal')
-	                                    // echo 'paypal';
-	                            ?>
-	                        </td>
+	                        <td><?=$line['transaction_method']?></td>
 	                        
 	                    </tr>
                 <?php 

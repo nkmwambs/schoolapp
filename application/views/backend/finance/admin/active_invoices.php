@@ -16,6 +16,7 @@
                     		<th><div><?php echo get_phrase('class');?></div></th>
                             <th><div><?php echo get_phrase('fee_structure_total');?></div></th>
                             <th><div><?php echo get_phrase('payable_amount');?></div></th>
+                            <th><div><?php echo get_phrase('actual_paid');?></div></th>
                             <th><div><?php echo get_phrase('balance');?></div></th>
                     		<th><div><?php echo get_phrase('date');?></div></th>
                     		<th><div><?php echo get_phrase('options');?></div></th>
@@ -35,9 +36,16 @@
 							<td><?php echo $this->crud_model->get_type_name_by_id('class',$row['class_id']);?></td>
 							<td><?php echo number_format($row['amount'],2);?></td>
                             <td><?php echo number_format($row['amount_due'],2);?></td>
+                            
+                            <?php $paid = $this->db->select_sum('amount')->get_where('transaction',
+                            array('invoice_id'=>$row['invoice_id']))->row()->amount;?>
+                            
+                            <td><?php echo $paid;?></td>
+                            
                             <?php
-                            	$bal = $row['amount_due'] - $row['amount_paid']; 
+                            	$bal = $row['amount_due'] - $paid; 
                             ?>
+                            
                             <td><?php echo number_format($bal,2);?></td>
 							<td><?php echo date('d M,Y', $row['creation_timestamp']);?></td>
 							<td>
@@ -78,25 +86,13 @@
 
                                     <!-- DELETION LINK -->
                                     <li class="delete_or_cancel_invoice">
-                                    	<?php
-                                    	if($this->db->get_where("payment",array("invoice_id"=>$row['invoice_id']))->num_rows() === 0){	
-                                    	?>
-	                                        <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?finance/invoice/delete/<?php echo $row['invoice_id'];?>');">
-	                                            <i class="entypo-trash"></i>
-	                                                <?php echo get_phrase('delete_invoice');?>
-	                                        </a>
-	                                        
-                                        <?php
-										}else{
-                                    	?>
+                                    	
                                     		<a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?finance/invoice/cancel/<?php echo $row['invoice_id'];?>');">
 	                                            <i class="entypo-cancel"></i>
 	                                                <?php echo get_phrase('cancel_invoice');?>
 	                                        </a>
                                     	
-                                    	<?php
-										}
-                                    	?>
+                                    	
                                      </li>
                                 </ul>
                             </div>
