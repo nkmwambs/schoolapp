@@ -1761,6 +1761,21 @@ class Finance extends CI_Controller
         $this->load->view('backend/index', $page_data);		
 	}
 	
+	function scroll_budget($year){
+		
+		
+		$current_term = $this->input->post('terms_id');
+		$months_in_term_short = $this->crud_model->months_in_a_term_short_name($current_term);
+        
+		$page_data['year']  = $year;
+		$page_data['current_term'] = $current_term;
+		$page_data['months_in_term_short']  = $months_in_term_short;
+        $page_data['page_name']  = 'budget';
+		$page_data['page_view'] = 'finance';
+        $page_data['page_title'] = get_phrase('budget');
+        $this->load->view('backend/index', $page_data);	
+	}
+	
 	public function budget($param="",$param2=""){
         if ($this->session->userdata('active_login') != 1)
             redirect(base_url() . 'index.php?login', 'refresh');
@@ -1770,6 +1785,7 @@ class Finance extends CI_Controller
 			$data['expense_category_id'] = $this->input->post('expense_category_id');
 			$data['description'] = $this->input->post('description');
 			$data['fy'] = $this->input->post('fy');
+			$data['terms_id'] = $this->input->post('terms_id');
 			$data['qty'] = $this->input->post('qty');
 			$data['unitcost'] = $this->input->post('unitcost');
 			$data['often'] = $this->input->post('often');
@@ -1838,18 +1854,28 @@ class Finance extends CI_Controller
             redirect(base_url() . 'index.php?admin/budget/', 'refresh');
 		}
 		
-		if($param==='edit_item'){
-			
-		}
-		
 		$page_data['year']  = date('Y');
+		
 		if($param==="scroll"){
 			$page_data['year']  = $param2;
 		}
+
+		$current_term = $this->crud_model->get_current_term();
+		//$months_in_term = $this->crud_model->months_in_a_term($current_term);
+		$months_in_term_short = $this->crud_model->months_in_a_term_short_name($current_term);
+        
+		$page_data['current_term'] = $current_term;
+		$page_data['months_in_term_short']  = $months_in_term_short;
         $page_data['page_name']  = 'budget';
 		$page_data['page_view'] = 'finance';
         $page_data['page_title'] = get_phrase('budget');
         $this->load->view('backend/index', $page_data);		
+	}
+
+	function change_new_item_budget_month_spread($term_id){
+		$data['months_in_term_short'] = $this->crud_model->months_in_a_term_short_name($term_id);
+		
+		echo $this->load->view('backend/finance/admin/load_new_budget_month_spread',$data,true);
 	}
 
 	function edit_budget($budget_id = ""){

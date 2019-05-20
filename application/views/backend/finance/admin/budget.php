@@ -1,6 +1,5 @@
 <?php
-//print_r($this->crud_model->budget_income_summary_by_expense_category(1))
-//$year = '2017';
+//print_r($this->crud_model->months_in_a_term_short_name(3));
 ?>
 
 <style>
@@ -31,12 +30,15 @@
 						
 				<div class="tab-pane" id="new-budget-item">
 					<div class="row">
-						<div class="col-sm-12">
+						<div class="col-sm-6">
 							<a class="btn btn-info btn-icon scroll" href="<?=base_url();?>index.php?finance/budget/scroll/<?=$year-1;?>"><i class="fa fa-angle-left"></i><?=$year-1;?></a>
 							<a class="btn btn-info btn-icon scroll" href="<?=base_url();?>index.php?finance/budget/scroll/<?=$year+1;?>"><i class="fa fa-angle-right"></i><?=$year+1;?></a>
 						</div>
 					</div>
+				
 					<hr />
+					
+					
 					<?php echo form_open(base_url() . 'index.php?finance/budget/create/' , array('id'=>'frm_schedule','class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
 
 							<div class="row">
@@ -68,20 +70,28 @@
 								<div class="form-group">
 									<label class="control-label col-sm-4"><?=get_phrase('financial_year');?></label>
 									<div class="col-sm-7">
-										<!--<select name="fy" id="fy" class="form-control"  required="required">
-											<option disabled selected value=""><?=get_phrase('select');?></option>
-											<?php 
-												$fy = range(date('Y')-5, date('Y')+5);
-													
-												foreach($fy as $yr):
-											?>
-												<option value="<?=$yr;?>" <?php if($yr === $year) echo 'selected';?>><?=$yr;?></option>
-											<?php 
-												endforeach;
-											?>
-										</select>-->
+										
 										<input type="text" id="fy" name="fy" value="<?=$year;?>" class="form-control" required="required" readonly='readonly'/>
 									</div>
+								</div>
+								
+								<div class="form-group">
+								<label class="control-label col-sm-4"><?=get_phrase('term');?></label>
+									<div class="col-sm-7">
+										<select id="terms_id" name="terms_id" class="form-control">
+													<option><?=get_phrase('select');?></option>
+													<?php
+														$terms = $this->db->get_where('terms')->result_object();
+														
+														foreach($terms as $term){
+													?>
+														<option value="<?=$term->terms_id;?>" <?php if($current_term == $term->terms_id) echo "selected";?> ><?=$term->name;?></option>
+													<?php
+														}
+													?>
+										</select>
+									</div>	
+									
 								</div>
 								
 								
@@ -113,43 +123,36 @@
 									</div>
 								</div>								
 								
-								<table class="table">
+								<div id="new_budget_month_spread">
+									<table class="table">
 									<thead>
 										<tr>
 											<th colspan="12"><?=get_phrase('monthly_spread');?></th>
 										</tr>
 										<tr>
-											<th><input type="checkbox" class="chk_month" id="chk_Jan" name=""/> <?=get_phrase('January');?></th>
-											<th><input type="checkbox" class="chk_month"  id="chk_Feb" name=""/> <?=get_phrase('February');?></th>
-											<th><input type="checkbox" class="chk_month"  id="chk_Mar" name=""/> <?=get_phrase('March');?></th>
-											<th><input type="checkbox" class="chk_month"  id="chk_Apr" name=""/> <?=get_phrase('April');?></th>
-											<th><input type="checkbox" class="chk_month"  id="chk_May" name=""/> <?=get_phrase('May');?></th>
-											<th><input type="checkbox" class="chk_month"  id="chk_Jun" name=""/> <?=get_phrase('June');?></th>
-											<th><input type="checkbox" class="chk_month"  id="chk_Jul" name=""/> <?=get_phrase('July');?></th>
-											<th><input type="checkbox" class="chk_month"  id="chk_Aug" name=""/> <?=get_phrase('August');?></th>
-											<th><input type="checkbox" class="chk_month"  id="chk_Sep" name=""/> <?=get_phrase('September');?></th>
-											<th><input type="checkbox" class="chk_month"  id="chk_Oct" name=""/> <?=get_phrase('October');?></th>
-											<th><input type="checkbox" class="chk_month"  id="chk_Nov" name=""/> <?=get_phrase('November');?></th>
-											<th><input type="checkbox" class="chk_month"  id="chk_Sec" name=""/> <?=get_phrase('December');?></th>
+											<?php
+												foreach($months_in_term_short as $month_short){									
+											?>
+												<th><input type="checkbox" class="chk_month" id="chk_<?=$month_short;?>" name=""/> <?=get_phrase($month_short);?></th>
+											
+											<?php
+											}
+											?>
 										</tr>
 									</thead>
 									<tbody>
 										<tr>
-											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Jan" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Feb" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Mar" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Apr" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="May" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Jun" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Jul" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Aug" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Sep" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Oct" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Nov" value="0" required="required"/></td>
-											<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="Dec" value="0" required="required"/></td>
+											<?php
+												foreach($months_in_term_short as $month_short){									
+											?>
+												<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="<?=$month_short;?>" value="0" required="required"/></td>
+											<?php
+											}
+											?>
 										</tr>
 									</tbody>
 								</table>
+								</div>
 								
 								<div class="form-group">
 									<div class="col-sm-12">
@@ -165,11 +168,36 @@
 						
 				<div class="tab-pane active" id="budget-summary">
 					<div class="row">
-						<div class="col-sm-12">
+						<div class="col-sm-6">
 							<a class="btn btn-info btn-icon scroll" href="<?=base_url();?>index.php?finance/budget/scroll/<?=$year-1;?>"><i class="fa fa-angle-left"></i><?=$year-1;?></a>
 							<a class="btn btn-info btn-icon scroll" href="<?=base_url();?>index.php?finance/budget/scroll/<?=$year+1;?>"><i class="fa fa-angle-right"></i><?=$year+1;?></a>
 						</div>
-					</div>
+						<div class="col-sm-6">
+								<div class="col-sm-10">	
+								<?php echo form_open(base_url() . 'index.php?finance/scroll_budget/'.$year , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
+	
+										<select name="terms_id" class="form-control">
+											<option><?=get_phrase('select_term');?></option>
+											<?php
+												$terms = $this->db->get_where('terms')->result_object();
+												
+												foreach($terms as $term){
+											?>
+												<option value="<?=$term->terms_id;?>" <?php if($current_term == $term->terms_id) echo "selected";?> ><?=$term->name;?></option>
+											<?php
+												}
+											?>
+										</select>
+									</div>
+									<div class="col-sm-2">
+										<button type="submit" class="btn btn-primary"><?=get_phrase('go')?></button>	
+									</div>
+								</form>
+								</div>
+								
+							
+						</div>
+					
 					<hr />
 					<caption><?=get_phrase('summary_by_expense_categories');?></caption>
 					<table class="table table-bordered table-striped">
@@ -178,18 +206,13 @@
 								<th><?=get_phrase('expense_category');?></th>
 								<th><?=get_phrase('total');?></th>
 								
-								<th><?php echo get_phrase('Jan');?></th>
-								<th><?php echo get_phrase('Feb');?></th>
-								<th><?php echo get_phrase('Mar');?></th>
-								<th><?php echo get_phrase('Apr');?></th>
-								<th><?php echo get_phrase('May');?></th>
-								<th><?php echo get_phrase('Jun');?></th>
-								<th><?php echo get_phrase('Jul');?></th>
-								<th><?php echo get_phrase('Aug');?></th>
-								<th><?php echo get_phrase('Sep');?></th>
-								<th><?php echo get_phrase('Oct');?></th>
-								<th><?php echo get_phrase('Nov');?></th>
-								<th><?php echo get_phrase('Dec');?></th>
+								<?php
+								foreach($months_in_term_short as $short_month){
+								?>
+									<th><?php echo get_phrase($short_month);?></th>
+								<?php	
+								}
+								?>
 							</tr>
 						</thead>	
 						<tbody align="right">
@@ -198,7 +221,7 @@
 								
 								foreach($expense_category as $exp_cat):
 								
-								$exp_spread = $this->crud_model->budget_expense_summary_by_expense_category($exp_cat->expense_category_id,$year);
+								$exp_spread = $this->crud_model->budget_expense_summary_by_expense_category($exp_cat->expense_category_id,$year,$current_term);
 								
 							?>
 								<tr>
@@ -222,7 +245,7 @@
 						</tbody>
 						<tfoot align="right">
 							<?php
-								$budget_summary = $this->crud_model->budget_summary_by_expense_category($year);
+								$budget_summary = $this->crud_model->budget_summary_by_expense_category($year,$current_term);
 							?>
 							<tr>
 								<td align="left"><?=get_phrase('total');?></td>
@@ -244,33 +267,29 @@
 					<hr/>
 					
 					<caption><?=get_phrase('summary_by_income_categories');?></caption>
+				
 					<table class="table table-bordered table-striped">
 						<thead>
 							<tr>
 								<th><?=get_phrase('income_category');?></th>
 								<th><?=get_phrase('total');?></th>
 								
-								<th><?php echo get_phrase('Jan');?></th>
-								<th><?php echo get_phrase('Feb');?></th>
-								<th><?php echo get_phrase('Mar');?></th>
-								<th><?php echo get_phrase('Apr');?></th>
-								<th><?php echo get_phrase('May');?></th>
-								<th><?php echo get_phrase('Jun');?></th>
-								<th><?php echo get_phrase('Jul');?></th>
-								<th><?php echo get_phrase('Aug');?></th>
-								<th><?php echo get_phrase('Sep');?></th>
-								<th><?php echo get_phrase('Oct');?></th>
-								<th><?php echo get_phrase('Nov');?></th>
-								<th><?php echo get_phrase('Dec');?></th>
+								<?php
+								foreach($months_in_term_short as $short_month){
+								?>
+									<th><?php echo get_phrase($short_month);?></th>
+								<?php	
+								}
+								?>
 							</tr>
 						</thead>
 						<tbody>
 							<?php
 								$income_categories = $this->db->get('income_categories')->result_object();
 								
-							foreach($income_categories as $inc_cat):
+								foreach($income_categories as $inc_cat){
 								
-								$inc_spread = $this->crud_model->budget_income_summary_by_expense_category($inc_cat->income_category_id,$year);
+								$inc_spread = $this->crud_model->budget_income_summary_by_expense_category($inc_cat->income_category_id,$year,$current_term);
 								
 							?>
 								<tr>
@@ -289,12 +308,12 @@
 									
 								</tr>
 							<?php
-								endforeach;
+								}
 							?>
 						</tbody>
 						<tfoot align="right">
 							<?php
-								$budget_summary = $this->crud_model->budget_summary_by_expense_category($year);
+								$budget_summary = $this->crud_model->budget_summary_by_expense_category($year,$current_term);
 							?>
 							<tr>
 								<td align="left"><?=get_phrase('total');?></td>
@@ -311,15 +330,38 @@
 								
 							</tr>
 						</tfoot>	
-					</table>
-									
-				</div>
+					</table>		
+					
+				</div>	
 											
 				<div class="tab-pane" id="budget-schedules">
 					<div class="row">
-						<div class="col-sm-12">
+						<div class="col-sm-6">
 							<a class="btn btn-info btn-icon scroll" href="<?=base_url();?>index.php?finance/budget/scroll/<?=$year-1;?>"><i class="fa fa-angle-left"></i><?=$year-1;?></a>
 							<a class="btn btn-info btn-icon scroll" href="<?=base_url();?>index.php?finance/budget/scroll/<?=$year+1;?>"><i class="fa fa-angle-right"></i><?=$year+1;?></a>
+						</div>
+						<div class="col-sm-6">
+							
+								<div class="col-sm-10">	
+									<?php echo form_open(base_url() . 'index.php?finance/scroll_budget/'.$year , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
+	
+									<select name="terms_id" class="form-control">
+										<option><?=get_phrase('select_term');?></option>
+										<?php
+											$terms = $this->db->get_where('terms')->result_object();
+											
+											foreach($terms as $term){
+										?>
+											<option value="<?=$term->terms_id;?>" <?php if($current_term == $term->terms_id) echo "selected";?> ><?=$term->name;?></option>
+										<?php
+											}
+										?>
+									</select>
+								</div>
+								<div class="col-sm-2">
+									<button type="submit" class="btn btn-primary"><?=get_phrase('go')?></button>	
+								</div>
+							</form>
 						</div>
 					</div>
 					<hr />
@@ -339,24 +381,20 @@
 								<th><?php echo get_phrase('often');?></th>
 								<th><?php echo get_phrase('total');?></th>
 								
-								<th><?php echo get_phrase('Jan');?></th>
-								<th><?php echo get_phrase('Feb');?></th>
-								<th><?php echo get_phrase('Mar');?></th>
-								<th><?php echo get_phrase('Apr');?></th>
-								<th><?php echo get_phrase('May');?></th>
-								<th><?php echo get_phrase('Jun');?></th>
-								<th><?php echo get_phrase('Jul');?></th>
-								<th><?php echo get_phrase('Aug');?></th>
-								<th><?php echo get_phrase('Sep');?></th>
-								<th><?php echo get_phrase('Oct');?></th>
-								<th><?php echo get_phrase('Nov');?></th>
-								<th><?php echo get_phrase('Dec');?></th>
+								<?php
+								foreach($months_in_term_short as $short_month){
+								?>
+									<th><?php echo get_phrase($short_month);?></th>
+								<?php	
+								}
+								?>
+								
 							</tr>
 							
 						</thead>
 						<tbody>
 						<?php
-							$spread = $this->db->get_where('budget',array('expense_category_id'=>$exp->expense_category_id,'fy'=>$year))->result_object();
+							$spread = $this->db->get_where('budget',array('expense_category_id'=>$exp->expense_category_id,'fy'=>$year,'terms_id'=>$current_term))->result_object();
 							//print_r($spread);
 							$total = 0;
 							
@@ -420,14 +458,7 @@
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
+							
 						</tr>
 						</tbody>
 					</table>
@@ -494,7 +525,7 @@
 				
 				$('#total').val(sum);
 				
-				spread = sum/12;
+				spread = sum/<?=count($months_in_term_short);?>;
 				
 				$('.spread').each(function(){
 					$(this).val(spread);
@@ -506,7 +537,7 @@
 				
 				$('#total').val(sum);
 				
-				spread = sum/12;
+				spread = sum/<?=count($months_in_term_short);?>;
 				
 				$('.spread').each(function(){
 					$(this).val(spread);
@@ -640,5 +671,23 @@ $('#frm_schedule').submit(function(ev){
 		});
 		
 	});
+	
+	$("#terms_id").on('change',function(){
+		var term_id = $(this).val();
+		var url = "<?=base_url();?>index.php?finance/change_new_item_budget_month_spread/"+term_id;
+		$.ajax({
+			url:url,
+			beforeSend:function(){
+				
+			},
+			success:function(resp){
+				$("#new_budget_month_spread").html(resp);
+			},
+			error:function(){
+				alert('Error occurred!');
+			}
+		});
+		
+	})
 	
 </script>

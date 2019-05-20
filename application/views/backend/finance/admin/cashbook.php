@@ -19,13 +19,6 @@ if(isset($current)){
 	<div class="col-sm-3 create_bank_reconciliation_statement">
 			<a href="<?=base_url();?>index.php?finance/reconcile/<?=$t_date;?>" id="reconcile" class="btn btn-success btn-icon float-left"><i class="fa fa-book"></i><?=get_phrase('bank_reconciliation');?></a>
 	</div>	
-	
-	<div class="col-sm-6">
-		<div class="btn btn-group">
-			<a href="<?php echo base_url(); ?>index.php?finance/income"" class="btn btn-info"><?=get_phrase('income_list');?></a>
-			<a href="<?php echo base_url(); ?>index.php?finance/expense" class="btn btn-info"><?=get_phrase('expense_list');?></a>
-		</div>
-	</div>
 </div>
 
 
@@ -33,7 +26,7 @@ if(isset($current)){
 
 <div class="row">
 	<div class="col-sm-1">
-		<a href="<?=base_url();?>index.php?finance/scroll_cashbook/<?=strtotime('-1 month',$t_date);?>"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>
+		<a href="<?=base_url();?>index.php?finance/cashbook/scroll/<?=strtotime('-1 month',$t_date);?>"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>
 	</div>
 	<div class="col-sm-10">
 		<div class="well well-sm" style="font-weight: bolder;text-align: center;">Cash Book for the Month of <?=date('F-Y',strtotime($current));?></div>
@@ -160,7 +153,7 @@ if(isset($current)){
 		
 	</div>
 	<div class="col-sm-1">
-		<a href="<?=base_url();?>index.php?finance/scroll_cashbook/<?=strtotime('+1 month',$t_date);?>"><i style="font-size: 145pt;" class="fa fa-angle-right"></i></a>
+		<a href="<?=base_url();?>index.php?finance/cashbook/scroll/<?=strtotime('+1 month',$t_date);?>"><i style="font-size: 145pt;" class="fa fa-angle-right"></i></a>
 	</div>
 </div>
 

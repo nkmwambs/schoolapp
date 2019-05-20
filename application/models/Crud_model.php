@@ -621,14 +621,14 @@ class Crud_model extends CI_Model {
 		return $open;
 	}
 
-	function budget_expense_summary_by_expense_category($expense_category_id,$fy){
+	function budget_expense_summary_by_expense_category($expense_category_id,$fy,$terms_id){
 		
-		$arr = range(1,12);
+		$arr = $this->months_in_a_term($terms_id);
 		
 		$month_total = array();
 		
 		for($i=1;$i<sizeof($arr)+1;$i++){
-			$cond = "budget.expense_category_id=".$expense_category_id." AND budget_schedule.month=".$i." AND budget.fy=".$fy."";	
+			$cond = "budget.expense_category_id=".$expense_category_id." AND budget_schedule.month=".$i." AND budget.fy=".$fy." AND budget.terms_id=".$terms_id;	
 			$month_total[$i] = $this->db->select_sum('amount')->join('budget','budget_schedule.budget_id=budget.budget_id',"right")->where($cond)->get('budget_schedule')->row()->amount; 
 			
 		}
@@ -636,14 +636,14 @@ class Crud_model extends CI_Model {
 		return $month_total;
 	}
 
-	function budget_income_summary_by_expense_category($income_category_id,$fy){
+	function budget_income_summary_by_expense_category($income_category_id,$fy,$terms_id){
 		
-		$arr = range(1,12);
+		$arr = $this->months_in_a_term($terms_id);
 		
 		$month_total = array();
 		
 		for($i=1;$i<sizeof($arr)+1;$i++){
-			$cond = "expense_category.income_category_id=".$income_category_id." AND budget_schedule.month=".$i." AND budget.fy=".$fy."";	
+			$cond = "expense_category.income_category_id=".$income_category_id." AND budget_schedule.month=".$i." AND budget.fy=".$fy." AND budget.terms_id =".$terms_id;	
 			$this->db->join('budget','budget_schedule.budget_id=budget.budget_id',"right");
 			$this->db->join('expense_category','budget.expense_category_id=expense_category.expense_category_id',"right");
 			$month_total[$i] = $this->db->select_sum('amount')->where($cond)->get('budget_schedule')->row()->amount; 
@@ -653,14 +653,14 @@ class Crud_model extends CI_Model {
 		return $month_total;
 	}
 	
-	function budget_summary_by_expense_category($fy){
+	function budget_summary_by_expense_category($fy,$term_id){
 		
-		$arr = range(1,12);
+		$arr = $this->months_in_a_term($term_id);
 		
 		$month_total = array();
 		
 		for($i=1;$i<sizeof($arr)+1;$i++){
-			$cond = "budget_schedule.month=".$i." AND budget.fy=".$fy."";	
+			$cond = "budget_schedule.month=".$i." AND budget.fy=".$fy." AND budget.terms_id=".$term_id;	
 			$month_total[$i] = $this->db->select_sum('amount')->join('budget','budget_schedule.budget_id=budget.budget_id',"right")->where($cond)->get('budget_schedule')->row()->amount; 
 			
 		}
@@ -952,6 +952,52 @@ class Crud_model extends CI_Model {
 		$payment_history = $this->db->get_where('transaction_detail', array('transaction.invoice_id' => $invoice_id));
  		
 		return $payment_history;		
+	}
+	
+	function get_current_term(){
+		$current_transacting_month = $this->current_transaction_month();
+		
+		$month = date('n',$current_transacting_month);
+		
+		$all_terms = $this->db->get('terms')->result_object();	
+		
+		$term_months = array();
+		
+		$current_term = 1;
+		
+		foreach($all_terms as $term){
+			$term_months[$term->terms_id] = range($term->start_month, $term->end_month);//array($term->start_month,$term->end_month);
+			
+			if(in_array($month, $term_months[$term->terms_id])){
+				$current_term = $term->terms_id;
+				break;
+			}
+		}
+		
+		return $current_term;
+		
+	}
+
+	function months_in_a_term($term_id){
+		
+		$term = $this->db->get_where('terms',array('terms_id'=>$term_id))->row();	
+		
+		return range($term->start_month, $term->end_month);
+	}
+
+	function months_in_a_term_short_name($term_id){
+		
+		$arr = array();
+		
+		$short = array('','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
+		
+		$cnt = 0;
+		foreach($this->months_in_a_term($term_id) as $month_number){
+			$arr[$cnt] = $short[$month_number];
+			$cnt++;
+		}
+		
+		return $arr;
 	}
 	 /**
 	  * End of Upgraded Finance Model
