@@ -4,12 +4,12 @@
         	<div class="panel-heading">
             	<div class="panel-title" >
             		<i class="entypo-plus-circled"></i>
-					<?php echo get_phrase('add_income');?>
+					<?php echo get_phrase('add_expense');?>
             	</div>
             </div>
 			<div class="panel-body">
 				
-                <?php echo form_open(base_url() . 'index.php?finance/income/create/' , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
+                <?php echo form_open(base_url() . 'index.php?finance/expense/create/' , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
 	
 					<div class="form-group">
 						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('payee');?></label>
@@ -23,7 +23,7 @@
 						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
                         
 						<div class="col-sm-6">
-							<input type="text" id="t_date" data-start-date="<?php echo $this->crud_model->next_transaction_date()->start_date;?>" data-end-date="<?php echo $this->crud_model->next_transaction_date()->end_date;?>" class="form-control datepicker" data-format="yyyy-mm-dd" readonly="readonly" name="t_date" data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>" autofocus>
+							<input type="text" class="form-control datepicker" data-start-date="<?php echo $this->crud_model->next_transaction_date()->start_date;?>" data-end-date="<?php echo $this->crud_model->next_transaction_date()->end_date;?>" data-format="yyyy-mm-dd" readonly="readonly" name="t_date" data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>" autofocus>
 						</div>
 					</div>
 					
@@ -31,7 +31,7 @@
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('serial_number');?></label>
                         
 						<div class="col-sm-6">
-							<input type="text" class="form-control" readonly="readonly" value="<?=$this->crud_model->next_batch_number();;?>" required="required">
+							<input type="text" class="form-control" readonly="readonly" value="<?=$this->crud_model->next_batch_number();?>" required="required">
 						</div> 
 					</div>
 					
@@ -46,16 +46,24 @@
 					<div class="form-group">
                         <label class="col-sm-3 control-label"><?php echo get_phrase('method');?></label>
                         <div class="col-sm-6">
-                            <select name="method" id="method" class="form-control select2" required="required">
+                            <select name="method" id="method" onchange="show_cheque_group(this.value);" class="form-control select2" required="required">
                             	<option value="" selected="selected" disabled="disabled"><?php echo get_phrase('select');?></option>
                                 <option value="1"><?php echo get_phrase('cash');?></option>
-                                <option value="2"><?php echo get_phrase('bank');?></option>
-                                
+                                <option value="2"><?php echo get_phrase('cheque');?></option>
+                                <!--<option value="3"><?php echo get_phrase('card');?></option>-->
                             </select>
                         </div>
                     </div>
                     
-                    					
+                    <div class="form-group" id="chq_group" style="display: none;">
+						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('cheque_number');?></label>
+                        
+						<div class="col-sm-6">
+							<input type="text" class="form-control" name="cheque_no" id="cheque_no" onchange="validate_cheque_number(this.value);" value="0" required="required">
+						</div> 
+					</div>
+                    
+					
 					<table class="table table-bordered" id="tbl_details">
 						<thead>
 							<tr>
@@ -64,7 +72,7 @@
 							<th><?=get_phrase('description');?></th>
 							<th><?=get_phrase('unit_cost');?></th>
 							<th><?=get_phrase('cost');?></th>
-							<th><?=get_phrase('income_category');?></th>
+							<th><?=get_phrase('expense_category');?></th>
 						</tr>
 						</thead>
 						<tbody>
@@ -78,7 +86,7 @@
                     <div class="form-group">
 						<div class="col-sm-offset-3 col-sm-5">
 							<div id="add_row" class="btn btn-orange"><?=get_phrase('add_row');?></div>
-							<button type="submit" id="submit" class="btn btn-info"><?php echo get_phrase('add_income');?></button>
+							<button type="submit" id="submit" class="btn btn-info"><?php echo get_phrase('add_expense');?></button>
 						</div>
 					</div>
                 <?php echo form_close();?>
@@ -89,6 +97,35 @@
 
 <script>
 
+$("#submit").click(function(e){
+	if((isNaN($("#cheque_no").val()) || $("#cheque_no").val() === '0' )  && $("#method").val()=== '2'){
+		alert("Invalid Cheque");
+		e.preventDefault();
+	}
+});
+
+function show_cheque_group(pay_type){
+	if(pay_type==='2'){
+		$("#chq_group").css('display','block');
+	}else{
+		$("#cheque_no").val("0");
+		$("#chq_group").css('display','none');
+	}
+}
+
+function validate_cheque_number(cheque_number){
+	var url = "<?=base_url();?>index.php?admin/validate_cheque_number/"+cheque_number;
+	$.ajax({
+		url:url,
+		success:function(response){
+			//alert(response);
+			if(response !== '0'){
+				alert(response);
+				$("#cheque_no").val("0");
+			}
+		}
+	});
+}
 
 	$('#add_row').click(function(){
 		
@@ -104,11 +141,11 @@
 										'<td><select  class="form-control"  required="required" id="category_'+row+'"  name="category[]">'+
 										'<option value="" selected="selected" disabled="disabled"><?=get_phrase('select');?></option>'+
 										<?php
-											$inc_cat = $this->db->get('income_categories')->result_object();
+											$exp_cat = $this->db->get('expense_category')->result_object();
 											
-											foreach($inc_cat as $cat):
+											foreach($exp_cat as $cat):
 										?>
-											'<option value="<?=$cat->income_category_id;?>"><?=$cat->name;?></option>'+
+											'<option value="<?=$cat->expense_category_id;?>"><?=$cat->name;?></option>'+
 										<?php
 											endforeach;
 										?>

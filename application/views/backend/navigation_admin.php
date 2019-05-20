@@ -243,7 +243,7 @@
 
         
         <!-- ACCOUNTING -->
-        <li class="<?php
+        <!-- <li class="<?php
         if (	$page_name == 'income' ||
                 $page_name == 'expense' ||
                 $page_name == 'create_invoice' ||
@@ -272,18 +272,18 @@
                     </a>
                 </li>
 
-                <!-- <li class="<?php if ($page_name == 'create_invoice') echo 'active'; ?> create_invoice">
+                <li class="<?php if ($page_name == 'create_invoice') echo 'active'; ?> create_invoice">
                     <a href="<?php echo base_url(); ?>index.php?finance/create_invoice">
                         <span><i class="fa fa-bookmark"></i> <?php echo get_phrase('create_invoice'); ?></span>
                     </a>
-                </li> -->
+                </li>
                 <li class="<?php if ($page_name == 'student_payments') echo 'active'; ?> <?=get_access_class('fees_structure','admin','accounting');?>">
                     <a href="<?php echo base_url(); ?>index.php?finance/student_payments">
                         <span><i class="fa fa-money"></i> <?php echo get_phrase('invoices'); ?></span>
                     </a>
                 </li>
 				
-				<!-- <li class="<?php if ($page_name == 'income') echo 'active'; ?> other_income">
+				<li class="<?php if ($page_name == 'income') echo 'active'; ?> other_income">
                     <a href="<?php echo base_url(); ?>index.php?finance/income">
                         <span><i class="fa fa-building-o"></i> <?php echo get_phrase('school_incomes'); ?></span>
                     </a>
@@ -293,7 +293,7 @@
                     <a href="<?php echo base_url(); ?>index.php?finance/expense">
                         <span><i class="fa fa-credit-card"></i> <?php echo get_phrase('school_expenses'); ?></span>
                     </a>
-                </li> -->
+                </li>
                 <li class="<?php if ($page_name == 'cash_book') echo 'active'; ?> <?=get_access_class('cash_book','admin','accounting');?>">
                     <a href="<?php echo base_url(); ?>index.php?finance/cash_book">
                         <span><i class="fa fa-book"></i> <?php echo get_phrase('cash_book'); ?></span>
@@ -354,7 +354,7 @@
                 
                 
             </ul>
-        </li>
+        </li> -->
         
         <!--New Finance Feature - The Start -->
         
@@ -378,14 +378,14 @@
         ?> <?=get_access_class('accounting','admin');?>">
             <a href="#">
                 <i class="entypo-suitcase"></i>
-                <span><?php echo get_phrase('accounting'); ?> - Renewed</span>
+                <span><?php echo get_phrase('accounting'); ?></span>
             </a>
             <ul>
-                <!-- <li class="<?php if ($page_name == 'fees_structure') echo 'active'; ?>  <?=get_access_class('fees_structure','admin','accounting');?>">
+                <li class="<?php if ($page_name == 'fees_structure') echo 'active'; ?>  <?=get_access_class('fees_structure','admin','accounting');?>">
                     <a href="<?php echo base_url(); ?>index.php?finance/fees_structure">
                         <span><i class="fa fa-tasks"></i> <?php echo get_phrase('fees_structure'); ?></span>
                     </a>
-                </li> -->
+                </li>
 
                 <li class="<?php if ($page_name == 'student_payments') echo 'active'; ?> <?=get_access_class('fees_structure','admin','accounting');?>">
                     <a href="<?php echo base_url(); ?>index.php?finance/student_payments">
@@ -399,11 +399,11 @@
                     </a>
                 </li>
                 
-                <!-- <li class="<?php if ($page_name == 'budget') echo 'active'; ?> <?=get_access_class('budget','admin','accounting');?>">
+                <li class="<?php if ($page_name == 'budget') echo 'active'; ?> <?=get_access_class('budget','admin','accounting');?>">
                     <a href="<?php echo base_url(); ?>index.php?finance/budget">
                         <span><i class="fa fa-code"></i> <?php echo get_phrase('budget'); ?></span>
                     </a>
-                </li> -->
+                </li>
                 
                 <li class="<?php if ($page_name == 'monthly_reconciliation') echo 'active'; ?> <?=get_access_class('monthly_reconciliation','admin','accounting');?>">
                     <a href="<?php echo base_url(); ?>index.php?finance/monthly_reconciliation">

@@ -72,7 +72,7 @@ $row = $transaction[0];
 						<td><?=number_format($details['cost'],2);?></td>
 						<td>
 							<?php 
-								if($details['expense_catgory_id'] >  0){
+								if($details['expense_category_id'] >  0){
 									echo $this->crud_model->get_type_name_by_id('expense_category',$details['expense_category_id']);
 								}else{
 									echo $this->db->select('name')->get_where('income_categories',
