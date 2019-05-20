@@ -1419,8 +1419,8 @@ class Finance extends CI_Controller
 		return $total_income;
 	}
 
-	function to_date_other_income_by_income_category($income_category_id){
-
+	
+	function to_date_income_by_income_category($income_category_id){
 		$system_start_date = $this->db->get_where('settings',
 		array('type'=>'system_start_date'))->row()->description; 
 		
@@ -1428,61 +1428,30 @@ class Finance extends CI_Controller
 		
 		$this->db->where(array('t_date>='=>date('Y-m-01',strtotime($system_start_date))));		
 		$this->db->where(array('t_date<='=>date('Y-m-t',strtotime($last_reconciled_date))));
-		$this->db->where(array('other_payment_details.income_category_id'=>$income_category_id));
-		$this->db->join('other_payment_details','other_payment_details.payment_id=payment.payment_id');
-		$total_income = $this->db->select_sum('payment.amount')->get('payment')->row()->amount;
+		$this->db->where(array('transaction_detail.income_category_id'=>$income_category_id));
+		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		$total_income = $this->db->select_sum('transaction_detail.cost')->group_by('transaction_detail.income_category_id')->get('transaction_detail')->row()->cost;
 		
 		return $total_income;
-	}
-	
-	function month_other_income_by_income_category($category_id = "", $start_month = ""){
-		
-		$this->db->where(array('t_date>='=>date('Y-m-01',strtotime($start_month))));		
-		$this->db->where(array('t_date<='=>date('Y-m-t',strtotime($start_month))));
-		$this->db->where(array('other_payment_details.income_category_id'=>$category_id));
-		$this->db->join('other_payment_details','other_payment_details.payment_id=payment.payment_id');
-		$total_income = $this->db->select_sum('payment.amount')->get('payment')->row()->amount;
-		
-		return $total_income;
-	}
-
-	function sum_income_by_income_category($category_id = "", $start_month = ""){
-		return $this->month_fees_income_by_income_category($category_id,$start_month) + 
-		$this->month_other_income_by_income_category($category_id,$start_month);
-	}
-	
-	function to_date_sum_income_by_income_category($income_category_id){
-		return $this->to_date_fees_income_by_income_category($income_category_id) + 
-		$this->to_date_other_income_by_income_category($income_category_id);
 	}	
 	
-	function expense_by_income_category($income_category_id,$month_start_date){
-		
-		$this->db->where(array('expense.t_date>='=>date('Y-m-01',strtotime($month_start_date))));		
-		$this->db->where(array('expense.t_date<='=>date('Y-m-t',strtotime($month_start_date))));
-		$this->db->where(array('expense_category.income_category_id'=>$income_category_id));
-		$this->db->join('expense_category','expense_category.expense_category_id=expense_details.expense_category_id');
-		$this->db->join('expense','expense.expense_id=expense_details.expense_id');
-		$month_expense = $this->db->select_sum('expense_details.cost')->get('expense_details')->row()->cost;
-		
-		return $month_expense;
-	}
 	
 	function to_date_expense_by_income_category($income_category_id){
 		
 		$system_start_date = $this->db->get_where('settings',
 		array('type'=>'system_start_date'))->row()->description; 
 		
-		$last_reconciled_date = $this->crud_model->last_reconciled_month();
+		$last_reconciled_date = $this->crud_model->last_reconciled_month();		
 		
-		$this->db->where(array('expense.t_date>='=>date('Y-m-01',strtotime($system_start_date))));		
-		$this->db->where(array('expense.t_date<='=>date('Y-m-t',strtotime($last_reconciled_date))));
+		$this->db->where(array('transaction.t_date>='=>date('Y-m-01',strtotime($system_start_date))));		
+		$this->db->where(array('transaction.t_date<='=>date('Y-m-t',strtotime($last_reconciled_date))));
+		
 		$this->db->where(array('expense_category.income_category_id'=>$income_category_id));
-		$this->db->join('expense_category','expense_category.expense_category_id=expense_details.expense_category_id');
-		$this->db->join('expense','expense.expense_id=expense_details.expense_id');
-		$month_expense = $this->db->select_sum('expense_details.cost')->get('expense_details')->row()->cost;
+		$this->db->join('expense_category','expense_category.expense_category_id=transaction_detail.expense_category_id');
 		
-		return $month_expense;
+		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		return $month_expense = $this->db->select_sum('transaction_detail.cost')->group_by('expense_category.expense_category_id')->get('transaction_detail')->row()->cost;
+		
 	}
 	
 	function system_start_date(){
@@ -1530,7 +1499,7 @@ class Finance extends CI_Controller
 		foreach($system_set_opening_balance as $income_category_id => $opening_amount){
 			
 			$opening_balance[$income_category_id] = $opening_amount + 
-			($this->to_date_sum_income_by_income_category($income_category_id) - 
+			($this->to_date_income_by_income_category($income_category_id) - 
 			$this->to_date_expense_by_income_category($income_category_id));
 		}
 		
@@ -1540,14 +1509,15 @@ class Finance extends CI_Controller
 	
 	function year_expense_to_date($income_category_id,$month_start_date){
 		
-		$this->db->where(array('expense.t_date>='=>date('Y-m-01',strtotime('first day of january',$month_start_date))));		
-		$this->db->where(array('expense.t_date<='=>date('Y-m-t',strtotime($month_start_date))));
-		$this->db->where(array('expense_category.income_category_id'=>$income_category_id));
-		$this->db->join('expense_category','expense_category.expense_category_id=expense_details.expense_category_id');
-		$this->db->join('expense','expense.expense_id=expense_details.expense_id');
-		$expense_to_date = $this->db->select_sum('expense_details.cost')->get('expense_details')->row()->cost;
+		$this->db->where(array('transaction.t_date>='=>date('Y-m-01',strtotime('first day of january',strtotime($month_start_date)))));		
+		$this->db->where(array('transaction.t_date<='=>date('Y-m-t',strtotime($month_start_date))));
 		
-		return $expense_to_date;
+		$this->db->where(array('expense_category.income_category_id'=>$income_category_id));
+		$this->db->join('expense_category','expense_category.expense_category_id=transaction_detail.expense_category_id');
+		
+		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		return $expense_to_date = $this->db->select_sum('transaction_detail.cost')->group_by('expense_category.expense_category_id')->get('transaction_detail')->row()->cost;
+		
 	
 	}
 	
@@ -1607,7 +1577,7 @@ class Finance extends CI_Controller
 		$budget_to_date = array();
 		
 		foreach($income_category_ids as $income_category_id){
-			$month_expense[$income_category_id] = $this->expense_by_income_category($income_category_id,$month_start_date);
+			$month_expense[$income_category_id] = $this->month_expense_by_income_category($income_category_id,$month_start_date);
 			$expense_to_date[$income_category_id] = $this->year_expense_to_date($income_category_id, $month_start_date);
 			$budget_to_date[$income_category_id] = $this->budget_to_date($month_start_date,$income_category_id);
 		}
@@ -1668,6 +1638,29 @@ class Finance extends CI_Controller
 			
 	}
 	
+	function month_income_by_income_category($category_id = "", $start_month = ""){
+		
+		$this->db->where(array('t_date>='=>date('Y-m-01',strtotime($start_month))));		
+		$this->db->where(array('t_date<='=>date('Y-m-t',strtotime($start_month))));
+		$this->db->where(array('transaction_detail.income_category_id'=>$category_id));
+		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		$total_income = $this->db->select_sum('transaction_detail.cost')->group_by('transaction_detail.income_category_id')->get('transaction_detail')->row()->cost;
+		
+		return $total_income;
+	}
+	
+	function month_expense_by_income_category($income_category_id,$month_start_date){
+		
+		$this->db->where(array('transaction.t_date>='=>date('Y-m-01',strtotime($month_start_date))));		
+		$this->db->where(array('transaction.t_date<='=>date('Y-m-t',strtotime($month_start_date))));
+		
+		$this->db->where(array('expense_category.income_category_id'=>$income_category_id));
+		$this->db->join('expense_category','expense_category.expense_category_id=transaction_detail.expense_category_id');
+		
+		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		return $month_expense = $this->db->select_sum('transaction_detail.cost')->group_by('expense_category.expense_category_id')->get('transaction_detail')->row()->cost;
+		
+	}
 	function fund_balances($month_start_date = ""){
 		
 		$fund_balances = array();
@@ -1709,8 +1702,8 @@ class Finance extends CI_Controller
 		} 
 		
 		foreach($income_category_ids as $income_category_id){
-			$month_income[$income_category_id] = $this->sum_income_by_income_category($income_category_id,$month_start_date);
-			$month_expense[$income_category_id] = $this->expense_by_income_category($income_category_id,$month_start_date);
+			$month_income[$income_category_id] = $this->month_income_by_income_category($income_category_id,$month_start_date);
+			$month_expense[$income_category_id] = $this->month_expense_by_income_category($income_category_id,$month_start_date);
 		}
 		
 		$fund_balances['categories'] = $categories;

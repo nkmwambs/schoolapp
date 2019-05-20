@@ -1,6 +1,7 @@
 <hr />
 <?php
-//print_r($fund_balances);
+
+
 ?>
 <p></p>
 <div class="row">
@@ -29,6 +30,7 @@
 			<tbody>
 				<?php
 					$cnt = 0;
+					//print_r($fund_balances);
 					foreach($fund_balances['categories'] as $category_id=>$category_name){
 						
 						$opening  = $fund_balances['opening_balances'][$category_id];
