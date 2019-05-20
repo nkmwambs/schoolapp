@@ -306,9 +306,7 @@ echo $term;
 
 <script type="text/javascript">
 
-$(".charge_overpay").change(function(){
-  alert("Hello");
-});
+
 
 $(".get_ajax_details").change(function(){
 		var fees_structure_class = $("#fees_structure_class").val();
@@ -554,7 +552,43 @@ $(".get_ajax_details").change(function(){
         
     }
     
-       
+    function check_overpay_balance(elem){
+    	$payable = $(elem).parent().prev().find('input').val();
+    	$charge_over = $(elem).val();
+    	
+    	var sum_overcharge = 0;
+    	
+    	$('.charge_overpay').each(function(i,el){
+    		sum_overcharge = parseInt(sum_overcharge) + parseInt($(this).val());
+    	});
+    	
+    	var total_payable = 0;
+		$('.payable_items').each(function(i,el){
+			var to_add = 0;
+				if($(this).val()!==""){
+				 	to_add = $(this).val();
+				}
+			total_payable=parseInt(total_payable)+parseInt(to_add);
+		});
+		
+		var amount_due = parseInt(total_payable) - parseInt(sum_overcharge);
+    	
+    	if(parseInt($payable) < parseInt($charge_over)){
+    		alert('Exhausted the payable amount');
+    		$(elem).val(0);
+    		$("#amount_due").val(amount_due);
+    	}else if(parseInt(sum_overcharge) > parseInt($("#overpay").val())){
+    		var variance = parseInt($("#overpay").val()) - (parseInt(sum_overcharge) - parseInt($(elem).val()));
+    		alert("You have exhausted the overpaid amount. The balance is "+variance);
+    		$(elem).val(0);
+    		$("#amount_due").val(amount_due);
+    	}else{
+    		$("#amount_due").val(amount_due);
+    	}
+    	
+    	
+    	
+    }   
     
     $(document).ready(function(){
     	

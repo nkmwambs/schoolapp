@@ -64,11 +64,11 @@ $row = $edit_data[0];
 										$tot_paid = array_sum(array_column($invoice_details, 'amount_paid'));
 										$tot_bal  = array_sum(array_column($invoice_details, 'balance'));
 									?>
-									<tr><td>Overpayment</td><td colspan="3"><input type="text" class="form-control overpay" name="overpayment_description" readonly="readonly" /></td><td><input type="text" onkeyup="return get_total_payment();" name="overpayment" class="form-control paying overpay" value="0" readonly="readonly"/></td></tr>
+									<tr><td><?=get_phrase('overpayment');?></td><td colspan="3"><input type="text" class="form-control overpay" name="overpayment_description" readonly="readonly" /></td><td><input type="text" onkeyup="return get_total_payment();" id="overpayment" name="overpayment" class="form-control paying overpay" value="0" readonly="readonly"/></td></tr>
 									<tr>
 										<td>Totals</td><td><?php echo number_format($tot_due,2);?></td>
-										<td><?php echo number_format($tot_paid,2);?></td>
-										<td id="total_balance"><?php echo number_format($tot_bal,2);?></td>
+										<td><?php echo number_format($this->crud_model->get_invoice_amount_paid($param2),2);?></td>
+										<td id="total_balance"><?php echo number_format($this->crud_model->get_invoice_balance($param2),2);?></td>
 										<td><input type="text" class="form-control" name="total_payment" id="total_payment" value="0" readonly="readonly"/></td>
 									</tr>
 								</tbody>
@@ -154,12 +154,10 @@ $row = $edit_data[0];
 			tot = parseInt(tot)+parseInt(amt);
 		});
 		
-		$('#total_payment').val(tot);
 		
-		if(parseInt(tot) == parseInt($("#total_balance").html())){
-			//alert($("#total_balance").html());
+		if(parseInt(tot) == parseInt(<?=$this->crud_model->get_invoice_balance($param2);?>)){
 			$(".overpay").removeAttr('readonly');	
-		}else if(parseInt(tot) < parseInt($("#total_balance").html())){
+		}else if(parseInt(tot) < parseInt(<?=$this->crud_model->get_invoice_balance($param2);?>)){
 			$(".overpay").val(0);
 			$(".overpay").prop("readonly","readonly");
 		}
@@ -170,7 +168,7 @@ $row = $edit_data[0];
 		var detail_balance = $(this).parent().prev().html();
 		var detail_paying = $(this).val();
 		
-		if(parseInt(detail_paying) > parseInt(accounting.unformat(detail_balance))){
+		if((parseInt(detail_paying) - parseInt($("#overpayment").val())) > parseInt(accounting.unformat(detail_balance))){
 			alert("<?=get_phrase("paying_more_than_balance");?>");
 			$(this).val("0");
 			get_total_payment();

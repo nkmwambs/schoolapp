@@ -80,29 +80,10 @@ if(isset($current)){
 					
 					<tr>
 						<td><?=$rows->t_date;?></td>
-						<td><div class="btn btn-success"
-							
-							<?php if($rows->transaction_type==='2' && ($rows->account==='1' || $rows->account==='2')){ ?>
-								onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_expense/<?=$rows->batch_number?>');"
-							<?php } ?>
-							
-							<?php if($rows->transaction_type==='1' && ($rows->account==='1' || $rows->account==='2')){ ?>
-								onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_income/<?=$rows->batch_number?>');"
-							<?php } ?>
-							
-							<?php if(($rows->transaction_type==='3' ||$rows->transaction_type==='4')){ ?>
-								onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_contra/<?=$rows->batch_number?>');"
-							<?php } ?>
-							
-							<?php if(($rows->transaction_type==='5')){ ?>
-								onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_funds_transfer/<?=$rows->batch_number?>');"
-							<?php } ?>
-							
-							
-							><?=$rows->batch_number?></div></td>
+						<td><div class="btn btn-success" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_transaction/<?=$rows->batch_number?>');"><?=$rows->batch_number?></div></td>
 						<td><?=$rows->payee;?></td>
 						<td><?=substr($rows->description,0,25);?></td>
-						<td><?=ucwords($rows->transaction_method.' '.$rows->transaction_type);?></td>
+						<td><?=ucwords($rows->transaction_type);?></td>
 						
 						<!--Bank Income-->
 						<?php

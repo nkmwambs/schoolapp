@@ -320,7 +320,7 @@ class Finance extends CI_Controller
             redirect(base_url(), 'refresh');
         
         if ($param1 == 'create') {
-            
+            $this->db->trans_start();
 			//Cancel a previous invoice
 			$this->cancel_previous_invoice($this->input->post('student_id'),$this->input->post('yr'),$this->input->post('term'));
 				
@@ -330,7 +330,7 @@ class Finance extends CI_Controller
             $data['term']        = $this->input->post('term');
             $data['amount']             = $this->input->post('amount');
             $data['amount_due']        = $this->input->post('amount_due');
-			$data['balance']        = $this->input->post('amount_due');
+			//$data['balance']        = $this->input->post('amount_due');
             $data['status']             = "unpaid";//$this->input->post('status');
             $data['creation_timestamp'] = strtotime($this->input->post('date'));
             
@@ -341,18 +341,25 @@ class Finance extends CI_Controller
 			$structure_ids = $this->input->post('detail_id');
 			$payable_amount = $this->input->post('payable');
 			$charge_overpay = array_sum($this->input->post("charge_overpay"));
+			$ocharge = $this->input->post("charge_overpay");
 			
 			foreach($payable_amount as $key=>$value):
 				if($value > 0){
 					$data2['invoice_id'] 	= $invoice_id;
 					$data2['detail_id'] 	= $key;
-					$data2['amount_due'] 	= $value;
-					$data2['balance']        = $value;
+					
+					if(isset($ocharge[$key])){
+						$data2['amount_due'] 	= $value - $ocharge[$key];
+					}else{
+						$data2['amount_due'] 	= $value;
+					}
+					
 				
 					$this->db->insert('invoice_details',$data2);
 				}
 							
 			endforeach;
+			
 			
 			if($charge_overpay > 0){
 				
@@ -370,12 +377,42 @@ class Finance extends CI_Controller
 					}
 					$this->db->update("overpay",$data8);
 					
+					
+				}
+				
+				$external_count = 0;
+				foreach($ocharge as $overcharge_key => $overcharge_amount){
+					//Create a funds tranfer from reserve account to the account pointed to
+					$to_account_id = $this->db->get_where('fees_structure_details',
+					array('detail_id'=>$overcharge_key))->row()->income_category_id;
+					
+					$from_account_id = $this->db->get_where('income_categories',
+					array('default_category'=>1))->row()->income_category_id;
+					
+					$t_date = $this->crud_model->next_transaction_date()->start_date;
+					
+					$amount = $overcharge_amount;
+					
+					$this->record_internal_funds_transfer($t_date, $amount, $from_account_id, $to_account_id,$external_count);	
+					
+					$external_count++;	
 				}
 				
 			}
 			
+			if ($this->db->trans_status() === FALSE)
+			{
+			        $this->db->trans_rollback();
+					$this->session->set_flashdata('flash_message' , get_phrase('invoice_creation_failed'));
+			}
+			else
+			{
+			        $this->db->trans_commit();
+					$this->session->set_flashdata('flash_message' , get_phrase('invoice_created_successfully'));
+			}
 			
-            $this->session->set_flashdata('flash_message' , get_phrase('invoice_created_successfully'));
+			
+            
             redirect(base_url() . 'index.php?finance/create_invoice', 'refresh');
         }
 
@@ -406,7 +443,7 @@ class Finance extends CI_Controller
 	                    $data['term']        = $this->input->post('term');
 	                    $data['amount']             = $this->input->post('amount');
 	                    $data['amount_due']        = $this->input->post('amount_due');
-						$data['balance']        = $this->input->post('amount_due');
+						//$data['balance']        = $this->input->post('amount_due');
 	                    $data['status']             = 'unpaid';
 	                    $data['creation_timestamp'] = strtotime($this->input->post('date'));
 	                    
@@ -422,7 +459,7 @@ class Finance extends CI_Controller
 								$data2['invoice_id'] = $invoice_id;
 								$data2['detail_id'] = $key;
 								$data2['amount_due'] = $value;
-								$data2['balance'] = $value;
+								//$data2['balance'] = $value;
 								$this->db->insert('invoice_details',$data2);
 							}
 										
@@ -635,7 +672,7 @@ class Finance extends CI_Controller
 							onkeyup='return get_payable_amount(".$row->detail_id.")' 
 							class='form-control payable_items' id='payable_".$row->detail_id."' 
 							name='payable[".$row->detail_id."]' value='0' /></td>
-							<td><input type='text' class='form-control charge_overpay' 
+							<td><input type='text' onchange='check_overpay_balance(this);' class='form-control charge_overpay' 
 							value='0' name='charge_overpay[".$row->detail_id."]' /></td>
 							<tr>";
 						endforeach;
@@ -658,6 +695,7 @@ class Finance extends CI_Controller
 			}else{
 				$body .= "<tr><td class='col-sm-4'>".get_phrase('no_items_found')."</td></tr>";
 			}	
+			
 		echo $body;	
 	}
 
@@ -1797,7 +1835,7 @@ class Finance extends CI_Controller
 							
 			switch($page_to_show):
 				case "other_income":
-					$page = "modal_income_add";
+					$page = "income_add";
 					break;
 				case "expense":
 					$page = "modal_expense_add";
@@ -1971,7 +2009,12 @@ class Finance extends CI_Controller
 			$data_payment['description']			=   $this->input->post('description');
 			$data_payment['payee']					=   $this->input->post('payee');
 			$data_payment['transaction_type_id']	=   "1";
-			$data_payment['amount']					=   array_sum($take_payment);
+			
+			if($this->input->post('overpayment') > 0){
+				$data_payment['amount']	 			=  array_sum($take_payment) + $this->input->post('overpayment');						
+			}else{
+				$data_payment['amount']				=   array_sum($take_payment);
+			}
 			$data_payment['createddate']    		=   strtotime($this->input->post('timestamp'));
 			$data_payment['createdby']    			=   $this->session->login_user_id;
 			$data_payment['lastmodifiedby']			=   $this->session->login_user_id;
@@ -1980,6 +2023,7 @@ class Finance extends CI_Controller
 			$this->db->insert('transaction' , $data_payment);
 			
 			$last_transaction_id = $this->db->insert_id();
+			
 			
 			//Update Invoice Details
 
@@ -2011,20 +2055,49 @@ class Finance extends CI_Controller
 								
 		          }	
 			}
-				
+			
+			//Check if amount fully settled
+			if($this->crud_model->get_invoice_balance($this->input->post('invoice_id')) == 0){
+				$settled_invoice['status'] = 'paid';
+				$this->db->where(array('invoice_id'=>$this->input->post('invoice_id')));
+				$this->db->update('invoice',$settled_invoice);
+			}	
 					
 						
 			//Check if there is an overpayment
 			if($this->input->post('overpayment') > 0){
 				
-				$student_id = $this->db->get_where('invoice',array('invoice_id'=>$param2))->row()->student_id;
+				$student_id = $this->db->get_where('invoice',array('invoice_id'=>$this->input->post('invoice_id')))->row()->student_id;
 				
 				$overpay['student_id'] = $student_id;
+				$overpay['transaction_id'] = $last_transaction_id;
 				$overpay['amount'] = $this->input->post('overpayment');
 				$overpay['amount_due'] = $this->input->post('overpayment');
 				$overpay['description'] = $this->input->post('overpayment_description');
 				
 				$this->db->insert('overpay',$overpay);
+				
+				
+				//Insert this to the reverse account by creating a transaction_detail
+				
+				$to_reserve['transaction_id'] 	= $last_transaction_id;
+				$to_reserve['invoice_details_id'] = 0;
+				
+				$to_reserve['income_category_id'] = $this->db->get_where('income_categories',
+				array('default_category'=>1))->row()->income_category_id;
+					
+				$to_reserve['qty']				= 1;
+					
+				$to_reserve['detail_description'] = get_phrase('excess_payment');
+				$to_reserve['unitcost'] = $this->input->post('overpayment');
+				$to_reserve['cost'] = $this->input->post('overpayment');
+				$this->db->insert('transaction_detail',$to_reserve);
+				
+				//Update invoice to excess status
+				$excess_invoice['status'] = 'excess';
+				$this->db->where(array('invoice_id'=>$this->input->post('invoice_id')));
+				$this->db->update('invoice',$excess_invoice);
+				
 			}
 			
 			
@@ -2055,7 +2128,57 @@ class Finance extends CI_Controller
 		
 	}
 	
+	function record_internal_funds_transfer($t_date,$amount,$from_account_id,$to_account_id,$external_count = 0){
+		
+		if($external_count == 0){	
+			$data_payment['batch_number'] 			= 	$this->crud_model->next_batch_number();
+			$data_payment['t_date'] 				= 	$t_date;
+			$data_payment['invoice_id'] 			= 	0;
+			$data_payment['transaction_method_id']	=   4;//funds_transfer
+			$data_payment['description']			=   get_phrase('internal_funds_transfer');
+			$data_payment['payee']					=   get_phrase('system_generated');
+			$data_payment['transaction_type_id']	=   5;
+			$data_payment['amount']					=   0;
+			$data_payment['createddate']    		=   date('Y-m-d h:i:s');
+			$data_payment['createdby']    			=   $this->session->login_user_id;
+			$data_payment['lastmodifiedby']			=   $this->session->login_user_id;	
+				
+			$this->db->insert('transaction' , $data_payment);
+				
+			$this->session->set_userdata('last_transaction_id',$this->db->insert_id());
+		}
+		//Create Transaction details
+		
+		$affected_income_categories = array($from_account_id,$to_account_id);
+		
+		$cnt = 0;
+		foreach($affected_income_categories as $account_id){
+			if($amount > 0){
+				$data_transaction['transaction_id'] 	= $this->session->last_transaction_id;
+				$data_transaction['invoice_details_id'] = 0;						
+				$data_transaction['income_category_id'] = $account_id;
+				$data_transaction['qty']				= 1;
+				$data_transaction['detail_description'] = get_phrase('internal_funds_transfer');
+				if($cnt == 0){
+					$data_transaction['unitcost'] 			= - $amount;
+					$data_transaction['cost'] 				= - $amount;	
+				}else{
+					$data_transaction['unitcost'] 			= $amount;
+					$data_transaction['cost'] 				= $amount;
+				}
+									
+				$this->db->insert("transaction_detail",$data_transaction);
+					
+			}
+			
+			$cnt++;
+		}
+					
+		
+	}
+	
 	function record_funds_transfer(){
+		
 		
 	}
 	
