@@ -5,7 +5,6 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
-DROP TABLE IF EXISTS `access`;
 CREATE TABLE `access` (
   `access_id` int(100) NOT NULL AUTO_INCREMENT,
   `entitlement_id` int(100) NOT NULL,
@@ -112,7 +111,6 @@ INSERT INTO `access` (`access_id`, `entitlement_id`, `profile_id`) VALUES
 (167,	525,	1),
 (168,	526,	1);
 
-DROP TABLE IF EXISTS `accounts`;
 CREATE TABLE `accounts` (
   `accounts_id` int(10) NOT NULL AUTO_INCREMENT,
   `numeric_code` int(10) NOT NULL,
@@ -126,7 +124,6 @@ INSERT INTO `accounts` (`accounts_id`, `numeric_code`, `name`, `opening_balance`
 (1,	1,	'cash',	75000.00,	'2017-03-01'),
 (2,	2,	'bank',	342870.23,	'2017-03-01');
 
-DROP TABLE IF EXISTS `activity`;
 CREATE TABLE `activity` (
   `activity_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL,
@@ -144,7 +141,6 @@ INSERT INTO `activity` (`activity_id`, `name`, `description`, `start_date`, `end
 (8,	'Closing Day',	'Closing Day',	'2018-06-29',	'2018-06-29',	'2018-06-15 13:33:39'),
 (9,	'Thanks giving day',	'All parents thanks giving day',	'2019-04-18',	'2019-04-18',	'2019-03-30 08:15:35');
 
-DROP TABLE IF EXISTS `activity_attendance`;
 CREATE TABLE `activity_attendance` (
   `activity_attendance_id` int(100) NOT NULL AUTO_INCREMENT,
   `activity_id` int(100) NOT NULL,
@@ -171,7 +167,6 @@ INSERT INTO `activity_attendance` (`activity_attendance_id`, `activity_id`, `par
 (41,	9,	2,	1,	1),
 (42,	9,	3,	1,	0);
 
-DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin` (
   `admin_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
@@ -189,7 +184,6 @@ INSERT INTO `admin` (`admin_id`, `name`, `email`, `birthday`, `sex`, `phone`, `l
 (2,	'Livingstone Onduso',	'livingstoneonduso@gmail.com',	'',	'male',	'0909',	'super'),
 (3,	'Hope Shume',	'hopeshume@gmail.com',	'',	'female',	'87778',	'super');
 
-DROP TABLE IF EXISTS `app`;
 CREATE TABLE `app` (
   `app_id` int(100) NOT NULL AUTO_INCREMENT,
   `app_name` varchar(20) NOT NULL,
@@ -200,7 +194,6 @@ INSERT INTO `app` (`app_id`, `app_name`) VALUES
 (1,	'default'),
 (2,	'schoolapp2');
 
-DROP TABLE IF EXISTS `attendance`;
 CREATE TABLE `attendance` (
   `attendance_id` int(11) NOT NULL AUTO_INCREMENT,
   `status` int(11) NOT NULL COMMENT '0 undefined , 1 present , 2  absent',
@@ -235,7 +228,6 @@ INSERT INTO `attendance` (`attendance_id`, `status`, `student_id`, `date`) VALUE
 (21,	0,	16,	'2019-04-24'),
 (22,	0,	17,	'2019-04-24');
 
-DROP TABLE IF EXISTS `book`;
 CREATE TABLE `book` (
   `book_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -248,7 +240,6 @@ CREATE TABLE `book` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
-DROP TABLE IF EXISTS `budget`;
 CREATE TABLE `budget` (
   `budget_id` int(100) NOT NULL AUTO_INCREMENT,
   `expense_category_id` int(11) NOT NULL,
@@ -271,7 +262,6 @@ INSERT INTO `budget` (`budget_id`, `expense_category_id`, `description`, `fy`, `
 (7,	1,	'Bus Service',	2019,	1,	2.00,	7500.00,	4,	60000.00,	'2019-05-20 16:41:06'),
 (8,	5,	'Staff Salaries',	2019,	1,	15.00,	15400.00,	4,	924000.00,	'2019-05-20 17:22:08');
 
-DROP TABLE IF EXISTS `budget_schedule`;
 CREATE TABLE `budget_schedule` (
   `budget_schedule_id` int(100) NOT NULL AUTO_INCREMENT,
   `budget_id` int(100) NOT NULL,
@@ -293,7 +283,6 @@ INSERT INTO `budget_schedule` (`budget_schedule_id`, `budget_id`, `month`, `amou
 (79,	8,	3,	231000.00,	'2019-05-20 17:22:08'),
 (80,	8,	4,	231000.00,	'2019-05-20 17:22:08');
 
-DROP TABLE IF EXISTS `caregiver`;
 CREATE TABLE `caregiver` (
   `caregiver_id` int(100) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) NOT NULL,
@@ -323,7 +312,6 @@ INSERT INTO `caregiver` (`caregiver_id`, `parent_id`, `student_id`) VALUES
 (36,	5,	35),
 (37,	7,	35);
 
-DROP TABLE IF EXISTS `cashbook`;
 CREATE TABLE `cashbook` (
   `cashbook_id` int(200) NOT NULL AUTO_INCREMENT,
   `batch_number` int(200) NOT NULL,
@@ -337,7 +325,6 @@ CREATE TABLE `cashbook` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-DROP TABLE IF EXISTS `ci_sessions`;
 CREATE TABLE `ci_sessions` (
   `id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
   `ip_address` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
@@ -374,7 +361,6 @@ INSERT INTO `ci_sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('ulp1qpbqagmbg4jgg64pnu1f1tqe6fo8',	'::1',	1558383580,	'__ci_last_regenerate|i:1558383580;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
 ('vfaiu1tpj1qhl89b55f7deq3ttvnb1qb',	'::1',	1558384973,	'__ci_last_regenerate|i:1558384816;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"student\";last_transaction_id|s:2:\"93\";');
 
-DROP TABLE IF EXISTS `class`;
 CREATE TABLE `class` (
   `class_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -398,7 +384,6 @@ INSERT INTO `class` (`class_id`, `name`, `name_numeric`, `teacher_id`) VALUES
 (11,	'Class Seven',	10,	1),
 (12,	'Class Eight',	11,	2);
 
-DROP TABLE IF EXISTS `class_routine`;
 CREATE TABLE `class_routine` (
   `class_routine_id` int(11) NOT NULL AUTO_INCREMENT,
   `class_id` int(11) NOT NULL,
@@ -420,7 +405,6 @@ INSERT INTO `class_routine` (`class_routine_id`, `class_id`, `subject_id`, `time
 (2,	1,	3,	8,	9,	40,	30,	'wednesday'),
 (3,	1,	14,	14,	14,	0,	40,	'thursday');
 
-DROP TABLE IF EXISTS `class_routine_attendance`;
 CREATE TABLE `class_routine_attendance` (
   `class_routine_attendance_id` int(100) NOT NULL AUTO_INCREMENT,
   `class_routine_id` int(11) NOT NULL,
@@ -435,7 +419,6 @@ INSERT INTO `class_routine_attendance` (`class_routine_attendance_id`, `class_ro
 (1,	2,	'2019-04-17',	'Well done'),
 (2,	3,	'2019-04-18',	'Well done');
 
-DROP TABLE IF EXISTS `document`;
 CREATE TABLE `document` (
   `document_id` int(11) NOT NULL AUTO_INCREMENT,
   `title` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -449,7 +432,6 @@ CREATE TABLE `document` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
-DROP TABLE IF EXISTS `dormitory`;
 CREATE TABLE `dormitory` (
   `dormitory_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -459,7 +441,6 @@ CREATE TABLE `dormitory` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
-DROP TABLE IF EXISTS `entitlement`;
 CREATE TABLE `entitlement` (
   `entitlement_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -583,7 +564,6 @@ INSERT INTO `entitlement` (`entitlement_id`, `name`, `login_type_id`, `derivativ
 (530,	'del_marks',	1,	378,	1),
 (531,	'all_students',	1,	364,	1);
 
-DROP TABLE IF EXISTS `exam`;
 CREATE TABLE `exam` (
   `exam_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -596,7 +576,6 @@ INSERT INTO `exam` (`exam_id`, `name`, `date`, `comment`) VALUES
 (1,	'Mid Term Term one',	'04/30/2018',	'Exam'),
 (2,	'Opening School Exam - Term Two 2019',	'05/16/2019',	'Opening School Exam - Term Two 2019');
 
-DROP TABLE IF EXISTS `expense_category`;
 CREATE TABLE `expense_category` (
   `expense_category_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -616,7 +595,6 @@ INSERT INTO `expense_category` (`expense_category_id`, `name`, `income_category_
 (7,	'Firewood',	7),
 (8,	'Food',	7);
 
-DROP TABLE IF EXISTS `fees_structure`;
 CREATE TABLE `fees_structure` (
   `fees_id` int(10) NOT NULL AUTO_INCREMENT,
   `name` longtext NOT NULL,
@@ -633,7 +611,6 @@ INSERT INTO `fees_structure` (`fees_id`, `name`, `class_id`, `yr`, `term`) VALUE
 (16,	'class_Class_One_term_Two_year_2019',	8,	2019,	2),
 (17,	'class_Class_Seven_term_Two_year_2019',	11,	2019,	1);
 
-DROP TABLE IF EXISTS `fees_structure_details`;
 CREATE TABLE `fees_structure_details` (
   `detail_id` int(10) NOT NULL AUTO_INCREMENT,
   `name` longtext NOT NULL,
@@ -676,7 +653,6 @@ INSERT INTO `fees_structure_details` (`detail_id`, `name`, `fees_id`, `income_ca
 (81,	'Tuition',	17,	6,	7800),
 (82,	'Exams',	17,	2,	2100);
 
-DROP TABLE IF EXISTS `grade`;
 CREATE TABLE `grade` (
   `grade_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -693,7 +669,6 @@ INSERT INTO `grade` (`grade_id`, `name`, `grade_point`, `mark_from`, `mark_upto`
 (3,	'Fair',	'2',	40,	59,	''),
 (4,	'Poor',	'1',	0,	39,	'Poor');
 
-DROP TABLE IF EXISTS `income_categories`;
 CREATE TABLE `income_categories` (
   `income_category_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -712,7 +687,6 @@ INSERT INTO `income_categories` (`income_category_id`, `name`, `opening_balance`
 (7,	'Boarding Fees',	34500.00,	0),
 (8,	'Other Incomes',	0.00,	1);
 
-DROP TABLE IF EXISTS `invoice`;
 CREATE TABLE `invoice` (
   `invoice_id` int(11) NOT NULL AUTO_INCREMENT,
   `student_id` int(11) NOT NULL,
@@ -738,7 +712,6 @@ INSERT INTO `invoice` (`invoice_id`, `student_id`, `class_id`, `yr`, `term`, `am
 (58,	17,	1,	'2019',	'1',	19000,	'11000',	0,	0,	'1556575200',	'excess',	0,	0),
 (70,	17,	1,	'2019',	'2',	25200,	'5200',	0,	0,	'1567202400',	'unpaid',	0,	0);
 
-DROP TABLE IF EXISTS `invoice_details`;
 CREATE TABLE `invoice_details` (
   `invoice_details_id` int(200) NOT NULL AUTO_INCREMENT,
   `invoice_id` int(200) NOT NULL,
@@ -761,7 +734,6 @@ INSERT INTO `invoice_details` (`invoice_details_id`, `invoice_id`, `detail_id`, 
 (329,	70,	62,	0,	0,	0,	0),
 (330,	70,	63,	5200,	0,	0,	0);
 
-DROP TABLE IF EXISTS `language`;
 CREATE TABLE `language` (
   `phrase_id` int(11) NOT NULL AUTO_INCREMENT,
   `phrase` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1576,7 +1548,6 @@ INSERT INTO `language` (`phrase_id`, `phrase`, `english`, `bengali`, `spanish`, 
 (863,	'invoice_year',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
 (864,	'payment_from',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL);
 
-DROP TABLE IF EXISTS `lesson_plan`;
 CREATE TABLE `lesson_plan` (
   `lesson_plan_id` int(100) NOT NULL AUTO_INCREMENT,
   `scheme_id` int(100) NOT NULL,
@@ -1610,7 +1581,6 @@ CREATE TABLE `lesson_plan` (
 INSERT INTO `lesson_plan` (`lesson_plan_id`, `scheme_id`, `planned_date`, `attendance_date`, `class_routine_id`, `roll`, `core_competencies`, `introduction`, `lesson_development`, `conclusion`, `summary`, `reflection`, `signed_off_by`, `signed_off_date`, `createdby`, `lastmodifiedby`, `createddate`, `lastmodifieddate`) VALUES
 (5,	1,	'2019-05-22',	'2019-04-24',	1,	42,	'Taking turns in watering flowerbeds promotes the values of caring for plants, responsibility and respect for one another.  ',	'Learners are guided to watch age appropriate media on watering flowers to develop interest and curiosity in watering flowerbeds or study photographs/newspaper cuttings showing watering flowerbeds',	'Step 1: Learners to suggest reasons for watering flowers \r\nStep 2:  Using the key inquiry questions, synthesize learners, responses on when and how to water flowers \r\n Step 3: Teacher to demonstrate watering flowerbeds \r\nStep 4: Learners practice watering flowerbeds at school. ',	'• Keenly observe and guide learners on the procedure of watering flowerbeds \r\n• Learners carry out related activities in the workbook ',	'Some of the plants in our surroundings are flowers. Flowers need water to grow. We can take care of plants by watering the flowerbeds.',	'Happy to have taught this. See this! ',	NULL,	NULL,	1,	1,	'2019-04-25 02:27:40',	'2019-04-25 02:17:02');
 
-DROP TABLE IF EXISTS `login_type`;
 CREATE TABLE `login_type` (
   `login_type_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(10) NOT NULL,
@@ -1623,7 +1593,6 @@ INSERT INTO `login_type` (`login_type_id`, `name`) VALUES
 (3,	'student'),
 (4,	'parent');
 
-DROP TABLE IF EXISTS `mark`;
 CREATE TABLE `mark` (
   `mark_id` int(11) NOT NULL AUTO_INCREMENT,
   `student_id` int(11) NOT NULL,
@@ -1694,7 +1663,6 @@ INSERT INTO `mark` (`mark_id`, `student_id`, `subject_id`, `class_id`, `exam_id`
 (80,	32,	2,	1,	1,	75,	100,	''),
 (81,	33,	2,	1,	1,	77,	100,	'');
 
-DROP TABLE IF EXISTS `message`;
 CREATE TABLE `message` (
   `message_id` int(11) NOT NULL AUTO_INCREMENT,
   `message_thread_code` longtext NOT NULL,
@@ -1709,7 +1677,6 @@ INSERT INTO `message` (`message_id`, `message_thread_code`, `message`, `sender`,
 (1,	'8cbce2aa38abde1',	'Hey',	'admin-1',	'1522852035',	0),
 (2,	'd41d8cd98f00b20',	'Welocme here',	'admin-1',	'1553505210',	0);
 
-DROP TABLE IF EXISTS `message_thread`;
 CREATE TABLE `message_thread` (
   `message_thread_id` int(11) NOT NULL AUTO_INCREMENT,
   `message_thread_code` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1723,7 +1690,6 @@ INSERT INTO `message_thread` (`message_thread_id`, `message_thread_code`, `sende
 (1,	'8cbce2aa38abde1',	'admin-1',	'parent-3',	''),
 (2,	'd41d8cd98f00b20',	'admin-1',	'student-1',	'');
 
-DROP TABLE IF EXISTS `noticeboard`;
 CREATE TABLE `noticeboard` (
   `notice_id` int(11) NOT NULL AUTO_INCREMENT,
   `notice_title` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1735,7 +1701,6 @@ CREATE TABLE `noticeboard` (
 INSERT INTO `noticeboard` (`notice_id`, `notice_title`, `notice`, `create_timestamp`) VALUES
 (1,	'Academic Day',	'Academic Day',	1524002400);
 
-DROP TABLE IF EXISTS `overpay`;
 CREATE TABLE `overpay` (
   `overpay_id` int(100) NOT NULL AUTO_INCREMENT,
   `student_id` int(100) NOT NULL,
@@ -1755,7 +1720,6 @@ CREATE TABLE `overpay` (
 INSERT INTO `overpay` (`overpay_id`, `student_id`, `transaction_id`, `amount`, `amount_due`, `description`, `status`, `creation_timestamp`) VALUES
 (10,	17,	62,	20000,	0,	'Excess payment',	'cleared',	'2019-05-20 12:59:45');
 
-DROP TABLE IF EXISTS `parent`;
 CREATE TABLE `parent` (
   `parent_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1782,7 +1746,6 @@ INSERT INTO `parent` (`parent_id`, `name`, `email`, `phone`, `address`, `relatio
 (8,	'Martina Chengo Garama',	'machess@gmail.com',	'075787578',	'80788',	2,	'primary',	'Air Hostess',	1),
 (9,	'Lilian Njeru',	'lnjeru@gmail.com',	'0711635873',	'Nairobi',	2,	'primary',	'Teacher',	1);
 
-DROP TABLE IF EXISTS `profile`;
 CREATE TABLE `profile` (
   `profile_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -1796,7 +1759,6 @@ INSERT INTO `profile` (`profile_id`, `name`, `login_type_id`, `description`) VAL
 (2,	'None Class Teachers',	2,	'None Class Teachers'),
 (3,	'Secretary',	1,	'Admin Sec');
 
-DROP TABLE IF EXISTS `reconcile`;
 CREATE TABLE `reconcile` (
   `reconcile_id` int(100) NOT NULL AUTO_INCREMENT,
   `statement_amount` decimal(10,2) NOT NULL,
@@ -1808,7 +1770,6 @@ CREATE TABLE `reconcile` (
 INSERT INTO `reconcile` (`reconcile_id`, `statement_amount`, `month`, `timestamp`) VALUES
 (1,	392270.23,	'2019-04-30',	'2019-05-20 19:08:00');
 
-DROP TABLE IF EXISTS `relationship`;
 CREATE TABLE `relationship` (
   `relationship_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -1823,7 +1784,6 @@ INSERT INTO `relationship` (`relationship_id`, `name`) VALUES
 (5,	'Uncle'),
 (6,	'Aunt');
 
-DROP TABLE IF EXISTS `scheme`;
 CREATE TABLE `scheme` (
   `scheme_id` int(100) NOT NULL AUTO_INCREMENT,
   `scheme_header_id` int(100) NOT NULL,
@@ -1854,7 +1814,6 @@ INSERT INTO `scheme` (`scheme_id`, `scheme_header_id`, `week`, `lesson`, `strand
 (2,	3,	1,	2,	'Care for the environment',	'Caring for plants - watering flower beds ',	' Water flower beds appropriately within the school environment.                        ',	'N/A',	'-In groups, learners to identify things used for watering flowers (watering can, sprinkler, hose pipe, bucket, improvised watering can).     ',	'Watering can Sprinkler Hose pipe Improvised watering can, bucket     ',	'Observing the procedure of watering flowers           ',	1,	1,	'2019-04-25 12:39:40',	'2019-04-24 22:39:40'),
 (3,	4,	1,	2,	'Numbers ',	'Number Concept',	'By the end of the sub-strand, the\r\nlearner should be able to:\r\na) sort and group objects\r\naccording to different attributes\r\nwithin the classroom,\r\nb) pair and match objects in the\r\nenvironment,\r\nc) order and sequence objects in\r\nascending and descending\r\norder,\r\nd) make patterns using real\r\nobjects,\r\ne) recite number names in order\r\nup to 50,\r\nf) represent numbers 1-30 using\r\nconcrete objects,\r\ng) demonstrate through counting\r\nthat a group in all situations has\r\nonly one count,\r\nh) appreciate the use of sorting\r\nand grouping items in day to\r\nday activities.',	'1) How can we find\r\nout which group\r\nhas more objects\r\nthan another?\r\n2) How can we\r\ngroup items?',	'? Learners in pairs/groups to collect different types of\r\nsafe objects.\r\n? Learners in pairs/groups to sort objects with same\r\nattribute and group them together.\r\n? Learners to play digital games involving sorting and\r\ngrouping according to different attributes.\r\n? Learners in pairs/groups to pair and match objectsto\r\nestablish “equal to”, “more than” and “less than.”\r\n? Learners to order objects according to size from\r\nsmallest to biggest and vice versa.\r\n? Learners to make patterns using real objects.\r\n? Learners to recite number names up to 50.\r\n? Learners to represent numbers 1-30 using concrete\r\nobjects as well as their body parts.\r\n? Learners to demonstrate that any given group has\r\nonly one count.\r\n? Learner in pairs/groups to collect and sort litter in\r\nthe environment and put it in various groups\r\naccording to an attribute of their choice and give\r\nreasons for the grouping.\r\n? Learners in pairs/groups could assist in arranging,\r\nedible items like fruits, cabbages according to size\r\nand colour in the school store.\r\n? Learners could visit a market for them to observe\r\nthe sorting and grouping of fruits and vegetables',	'Counting balls',	'Student can count',	1,	1,	'2019-04-25 08:28:27',	'2019-04-25 18:28:27');
 
-DROP TABLE IF EXISTS `scheme_header`;
 CREATE TABLE `scheme_header` (
   `scheme_header_id` int(100) NOT NULL AUTO_INCREMENT,
   `class_id` int(100) NOT NULL,
@@ -1882,7 +1841,6 @@ INSERT INTO `scheme_header` (`scheme_header_id`, `class_id`, `subject_id`, `term
 (3,	1,	2,	2,	2019,	1,	1,	'2019-04-24 11:35:34',	'2019-04-24 21:35:34'),
 (4,	1,	2,	1,	2019,	1,	1,	'2019-04-25 08:23:15',	'2019-04-25 18:23:15');
 
-DROP TABLE IF EXISTS `section`;
 CREATE TABLE `section` (
   `section_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1904,7 +1862,6 @@ INSERT INTO `section` (`section_id`, `name`, `nick_name`, `class_id`, `teacher_i
 (6,	'David',	'David',	9,	2),
 (7,	'Joseph',	'Joseph',	9,	1);
 
-DROP TABLE IF EXISTS `settings`;
 CREATE TABLE `settings` (
   `settings_id` int(11) NOT NULL AUTO_INCREMENT,
   `type` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
@@ -1934,7 +1891,6 @@ INSERT INTO `settings` (`settings_id`, `type`, `description`) VALUES
 (22,	'version',	'2019040100'),
 (23,	'sidebar-collapsed',	'no');
 
-DROP TABLE IF EXISTS `student`;
 CREATE TABLE `student` (
   `student_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
@@ -1980,7 +1936,6 @@ INSERT INTO `student` (`student_id`, `name`, `birthday`, `sex`, `religion`, `blo
 (35,	'Miriam Karo',	'',	'female',	'',	'',	'',	'',	'',	5,	0,	9,	'5678',	'8968',	0,	0,	'',	1),
 (36,	'Belinda Mukori',	'02/03/2009',	'male',	'',	'',	'',	'',	'',	11,	0,	1,	'76852',	'906897',	1,	0,	'',	1);
 
-DROP TABLE IF EXISTS `subject`;
 CREATE TABLE `subject` (
   `subject_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -2004,7 +1959,6 @@ INSERT INTO `subject` (`subject_id`, `name`, `class_id`, `teacher_id`) VALUES
 (13,	'French',	9,	3),
 (14,	'CRE',	1,	3);
 
-DROP TABLE IF EXISTS `teacher`;
 CREATE TABLE `teacher` (
   `teacher_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -2023,7 +1977,6 @@ INSERT INTO `teacher` (`teacher_id`, `name`, `birthday`, `sex`, `religion`, `blo
 (1,	'Patty Kamau Karanja',	'02/23/1981',	'female',	'',	'',	'Nairobi',	'07206876543',	'purityKamau2018@gmail.com',	1),
 (2,	'Macmillan Ben ',	'06/12/1979',	'male',	'',	'',	'122 Nairobi',	'0728367826',	'macben@gmail.com',	1);
 
-DROP TABLE IF EXISTS `terms`;
 CREATE TABLE `terms` (
   `terms_id` int(100) NOT NULL AUTO_INCREMENT,
   `term_number` int(5) NOT NULL,
@@ -2038,7 +1991,6 @@ INSERT INTO `terms` (`terms_id`, `term_number`, `name`, `start_month`, `end_mont
 (2,	2,	'Two',	5,	8),
 (3,	3,	'Three',	9,	12);
 
-DROP TABLE IF EXISTS `transaction`;
 CREATE TABLE `transaction` (
   `transaction_id` int(100) NOT NULL AUTO_INCREMENT,
   `t_date` date NOT NULL,
@@ -2081,7 +2033,6 @@ INSERT INTO `transaction` (`transaction_id`, `t_date`, `batch_number`, `invoice_
 (93,	'2019-05-01',	'190502',	0,	'Funds Transfer: Resolving over transfer in transport',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	'2019-05-20 10:29:11',	1,	'2019-05-20 20:29:11',	1),
 (94,	'2019-05-02',	'190503',	0,	'Electricity Bill',	'KPLC',	2,	1,	0,	800.00,	0,	'0000-00-00',	'0000-00-00 00:00:00',	1,	'2019-05-20 20:35:23',	1);
 
-DROP TABLE IF EXISTS `transaction_detail`;
 CREATE TABLE `transaction_detail` (
   `transaction_detail_id` int(100) NOT NULL AUTO_INCREMENT,
   `transaction_id` int(100) NOT NULL,
@@ -2130,7 +2081,6 @@ INSERT INTO `transaction_detail` (`transaction_detail_id`, `transaction_id`, `in
 (182,	93,	0,	0,	1,	1.00,	'Funds Transfer: Resolving over transfer in transport',	46000.00,	46000.00),
 (183,	94,	0,	2,	0,	1.00,	'Bill',	800.00,	800.00);
 
-DROP TABLE IF EXISTS `transaction_method`;
 CREATE TABLE `transaction_method` (
   `transaction_method_id` int(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -2145,7 +2095,6 @@ INSERT INTO `transaction_method` (`transaction_method_id`, `name`, `description`
 (3,	'mpesa',	'M-Pesa',	1),
 (4,	'funds_transfer',	'Funds Transfer',	0);
 
-DROP TABLE IF EXISTS `transaction_type`;
 CREATE TABLE `transaction_type` (
   `transaction_type_id` int(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -2160,7 +2109,6 @@ INSERT INTO `transaction_type` (`transaction_type_id`, `name`, `description`) VA
 (4,	'contra_entry_to_cash',	'To Cash Contra Entry'),
 (5,	'funds_transfer',	'Funds Transfer');
 
-DROP TABLE IF EXISTS `transition`;
 CREATE TABLE `transition` (
   `transition_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -2172,7 +2120,6 @@ INSERT INTO `transition` (`transition_id`, `name`) VALUES
 (2,	'completion'),
 (3,	'suspend');
 
-DROP TABLE IF EXISTS `transition_detail`;
 CREATE TABLE `transition_detail` (
   `transition_detail_id` int(100) NOT NULL AUTO_INCREMENT,
   `transition_id` int(100) NOT NULL,
@@ -2188,7 +2135,6 @@ CREATE TABLE `transition_detail` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-DROP TABLE IF EXISTS `transport`;
 CREATE TABLE `transport` (
   `transport_id` int(11) NOT NULL AUTO_INCREMENT,
   `route_name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -2201,7 +2147,6 @@ CREATE TABLE `transport` (
 INSERT INTO `transport` (`transport_id`, `route_name`, `number_of_vehicle`, `description`, `route_fare`) VALUES
 (1,	'Ngong Road',	'KBX 541V',	'Ngong to Vet Area',	'12500');
 
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `user_id` int(100) NOT NULL AUTO_INCREMENT,
   `firstname` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
@@ -2223,4 +2168,4 @@ INSERT INTO `user` (`user_id`, `firstname`, `lastname`, `email`, `password`, `ph
 (2,	'Livingstone',	'Onduso',	'livingstoneonduso@gmail.com',	'fbdf9989ea636d6b339fd6b85f63e06e',	'0909',	1,	1,	2,	1,	1),
 (7,	'Hope',	'Shume',	'hopeshume@gmail.com',	'd41d8cd98f00b204e9800998ecf8427e',	'87778',	1,	3,	3,	1,	1);
 
--- 2019-05-20 20:45:38
+-- 2019-05-20 20:46:08
