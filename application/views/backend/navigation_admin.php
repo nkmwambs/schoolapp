@@ -355,6 +355,108 @@
                 
             </ul>
         </li>
+        
+        <!--New Finance Feature - The Start -->
+        
+        <li class="<?php
+        if (	$page_name == 'income' ||
+                $page_name == 'expense' ||
+                $page_name == 'create_invoice' ||
+                $page_name == 'student_payments'||
+				$page_name == 'budget'||
+				$page_name == 'cash_book'||
+				$page_name == 'financial_report'||
+				$page_name == 'fees_structure' ||
+				$page_name == 'monthly_reconciliation' ||
+				$page_name == 'fund_balance_report' ||
+				$page_name == 'expense_variance_report' ||
+				$page_name == 'income_variance_report' ||
+				$page_name == 'funds_transfers' ||
+				$page_name == 'create_transaction'
+				)
+                echo 'opened active';
+        ?> <?=get_access_class('accounting','admin');?>">
+            <a href="#">
+                <i class="entypo-suitcase"></i>
+                <span><?php echo get_phrase('accounting'); ?> - Renewed</span>
+            </a>
+            <ul>
+                <!-- <li class="<?php if ($page_name == 'fees_structure') echo 'active'; ?>  <?=get_access_class('fees_structure','admin','accounting');?>">
+                    <a href="<?php echo base_url(); ?>index.php?finance/fees_structure">
+                        <span><i class="fa fa-tasks"></i> <?php echo get_phrase('fees_structure'); ?></span>
+                    </a>
+                </li> -->
+
+                <li class="<?php if ($page_name == 'student_payments') echo 'active'; ?> <?=get_access_class('fees_structure','admin','accounting');?>">
+                    <a href="<?php echo base_url(); ?>index.php?finance/student_payments">
+                        <span><i class="fa fa-money"></i> <?php echo get_phrase('invoices'); ?></span>
+                    </a>
+                </li>
+				
+                <li class="<?php if ($page_name == 'cash_book') echo 'active'; ?> <?=get_access_class('cash_book','admin','accounting');?>">
+                    <a href="<?php echo base_url(); ?>index.php?finance/cashbook">
+                        <span><i class="fa fa-book"></i> <?php echo get_phrase('cash_book'); ?></span>
+                    </a>
+                </li>
+                
+                <!-- <li class="<?php if ($page_name == 'budget') echo 'active'; ?> <?=get_access_class('budget','admin','accounting');?>">
+                    <a href="<?php echo base_url(); ?>index.php?finance/budget">
+                        <span><i class="fa fa-code"></i> <?php echo get_phrase('budget'); ?></span>
+                    </a>
+                </li> -->
+                
+                <li class="<?php if ($page_name == 'monthly_reconciliation') echo 'active'; ?> <?=get_access_class('monthly_reconciliation','admin','accounting');?>">
+                    <a href="<?php echo base_url(); ?>index.php?finance/monthly_reconciliation">
+                        <span><i class="fa fa-bell"></i> <?php echo get_phrase('monthly_reconciliation'); ?></span>
+                    </a>
+                </li>
+                
+                <li class="<?php if (
+                						$page_name == 'fund_balance_report' ||
+										$page_name == 'expense_variance_report' ||
+										$page_name == 'income_variance_report' ||
+										$page_name == 'funds_transfers'
+									) 
+                					echo 'active'; ?> <?=get_access_class('financial_report','admin','accounting');?>">
+                                        
+                    <a href="#">
+                        <span><i class="fa fa-filter"></i> <?php echo get_phrase('financial_report'); ?></span>
+                    </a>
+                    
+                     <ul>
+                        <li class="<?php if ($page_name == 'fund_balance_report') echo 'active'; ?> <?=get_access_class('fund_balance_report','admin','accounting');?>">
+                        	<a href="<?php echo base_url(); ?>index.php?finance/fund_balance_report" class="">
+                                <span><i class="entypo-globe"></i><?php echo get_phrase('fund_balance'); ?></span>
+                            </a>
+                        </li>
+
+                        <li class="<?php if ($page_name == 'expense_variance_report') echo 'active'; ?> <?=get_access_class('expense_variance_report','admin','accounting');?>">
+                        	<a href="<?php echo base_url(); ?>index.php?finance/expense_variance_report"  class="">
+                                    <span><i class="entypo-progress-3"></i><?php echo get_phrase('expense_variance'); ?></span>
+                            </a>
+                        </li>
+                        
+                        <li class="<?php if ($page_name == 'income_variance_report') echo 'active'; ?> <?=get_access_class('income_variance_report','admin','accounting');?>">
+                        	<a href="<?php echo base_url(); ?>index.php?finance/income_variance_report"  class="">
+                                    <span><i class="entypo-tag"></i><?php echo get_phrase('income_variance'); ?></span>
+                            </a>
+                        </li>
+                        
+                        <li class="<?php if ($page_name == 'funds_transfers') echo 'active'; ?> <?=get_access_class('funds_transfers','admin','accounting');?>">
+                        	<a href="<?php echo base_url(); ?>index.php?finance/funds_transfers_report"  class="">
+                                    <span><i class="entypo-shuffle"></i><?php echo get_phrase('funds_transfers'); ?></span>
+                            </a>
+                        </li>
+                        
+                     </ul>  
+                    
+                </li>
+                
+                
+            </ul>
+        </li>
+        
+        <!--New Finance Feature - The End -->
 
         <!-- LIBRARY -->
         <li class="<?php if ($page_name == 'book') echo 'active'; ?> <?=get_access_class('library','admin');?>">

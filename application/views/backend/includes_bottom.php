@@ -46,6 +46,9 @@
 	<!--Accounting JS-->
 	<script src="<?php echo base_url();?>assets/js/accounting.min.js"></script>
 	
+	<!--Cookie Plugin -->
+	<script src="<?php echo base_url();?>assets/js/jquery.cookie.js"></script>
+	
 <!-- SHOW TOASTR NOTIFIVATION -->
 <?php if ($this->session->flashdata('flash_message') != ""):?>
 
@@ -71,6 +74,7 @@
 	jQuery(document).ready(function($)
 	{
 		
+		
 		var datatable = $("#table_export").dataTable();
 
 		$(".dataTables_wrapper select").select2({
@@ -85,26 +89,27 @@
 		    minWidth: 300
 		});
 		
-		var attr_name2 = "";
+		$.cookie('buffer','');
+		$.cookie('buffer_name','');
 		
-		$(".unique").on('click',function(){
+		$(".unique").on('click,mousedown',function(){
 			
-			var attr_name1 = $(this).attr('name');
+			var attr_name1 = $(this).attr('name');	
 			
-			if(attr_name1 != attr_name2){
-				attr_name2 = attr_name1;
-				$("#buffer").html($(this).val());
-			}			
+			if($.cookie('buffer_name') != attr_name1){
+				$.cookie('buffer_name',attr_name1);
+				$.cookie('buffer',$(this).val());
+			}		
 			
 		});
 		
 		$(".unique").on('mousedown',function(){
 			
-			var attr_name1 = $(this).attr('name');
+			var attr_name1 = $(this).attr('name');	
 			
-			if(attr_name1 != attr_name2){
-				attr_name2 = attr_name1;
-				$("#buffer").html($(this).val());
+			if($.cookie('buffer_name') != attr_name1){
+				$.cookie('buffer_name',attr_name1);
+				$.cookie('buffer',$(this).val());
 			}			
 			
 		});
@@ -130,11 +135,13 @@
 					
 					elem.parent().find('.duplicate-errror').remove();
 					
-					if(resp != "0" && $("#buffer").html() != value){
+					if(resp != "0" && $.cookie("buffer") != value){
 						elem.css('border','1px solid red');
 						elem.parent().append('<div class="duplicate-errror"><span style="color:red;">Duplicate value found for <span>'+value+'</span></span></div>');
-						elem.val($("#buffer").html());
+						elem.val($.cookie('buffer'));
 						
+					}else{
+						elem.css('border','1px solid grey');
 					}
 				}
 			});

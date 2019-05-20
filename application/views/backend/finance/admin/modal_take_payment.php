@@ -12,7 +12,7 @@ $row = $edit_data[0];
                 <div class="panel-title"><?php echo get_phrase('take_payment');?></div>
             </div>
             <div class="panel-body">
-				<?php echo form_open(base_url() . 'index.php?finance/invoice/take_payment/'.$row['invoice_id'], array(
+				<?php echo form_open(base_url() . 'index.php?finance/record_fees_income/take_payment/'.$row['invoice_id'], array(
 					'class' => 'form-horizontal form-groups-bordered validate','target'=>'_top','id'=>'frm_payment'));?>
 
 		
@@ -113,7 +113,7 @@ $row = $edit_data[0];
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('serial_number');?></label>
                         
 						<div class="col-sm-6">
-							<input type="text" class="form-control" readonly="readonly" value="<?=$this->crud_model->next_serial_number();?>" required="required">
+							<input type="text" class="form-control" readonly="readonly" value="<?=$this->crud_model->next_batch_number();?>" required="required">
 						</div> 
 				</div>
 

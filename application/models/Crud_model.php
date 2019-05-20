@@ -777,4 +777,86 @@ class Crud_model extends CI_Model {
 			
 			return $cumulative_results;
 		}
+
+	/**
+	 * Start of Upgraded Finance Model
+	 */
+	 
+	 	function next_batch_number(){
+			
+		$this->db->select_max('batch_number');
+		$max_serial_number = $this->db->get('transaction')->row()->batch_number + 1;
+		
+		$current_transaction_month = strtotime($this->current_transaction_month());
+		$last_reconciled_month = strtotime($this->last_reconciled_month());
+		
+		$count_of_transactions_in_current_transacting_month = $this->db->get_where('transaction',
+		array('t_date>='=>$this->current_transaction_month()))->num_rows();
+		
+		if($current_transaction_month > $last_reconciled_month && 
+			$count_of_transactions_in_current_transacting_month == 0){
+		 	$max_serial_number = date('y').date('m',$current_transaction_month).'01';
+		}				
+ 		
+		return $max_serial_number;
+	}
+		
+		
+	function account_opening_balance($curr_date){
+		
+		$start_date = $this->db->get_where('settings',array('type'=>'system_start_date'))->row()->description;
+		
+		$opening_bank_balance = $this->db->get_where('accounts',array('name'=>'bank'))->row()->opening_balance;
+		
+		$opening_cash_balance = $this->db->get_where('accounts',array('name'=>'cash'))->row()->opening_balance;
+		
+		$bank_balance = 0;
+		
+		$cash_balance = 0;
+		
+		if(strtotime(date('Y-m-01',strtotime($start_date)))===strtotime(date('Y-m-01',strtotime($curr_date)))){
+			
+				$bank_balance = $this->db->get_where('accounts',array('name'=>'bank'))->row()->opening_balance;
+		
+				$cash_balance = $this->db->get_where('accounts',array('name'=>'cash'))->row()->opening_balance;
+		
+		}elseif(strtotime(date('Y-m-01',strtotime($start_date)))<strtotime(date('Y-m-01',strtotime($curr_date)))){
+			
+				$c_date = date('Y-m-01',strtotime($curr_date));
+				
+				//Sum all Bank Income and expenses in previous months before the supplied month and get their difference
+				
+				$month = date('m',strtotime($c_date));
+				$year = date('Y',strtotime($c_date));
+				
+				$bank_income_cond = " ((transaction_type='1' AND account='2') OR transaction_type='3') AND t_date<'".$c_date."'";// AND t_date<='".$c_date."'
+				
+				$bank_income = $this->db->select_sum('amount')->where($bank_income_cond)->get('transaction')->row()->amount;
+				
+				$bank_expense_cond = " ((transaction_type='2' AND account='2') OR transaction_type='4') AND t_date<'".$c_date."'";
+				
+				$bank_expense = $this->db->select_sum('amount')->where($bank_expense_cond)->get('transaction')->row()->amount;
+				
+				$bank_balance = ($opening_bank_balance+$bank_income)-$bank_expense;
+				
+				//Sum all Cash Income and expenses in previous months before the supplied months and get their difference
+				
+				$cash_income_cond = " ((transaction_type='1' AND account='1') OR transaction_type='4') AND t_date<'".$c_date."'";
+				
+				$cash_income = $this->db->select_sum('amount')->where($cash_income_cond)->get('transaction')->row()->amount;
+				
+				$cash_expense_cond = " ((transaction_type='2' AND account='1') OR transaction_type='3') AND t_date<'".$c_date."'";
+				
+				$cash_expense = $this->db->select_sum('amount')->where($cash_expense_cond)->get('transaction')->row()->amount;
+				
+				$cash_balance = ($opening_cash_balance+$cash_income)-$cash_expense;
+		}
+		//Return the Cash and Bank Balances
+		
+		return array('cash_balance'=>$cash_balance,'bank_balance'=>$bank_balance);
+	}	
+	 
+	 /**
+	  * End of Upgraded Finance Model
+	  */
 }

@@ -2068,5 +2068,180 @@ class Finance extends CI_Controller
 	function show_transaction_page(){
 	
 	}
+	
+	/**
+	 * Revamped code for finance transactions using the new transaction tables
+	 * 
+	 */
+	 
+	function record_fees_income($param1 = ""){
 		
+		 if ($param1 == 'take_payment') {
+        	
+						
+			$take_payment = $this->input->post('take_payment');
+						
+			
+			//Create a Payment Record
+			$data_payment['batch_number'] 			= 	$this->crud_model->next_batch_number();
+			$data_payment['t_date'] 				= 	$this->input->post('timestamp');
+			$data_payment['invoice_id'] 			= 	$this->input->post('invoice_id');
+			$data_payment['transaction_method_id']	=   $this->input->post('method');
+			$data_payment['description']			=   $this->input->post('description');
+			$data_payment['payee']					=   $this->input->post('payee');
+			$data_payment['transaction_type_id']	=   "1";
+			$data_payment['amount']					=   array_sum($take_payment);
+			$data_payment['createddate']    		=   strtotime($this->input->post('timestamp'));
+			$data_payment['createdby']    			=   $this->session->login_user_id;
+			$data_payment['lastmodifiedby']			=   $this->session->login_user_id;
+			
+			
+			$this->db->insert('transaction' , $data_payment);
+			
+			$last_payment_id = $this->db->insert_id();
+			
+			//Update Invoice Details
+
+			foreach($take_payment as $key=>$value){
+				if($value > 0){
+					
+					$detail = $this->db->get_where("invoice_details",
+						array("detail_id"=>$key,'invoice_id'=>$this->input->post('invoice_id')))->row();
+												
+					$paid_to_date  = $detail->amount_paid + $value;
+					
+					$data_invoice['amount_paid']   	=   $paid_to_date;
+					$data_invoice['balance'] 		= 	$detail->balance - $paid_to_date;
+					$data_invoice['detail_id'] 		=  $key;
+					$data_invoice['last_payment_id']=   $last_payment_id;
+		            
+					$this->db->where(array("invoice_id"=> $this->input->post('invoice_id'), "detail_id"=>$key));
+					
+		            $this->db->update('invoice_details' , $data_invoice);
+					
+					//Create Transaction details
+					
+					$data_details['transaction_id'] 	= $last_payment_id;
+					$data_details['detail_id'] 			= $key;
+					
+					$income_category_id = $this->db->get_where('fees_structure_details',
+					array('detail_id'=>$key))->row()->income_category_id;
+					
+					$data_details['income_category_id'] = $income_category_id;
+					
+					$data_details['qty']				= 1;
+					
+					$data_details['detail_description'] = get_phrase('school_fees_payment_for_').$this->db->get_where('income_categories',
+					array('income_category_id'=>$income_category_id))->row()->name;
+					
+					$data_details['unitcost'] 			= $value;
+					$data_details['cost'] 				= $value;
+
+					
+					$this->db->insert("transaction_detail",$data_details);
+								
+		          }	
+			}
+			
+			//Update Invoice Record			
+
+            $data2['amount_paid']   =   $this->input->post('total_payment');
+            $this->db->where('invoice_id' , $param2);
+            $this->db->set('amount_paid', 'amount_paid + ' . $data2['amount_paid'], FALSE);
+            $this->db->set('balance', 'balance - ' . $data2['amount_paid'], FALSE);
+            $this->db->update('invoice');
+			
+			$bal = $this->db->get_where('invoice',array('invoice_id'=>$param2))->row()->balance;
+			
+			if($bal<=0){
+				$data3['status']   =   'paid';
+            	$this->db->where('invoice_id' , $param2);
+				$this->db->update('invoice',$data3);
+			}
+			
+					
+						
+			//Check if there is an overpayment
+			if($this->input->post('overpayment') > 0){
+				
+				$student_id = $this->db->get_where('invoice',array('invoice_id'=>$param2))->row()->student_id;
+				
+				$overpay['student_id'] = $student_id;
+				$overpay['amount'] = $this->input->post('overpayment');
+				$overpay['amount_due'] = $this->input->post('overpayment');
+				$overpay['description'] = $this->input->post('overpayment_description');
+				
+				$this->db->insert('overpay',$overpay);
+			}
+			
+			
+			//exit;
+            $this->session->set_flashdata('flash_message' , get_phrase('payment_successfull'));
+            redirect(base_url() . 'index.php?finance/scroll_cashbook/'.strtotime($this->input->post('timestamp')), 'refresh');
+        }
+	}
+	
+	function record_other_income(){
+		
+	}
+		
+	function record_expenses(){
+		
+	}	
+	
+	function record_contra_entry(){
+		
+	}
+	
+	function record_funds_transfer(){
+		
+	}
+	
+	function cashbook($param1 = ""){
+		if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');
+		
+		$t_date = date('Y-m-d');
+		
+		if($param1==="scroll") $t_date = $this->input->post('t_date'); 
+		
+		if($param1==="") {
+			
+			$t_date = date('Y-m-01');
+			
+			$reconcile = $this->db->get("reconcile");
+			
+			$cashbook = $this->db->get("transaction");
+			
+			if($reconcile->num_rows() > 0 && $cashbook->num_rows() > 0){
+				
+				$last_reconcile_month = $this->db->select_max("month")->get("reconcile")->row()->month;
+
+				if(date("Y-m-01",strtotime($last_reconcile_month)) < $t_date ){
+					$t_date = date("Y-m-01",strtotime('+1 month',strtotime($last_reconcile_month)));
+				}
+				
+			}elseif($cashbook->num_rows() == 0){
+				$t_date = $this->db->get_where('settings',array('type'=>'system_start_date'))->row()->description;	
+			}elseif($reconcile->num_rows() === 0){
+				$t_date = $this->db->select_max("t_date")->get("transaction")->row()->t_date;
+			}
+		}
+			
+		$month = date('m',strtotime($t_date));
+		$year = date('Y',strtotime($t_date));
+		
+		$opening_balance = $this->crud_model->opening_account_balance($t_date);
+		
+
+		$page_data['cash_balance'] = $opening_balance['cash_balance'];
+		$page_data['bank_balance'] = $opening_balance['bank_balance'];
+        $page_data['page_name']  = 'cash_book';
+		$page_data['page_view'] = "finance";
+        $page_data['page_title'] = get_phrase('cash_book');
+		$page_data['current'] = $t_date;
+		$page_data['transactions'] = $this->db->get('transaction',array('Month(t_date)'=>$month,'Year(t_date)'=>$year))->result_object();
+        $this->load->view('backend/index', $page_data); 
+	}
+	
 }
