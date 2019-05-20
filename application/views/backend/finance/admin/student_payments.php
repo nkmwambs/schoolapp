@@ -126,6 +126,7 @@
                     		<th><div><?php echo get_phrase('class');?></div></th>
                             <th><div><?php echo get_phrase('fee_structure_total');?></div></th>
                             <th><div><?php echo get_phrase('payable_amount');?></div></th>
+                            <th><div><?php echo get_phrase('actual_paid');?></div></th>
                             <th><div><?php echo get_phrase('balance');?></div></th>
                     		<th><div><?php echo get_phrase('date');?></div></th>
                     		<th><div><?php echo get_phrase('options');?></div></th>
@@ -146,7 +147,15 @@
 							<td><?php echo $row['amount'];?></td>
                             <td><?php echo $row['amount_due'];?></td>
                             
-                            <td><?php echo $row['balance'];?></td>
+                            <?php $paid = $this->db->select_sum('amount')->get_where('transaction',
+                            array('invoice_id'=>$row['invoice_id']))->row()->amount;?>
+                            
+                            <td><?php echo $paid;?></td>
+                           <?php
+                            	$bal = $row['amount_due'] - $paid; 
+                            ?>
+                            
+                            <td><?php echo number_format($bal,2);?></td>
 							<td><?php echo date('d M,Y', $row['creation_timestamp']);?></td>
 							<td>
                             <div class="btn-group">
@@ -155,7 +164,7 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 
-                                    <?php if ($row['balance'] != 0):?>
+                                    <?php if ($bal != 0):?>
 
                                     <li class="<?=get_access_class('take_student_payment','admin','accounting');?>">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_take_payment/<?php echo $row['invoice_id'];?>');">
@@ -186,25 +195,13 @@
 
                                     <!-- DELETION LINK -->
                                     <li class="<?=get_access_class('delete_or_cancel_invoice','admin','accounting');?>">
-                                    	<?php
-                                    	if($this->db->get_where("payment",array("invoice_id"=>$row['invoice_id']))->num_rows() === 0){	
-                                    	?>
-	                                        <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?finance/invoice/delete/<?php echo $row['invoice_id'];?>');">
-	                                            <i class="entypo-trash"></i>
-	                                                <?php echo get_phrase('delete_invoice');?>
-	                                        </a>
-	                                        
-                                        <?php
-										}else{
-                                    	?>
+                                    	
                                     		<a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?finance/invoice/cancel/<?php echo $row['invoice_id'];?>');">
 	                                            <i class="entypo-cancel"></i>
 	                                                <?php echo get_phrase('cancel_invoice');?>
 	                                        </a>
                                     	
-                                    	<?php
-										}
-                                    	?>
+                                    	
                                      </li>
                                 </ul>
                             </div>

@@ -854,8 +854,105 @@ class Crud_model extends CI_Model {
 		//Return the Cash and Bank Balances
 		
 		return array('cash_balance'=>$cash_balance,'bank_balance'=>$bank_balance);
+	}
+
+	function next_transaction_date(){
+			
+			//Get Cashbook Object
+			$cashbook_obj = $this->db->get("transaction");
+			
+			$system_start_date = $this->db->get_where("settings",array("type"=>"system_start_date"))->row()->description;
+			$start_date = date("Y-m-01",strtotime($system_start_date));
+			$end_date = date("Y-m-t",strtotime($system_start_date));
+			
+			if($cashbook_obj->num_rows() > 0){
+			
+				/**Get Max data in the Cash Book**/
+				
+				$max_id = $this->db->select_max("transaction_id")->get("transaction")->row()->transaction_id;
+				$last_transaction = $this->db->get_where("transaction",array("transaction_id"=>$max_id))->row();
+				$reconcile = $this->db->get("reconcile");
+				
+				$start_date = $last_transaction->t_date;
+				$end_date = date('Y-m-t',strtotime($last_transaction->t_date));
+				
+				if($reconcile->num_rows() > 0){
+					$last_reconcile_month = $this->db->select_max("month")->get("reconcile")->row()->month;
+					if(strtotime($last_transaction->t_date) < strtotime($last_reconcile_month) || 
+					strtotime($last_transaction->t_date) == strtotime($last_reconcile_month)){
+						$start_date = date("Y-m-01",strtotime('first day of next month',strtotime($last_reconcile_month)));
+						$end_date = date("Y-m-t",strtotime('first day of next month',strtotime($last_reconcile_month)));
+					}
+					
+					
+				}
+			}
+			/**Derive Start and End Dates**/
+			
+			$cashbook_dates['start_date'] = $start_date;
+			$cashbook_dates['end_date'] = $end_date;
+			//$cashbook_dates['extra'] = $max_id;
+			
+			/** Create Date Object**/
+			
+			return (object)$cashbook_dates;
+		}	
+		
+	function get_invoice_detail_balance($invoice_detail_id){
+			
+		//Get details due amount
+		$due_amount = $this->db->get_where('invoice_details',
+		array('invoice_details_id'=>$invoice_detail_id))->row()->amount_due;
+		
+		
+		//Get Sum paid
+		$amount_paid = $this->get_invoice_detail_amount_paid($invoice_detail_id);
+		
+		//Compute balance
+		$balance = $due_amount - $amount_paid;
+		
+		return $balance;
 	}	
-	 
+	
+	function get_invoice_detail_amount_paid($invoice_detail_id){
+		
+		$amount_paid = $this->db->select_sum('cost')->get_where('transaction_detail',
+		array('invoice_details_id'=>$invoice_detail_id))->row()->cost;
+		
+		return $amount_paid;
+	}
+	
+	function get_invoice_amount_paid($invoice_id){
+		
+		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		$amount_paid = $this->db->select_sum('cost')->get_where('transaction_detail',
+		array('invoice_id'=>$invoice_id))->row()->cost;
+		
+		return $amount_paid;
+	}
+	
+	function get_invoice_balance($invoice_id){
+		$invoice_due = $this->db->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->amount_due;
+		
+		$balance = $invoice_due - $this->get_invoice_amount_paid($invoice_id);
+		
+		return $balance;
+	} 
+	
+	function get_invoice_payment_history($invoice_id){
+		$this->db->select(array('transaction.invoice_id','transaction.t_date',
+        'transaction_detail.cost','invoice_details.detail_id',
+		'fees_structure_details.name','transaction.transaction_method_id',
+		'transaction_method.description as transaction_method'));			
+				
+		$this->db->join('invoice_details','invoice_details.invoice_details_id=transaction_detail.invoice_details_id');
+ 		$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');
+		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		$this->db->join('transaction_method','transaction_method.transaction_method_id=transaction.transaction_method_id');
+		$payment_history = $this->db->get_where('transaction_detail', array('transaction.invoice_id' => $invoice_id));
+ 		
+		return $payment_history;		
+	}
 	 /**
 	  * End of Upgraded Finance Model
 	  */

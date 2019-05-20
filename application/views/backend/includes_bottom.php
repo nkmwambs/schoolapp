@@ -48,6 +48,7 @@
 	
 	<!--Cookie Plugin -->
 	<script src="<?php echo base_url();?>assets/js/jquery.cookie.js"></script>
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script> -->
 	
 <!-- SHOW TOASTR NOTIFIVATION -->
 <?php if ($this->session->flashdata('flash_message') != ""):?>

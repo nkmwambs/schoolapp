@@ -40,7 +40,7 @@ if(isset($current)){
 		<table class="table table-hover table-bordered datatable">
 			<thead>
 				<tr>
-					<th colspan="4">&nbsp;</th>
+					<th colspan="5">&nbsp;</th>
 					<th colspan="3"><?=get_phrase('bank');?> <br/> <?=get_phrase('balance_brought_forward');?>: <?=number_format($bank_balance,2);?></th>
 					<th colspan="3"><?=get_phrase('cash');?> <br/> <?=get_phrase('balance_brought_forward');?>: <?=number_format($cash_balance,2);?></th>
 				</tr>
@@ -48,6 +48,7 @@ if(isset($current)){
 				<tr>
 					<th><?=get_phrase('date');?></th>
 					<th><?=get_phrase('reference');?></th>
+					<th><?=get_phrase('payee');?></th>
 					<th><?=get_phrase('description');?></th>
 					<th><?=get_phrase('transaction_type');?></th>
 					<!--Bank-->
@@ -74,7 +75,7 @@ if(isset($current)){
 					
 					foreach($transactions as $rows):
 						
-					$type = array('1'=>'Income','2'=>'Expense','3'=>'Bank Deposit from Cash','4'=>'Bank Withdraw to Cash');
+					//$type = array('1'=>'Income','2'=>'Expense','3'=>'Bank Deposit from Cash','4'=>'Bank Withdraw to Cash');
 				?>
 					
 					<tr>
@@ -99,13 +100,14 @@ if(isset($current)){
 							
 							
 							><?=$rows->batch_number?></div></td>
+						<td><?=$rows->payee;?></td>
 						<td><?=substr($rows->description,0,25);?></td>
-						<td><?=$type[$rows->transaction_type];?></td>
+						<td><?=ucwords($rows->transaction_method.' '.$rows->transaction_type);?></td>
 						
 						<!--Bank Income-->
 						<?php
 							$bank_income = 0;
-							if(($rows->transaction_type==='1' && $rows->account==='2')||$rows->transaction_type==='3') $bank_income = $rows->amount;		
+							if(($rows->transaction_type_id==='1' && $rows->transaction_method_id==='2')||$rows->transaction_type_id==='3') $bank_income = $rows->amount;		
 							$sum_bank_income +=	$bank_income;		
 						?>
 						
@@ -114,7 +116,7 @@ if(isset($current)){
 						<!--Bank Expense-->
 						<?php
 							$bank_expense = 0;
-							if(($rows->transaction_type==='2' && $rows->account==='2')||$rows->transaction_type==='4') $bank_expense = $rows->amount;
+							if(($rows->transaction_type_id==='2' && $rows->transaction_method_id==='2')||$rows->transaction_type_id==='4') $bank_expense = $rows->amount;
 							$sum_bank_expense +=	$bank_expense;					
 						?>
 						
@@ -133,7 +135,7 @@ if(isset($current)){
 						<!--Cash Income-->
 						<?php
 							$cash_income = 0;
-							if(($rows->transaction_type==='1' && $rows->account==='1')||$rows->transaction_type==='4') $cash_income = $rows->amount;	
+							if(($rows->transaction_type_id==='1' && $rows->transaction_method_id==='1')||$rows->transaction_type_id==='4') $cash_income = $rows->amount;	
 							$sum_cash_income +=	$cash_income;		
 						?>
 						
@@ -142,7 +144,7 @@ if(isset($current)){
 						<!--Cash Expense-->
 						<?php
 							$cash_expense = 0;
-							if(($rows->transaction_type==='2' && $rows->account==='1')||$rows->transaction_type==='3') $cash_expense = $rows->amount;
+							if(($rows->transaction_type_id==='2' && $rows->transaction_method_id==='1')||$rows->transaction_type_id==='3') $cash_expense = $rows->amount;
 							$sum_cash_expense +=	$cash_expense;				
 						?>
 						
@@ -162,7 +164,7 @@ if(isset($current)){
 			</tbody>
 			<tfoot>
 				<tr>
-					<td colspan="4"><?=get_phrase('total');?></td>
+					<td colspan="5"><?=get_phrase('total');?></td>
 					
 					<td><?=number_format($sum_bank_income,2);?></td>
 					<td><?=number_format($sum_bank_expense,2);?></td>

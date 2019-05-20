@@ -41,7 +41,7 @@ $row = $edit_data[0];
 								<tbody>
 									<?php
 										$this->db->select(array('fees_structure_details.detail_id','fees_structure_details.name',
-	                                	'fees_structure_details.amount','invoice_details.amount_due','invoice_details.amount_paid','invoice_details.balance'));
+	                                	'fees_structure_details.amount','invoice_details.invoice_details_id','invoice_details.amount_due','invoice_details.amount_paid','invoice_details.balance'));
 	                                	
 										$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');									
 	                                	$this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
@@ -52,9 +52,9 @@ $row = $edit_data[0];
 										<tr>
 											<td><?php echo $inv->name;?></td>
 											<td><?php echo number_format($inv->amount_due,2);?></td>
-											<td><?php echo number_format($inv->amount_paid,2);?></td>
-											<td><?php echo number_format($inv->balance,2);?></td>
-											<td><input type="text" onkeyup="return get_total_payment();" class="form-control paying" name="take_payment[<?php echo $inv->detail_id;?>]" id="" value="0"/></td>
+											<td><?php echo number_format($this->crud_model->get_invoice_detail_amount_paid($inv->invoice_details_id),2);?></td>
+											<td><?php echo number_format($this->crud_model->get_invoice_detail_balance($inv->invoice_details_id),2);?></td>
+											<td><input type="text" onkeyup="return get_total_payment();" class="form-control paying" name="take_payment[<?php echo $inv->invoice_details_id;?>]" id="" value="0"/></td>
 										</tr>
 									
 									<?php
@@ -79,21 +79,21 @@ $row = $edit_data[0];
 		            <div class="form-group">
 		                <label class="col-sm-3 control-label"><?php echo get_phrase('description');?></label>
 		                <div class="col-sm-6">
-		                    <input type="text" class="form-control" name="description" id="description" placeholder="<?php echo get_phrase('description');?>"/>
+		                    <input type="text" required="required" class="form-control" name="description" id="description" placeholder="<?php echo get_phrase('description');?>"/>
 		                </div>
 		            </div>
 		            
 		            <div class="form-group">
 		                <label class="col-sm-3 control-label"><?php echo get_phrase('payee');?></label>
 		                <div class="col-sm-6">
-		                    <input type="text" class="form-control" name="payee" id="payee" placeholder="<?php echo get_phrase('payee');?>"/>
+		                    <input type="text" required="required" class="form-control" name="payee" id="payee" placeholder="<?php echo get_phrase('payee');?>"/>
 		                </div>
 		            </div>
 
 		            <div class="form-group">
                         <label class="col-sm-3 control-label"><?php echo get_phrase('method');?></label>
                         <div class="col-sm-6">
-                            <select name="method" class="form-control">
+                            <select name="method" class="form-control" required="required">
                                 <option value="1"><?php echo get_phrase('cash');?></option>
                                 <option value="2"><?php echo get_phrase('check');?></option>
 
@@ -104,8 +104,11 @@ $row = $edit_data[0];
                     <div class="form-group">
 	                    <label class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
 	                    <div class="col-sm-6">
-	                        <input type="text" class="datepicker form-control" readonly="readonly" data-start-date="<?php echo $this->crud_model->next_cashbook_date()->start_date;?>" data-end-date="<?php echo $this->crud_model->next_cashbook_date()->end_date;?>" data-format="yyyy-mm-dd" name="timestamp" 
-	                            value=""/>
+	                        <input type="text" class="datepicker form-control" readonly="readonly" 
+	                        	data-start-date="<?php echo $this->crud_model->next_transaction_date()->start_date;?>" 
+	                        	data-end-date="<?php echo $this->crud_model->next_transaction_date()->end_date;?>" 
+	                        	data-format="yyyy-mm-dd" name="timestamp" 
+	                            value="" required="required"/>
 	                    </div>
 					</div>
 					
