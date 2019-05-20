@@ -164,8 +164,8 @@
 						<div class="tile-stats tile-cyan <?=get_access_class('years_expense_to_date','admin','dashboard');?>">
 							<div class="icon"><i class="entypo-paper-plane"></i></div>
 							<?php
-								$expense = $this->db->select_sum('amount')->get_where('expense',
-								array('YEAR(t_date)'=>date('Y')))->row()->amount;
+								$expense = $this->db->select_sum('amount')->get_where('transaction',
+								array('YEAR(t_date)'=>date('Y'),'transaction_type_id'=>2))->row()->amount;
 							?>
 							<div class="num"><?=number_format($expense);?></div>
 							
