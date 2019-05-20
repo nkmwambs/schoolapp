@@ -1151,12 +1151,12 @@ class Finance extends CI_Controller
 	}
 
 	function clear_transactions(){
-		$table = $_POST['record_type'];
+		$transaction_type = $_POST['record_type'];
 		$record_id = $_POST["indx"];
 		$month = $_POST['month'];
 		
 		//$check current clear state
-		$record = $this->db->get_where($table,array($table."_id"=>$record_id))->row();
+		$record = $this->db->get_where('transaction',array("transaction_id"=>$record_id))->row();
 		
 		$data['cleared'] = 1;
 		$data['clearedMonth'] = $month;
@@ -1167,8 +1167,8 @@ class Finance extends CI_Controller
 		}
 		
 		
-		$this->db->where(array($table."_id"=>$record_id));
-		$this->db->update($table,$data);
+		$this->db->where(array("transaction_id"=>$record_id));
+		$this->db->update('transaction',$data);
 		
 		if($this->db->affected_rows() > 0){
 			echo "Update Successful";
