@@ -95,11 +95,13 @@
                                 <label class="col-sm-3 control-label"><?php echo get_phrase('teacher');?></label>
                                 <div class="col-sm-5">
                                     <select name="teacher_id" class="form-control select2" style="width:100%;">
+                                    	<option value=""><?php echo get_phrase('select');?></option>
                                     	<?php
 										$teachers = $this->db->get('teacher')->result_array();
+										
 										foreach($teachers as $row):
 										?>
-                                            <option value=""><?php echo get_phrase('select');?></option>
+                                            
                                     		<option value="<?php echo $row['teacher_id'];?>"><?php echo $row['name'];?></option>
                                         <?php
 										endforeach;

@@ -9,7 +9,7 @@
         <!-- Language Selector -->			
            <li class="dropdown language-selector">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-close-others="true">
-                        	<i class="entypo-user"></i> <?php echo $this->session->userdata('login_type');?>
+                        	<i class="entypo-user"></i> <?php echo ucfirst($this->session->userdata('profile'));?> - <?=get_phrase('instance_of')." ".$this->session->app;?>
                     </a>
 
 				<?php if ($account_type != 'parent'):?>

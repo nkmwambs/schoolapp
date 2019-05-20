@@ -9,15 +9,17 @@ if (!defined('BASEPATH'))
      *	Techsys School Management System
      *	https://www.techsysolutions.com
      *	support@techsysolutions.com
+	 *  
      */
 
 class Login extends CI_Controller {
 
     function __construct() {
         parent::__construct();
-        $this->load->model('crud_model');
-        //$this->load->database();
-        $this->load->library('session');
+		$this->load->library('session');
+        $this->config->load('localrepositoryvars');
+        $this->load->database($this->config->item('db_prefix').'_default',true);
+        
         /* cache control */
         $this->output->set_header('Last-Modified: ' . gmdate("D, d M Y H:i:s") . ' GMT');
         $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
@@ -73,8 +75,13 @@ class Login extends CI_Controller {
         // Checking login credential for admin
         $query = $this->db->get_where('user', $credential);
         if ($query->num_rows() > 0) {
-            $row = $query->row();
-            $login_type = $this->db->get_where("login_type",array("login_type_id"=>$row->login_type_id))->row()->name;
+            
+			$default_database = $this->load->database($this->config->item('db_prefix').'_default',true);
+			$customer_database = $this->load->database($this->config->item('db_prefix').'_app'.$query->row()->app_id,true);
+			
+			$row = $customer_database->get_where('user',array('email'))->row();
+			
+            $login_type = $customer_database->get_where("login_type",array("login_type_id"=>$row->login_type_id))->row()->name;
             $this->session->set_userdata('active_login', '1');
             $this->session->set_userdata('login_user_id', $row->user_id);
             $this->session->set_userdata('login_firstname', $row->firstname);
@@ -82,11 +89,23 @@ class Login extends CI_Controller {
             $this->session->set_userdata('login_email', $row->email);
             $this->session->set_userdata('login_type_id', $row->login_type_id);
             $this->session->set_userdata('login_profile', $row->profile_id);
-            $this->session->set_userdata('login_type', $login_type);
             $this->session->set_userdata('profile_id', $row->profile_id);
+			
+			
+			$this->session->set_userdata('login_type', $login_type);
+			
+			$this->session->set_userdata('profile', 
+				$customer_database->get_where('profile',array('profile_id'=>$row->profile_id))->row()->name);
+				
 			$label = $login_type.'_id';
-			$type_table_id = $this->db->get_where($login_type,array("email"=>$row->email))->row()->$label;
+			
+			$type_table_id = $customer_database->get_where($login_type,
+			array("email"=>$row->email))->row()->$label;
+			
 			$this->session->set_userdata('type_login_user_id',  $type_table_id);
+			
+			//Switch App database session
+			$this->session->set_userdata('app', $this->config->item('db_prefix').'_app'.$query->row()->app_id);
 			
             return 'success';
         }
