@@ -20,7 +20,7 @@ class Dashboard extends CI_Controller
 		//if($this->session->app === 'default')$this->load->database(); else $this->load->database($this->session->app,true);
         $this->load->library('session');
         $this->load->database();
-        //$this->db->db_select($this->session->app);
+       	$this->db->db_select($this->session->app);
 
        /*cache control*/
 		$this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');

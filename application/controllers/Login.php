@@ -18,7 +18,7 @@ class Login extends CI_Controller {
         $this->load->model('crud_model');
         //$this->load->database();
         $this->load->library('session');
-		//$this->config->load('localrepositoryvars');
+		$this->config->load('localrepositoryvars');
         /* cache control */
         $this->output->set_header('Last-Modified: ' . gmdate("D, d M Y H:i:s") . ' GMT');
         $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
@@ -97,7 +97,12 @@ class Login extends CI_Controller {
  			
 			$this->session->set_userdata('type_login_user_id',  $type_table_id);
 			
-			//$this->session->set_userdata('app', $this->config->item('db_prefix').'_app'.$row->app_id);
+			if($row->app_id > 0){
+				$this->session->set_userdata('app', $this->config->item('db_prefix').'_app'.$row->app_id);
+			}else{
+				$this->session->set_userdata('app', $this->config->item('default_app_db'));
+			}
+			
 			
 			
             return 'success';
