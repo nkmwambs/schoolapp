@@ -28,7 +28,7 @@ class Login extends CI_Controller {
 
     //Default function, redirects to logged in user area
     public function index() {
-
+		$this->db->db_select($this->session->app);
       if ($this->session->userdata('active_login') == 1)
           redirect(base_url() . 'index.php?dashboard', 'refresh');
 
