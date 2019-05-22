@@ -2317,4 +2317,7 @@ class Finance extends CI_Controller
         $this->load->view('backend/index', $page_data); 
 	}
 	
+	function reverse_transaction($transaction_id){
+		
+	}
 }

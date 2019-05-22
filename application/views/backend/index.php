@@ -26,13 +26,14 @@
 
 </head>
 <body class="page-body <?php if ($skin_colour != '') echo 'skin-' . $skin_colour;?>" >
-	<div class="page-container <?=$sidebar_collapsed;?> <?php if ($text_align == 'right-to-left') echo 'right-sidebar';?>" >
+	<!-- <div class="page-container <?=$sidebar_collapsed;?> <?php if ($text_align == 'right-to-left') echo 'right-sidebar';?>" > -->
+	<div class="page-container horizontal-menu">	
 		<?php include 'navigation_'.$account_type.'.php';?>
 		<div class="main-content">
 			
-			<?php include 'header.php';?>
+			<?php //include 'header.php';?>
 			
-			<?php include 'lower_header.php'?>
+			<?php //include 'lower_header.php'?>
 			<div id="page_content" class="row">  
 				<div class="col-xs-12">
 					

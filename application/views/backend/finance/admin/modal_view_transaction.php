@@ -17,9 +17,16 @@ $row = $transaction[0];
 
 ?>
 <center>
-    <a onClick="PrintElem('#invoice_print')" class="btn btn-default btn-icon icon-left hidden-print pull-right">
+    <a onClick="PrintElem('#invoice_print')" 
+    class="btn btn-default btn-icon icon-left hidden-print pull-right">
         <?=get_phrase('print_transaction');?>
         <i class="entypo-print"></i>
+    </a>
+    
+    <a onclick="confirm_action('<?=base_url();?>index.php?finance/reverse_transaction/<?=$row['transaction_id'];?>');" 
+    	class="btn btn-danger btn-icon icon-left hidden-print pull-left">
+    	<?=get_phrase('reverse_transaction');?>
+        <i class="entypo-ccw"></i>
     </a>
 </center>
 
@@ -139,3 +146,7 @@ $row = $transaction[0];
 		</table>
 		
     </div>
+
+<script>
+	
+</script>
