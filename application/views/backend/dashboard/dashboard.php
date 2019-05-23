@@ -5,12 +5,42 @@
 <div class="row">
 	<div class="col-xs-12 <?=get_access_class('dashboard','admin');?>">
 		<hr />
-		<div class="row  <?=get_access_class('create_transaction','admin','dashboard');?>">
+		<div class="row  <?=get_access_class('create_transaction','admin','accounting');?>">
 			<div class="col-xs-12">
 				<div class="col-xs-3">
-					<a href="<?=base_url();?>index.php?finance/create_transaction" class="btn btn-success btn-icon float-left">
+					<!-- <a href="<?=base_url();?>index.php?finance/create_transaction" class="btn btn-success btn-icon float-left">
 						<i class="fa fa-tasks"></i><?=get_phrase('create_a_transaction');?>
-					</a> 
+					</a> -->
+					<div class="btn-group">
+						<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+							<?=get_phrase('create_a_transaction');?> <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu dropdown-default" role="menu">
+							<li class="<?=get_access_class('take_student_payment','admin','accounting');?>">
+								<a href="<?=base_url();?>index.php?finance/create_transaction/active_invoices/fees_income"><?=get_phrase('student_fees_receipt');?></a>
+							</li>
+							<li class="divider <?=get_access_class('take_student_payment','admin','accounting');?>"></li>
+							
+							<li class="<?=get_access_class('take_other_income','admin','accounting');?>">
+								<a href="<?=base_url();?>index.php?finance/create_transaction/income_add/other_income"><?=get_phrase('other_income_receipt');?></a>
+							</li>
+							<li class="divider <?=get_access_class('take_other_income','admin','accounting');?>"></li>
+							
+							<li class="<?=get_access_class('make_expense','admin','accounting');?>">
+								<a href="<?=base_url();?>index.php?finance/create_transaction/expense_add/expense"><?=get_phrase('expense');?></a>
+							</li>
+							<li class="divider <?=get_access_class('make_expense','admin','accounting');?>"></li>
+							
+							<li class="<?=get_access_class('tranfer_funds','admin','accounting');?>">
+								<a href="<?=base_url();?>index.php?finance/create_transaction/tranfer_funds/tranfer_funds"><?=get_phrase('funds_transfer');?></a>
+							</li>
+							<li class="divider <?=get_access_class('tranfer_funds','admin','accounting');?>"></li>
+							
+							<li class="<?=get_access_class('raise_contra_entry','admin','accounting');?>">
+								<a href="<?=base_url();?>index.php?finance/create_transaction/contra_entry/contra"><?=get_phrase('contra_entry');?></a>
+							</li>
+						</ul>
+					</div> 
 				</div>
 			</div>
 		</div>

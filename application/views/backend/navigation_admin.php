@@ -25,45 +25,45 @@
 				<li class="opened active has-sub">
 					<a href="#">
 						<i class="entypo-layout"></i>
-						<span class="title">Accounts</span>
+						<span class="title"><?=get_phrase('accounts');?></span>
 					</a>
 					<ul class="visible">
 						
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?admin/administrator">
-								<span class="title">Administrators</span>
+								<span class="title"><?=get_phrase('administrators');?></span>
 							</a>
 						</li>
 						
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?teacher/teacher">
-								<span class="title">Teachers</span>
+								<span class="title"><?=get_phrase('teachers');?></span>
 							</a>
 						</li>
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?parents/parent">
-								<span class="title">Parents</span>
+								<span class="title"><?=get_phrase('parents');?></span>
 							</a>
 						</li>
 						
 						<li class="has-sub active">
 							<a href="#">
-								<span class="title">Students</span>
+								<span class="title"><?=get_phrase('students');?></span>
 							</a>
 							<ul>
 								<li>
 									<a href="<?php echo base_url(); ?>index.php?student/student_add">
-										<span class="title">Admit Student</span>
+										<span class="title"><?=get_phrase('admit_student');?></span>
 									</a>
 								</li>
 								<li>
 									<a href="<?php echo base_url(); ?>index.php?student/student_bulk_add">
-										<span class="title">Bulk Admit Students</span>
+										<span class="title"><?=get_phrase('admit_bulk_students');?></span>
 									</a>
 								</li>
 								<li class="has-sub">
 									<a href="#">
-										<span class="title">Student Information</span>
+										<span class="title"><?=get_phrase('student_information');?></span>
 									</a>
 									<ul>
 										
@@ -98,7 +98,7 @@
 						
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?account/manage_profile">
-								<span class="title">Manage Own Account</span>
+								<span class="title"><?=get_phrase('manage_own_account');?></span>
 							</a>
 						</li>	
 						
@@ -115,36 +115,36 @@
 				<li class="has-sub">
 					<a href="#">
 						<i class="entypo-newspaper"></i>
-						<span class="title">Classes and Attendance</span>
+						<span class="title">Classes</span>
 					</a>
 					<ul>
 						<li class="has-sub">
 							<a href="#">
-								<span class="title">Classes</span>
+								<span class="title"><?=get_phrase('classes');?></span>
 							</a>
 							<ul>
 								<li>
 									<a href="<?php echo base_url(); ?>index.php?classes/classes">
-										<span class="title">Manage Classes</span>
+										<span class="title"><?=get_phrase('manage_classes');?></span>
 									</a>
 								</li>
 								
 								<li>
 									<a href="<?php echo base_url(); ?>index.php?classes/section">
-										<span class="title">Manage Sections</span>
+										<span class="title"><?=get_phrase('manage_sections');?></span>
 									</a>
 								</li>
 								
 								<li>
 									<a href="<?php echo base_url(); ?>index.php?Class_Routine/class_routine">
-										<span class="title">Class Routine</span>
+										<span class="title"><?=get_phrase('class_routine');?></span>
 									</a>
 								</li>
 							</ul>
 						</li>
 						<li class="has-sub">
 							<a href="#">
-								<span class="title">Subjects</span>
+								<span class="title"><?=get_phrase('subjects');?></span>
 							</a>
 							<ul>
 				                <?php
@@ -162,7 +162,7 @@
 						
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?attendance/manage_attendance/<?php echo date("d/m/Y"); ?>">
-								<span class="title">Class Attendance</span>
+								<span class="title"><?=get_phrase('class_attendance');?></span>
 							</a>
 						</li>
 						
@@ -170,33 +170,33 @@
 				</li>
 				<li class="has-sub">
 					<a href="#">
-						<i class="entypo-newspaper"></i>
-						<span class="title">Examination</span>
+						<i class="entypo-star"></i>
+						<span class="title"><?=get_phrase('examination');?></span>
 					</a>
 					<ul>
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?exam/exam">
-								<span class="title">Examination List</span>
+								<span class="title"><?=get_phrase('examination_list');?></span>
 							</a>
 						</li>
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?exam/grade">
-								<span class="title">Examination Grades</span>
+								<span class="title"><?=get_phrase('examination_grades');?></span>
 							</a>
 						</li>
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?exam/marks">
-								<span class="title">Marks</span>
+								<span class="title"><?=get_phrase('marks');?></span>
 							</a>
 						</li>
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?exam/exam_marks_sms">
-								<span class="title">Send Marks By SMS</span>
+								<span class="title"><?=get_phrase('send_marks_by_sms');?></span>
 							</a>
 						</li>
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?exam/tabulation_sheet">
-								<span class="title">Tabulation Sheet</span>
+								<span class="title"><?=get_phrase('tabulation_sheet');?></span>
 							</a>
 						</li>
 						
@@ -204,31 +204,31 @@
 				</li>
 				<li class="has-sub">
 					<a href="extra-icons.html">
-						<i class="entypo-bag"></i>
-						<span class="title">Finance</span>
+						<i class="entypo-heart"></i>
+						<span class="title"><?=get_phrase('finance');?></span>
 						<!-- <span class="badge badge-secondary">9</span> -->
 					</a>
 					<ul>
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?finance/fees_structure">
-								<span class="title">Fees Structure</span>
+								<span class="title"><?=get_phrase('fee_structure');?></span>
 								<!-- <span class="badge badge-success">3</span> -->
 							</a>
 						</li>	
 						
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?finance/student_payments">
-								<span class="title">Invoices</span>
+								<span class="title"><?=get_phrase('invoices');?></span>
 							</a>
 						</li>
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?finance/cashbook">
-								<span class="title">Cashbook</span>
+								<span class="title"><?=get_phrase('cashbook');?></span>
 							</a>
 						</li>
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?finance/budget">
-								<span class="title">Budget</span>
+								<span class="title"><?=get_phrase('budget');?></span>
 							</a>
 						</li>
 							
@@ -236,32 +236,32 @@
 						
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?finance/monthly_reconciliation">
-								<span class="title">Monthly Reconciliation</span>
+								<span class="title"><?=get_phrase('monthly_reconciliation');?></span>
 							</a>
 						</li>
 						<li class="has-sub">
 							<a href="#">
-								<span class="title">Financial Reports</span>
+								<span class="title"><?=get_phrase('financial_reports');?></span>
 							</a>
 							<ul>
 								<li>
 									<a href="<?php echo base_url(); ?>index.php?finance/fund_balance_report">
-										<span class="title">Fund Balance Report</span>
+										<span class="title"><?=get_phrase('fund_balance');?></span>
 									</a>
 								</li>
 								<li>
 									<a href="<?php echo base_url(); ?>index.php?finance/expense_variance_report">
-										<span class="title">Expense Variance Report</span>
+										<span class="title"><?=get_phrase('expense_variance');?></span>
 									</a>
 								</li>
 								<li>
 									<a href="<?php echo base_url(); ?>index.php?finance/income_variance_report">
-										<span class="title">Income Variance Report</span>
+										<span class="title"><?=get_phrase('income_variance');?></span>
 									</a>
 								</li>
 								<li>
 									<a href="<?php echo base_url(); ?>index.php?finance/funds_transfers_report">
-										<span class="title">Funds Transfer</span>
+										<span class="title"><?=get_phrase('funds_transfers');?></span>
 									</a>
 								</li>
 							</ul>
@@ -273,24 +273,24 @@
 				<li class="has-sub">
 					<a href="#">
 						<i class="entypo-bag"></i>
-							<span class="title">Inventory</span>
+							<span class="title"><?=get_phrase('inventory');?></span>
 					</a>
 					<ul>
 						<li>
 							 <a href="<?php echo base_url(); ?>index.php?Books/book">
-								<span class="title">Library</span>
+								<span class="title"><?=get_phrase('library');?></span>
 							</a>
 						</li>
 						
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?transport/transport">
-								<span class="title">Transport</span>
+								<span class="title"><?=get_phrase('transport');?></span>
 							</a>
 						</li>
 						
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?dormitory/dormitory">
-								<span class="title">Dormitory</span>
+								<span class="title"><?=get_phrase('dormitory');?></span>
 							</a>
 						</li>
 						
@@ -299,19 +299,19 @@
 				
 				<li class="has-sub">
 					<a href="#">
-						<i class="entypo-bag"></i>
-							<span class="title">Messaging</span>
+						<i class="entypo-mail"></i>
+							<span class="title"><?=get_phrase('messaging');?></span>
 					</a>
 					<ul>
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?events/noticeboard">
-								<span class="title">Noticeboard</span>
+								<span class="title"><?=get_phrase('noticeboard');?></span>
 							</a>
 						</li>
 						
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?Messages/message">
-								<span class="title">Messages</span>
+								<span class="title"><?=get_phrase('messages');?></span>
 							</a>
 						</li>
 						
@@ -323,36 +323,36 @@
 				<li class="has-sub">
 					<a href="#">
 						<i class="fa fa-gear"></i>
-							<span class="title">Settings</span>
+							<span class="title"><?=get_phrase('settings');?></span>
 					</a>
 					<ul>
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?settings/system_settings">
-								<span class="title">General Settings</span>
+								<span class="title"><?=get_phrase('general_settings');?></span>
 							</a>
 						</li>
 						
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?settings/sms_settings">
-								<span class="title">SMS settings</span>
+								<span class="title"><?=get_phrase('sms_settings');?></span>
 							</a>
 						</li>
 						
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?settings/manage_language">
-								<span class="title">Language Settings</span>
+								<span class="title"><?=get_phrase('language_settings');?></span>
 							</a>
 						</li>
 						
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?settings/school_settings">
-								<span class="title">School Settings</span>
+								<span class="title"><?=get_phrase('school_settings');?></span>
 							</a>
 						</li>
 						
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?settings/user_profiles">
-								<span class="title">User Profiles</span>
+								<span class="title"><?=get_phrase('user_profiles');?></span>
 							</a>
 						</li>
 						
@@ -369,7 +369,7 @@
 				
 				<li>
 					<a href="<?php echo base_url();?>index.php?login/logout">
-						Log Out <i class="entypo-logout right"></i>
+						<?=get_phrase('log_out');?> <i class="entypo-logout right"></i>
 					</a>
 				</li>
 				
