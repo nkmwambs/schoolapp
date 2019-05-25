@@ -17,8 +17,8 @@ $row = $edit_data[0];
 
 		
 		           <input type="hidden" class="form-control" value="<?php echo $row['amount_due'];?>" readonly/>
-		           <input type="hidden" class="form-control" name="amount_paid" value="<?php echo $row['amount_paid'];?>" readonly/>
-					<?php $bal = $row['amount_due'] - $row['amount_paid'];?>
+		           <input type="hidden" class="form-control" name="amount_paid" value="<?php echo $this->crud_model->fees_paid_by_invoice($param2);?>" readonly/>
+					<?php $bal = $this->crud_model->fees_balance_by_invoice($param2);?>
 		           <input type="hidden" id="get_bal" class="form-control" value="<?php echo $bal;?>" readonly/>
 
 		            
@@ -41,7 +41,7 @@ $row = $edit_data[0];
 								<tbody>
 									<?php
 										$this->db->select(array('fees_structure_details.detail_id','fees_structure_details.name',
-	                                	'fees_structure_details.amount','invoice_details.invoice_details_id','invoice_details.amount_due','invoice_details.amount_paid','invoice_details.balance'));
+	                                	'fees_structure_details.amount','invoice_details.invoice_details_id','invoice_details.amount_due'));
 	                                	
 										$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');									
 	                                	$this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
@@ -52,8 +52,8 @@ $row = $edit_data[0];
 										<tr>
 											<td><?php echo $inv->name;?></td>
 											<td><?php echo number_format($inv->amount_due,2);?></td>
-											<td><?php echo number_format($this->crud_model->get_invoice_detail_amount_paid($inv->invoice_details_id),2);?></td>
-											<td><?php echo number_format($this->crud_model->get_invoice_detail_balance($inv->invoice_details_id),2);?></td>
+											<td><?php echo number_format($this->crud_model->fees_paid_by_invoice_detail($inv->invoice_details_id),2);?></td>
+											<td><?php echo number_format($this->crud_model->fees_balance_by_invoice_detail($inv->invoice_details_id),2);?></td>
 											<td><input type="text" onkeyup="return get_total_payment();" class="form-control paying" name="take_payment[<?php echo $inv->invoice_details_id;?>]" id="" value="0"/></td>
 										</tr>
 									
@@ -61,14 +61,14 @@ $row = $edit_data[0];
 										
 										endforeach;
 										$tot_due = array_sum(array_column($invoice_details, 'amount_due'));
-										$tot_paid = array_sum(array_column($invoice_details, 'amount_paid'));
-										$tot_bal  = array_sum(array_column($invoice_details, 'balance'));
+										$tot_paid = $this->crud_model->fees_paid_by_invoice($param2);//array_sum(array_column($invoice_details, 'amount_paid'));
+										$tot_bal  = $this->crud_model->fees_balance_by_invoice($param2);//array_sum(array_column($invoice_details, 'balance'));
 									?>
 									<tr><td><?=get_phrase('overpayment');?></td><td colspan="3"><input type="text" class="form-control overpay" name="overpayment_description" readonly="readonly" /></td><td><input type="text" onkeyup="return get_total_payment();" id="overpayment" name="overpayment" class="form-control paying overpay" value="0" readonly="readonly"/></td></tr>
 									<tr>
 										<td>Totals</td><td><?php echo number_format($tot_due,2);?></td>
-										<td><?php echo number_format($this->crud_model->get_invoice_amount_paid($param2),2);?></td>
-										<td id="total_balance"><?php echo number_format($this->crud_model->get_invoice_balance($param2),2);?></td>
+										<td><?php echo number_format($this->crud_model->fees_paid_by_invoice($param2),2);?></td>
+										<td id="total_balance"><?php echo number_format($this->crud_model->fees_balance_by_invoice($param2),2);?></td>
 										<td><input type="text" class="form-control" name="total_payment" id="total_payment" value="0" readonly="readonly"/></td>
 									</tr>
 								</tbody>

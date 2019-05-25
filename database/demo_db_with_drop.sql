@@ -5,6 +5,7 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
+DROP TABLE IF EXISTS `access`;
 CREATE TABLE `access` (
   `access_id` int(100) NOT NULL AUTO_INCREMENT,
   `entitlement_id` int(100) NOT NULL,
@@ -108,9 +109,24 @@ INSERT INTO `access` (`access_id`, `entitlement_id`, `profile_id`) VALUES
 (164,	531,	1),
 (165,	523,	1),
 (166,	524,	1),
-(167,	525,	1),
-(168,	526,	1);
+(168,	526,	1),
+(169,	373,	1),
+(170,	374,	1),
+(171,	527,	1),
+(172,	528,	1),
+(173,	503,	1),
+(174,	504,	1),
+(175,	505,	1),
+(176,	507,	1),
+(177,	508,	1),
+(178,	509,	1),
+(179,	510,	1),
+(180,	511,	1),
+(181,	512,	1),
+(182,	384,	1),
+(183,	525,	1);
 
+DROP TABLE IF EXISTS `accounts`;
 CREATE TABLE `accounts` (
   `accounts_id` int(10) NOT NULL AUTO_INCREMENT,
   `numeric_code` int(10) NOT NULL,
@@ -124,6 +140,7 @@ INSERT INTO `accounts` (`accounts_id`, `numeric_code`, `name`, `opening_balance`
 (1,	1,	'cash',	75000.00,	'2017-03-01'),
 (2,	2,	'bank',	342870.23,	'2017-03-01');
 
+DROP TABLE IF EXISTS `activity`;
 CREATE TABLE `activity` (
   `activity_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL,
@@ -134,13 +151,8 @@ CREATE TABLE `activity` (
   PRIMARY KEY (`activity_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `activity` (`activity_id`, `name`, `description`, `start_date`, `end_date`, `stmp`) VALUES
-(5,	'Parents Meeting',	'For all parents and classes',	'2017-11-12',	'2017-11-12',	'2017-11-12 09:33:04'),
-(6,	'Prize Giving Day',	'Academic Day',	'2018-04-30',	'2018-04-30',	'2018-04-04 10:43:07'),
-(7,	'Fundraising Day',	'For purchasing a school bus',	'2018-06-28',	'2018-06-28',	'2018-06-15 10:57:47'),
-(8,	'Closing Day',	'Closing Day',	'2018-06-29',	'2018-06-29',	'2018-06-15 13:33:39'),
-(9,	'Thanks giving day',	'All parents thanks giving day',	'2019-04-18',	'2019-04-18',	'2019-03-30 08:15:35');
 
+DROP TABLE IF EXISTS `activity_attendance`;
 CREATE TABLE `activity_attendance` (
   `activity_attendance_id` int(100) NOT NULL AUTO_INCREMENT,
   `activity_id` int(100) NOT NULL,
@@ -155,18 +167,8 @@ CREATE TABLE `activity_attendance` (
   CONSTRAINT `activity_attendance_ibfk_3` FOREIGN KEY (`parent_id`) REFERENCES `parent` (`parent_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `activity_attendance` (`activity_attendance_id`, `activity_id`, `parent_id`, `expected`, `attendance`) VALUES
-(25,	7,	1,	1,	0),
-(26,	7,	3,	1,	1),
-(27,	7,	4,	1,	1),
-(28,	6,	1,	1,	0),
-(29,	6,	4,	1,	1),
-(30,	8,	4,	1,	1),
-(31,	8,	2,	1,	0),
-(40,	9,	1,	1,	1),
-(41,	9,	2,	1,	1),
-(42,	9,	3,	1,	0);
 
+DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin` (
   `admin_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
@@ -179,11 +181,8 @@ CREATE TABLE `admin` (
   UNIQUE KEY `email` (`email`(100))
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `admin` (`admin_id`, `name`, `email`, `birthday`, `sex`, `phone`, `level`) VALUES
-(1,	'Nicodemus Karisa',	'nkmwambs@gmail.com',	'10/12/1980',	'male',	'0711808078',	'super'),
-(2,	'Livingstone Onduso',	'livingstoneonduso@gmail.com',	'',	'male',	'0909',	'super'),
-(3,	'Hope Shume',	'hopeshume@gmail.com',	'',	'female',	'87778',	'super');
 
+DROP TABLE IF EXISTS `app`;
 CREATE TABLE `app` (
   `app_id` int(100) NOT NULL AUTO_INCREMENT,
   `app_name` varchar(20) NOT NULL,
@@ -194,6 +193,7 @@ INSERT INTO `app` (`app_id`, `app_name`) VALUES
 (1,	'default'),
 (2,	'schoolapp2');
 
+DROP TABLE IF EXISTS `attendance`;
 CREATE TABLE `attendance` (
   `attendance_id` int(11) NOT NULL AUTO_INCREMENT,
   `status` int(11) NOT NULL COMMENT '0 undefined , 1 present , 2  absent',
@@ -204,30 +204,8 @@ CREATE TABLE `attendance` (
   CONSTRAINT `attendance_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `attendance` (`attendance_id`, `status`, `student_id`, `date`) VALUES
-(1,	1,	4,	'2018-04-04'),
-(2,	0,	4,	'2018-04-05'),
-(3,	1,	1,	'2018-04-20'),
-(4,	1,	2,	'2018-04-20'),
-(5,	2,	3,	'2018-04-20'),
-(6,	1,	4,	'2018-06-14'),
-(7,	2,	11,	'2018-06-14'),
-(8,	1,	12,	'2018-06-14'),
-(9,	1,	13,	'2018-06-14'),
-(10,	0,	11,	'2018-07-12'),
-(11,	0,	13,	'2018-07-12'),
-(12,	1,	2,	'2019-03-25'),
-(13,	1,	4,	'2019-03-25'),
-(14,	2,	12,	'2019-03-25'),
-(15,	1,	16,	'2019-04-17'),
-(16,	1,	17,	'2019-04-17'),
-(17,	0,	2,	'2019-04-18'),
-(18,	1,	4,	'2019-04-18'),
-(19,	2,	12,	'2019-04-18'),
-(20,	1,	14,	'2019-04-18'),
-(21,	0,	16,	'2019-04-24'),
-(22,	0,	17,	'2019-04-24');
 
+DROP TABLE IF EXISTS `book`;
 CREATE TABLE `book` (
   `book_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -240,6 +218,7 @@ CREATE TABLE `book` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
+DROP TABLE IF EXISTS `budget`;
 CREATE TABLE `budget` (
   `budget_id` int(100) NOT NULL AUTO_INCREMENT,
   `expense_category_id` int(11) NOT NULL,
@@ -258,10 +237,8 @@ CREATE TABLE `budget` (
   CONSTRAINT `budget_ibfk_2` FOREIGN KEY (`terms_id`) REFERENCES `terms` (`terms_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `budget` (`budget_id`, `expense_category_id`, `description`, `fy`, `terms_id`, `qty`, `unitcost`, `often`, `total`, `smtp`) VALUES
-(7,	1,	'Bus Service',	2019,	1,	2.00,	7500.00,	4,	60000.00,	'2019-05-20 16:41:06'),
-(8,	5,	'Staff Salaries',	2019,	1,	15.00,	15400.00,	4,	924000.00,	'2019-05-20 17:22:08');
 
+DROP TABLE IF EXISTS `budget_schedule`;
 CREATE TABLE `budget_schedule` (
   `budget_schedule_id` int(100) NOT NULL AUTO_INCREMENT,
   `budget_id` int(100) NOT NULL,
@@ -273,16 +250,8 @@ CREATE TABLE `budget_schedule` (
   CONSTRAINT `budget_schedule_ibfk_1` FOREIGN KEY (`budget_id`) REFERENCES `budget` (`budget_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `budget_schedule` (`budget_schedule_id`, `budget_id`, `month`, `amount`, `stmp`) VALUES
-(73,	7,	1,	15000.00,	'2019-05-20 16:41:06'),
-(74,	7,	2,	15000.00,	'2019-05-20 16:41:06'),
-(75,	7,	3,	15000.00,	'2019-05-20 16:41:06'),
-(76,	7,	4,	15000.00,	'2019-05-20 16:41:06'),
-(77,	8,	1,	231000.00,	'2019-05-20 17:22:08'),
-(78,	8,	2,	231000.00,	'2019-05-20 17:22:08'),
-(79,	8,	3,	231000.00,	'2019-05-20 17:22:08'),
-(80,	8,	4,	231000.00,	'2019-05-20 17:22:08');
 
+DROP TABLE IF EXISTS `caregiver`;
 CREATE TABLE `caregiver` (
   `caregiver_id` int(100) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) NOT NULL,
@@ -294,37 +263,8 @@ CREATE TABLE `caregiver` (
   CONSTRAINT `caregiver_ibfk_2` FOREIGN KEY (`parent_id`) REFERENCES `parent` (`parent_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `caregiver` (`caregiver_id`, `parent_id`, `student_id`) VALUES
-(12,	5,	11),
-(13,	6,	11),
-(14,	5,	12),
-(15,	6,	12),
-(21,	7,	11),
-(25,	3,	4),
-(26,	7,	4),
-(27,	5,	13),
-(28,	7,	2),
-(29,	6,	16),
-(30,	7,	16),
-(31,	5,	18),
-(32,	7,	18),
-(33,	7,	19),
-(36,	5,	35),
-(37,	7,	35);
 
-CREATE TABLE `cashbook` (
-  `cashbook_id` int(200) NOT NULL AUTO_INCREMENT,
-  `batch_number` int(200) NOT NULL,
-  `t_date` date NOT NULL,
-  `description` varchar(100) NOT NULL,
-  `transaction_type` int(10) NOT NULL COMMENT '1=income,2=expense,3=to_bank,4=to_cash, 5 = funds transfer',
-  `account` int(10) NOT NULL COMMENT '1=cash,2=bank, 3 = funds transfer',
-  `amount` decimal(10,2) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`cashbook_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
+DROP TABLE IF EXISTS `ci_sessions`;
 CREATE TABLE `ci_sessions` (
   `id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
   `ip_address` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
@@ -334,33 +274,8 @@ CREATE TABLE `ci_sessions` (
   KEY `ci_sessions_timestamp` (`timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `ci_sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
-('0lmcuk1m70bj4pek2sl9vpgp5thch8g1',	'::1',	1558382434,	'__ci_last_regenerate|i:1558382434;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('204c4i6aejfia48r3ade4ibvifbumn5a',	'::1',	1558381781,	'__ci_last_regenerate|i:1558381781;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('3mv6mtk71om3lfclv29hcr7i66n46vsm',	'::1',	1558376872,	'__ci_last_regenerate|i:1558376872;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('4nk5qhto8qhp2t5p7mu8iuvf45oinarl',	'::1',	1558379742,	'__ci_last_regenerate|i:1558379742;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('5p2vhsi5mhpqgoqmog9er1fj9tvr7h9l',	'::1',	1558376086,	'__ci_last_regenerate|i:1558376086;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('6h7nl4vudbmgdafnqectp6v4lbfno2l2',	'::1',	1558384416,	'__ci_last_regenerate|i:1558384416;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"93\";'),
-('6mfgabhms74d12921vjiilc1vb8k9go5',	'::1',	1558380946,	'__ci_last_regenerate|i:1558380946;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('8mqo8q031sqsluh68ipoo20k3j51a7dm',	'::1',	1558378287,	'__ci_last_regenerate|i:1558378287;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('8q8erghfv3vus3gta2ch455pgmka812o',	'::1',	1558382763,	'__ci_last_regenerate|i:1558382763;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('9q5ld2fl4188hjm6ol4me9spi79rkig9',	'::1',	1558377521,	'__ci_last_regenerate|i:1558377521;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('9vnfbp67biesplp1v2csepcrfhk434ge',	'::1',	1558384816,	'__ci_last_regenerate|i:1558384816;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"93\";'),
-('e0oigkuqpmf3vfpabrvamb5q9u52rtm4',	'::1',	1558382097,	'__ci_last_regenerate|i:1558382097;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('g0e6akopc2ijeg4ppiufa2a8o61bk5t2',	'::1',	1558377969,	'__ci_last_regenerate|i:1558377969;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('gu8k07p83b3n5ecqalnj2dvgr28437qu',	'::1',	1558381351,	'__ci_last_regenerate|i:1558381351;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('jv8ubve2q2hpj3emk0cbtj8ei7mravip',	'::1',	1558380633,	'__ci_last_regenerate|i:1558380633;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('lcp83o47mkft2q6uaa033ukplbi4uoia',	'::1',	1558383149,	'__ci_last_regenerate|i:1558383149;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('lqe9o7g1rfc582ig4e3o77rp3auh7vsj',	'::1',	1558377208,	'__ci_last_regenerate|i:1558377208;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('n2jlbn9hjfo4pcrbcsoq5bj0ajq253d8',	'::1',	1558378934,	'__ci_last_regenerate|i:1558378934;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('o9258fckh9dh9feo6hkgpg7hjh84bkng',	'::1',	1558378589,	'__ci_last_regenerate|i:1558378589;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('pe311k66ckfoj519kl2kktvnu3gp795s',	'::1',	1558379280,	'__ci_last_regenerate|i:1558379280;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('pq88gbjhnn64e732kd5l6aubjveo4g0g',	'::1',	1558380270,	'__ci_last_regenerate|i:1558380270;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('rhg7mh0otve1s4suucrjemlldimudt2h',	'::1',	1558376537,	'__ci_last_regenerate|i:1558376537;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('tmbnl7do2fnri541olc58stbccm9f58a',	'::1',	1558384019,	'__ci_last_regenerate|i:1558384019;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('ulp1qpbqagmbg4jgg64pnu1f1tqe6fo8',	'::1',	1558383580,	'__ci_last_regenerate|i:1558383580;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('vfaiu1tpj1qhl89b55f7deq3ttvnb1qb',	'::1',	1558384973,	'__ci_last_regenerate|i:1558384816;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"student\";last_transaction_id|s:2:\"93\";');
 
+DROP TABLE IF EXISTS `class`;
 CREATE TABLE `class` (
   `class_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -371,19 +286,8 @@ CREATE TABLE `class` (
   CONSTRAINT `class_ibfk_1` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`teacher_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `class` (`class_id`, `name`, `name_numeric`, `teacher_id`) VALUES
-(1,	'STD Two',	5,	2),
-(2,	'P Three',	6,	1),
-(4,	'Class Four',	7,	2),
-(5,	'Play Group',	1,	1),
-(6,	'Kindergaten',	2,	2),
-(7,	'Pre-School',	3,	1),
-(8,	'Class One',	4,	1),
-(9,	'Class Five',	8,	2),
-(10,	'Class Six',	9,	2),
-(11,	'Class Seven',	10,	1),
-(12,	'Class Eight',	11,	2);
 
+DROP TABLE IF EXISTS `class_routine`;
 CREATE TABLE `class_routine` (
   `class_routine_id` int(11) NOT NULL AUTO_INCREMENT,
   `class_id` int(11) NOT NULL,
@@ -400,11 +304,8 @@ CREATE TABLE `class_routine` (
   CONSTRAINT `class_routine_ibfk_2` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`subject_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `class_routine` (`class_routine_id`, `class_id`, `subject_id`, `time_start`, `time_end`, `time_start_min`, `time_end_min`, `day`) VALUES
-(1,	1,	2,	8,	8,	0,	40,	'wednesday'),
-(2,	1,	3,	8,	9,	40,	30,	'wednesday'),
-(3,	1,	14,	14,	14,	0,	40,	'thursday');
 
+DROP TABLE IF EXISTS `class_routine_attendance`;
 CREATE TABLE `class_routine_attendance` (
   `class_routine_attendance_id` int(100) NOT NULL AUTO_INCREMENT,
   `class_routine_id` int(11) NOT NULL,
@@ -415,10 +316,18 @@ CREATE TABLE `class_routine_attendance` (
   CONSTRAINT `class_routine_attendance_ibfk_1` FOREIGN KEY (`class_routine_id`) REFERENCES `class_routine` (`class_routine_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `class_routine_attendance` (`class_routine_attendance_id`, `class_routine_id`, `attendance_date`, `notes`) VALUES
-(1,	2,	'2019-04-17',	'Well done'),
-(2,	3,	'2019-04-18',	'Well done');
 
+DROP TABLE IF EXISTS `crud`;
+CREATE TABLE `crud` (
+  `crud_id` int(100) NOT NULL AUTO_INCREMENT,
+  `user_access` varchar(20) NOT NULL,
+  `feature` varchar(20) NOT NULL,
+  `operation` varchar(20) NOT NULL,
+  PRIMARY KEY (`crud_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+DROP TABLE IF EXISTS `document`;
 CREATE TABLE `document` (
   `document_id` int(11) NOT NULL AUTO_INCREMENT,
   `title` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -432,6 +341,7 @@ CREATE TABLE `document` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
+DROP TABLE IF EXISTS `dormitory`;
 CREATE TABLE `dormitory` (
   `dormitory_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -441,6 +351,7 @@ CREATE TABLE `dormitory` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
+DROP TABLE IF EXISTS `entitlement`;
 CREATE TABLE `entitlement` (
   `entitlement_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -562,8 +473,10 @@ INSERT INTO `entitlement` (`entitlement_id`, `name`, `login_type_id`, `derivativ
 (528,	'delete_class',	1,	372,	1),
 (529,	'delete_marks',	1,	378,	1),
 (530,	'del_marks',	1,	378,	1),
-(531,	'all_students',	1,	364,	1);
+(531,	'all_students',	1,	364,	1),
+(532,	'create_transaction',	1,	384,	1);
 
+DROP TABLE IF EXISTS `exam`;
 CREATE TABLE `exam` (
   `exam_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -572,10 +485,8 @@ CREATE TABLE `exam` (
   PRIMARY KEY (`exam_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `exam` (`exam_id`, `name`, `date`, `comment`) VALUES
-(1,	'Mid Term Term one',	'04/30/2018',	'Exam'),
-(2,	'Opening School Exam - Term Two 2019',	'05/16/2019',	'Opening School Exam - Term Two 2019');
 
+DROP TABLE IF EXISTS `expense_category`;
 CREATE TABLE `expense_category` (
   `expense_category_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -585,16 +496,8 @@ CREATE TABLE `expense_category` (
   CONSTRAINT `expense_category_ibfk_1` FOREIGN KEY (`income_category_id`) REFERENCES `income_categories` (`income_category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `expense_category` (`expense_category_id`, `name`, `income_category_id`) VALUES
-(1,	'Transport Expenses',	1),
-(2,	'Administration',	6),
-(3,	'Examination',	2),
-(4,	'Miscellaneous',	3),
-(5,	'Salaries',	6),
-(6,	'Catering',	7),
-(7,	'Firewood',	7),
-(8,	'Food',	7);
 
+DROP TABLE IF EXISTS `fees_structure`;
 CREATE TABLE `fees_structure` (
   `fees_id` int(10) NOT NULL AUTO_INCREMENT,
   `name` longtext NOT NULL,
@@ -604,13 +507,8 @@ CREATE TABLE `fees_structure` (
   PRIMARY KEY (`fees_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `fees_structure` (`fees_id`, `name`, `class_id`, `yr`, `term`) VALUES
-(13,	'class_STD_Two_term_One_year_2019',	1,	2019,	1),
-(14,	'class_STD_Two_term_Two_year_2019',	1,	2019,	2),
-(15,	'class_Class_One_term_One_year_2019',	8,	2019,	1),
-(16,	'class_Class_One_term_Two_year_2019',	8,	2019,	2),
-(17,	'class_Class_Seven_term_Two_year_2019',	11,	2019,	1);
 
+DROP TABLE IF EXISTS `fees_structure_details`;
 CREATE TABLE `fees_structure_details` (
   `detail_id` int(10) NOT NULL AUTO_INCREMENT,
   `name` longtext NOT NULL,
@@ -624,35 +522,8 @@ CREATE TABLE `fees_structure_details` (
   CONSTRAINT `fees_structure_details_ibfk_2` FOREIGN KEY (`fees_id`) REFERENCES `fees_structure` (`fees_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `fees_structure_details` (`detail_id`, `name`, `fees_id`, `income_category_id`, `amount`) VALUES
-(56,	'Examination Fees',	13,	2,	2500),
-(57,	'Tuition',	13,	6,	8500),
-(58,	'Miscellaneous',	13,	3,	1800),
-(59,	'School Trips',	13,	4,	4700),
-(60,	'School Transport',	13,	1,	0),
-(61,	'Examination',	14,	2,	1500),
-(62,	'Tuition',	14,	6,	8700),
-(63,	'Boarding Fees',	14,	7,	15000),
-(64,	'Motivation Fees',	13,	8,	1500),
-(65,	'Balance Brought Forward',	13,	8,	0),
-(66,	'Balance b/f',	14,	8,	0),
-(67,	'Balance Brought Forward',	15,	8,	0),
-(68,	'Examination Fees',	15,	2,	1400),
-(69,	'Tuition',	15,	6,	7500),
-(70,	'School Transport',	15,	1,	0),
-(71,	'Educational Trips',	15,	4,	3400),
-(72,	'Boarding fees',	15,	7,	15000),
-(73,	'Balance Brought Forward',	16,	8,	0),
-(74,	'Examination Fees',	16,	2,	1200),
-(75,	'School Transport',	16,	1,	6500),
-(76,	'School Buildings Maintanance',	16,	5,	3200),
-(77,	'Tuition',	16,	6,	9600),
-(78,	'Boarding fees',	16,	7,	15000),
-(79,	'Balance Brought Forward',	17,	8,	0),
-(80,	'School Transport',	17,	1,	0),
-(81,	'Tuition',	17,	6,	7800),
-(82,	'Exams',	17,	2,	2100);
 
+DROP TABLE IF EXISTS `grade`;
 CREATE TABLE `grade` (
   `grade_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -663,12 +534,8 @@ CREATE TABLE `grade` (
   PRIMARY KEY (`grade_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `grade` (`grade_id`, `name`, `grade_point`, `mark_from`, `mark_upto`, `comment`) VALUES
-(1,	'Excellent ',	'4',	80,	100,	''),
-(2,	'Good',	'3',	60,	79,	''),
-(3,	'Fair',	'2',	40,	59,	''),
-(4,	'Poor',	'1',	0,	39,	'Poor');
 
+DROP TABLE IF EXISTS `income_categories`;
 CREATE TABLE `income_categories` (
   `income_category_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -677,16 +544,8 @@ CREATE TABLE `income_categories` (
   PRIMARY KEY (`income_category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `income_categories` (`income_category_id`, `name`, `opening_balance`, `default_category`) VALUES
-(1,	'Transport Revenue',	3500.00,	0),
-(2,	'Examinations',	0.00,	0),
-(3,	'Miscellaneous',	56000.00,	0),
-(4,	'Academic Trips',	0.00,	0),
-(5,	'Maintainance',	0.00,	0),
-(6,	'Tuition',	85000.00,	0),
-(7,	'Boarding Fees',	34500.00,	0),
-(8,	'Other Incomes',	0.00,	1);
 
+DROP TABLE IF EXISTS `invoice`;
 CREATE TABLE `invoice` (
   `invoice_id` int(11) NOT NULL AUTO_INCREMENT,
   `student_id` int(11) NOT NULL,
@@ -708,10 +567,8 @@ CREATE TABLE `invoice` (
   CONSTRAINT `invoice_ibfk_2` FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `invoice` (`invoice_id`, `student_id`, `class_id`, `yr`, `term`, `amount`, `amount_due`, `amount_paid`, `balance`, `creation_timestamp`, `status`, `carry_forward`, `transitioned`) VALUES
-(58,	17,	1,	'2019',	'1',	19000,	'11000',	0,	0,	'1556575200',	'excess',	0,	0),
-(70,	17,	1,	'2019',	'2',	25200,	'5200',	0,	0,	'1567202400',	'unpaid',	0,	0);
 
+DROP TABLE IF EXISTS `invoice_details`;
 CREATE TABLE `invoice_details` (
   `invoice_details_id` int(200) NOT NULL AUTO_INCREMENT,
   `invoice_id` int(200) NOT NULL,
@@ -727,13 +584,8 @@ CREATE TABLE `invoice_details` (
   CONSTRAINT `invoice_details_ibfk_2` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`invoice_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `invoice_details` (`invoice_details_id`, `invoice_id`, `detail_id`, `amount_due`, `amount_paid`, `balance`, `last_payment_id`) VALUES
-(293,	58,	56,	2500,	0,	0,	0),
-(294,	58,	57,	8500,	0,	0,	0),
-(328,	70,	61,	0,	0,	0,	0),
-(329,	70,	62,	0,	0,	0,	0),
-(330,	70,	63,	5200,	0,	0,	0);
 
+DROP TABLE IF EXISTS `language`;
 CREATE TABLE `language` (
   `phrase_id` int(11) NOT NULL AUTO_INCREMENT,
   `phrase` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1546,8 +1398,25 @@ INSERT INTO `language` (`phrase_id`, `phrase`, `english`, `bengali`, `spanish`, 
 (861,	'invoice_number',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
 (862,	'invoice_term',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
 (863,	'invoice_year',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
-(864,	'payment_from',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL);
+(864,	'payment_from',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(865,	'instance_of',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(866,	'reverse_transaction',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(867,	'accounts',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(868,	'admit_bulk_students',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(869,	'manage_own_account',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(870,	'class_attendance',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(871,	'examination',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(872,	'examination_list',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(873,	'examination_grades',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(874,	'marks',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(875,	'finance',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(876,	'fee_structure',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(877,	'financial_reports',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(878,	'inventory',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(879,	'messaging',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(880,	'log_out',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL);
 
+DROP TABLE IF EXISTS `lesson_plan`;
 CREATE TABLE `lesson_plan` (
   `lesson_plan_id` int(100) NOT NULL AUTO_INCREMENT,
   `scheme_id` int(100) NOT NULL,
@@ -1578,9 +1447,8 @@ CREATE TABLE `lesson_plan` (
   CONSTRAINT `lesson_plan_ibfk_6` FOREIGN KEY (`signed_off_by`) REFERENCES `user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `lesson_plan` (`lesson_plan_id`, `scheme_id`, `planned_date`, `attendance_date`, `class_routine_id`, `roll`, `core_competencies`, `introduction`, `lesson_development`, `conclusion`, `summary`, `reflection`, `signed_off_by`, `signed_off_date`, `createdby`, `lastmodifiedby`, `createddate`, `lastmodifieddate`) VALUES
-(5,	1,	'2019-05-22',	'2019-04-24',	1,	42,	'Taking turns in watering flowerbeds promotes the values of caring for plants, responsibility and respect for one another.  ',	'Learners are guided to watch age appropriate media on watering flowers to develop interest and curiosity in watering flowerbeds or study photographs/newspaper cuttings showing watering flowerbeds',	'Step 1: Learners to suggest reasons for watering flowers \r\nStep 2:  Using the key inquiry questions, synthesize learners, responses on when and how to water flowers \r\n Step 3: Teacher to demonstrate watering flowerbeds \r\nStep 4: Learners practice watering flowerbeds at school. ',	'• Keenly observe and guide learners on the procedure of watering flowerbeds \r\n• Learners carry out related activities in the workbook ',	'Some of the plants in our surroundings are flowers. Flowers need water to grow. We can take care of plants by watering the flowerbeds.',	'Happy to have taught this. See this! ',	NULL,	NULL,	1,	1,	'2019-04-25 02:27:40',	'2019-04-25 02:17:02');
 
+DROP TABLE IF EXISTS `login_type`;
 CREATE TABLE `login_type` (
   `login_type_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(10) NOT NULL,
@@ -1593,6 +1461,7 @@ INSERT INTO `login_type` (`login_type_id`, `name`) VALUES
 (3,	'student'),
 (4,	'parent');
 
+DROP TABLE IF EXISTS `mark`;
 CREATE TABLE `mark` (
   `mark_id` int(11) NOT NULL AUTO_INCREMENT,
   `student_id` int(11) NOT NULL,
@@ -1613,56 +1482,8 @@ CREATE TABLE `mark` (
   CONSTRAINT `mark_ibfk_4` FOREIGN KEY (`exam_id`) REFERENCES `exam` (`exam_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `mark` (`mark_id`, `student_id`, `subject_id`, `class_id`, `exam_id`, `mark_obtained`, `mark_total`, `comment`) VALUES
-(1,	4,	1,	2,	1,	72,	100,	'Good Work'),
-(5,	4,	7,	2,	1,	60,	100,	'Good'),
-(6,	11,	7,	2,	1,	65,	100,	'Good'),
-(7,	12,	7,	2,	1,	82,	100,	'Excellent'),
-(8,	13,	7,	2,	1,	71,	100,	'Very Good'),
-(9,	11,	1,	2,	1,	0,	100,	''),
-(10,	12,	1,	2,	1,	0,	100,	''),
-(11,	13,	1,	2,	1,	0,	100,	''),
-(14,	14,	8,	9,	2,	44,	100,	'Needs Improvemnet'),
-(15,	4,	8,	9,	2,	75,	100,	'Excellent'),
-(16,	12,	8,	9,	2,	82,	100,	'Excellent'),
-(17,	4,	9,	9,	2,	77,	100,	'Well done'),
-(18,	12,	9,	9,	2,	81,	100,	'Good'),
-(19,	14,	9,	9,	2,	65,	100,	'Fair'),
-(20,	4,	10,	9,	2,	89,	100,	'Good'),
-(21,	12,	10,	9,	2,	77,	100,	'Well done'),
-(22,	14,	10,	9,	2,	86,	100,	'Good'),
-(23,	4,	11,	9,	2,	72,	100,	'Well done'),
-(24,	12,	11,	9,	2,	68,	100,	'Good work'),
-(25,	14,	11,	9,	2,	86,	100,	'Keep it up'),
-(26,	4,	12,	9,	2,	56,	100,	'Fair'),
-(27,	12,	12,	9,	2,	74,	100,	'Good'),
-(28,	14,	12,	9,	2,	69,	100,	'Good'),
-(29,	4,	13,	9,	2,	88,	100,	'Well done'),
-(30,	12,	13,	9,	2,	77,	100,	'Good'),
-(31,	14,	13,	9,	2,	64,	100,	'Good'),
-(32,	4,	8,	9,	1,	72,	100,	'Good'),
-(33,	12,	8,	9,	1,	65,	100,	'Well done'),
-(34,	14,	8,	9,	1,	81,	100,	'Good'),
-(35,	4,	9,	9,	1,	62,	100,	'Good'),
-(36,	12,	9,	9,	1,	89,	100,	'Well done'),
-(37,	14,	9,	9,	1,	52,	100,	'fair'),
-(38,	4,	10,	9,	1,	74,	100,	'Good'),
-(39,	12,	10,	9,	1,	98,	100,	'Excellent'),
-(40,	14,	10,	9,	1,	52,	100,	'Fair'),
-(41,	4,	11,	9,	1,	64,	100,	'Good'),
-(42,	12,	11,	9,	1,	86,	100,	'Excellent'),
-(43,	14,	11,	9,	1,	71,	100,	'Good'),
-(44,	4,	12,	9,	1,	82,	100,	'Good'),
-(45,	12,	12,	9,	1,	94,	100,	'Excellent'),
-(46,	14,	12,	9,	1,	68,	100,	'Good'),
-(47,	4,	13,	9,	1,	68,	100,	'Good'),
-(48,	12,	13,	9,	1,	82,	100,	'Excellent'),
-(49,	14,	13,	9,	1,	66,	100,	'Good'),
-(78,	16,	2,	1,	1,	34,	100,	''),
-(79,	17,	2,	1,	1,	55,	100,	''),
-(80,	32,	2,	1,	1,	75,	100,	''),
-(81,	33,	2,	1,	1,	77,	100,	'');
 
+DROP TABLE IF EXISTS `message`;
 CREATE TABLE `message` (
   `message_id` int(11) NOT NULL AUTO_INCREMENT,
   `message_thread_code` longtext NOT NULL,
@@ -1673,10 +1494,8 @@ CREATE TABLE `message` (
   PRIMARY KEY (`message_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-INSERT INTO `message` (`message_id`, `message_thread_code`, `message`, `sender`, `timestamp`, `read_status`) VALUES
-(1,	'8cbce2aa38abde1',	'Hey',	'admin-1',	'1522852035',	0),
-(2,	'd41d8cd98f00b20',	'Welocme here',	'admin-1',	'1553505210',	0);
 
+DROP TABLE IF EXISTS `message_thread`;
 CREATE TABLE `message_thread` (
   `message_thread_id` int(11) NOT NULL AUTO_INCREMENT,
   `message_thread_code` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1686,10 +1505,8 @@ CREATE TABLE `message_thread` (
   PRIMARY KEY (`message_thread_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `message_thread` (`message_thread_id`, `message_thread_code`, `sender`, `reciever`, `last_message_timestamp`) VALUES
-(1,	'8cbce2aa38abde1',	'admin-1',	'parent-3',	''),
-(2,	'd41d8cd98f00b20',	'admin-1',	'student-1',	'');
 
+DROP TABLE IF EXISTS `noticeboard`;
 CREATE TABLE `noticeboard` (
   `notice_id` int(11) NOT NULL AUTO_INCREMENT,
   `notice_title` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1698,9 +1515,8 @@ CREATE TABLE `noticeboard` (
   PRIMARY KEY (`notice_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `noticeboard` (`notice_id`, `notice_title`, `notice`, `create_timestamp`) VALUES
-(1,	'Academic Day',	'Academic Day',	1524002400);
 
+DROP TABLE IF EXISTS `overpay`;
 CREATE TABLE `overpay` (
   `overpay_id` int(100) NOT NULL AUTO_INCREMENT,
   `student_id` int(100) NOT NULL,
@@ -1717,9 +1533,8 @@ CREATE TABLE `overpay` (
   CONSTRAINT `overpay_ibfk_2` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`transaction_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `overpay` (`overpay_id`, `student_id`, `transaction_id`, `amount`, `amount_due`, `description`, `status`, `creation_timestamp`) VALUES
-(10,	17,	62,	20000,	0,	'Excess payment',	'cleared',	'2019-05-20 12:59:45');
 
+DROP TABLE IF EXISTS `parent`;
 CREATE TABLE `parent` (
   `parent_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1735,17 +1550,27 @@ CREATE TABLE `parent` (
   CONSTRAINT `parent_ibfk_1` FOREIGN KEY (`relationship_id`) REFERENCES `relationship` (`relationship_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `parent` (`parent_id`, `name`, `email`, `phone`, `address`, `relationship_id`, `care_type`, `profession`, `status`) VALUES
-(1,	'Mulandi Kyalo',	'JMulandi1@gmail.com',	'0711808071',	'Nairobi',	1,	'primary',	'Businessman',	1),
-(2,	'Mwambire Karisa',	'mwambire2017@gmail.com',	'072267525',	'Kiserian',	5,	'primary',	'Teacher',	1),
-(3,	'Maina Maina',	'MEgelan@gmail.com',	'07124345654',	'80 Ngong',	3,	'secondary',	'Teacher',	1),
-(4,	'John Njugo',	'JNjugo2017@gmail.com',	'0711876542',	'1056 Karen Nairobi',	1,	'primary',	'Driver',	1),
-(5,	'Mary Otieno',	'MOtieno12@gmail.com',	'0711909076',	'54 Malindi',	2,	'secondary',	'Business Woman',	1),
-(6,	'Hellen Kamau',	'HKamau@yahoo.com',	'0711876542',	'45 Nairobi',	6,	'secondary',	'Air Hostess',	1),
-(7,	'Bitange Joseph',	'BJosey@gmail.com',	'',	'',	5,	'secondary',	'Journalist',	1),
-(8,	'Martina Chengo Garama',	'machess@gmail.com',	'075787578',	'80788',	2,	'primary',	'Air Hostess',	1),
-(9,	'Lilian Njeru',	'lnjeru@gmail.com',	'0711635873',	'Nairobi',	2,	'primary',	'Teacher',	1);
 
+DROP TABLE IF EXISTS `payment`;
+CREATE TABLE `payment` (
+  `payment_id` int(11) NOT NULL AUTO_INCREMENT,
+  `t_date` date NOT NULL,
+  `batch_number` int(10) NOT NULL,
+  `serial` int(10) NOT NULL,
+  `invoice_id` int(11) NOT NULL,
+  `payee` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `method` longtext COLLATE utf8_unicode_ci NOT NULL COMMENT '1-Cash,2-Bank, 3= Funds Transfer',
+  `payment_type` int(5) NOT NULL COMMENT '1-student fees income,2-other incomes, 3 = funds transfer',
+  `amount` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `cleared` tinyint(5) NOT NULL COMMENT '0-Uncleared,1-Cleared',
+  `clearedMonth` date NOT NULL,
+  `timestamp` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`payment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+DROP TABLE IF EXISTS `profile`;
 CREATE TABLE `profile` (
   `profile_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -1759,6 +1584,7 @@ INSERT INTO `profile` (`profile_id`, `name`, `login_type_id`, `description`) VAL
 (2,	'None Class Teachers',	2,	'None Class Teachers'),
 (3,	'Secretary',	1,	'Admin Sec');
 
+DROP TABLE IF EXISTS `reconcile`;
 CREATE TABLE `reconcile` (
   `reconcile_id` int(100) NOT NULL AUTO_INCREMENT,
   `statement_amount` decimal(10,2) NOT NULL,
@@ -1767,9 +1593,8 @@ CREATE TABLE `reconcile` (
   PRIMARY KEY (`reconcile_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `reconcile` (`reconcile_id`, `statement_amount`, `month`, `timestamp`) VALUES
-(1,	392270.23,	'2019-04-30',	'2019-05-20 19:08:00');
 
+DROP TABLE IF EXISTS `relationship`;
 CREATE TABLE `relationship` (
   `relationship_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -1784,6 +1609,7 @@ INSERT INTO `relationship` (`relationship_id`, `name`) VALUES
 (5,	'Uncle'),
 (6,	'Aunt');
 
+DROP TABLE IF EXISTS `scheme`;
 CREATE TABLE `scheme` (
   `scheme_id` int(100) NOT NULL AUTO_INCREMENT,
   `scheme_header_id` int(100) NOT NULL,
@@ -1809,11 +1635,8 @@ CREATE TABLE `scheme` (
   CONSTRAINT `scheme_ibfk_3` FOREIGN KEY (`lastmodifiedby`) REFERENCES `user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `scheme` (`scheme_id`, `scheme_header_id`, `week`, `lesson`, `strand`, `sub_strand`, `learning_outcomes`, `inquiry_question`, `learning_experiences`, `learning_resources`, `assessment`, `createdby`, `lastmodifiedby`, `createddate`, `lastmodifieddate`) VALUES
-(1,	3,	1,	1,	'Care for the environment',	'Caring for plants - watering flower beds',	'By the end of the sub-strand, the learner should be able to: \r\na) Identify the best time of the day to water a flowerbed within the school compound.  \r\nb) Water flower beds appropriately within the school compound.  \r\nc) Demonstrate willingness to water a flowerbed within the school compound.',	'1)When do we water flowers \r\n2)How should we water flowerbeds    ',	'-Learners to suggest reasons for watering flowers \r\n-Learners are guided to watch age appropriate media on watering flowers        ',	'• Watering can \r\n• Sprinkler \r\n• Hose pipe \r\n• Improvised watering can \r\n• Bucket ',	'Observing the procedure of watering flowers             ',	1,	1,	'2019-04-25 12:24:57',	'2019-04-25 00:07:32'),
-(2,	3,	1,	2,	'Care for the environment',	'Caring for plants - watering flower beds ',	' Water flower beds appropriately within the school environment.                        ',	'N/A',	'-In groups, learners to identify things used for watering flowers (watering can, sprinkler, hose pipe, bucket, improvised watering can).     ',	'Watering can Sprinkler Hose pipe Improvised watering can, bucket     ',	'Observing the procedure of watering flowers           ',	1,	1,	'2019-04-25 12:39:40',	'2019-04-24 22:39:40'),
-(3,	4,	1,	2,	'Numbers ',	'Number Concept',	'By the end of the sub-strand, the\r\nlearner should be able to:\r\na) sort and group objects\r\naccording to different attributes\r\nwithin the classroom,\r\nb) pair and match objects in the\r\nenvironment,\r\nc) order and sequence objects in\r\nascending and descending\r\norder,\r\nd) make patterns using real\r\nobjects,\r\ne) recite number names in order\r\nup to 50,\r\nf) represent numbers 1-30 using\r\nconcrete objects,\r\ng) demonstrate through counting\r\nthat a group in all situations has\r\nonly one count,\r\nh) appreciate the use of sorting\r\nand grouping items in day to\r\nday activities.',	'1) How can we find\r\nout which group\r\nhas more objects\r\nthan another?\r\n2) How can we\r\ngroup items?',	'? Learners in pairs/groups to collect different types of\r\nsafe objects.\r\n? Learners in pairs/groups to sort objects with same\r\nattribute and group them together.\r\n? Learners to play digital games involving sorting and\r\ngrouping according to different attributes.\r\n? Learners in pairs/groups to pair and match objectsto\r\nestablish “equal to”, “more than” and “less than.”\r\n? Learners to order objects according to size from\r\nsmallest to biggest and vice versa.\r\n? Learners to make patterns using real objects.\r\n? Learners to recite number names up to 50.\r\n? Learners to represent numbers 1-30 using concrete\r\nobjects as well as their body parts.\r\n? Learners to demonstrate that any given group has\r\nonly one count.\r\n? Learner in pairs/groups to collect and sort litter in\r\nthe environment and put it in various groups\r\naccording to an attribute of their choice and give\r\nreasons for the grouping.\r\n? Learners in pairs/groups could assist in arranging,\r\nedible items like fruits, cabbages according to size\r\nand colour in the school store.\r\n? Learners could visit a market for them to observe\r\nthe sorting and grouping of fruits and vegetables',	'Counting balls',	'Student can count',	1,	1,	'2019-04-25 08:28:27',	'2019-04-25 18:28:27');
 
+DROP TABLE IF EXISTS `scheme_header`;
 CREATE TABLE `scheme_header` (
   `scheme_header_id` int(100) NOT NULL AUTO_INCREMENT,
   `class_id` int(100) NOT NULL,
@@ -1837,10 +1660,8 @@ CREATE TABLE `scheme_header` (
   CONSTRAINT `scheme_header_ibfk_5` FOREIGN KEY (`lastmodifiedby`) REFERENCES `user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `scheme_header` (`scheme_header_id`, `class_id`, `subject_id`, `term_id`, `year`, `createdby`, `lastmodifiedby`, `createddate`, `lastmodifieddate`) VALUES
-(3,	1,	2,	2,	2019,	1,	1,	'2019-04-24 11:35:34',	'2019-04-24 21:35:34'),
-(4,	1,	2,	1,	2019,	1,	1,	'2019-04-25 08:23:15',	'2019-04-25 18:23:15');
 
+DROP TABLE IF EXISTS `section`;
 CREATE TABLE `section` (
   `section_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1854,14 +1675,8 @@ CREATE TABLE `section` (
   CONSTRAINT `section_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`teacher_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `section` (`section_id`, `name`, `nick_name`, `class_id`, `teacher_id`) VALUES
-(1,	'Judah',	'Judah',	2,	1),
-(2,	'Siloam',	'Siloam',	2,	1),
-(3,	'Eastern',	'E',	1,	2),
-(5,	'West',	'W',	1,	1),
-(6,	'David',	'David',	9,	2),
-(7,	'Joseph',	'Joseph',	9,	1);
 
+DROP TABLE IF EXISTS `settings`;
 CREATE TABLE `settings` (
   `settings_id` int(11) NOT NULL AUTO_INCREMENT,
   `type` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
@@ -1870,8 +1685,8 @@ CREATE TABLE `settings` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 INSERT INTO `settings` (`settings_id`, `type`, `description`) VALUES
-(1,	'system_name',	'School Management System'),
-(2,	'system_title',	'KPV Academy'),
+(1,	'system_name',	'Techsys School Management System'),
+(2,	'system_title',	'Main System'),
 (3,	'address',	'80-80200 Malindi'),
 (4,	'phone',	'254764837462'),
 (5,	'paypal_email',	'admin@techsys.com'),
@@ -1891,6 +1706,7 @@ INSERT INTO `settings` (`settings_id`, `type`, `description`) VALUES
 (22,	'version',	'2019040100'),
 (23,	'sidebar-collapsed',	'no');
 
+DROP TABLE IF EXISTS `student`;
 CREATE TABLE `student` (
   `student_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
@@ -1916,26 +1732,8 @@ CREATE TABLE `student` (
   CONSTRAINT `student_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `student` (`student_id`, `name`, `birthday`, `sex`, `religion`, `blood_group`, `address`, `phone`, `email`, `class_id`, `section_id`, `parent_id`, `roll`, `upi_number`, `transport_id`, `dormitory_id`, `dormitory_room_number`, `active`) VALUES
-(1,	'James Mulandi',	'0000-00-00',	'male',	'',	'',	'Nairobi',	'',	'nkmwambs@gmail.com',	2,	0,	1,	'VGS/01/2017',	'',	0,	0,	'',	1),
-(2,	'Nicodemus Karisa',	'0000-00-00',	'male',	'',	'',	'Kiserian',	'0722654372',	'mwambirekarisa@gmail.com',	10,	0,	2,	'VGC/24/2017',	'',	1,	0,	'',	1),
-(3,	'Joyce Ted',	'0000-00-00',	'',	'',	'',	'2',	'0722654376',	'nkmwambs@gmail.com',	4,	0,	1,	'VGS/242/2017',	'',	0,	0,	'',	1),
-(4,	'Beatrice Maina',	'0000-00-00',	'female',	'',	'',	'50',	'0770978233',	'MEgelan@gmail.com',	9,	1,	3,	'BM/12/2018',	'',	1,	0,	'',	1),
-(11,	'Ben Karanja',	'0000-00-00',	'male',	'',	'',	'',	'',	'',	4,	1,	4,	'34242',	'',	0,	0,	'',	1),
-(12,	'Brian Njogu',	'0000-00-00',	'',	'',	'',	'',	'',	'',	9,	2,	4,	'32423',	'',	0,	0,	'',	1),
-(13,	'Blessing Mvera',	'0000-00-00',	'female',	'',	'',	'1945 Karen Nairobi',	'0711909076',	'nkmwambs@gmail.com',	4,	2,	2,	'24542',	'',	0,	0,	'',	0),
-(14,	'Mapenzi Karani',	'0000-00-00',	'female',	'',	'',	'7672',	'711897242',	'm.karani@gmail.com',	9,	0,	0,	'543342',	'',	0,	0,	'',	1),
-(15,	'James Baya',	'0000-00-00',	'male',	'',	'',	'542',	'723447845',	'j.baya@gmail.com',	4,	0,	0,	'533234',	'',	0,	0,	'',	0),
-(16,	'Victor Amani',	'0000-00-00',	'male',	'',	'',	'Kiserian',	'0711808063',	'nkmwambs@gmail.com',	1,	3,	2,	'BBS/2019/20',	'78273',	1,	0,	'',	1),
-(17,	'Hellen Juma',	'0000-00-00',	'female',	'',	'',	'Karen',	'0726728432',	'nkarisa@gmail.com',	1,	5,	9,	'BSS/2019/201',	'424234',	1,	0,	'',	1),
-(18,	'Fiona Kalume',	'0000-00-00',	'female',	'',	'',	'Konza',	'',	'',	5,	0,	8,	'KPA/2019/121',	'93421',	0,	0,	'',	0),
-(19,	'Joshua Kaleli',	'0000-00-00',	'male',	'',	'',	'',	'',	'',	12,	0,	2,	'KPA/2000/065',	'23423',	0,	0,	'',	1),
-(32,	'Zack Milele',	'43020',	'male',	'',	'',	'Nairobi',	'',	'',	1,	0,	1,	'KPV/2019/769',	'',	1,	0,	'',	1),
-(33,	'Erustus Baraza',	'42056',	'male',	'',	'',	'Nairobi',	'',	'',	1,	0,	0,	'KPV/2019/775',	'',	0,	0,	'',	1),
-(34,	'Emma John',	'',	'female',	'',	'',	'',	'',	'',	8,	0,	9,	'BSS/354',	'34335',	0,	0,	'',	1),
-(35,	'Miriam Karo',	'',	'female',	'',	'',	'',	'',	'',	5,	0,	9,	'5678',	'8968',	0,	0,	'',	1),
-(36,	'Belinda Mukori',	'02/03/2009',	'male',	'',	'',	'',	'',	'',	11,	0,	1,	'76852',	'906897',	1,	0,	'',	1);
 
+DROP TABLE IF EXISTS `subject`;
 CREATE TABLE `subject` (
   `subject_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1944,21 +1742,8 @@ CREATE TABLE `subject` (
   PRIMARY KEY (`subject_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `subject` (`subject_id`, `name`, `class_id`, `teacher_id`) VALUES
-(1,	'English',	2,	1),
-(2,	'Maths',	1,	1),
-(3,	'English',	1,	2),
-(4,	'Science',	1,	2),
-(6,	'Swahili',	1,	1),
-(7,	'Swahili',	2,	1),
-(8,	'English',	9,	1),
-(9,	'Mathematics',	9,	4),
-(10,	'Seahili',	9,	1),
-(11,	'Social Studies',	9,	3),
-(12,	'Science',	9,	2),
-(13,	'French',	9,	3),
-(14,	'CRE',	1,	3);
 
+DROP TABLE IF EXISTS `teacher`;
 CREATE TABLE `teacher` (
   `teacher_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1973,10 +1758,8 @@ CREATE TABLE `teacher` (
   PRIMARY KEY (`teacher_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `teacher` (`teacher_id`, `name`, `birthday`, `sex`, `religion`, `blood_group`, `address`, `phone`, `email`, `status`) VALUES
-(1,	'Patty Kamau Karanja',	'02/23/1981',	'female',	'',	'',	'Nairobi',	'07206876543',	'purityKamau2018@gmail.com',	1),
-(2,	'Macmillan Ben ',	'06/12/1979',	'male',	'',	'',	'122 Nairobi',	'0728367826',	'macben@gmail.com',	1);
 
+DROP TABLE IF EXISTS `terms`;
 CREATE TABLE `terms` (
   `terms_id` int(100) NOT NULL AUTO_INCREMENT,
   `term_number` int(5) NOT NULL,
@@ -1991,6 +1774,7 @@ INSERT INTO `terms` (`terms_id`, `term_number`, `name`, `start_month`, `end_mont
 (2,	2,	'Two',	5,	8),
 (3,	3,	'Three',	9,	12);
 
+DROP TABLE IF EXISTS `transaction`;
 CREATE TABLE `transaction` (
   `transaction_id` int(100) NOT NULL AUTO_INCREMENT,
   `t_date` date NOT NULL,
@@ -2004,6 +1788,8 @@ CREATE TABLE `transaction` (
   `amount` decimal(10,2) NOT NULL,
   `cleared` int(5) NOT NULL COMMENT '0-oustanding,1-cleared',
   `clearedMonth` date NOT NULL,
+  `is_cancelled` int(5) NOT NULL DEFAULT '0',
+  `can_be_cancelled` int(5) NOT NULL DEFAULT '1',
   `createddate` datetime NOT NULL,
   `createdby` int(100) NOT NULL,
   `lastmodifieddate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -2015,24 +1801,8 @@ CREATE TABLE `transaction` (
   CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`transaction_method_id`) REFERENCES `transaction_method` (`transaction_method_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `transaction` (`transaction_id`, `t_date`, `batch_number`, `invoice_id`, `description`, `payee`, `transaction_type_id`, `transaction_method_id`, `cheque_no`, `amount`, `cleared`, `clearedMonth`, `createddate`, `createdby`, `lastmodifieddate`, `lastmodifiedby`) VALUES
-(62,	'2019-04-01',	'190401',	58,	'Fees with Excess',	'Ken',	1,	2,	0,	31000.00,	1,	'2019-04-30',	'0000-00-00 00:00:00',	1,	'2019-05-20 18:59:18',	1),
-(79,	'2019-04-01',	'190402',	0,	'Internal Funds Transfer',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	'2019-05-20 02:59:45',	1,	'2019-05-20 12:59:45',	1),
-(80,	'2019-04-02',	'190403',	70,	'Fees Payment',	'Joan',	1,	1,	0,	2500.00,	0,	'0000-00-00',	'0000-00-00 00:00:00',	1,	'2019-05-20 13:02:17',	1),
-(81,	'2019-04-02',	'190404',	0,	'Sale of Vegetables and Eggs',	'Uma Groceries',	1,	1,	0,	6775.00,	0,	'0000-00-00',	'0000-00-00 00:00:00',	1,	'2019-05-20 14:00:24',	1),
-(82,	'2019-04-03',	'190405',	0,	'Purchase of fuel and service',	'Kobil Service Station',	2,	1,	0,	8075.00,	0,	'0000-00-00',	'0000-00-00 00:00:00',	1,	'2019-05-20 14:09:34',	1),
-(83,	'2019-04-04',	'190406',	0,	'Internal Funds Transfer',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	'2019-05-20 04:39:22',	1,	'2019-05-20 14:39:22',	1),
-(84,	'2019-04-04',	'190407',	0,	'Internal Funds Transfer',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	'2019-05-20 04:43:59',	1,	'2019-05-20 14:43:59',	1),
-(85,	'2019-04-05',	'190408',	0,	'Internal Funds Transfer',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	'2019-05-20 04:45:19',	1,	'2019-05-20 14:45:19',	1),
-(86,	'2019-04-05',	'190409',	0,	'Funds Transfer: Monthly policy funds transfers',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	'2019-05-20 04:47:19',	1,	'2019-05-20 14:47:19',	1),
-(87,	'2019-04-05',	'190410',	0,	'Bank Withdrawal',	'System Generated',	4,	4,	0,	25000.00,	0,	'0000-00-00',	'2019-04-05 00:00:00',	1,	'2019-05-20 15:05:39',	1),
-(88,	'2019-04-08',	'190411',	0,	'Cash deposit to bank',	'System Generated',	3,	4,	0,	95000.00,	0,	'0000-00-00',	'2019-04-08 00:00:00',	1,	'2019-05-20 15:08:24',	1),
-(90,	'2019-04-08',	'190412',	0,	'Activity Fees',	'Various Students',	1,	2,	0,	3000.00,	0,	'0000-00-00',	'2019-04-08 00:00:00',	1,	'2019-05-20 18:58:08',	1),
-(91,	'2019-04-09',	'190413',	0,	'Contractor Wages',	'Contractors',	2,	2,	1,	52400.00,	0,	'0000-00-00',	'0000-00-00 00:00:00',	1,	'2019-05-20 19:05:43',	1),
-(92,	'2019-05-01',	'190501',	70,	'School Fees',	'Linet',	1,	1,	0,	1200.00,	0,	'0000-00-00',	'0000-00-00 00:00:00',	1,	'2019-05-20 19:09:08',	1),
-(93,	'2019-05-01',	'190502',	0,	'Funds Transfer: Resolving over transfer in transport',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	'2019-05-20 10:29:11',	1,	'2019-05-20 20:29:11',	1),
-(94,	'2019-05-02',	'190503',	0,	'Electricity Bill',	'KPLC',	2,	1,	0,	800.00,	0,	'0000-00-00',	'0000-00-00 00:00:00',	1,	'2019-05-20 20:35:23',	1);
 
+DROP TABLE IF EXISTS `transaction_detail`;
 CREATE TABLE `transaction_detail` (
   `transaction_detail_id` int(100) NOT NULL AUTO_INCREMENT,
   `transaction_id` int(100) NOT NULL,
@@ -2048,39 +1818,8 @@ CREATE TABLE `transaction_detail` (
   CONSTRAINT `transaction_detail_ibfk_1` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`transaction_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `transaction_detail` (`transaction_detail_id`, `transaction_id`, `invoice_details_id`, `expense_category_id`, `income_category_id`, `qty`, `detail_description`, `unitcost`, `cost`) VALUES
-(120,	62,	293,	0,	2,	1.00,	'School Fees Payment For Examinations',	2500.00,	2500.00),
-(121,	62,	294,	0,	6,	1.00,	'School Fees Payment For Tuition',	8500.00,	8500.00),
-(122,	62,	0,	0,	8,	1.00,	'Excess Payment',	20000.00,	20000.00),
-(155,	79,	0,	0,	8,	1.00,	'Internal Funds Transfer',	-1500.00,	-1500.00),
-(156,	79,	0,	0,	2,	1.00,	'Internal Funds Transfer',	1500.00,	1500.00),
-(157,	79,	0,	0,	8,	1.00,	'Internal Funds Transfer',	-8700.00,	-8700.00),
-(158,	79,	0,	0,	6,	1.00,	'Internal Funds Transfer',	8700.00,	8700.00),
-(159,	79,	0,	0,	8,	1.00,	'Internal Funds Transfer',	-9800.00,	-9800.00),
-(160,	79,	0,	0,	7,	1.00,	'Internal Funds Transfer',	9800.00,	9800.00),
-(161,	80,	330,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	2500.00,	2500.00),
-(162,	81,	0,	0,	3,	15.00,	'Bundles of Kales',	35.00,	525.00),
-(163,	81,	0,	0,	8,	25.00,	'Trays of eggs',	250.00,	6250.00),
-(164,	82,	0,	1,	0,	15.00,	'Liters of diesel',	105.00,	1575.00),
-(165,	82,	0,	1,	0,	1.00,	'Service',	6500.00,	6500.00),
-(166,	83,	0,	0,	6,	1.00,	'Internal Funds Transfer',	-21400.00,	-21400.00),
-(167,	83,	0,	0,	8,	1.00,	'Internal Funds Transfer',	21400.00,	21400.00),
-(168,	84,	0,	0,	1,	1.00,	'Internal Funds Transfer',	-45000.00,	-45000.00),
-(169,	84,	0,	0,	8,	1.00,	'Internal Funds Transfer',	45000.00,	45000.00),
-(170,	85,	0,	0,	3,	1.00,	'Internal Funds Transfer',	-6200.00,	-6200.00),
-(171,	85,	0,	0,	8,	1.00,	'Internal Funds Transfer',	6200.00,	6200.00),
-(172,	86,	0,	0,	4,	1.00,	'Funds Transfer: Monthly policy funds transfers',	-5400.00,	-5400.00),
-(173,	86,	0,	0,	8,	1.00,	'Funds Transfer: Monthly policy funds transfers',	5400.00,	5400.00),
-(174,	87,	0,	0,	0,	1.00,	'Contra Entry: To Cash Contra Entry',	25000.00,	25000.00),
-(175,	88,	0,	0,	0,	1.00,	'Contra Entry: To Bank Contra Entry',	95000.00,	95000.00),
-(177,	90,	0,	0,	4,	1.00,	'Patrick',	1500.00,	1500.00),
-(178,	90,	0,	0,	4,	1.00,	'James',	1500.00,	1500.00),
-(179,	91,	0,	5,	0,	1.00,	'Wages',	52400.00,	52400.00),
-(180,	92,	330,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	1200.00,	1200.00),
-(181,	93,	0,	0,	8,	1.00,	'Funds Transfer: Resolving over transfer in transport',	-46000.00,	-46000.00),
-(182,	93,	0,	0,	1,	1.00,	'Funds Transfer: Resolving over transfer in transport',	46000.00,	46000.00),
-(183,	94,	0,	2,	0,	1.00,	'Bill',	800.00,	800.00);
 
+DROP TABLE IF EXISTS `transaction_method`;
 CREATE TABLE `transaction_method` (
   `transaction_method_id` int(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -2095,6 +1834,7 @@ INSERT INTO `transaction_method` (`transaction_method_id`, `name`, `description`
 (3,	'mpesa',	'M-Pesa',	1),
 (4,	'funds_transfer',	'Funds Transfer',	0);
 
+DROP TABLE IF EXISTS `transaction_type`;
 CREATE TABLE `transaction_type` (
   `transaction_type_id` int(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -2109,6 +1849,7 @@ INSERT INTO `transaction_type` (`transaction_type_id`, `name`, `description`) VA
 (4,	'contra_entry_to_cash',	'To Cash Contra Entry'),
 (5,	'funds_transfer',	'Funds Transfer');
 
+DROP TABLE IF EXISTS `transition`;
 CREATE TABLE `transition` (
   `transition_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -2120,6 +1861,7 @@ INSERT INTO `transition` (`transition_id`, `name`) VALUES
 (2,	'completion'),
 (3,	'suspend');
 
+DROP TABLE IF EXISTS `transition_detail`;
 CREATE TABLE `transition_detail` (
   `transition_detail_id` int(100) NOT NULL AUTO_INCREMENT,
   `transition_id` int(100) NOT NULL,
@@ -2135,6 +1877,7 @@ CREATE TABLE `transition_detail` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
+DROP TABLE IF EXISTS `transport`;
 CREATE TABLE `transport` (
   `transport_id` int(11) NOT NULL AUTO_INCREMENT,
   `route_name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -2144,9 +1887,8 @@ CREATE TABLE `transport` (
   PRIMARY KEY (`transport_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `transport` (`transport_id`, `route_name`, `number_of_vehicle`, `description`, `route_fare`) VALUES
-(1,	'Ngong Road',	'KBX 541V',	'Ngong to Vet Area',	'12500');
 
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `user_id` int(100) NOT NULL AUTO_INCREMENT,
   `firstname` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
@@ -2157,15 +1899,15 @@ CREATE TABLE `user` (
   `login_type_id` tinyint(10) NOT NULL,
   `profile_id` tinyint(5) NOT NULL,
   `type_user_id` int(100) NOT NULL,
-  `app_id` int(100) NOT NULL DEFAULT '1',
+  `app_id` int(100) NOT NULL DEFAULT '2',
   `auth` tinyint(5) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `user` (`user_id`, `firstname`, `lastname`, `email`, `password`, `phone`, `login_type_id`, `profile_id`, `type_user_id`, `app_id`, `auth`) VALUES
-(1,	'Nicodemus',	'Karisa',	'nkmwambs@gmail.com',	'fbdf9989ea636d6b339fd6b85f63e06e',	'254711808071',	1,	1,	1,	2,	1),
-(2,	'Livingstone',	'Onduso',	'livingstoneonduso@gmail.com',	'fbdf9989ea636d6b339fd6b85f63e06e',	'0909',	1,	1,	2,	1,	1),
-(7,	'Hope',	'Shume',	'hopeshume@gmail.com',	'd41d8cd98f00b204e9800998ecf8427e',	'87778',	1,	3,	3,	1,	1);
+(1,	'Nicodemus',	'Karisa',	'nkmwambs@gmail.com',	'fbdf9989ea636d6b339fd6b85f63e06e',	'254711808071',	1,	1,	1,	0,	1),
+(2,	'Livingstone',	'Onduso',	'livingstoneonduso@gmail.com',	'fbdf9989ea636d6b339fd6b85f63e06e',	'0909',	1,	1,	2,	2,	1),
+(7,	'Hope',	'Shume',	'hopeshume@gmail.com',	'fbdf9989ea636d6b339fd6b85f63e06e',	'87778',	1,	3,	3,	3,	1);
 
--- 2019-05-20 20:46:08
+-- 2019-05-24 02:19:29

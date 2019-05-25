@@ -65,12 +65,12 @@ foreach ($edit_data as $row):
             </tr>
             <tr>
                 <td align="right" width="80%"><?php echo get_phrase('paid_amount'); ?> :</td>
-                <td align="right"><?php echo number_format($this->crud_model->get_invoice_amount_paid($row['invoice_id']),2); ?></td>
+                <td align="right"><?php echo number_format($this->crud_model->fees_paid_by_invoice($row['invoice_id']),2); ?></td>
             </tr>
             <?php if ($this->crud_model->get_invoice_balance($row['invoice_id']) != 0):?>
             <tr>
                 <td align="right" width="80%"><?php echo get_phrase('balance'); ?> :</td>
-                <td align="right"><?php echo number_format($this->crud_model->get_invoice_balance($row['invoice_id']),2); ?></td>
+                <td align="right"><?php echo number_format($this->crud_model->fees_balance_by_invoice($row['invoice_id']),2); ?></td>
             </tr>
             <?php endif;?>
             
@@ -94,7 +94,7 @@ foreach ($edit_data as $row):
             	<?php
 					//$invoice_details = $this->db->get_where('invoice_details',array('invoice_id'=>$row['invoice_id']))->result_object();
 					$this->db->select(array('fees_structure_details.detail_id','fees_structure_details.name',
-	                'fees_structure_details.amount','invoice_details_id','invoice_details.amount_due','invoice_details.amount_paid','invoice_details.balance'));
+	                'fees_structure_details.amount','invoice_details_id','invoice_details.amount_due'));
 	                                	
 					$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');									
 	                $this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
@@ -107,8 +107,8 @@ foreach ($edit_data as $row):
 						<td><?php echo $inv->name;?></td>
 						<td><?php echo number_format($inv->amount_due,2);?></td>
 						
-						<td><?php echo number_format($this->crud_model->get_invoice_detail_amount_paid($inv->invoice_details_id));?></td>
-						<td><?php echo number_format($this->crud_model->get_invoice_detail_balance($inv->invoice_details_id));?></td>
+						<td><?php echo number_format($this->crud_model->fees_paid_by_invoice_detail($inv->invoice_details_id));?></td>
+						<td><?php echo number_format($this->crud_model->fees_balance_by_invoice_detail($inv->invoice_details_id));?></td>
 						
 					</tr>
 									
@@ -117,8 +117,8 @@ foreach ($edit_data as $row):
 						endforeach;
 						
 						$tot_due = array_sum(array_column($invoice_details, 'amount_due'));
-						$tot_paid = $this->crud_model->get_invoice_amount_paid($row['invoice_id']);
-						$tot_bal  = $this->crud_model->get_invoice_balance($row['invoice_id']);
+						$tot_paid = $this->crud_model->fees_paid_by_invoice($row['invoice_id']);
+						$tot_bal  = $this->crud_model->fees_balance_by_invoice($row['invoice_id']);
 					?>
 						<tr>
 							<td><?=get_phrase('total')?></td>
@@ -146,25 +146,25 @@ foreach ($edit_data as $row):
             <tbody>
                 <?php
                 
-                $payment_history = $this->crud_model->get_invoice_payment_history($row['invoice_id']);
+                $payment_history = $this->crud_model->get_invoice_transaction_history($row['invoice_id']);
 				
-				if($payment_history->num_rows()>0){
+				//if($payment_history->num_rows()>0){
 	            	
-	            $payment = $payment_history->result_array(); 
+	            //$payment = $payment_history->result_array(); 
 					 
-	            foreach ($payment as $line){
+	            foreach ($payment_history as $line){
 	            
 	            ?>
 	                    <tr>
-	                        <td><?php echo $line['t_date']; ?></td>
-	                        <td><?php echo number_format($line['cost'],2); ?></td>
-	                        <td><?php echo $line['name'];?></td>
-	                        <td><?=$line['transaction_method']?></td>
+	                        <td><?php echo $line->t_date; ?></td>
+	                        <td><?php echo number_format($line->amount,2); ?></td>
+	                        <td><?php echo $line->description;?></td>
+	                        <td><?=$line->transaction_method;?></td>
 	                        
 	                    </tr>
                 <?php 
 					}
-                }
+                //}
 
                 ?>
             </tbody>

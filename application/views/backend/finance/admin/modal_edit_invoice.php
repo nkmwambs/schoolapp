@@ -2,7 +2,7 @@
 	$invoice = $this->db->get_where("invoice",array("invoice_id"=>$param2))->row();
 	
 	$this->db->select(array('fees_structure_details.detail_id','fees_structure_details.name',
-    'fees_structure_details.amount','invoice_details_id','invoice_details.amount_due','invoice_details.amount_paid'));
+    'fees_structure_details.amount','invoice_details_id','invoice_details.amount_due'));
                                 	
 	$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');									
     $this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
@@ -70,7 +70,7 @@
                                 		<td><?=number_format($detail->amount,2);?></td>
                                 		<td><?=number_format($detail->amount_due,2);?></td>
 										<td class="paid" id="paid_<?=$detail->detail_id;?>">
-											<?=number_format($this->crud_model->get_invoice_detail_amount_paid($detail->invoice_details_id),2);?></td>			
+											<?=number_format($this->crud_model->fees_paid_by_invoice_detail($detail->invoice_details_id),2);?></td>			
                                 		<td>
                                 			<input type="text" class="form-control detail_amount_due" value="<?=$detail->amount_due;?>" id="due_<?=$detail->invoice_details_id;?>" name="detail_amount_due[<?=$detail->invoice_details_id;?>]" />
                                 		</td>
@@ -90,7 +90,7 @@
                         <div class="col-sm-9">
                         <?php
                        		
-							$sum_paid = $this->crud_model->get_invoice_amount_paid($param2);//array_sum(array_column($details, 'amount_paid'));
+							$sum_paid = $this->crud_model->fees_paid_by_invoice($param2);//array_sum(array_column($details, 'amount_paid'));
 							$sum_due = array_sum(array_column($details, 'amount_due'));
 							$sum_balance = $sum_due - $sum_paid;
                         ?>

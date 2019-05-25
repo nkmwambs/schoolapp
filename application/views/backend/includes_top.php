@@ -1,11 +1,14 @@
-  
-  	<link href="assets/js/jquery-ui/css/jquery-ui.1.10.3.custom.css" rel="stylesheet">
-	<script src="assets/js/jquery-ui/js/jquery-1.9.1.js"></script>
+
+<link href="assets/js/jquery-ui/css/jquery-ui.1.10.3.custom.css" rel="stylesheet">
+	<!-- <script src="assets/js/jquery-ui/js/jquery-1.9.1.js"></script> -->
+
 
 <link rel="stylesheet" href="assets/js/jquery-ui/css/no-theme/jquery-ui-1.10.3.custom.min.css">
 <link rel="stylesheet" href="assets/css/font-icons/entypo/css/entypo.css">
 <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic">
-<link rel="stylesheet" href="assets/css/bootstrap.css">
+<!-- <link rel="stylesheet" href="assets/css/bootstrap.css"> -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
 <link rel="stylesheet" href="assets/css/neon-core.css">
 <link rel="stylesheet" href="assets/css/neon-theme.css">
 <link rel="stylesheet" href="assets/css/neon-forms.css">
@@ -25,7 +28,10 @@
 <?php if ($text_align == 'right-to-left') : ?>
     <link rel="stylesheet" href="assets/css/neon-rtl.css">
 <?php endif; ?>
-<script src="assets/js/jquery-1.11.0.min.js"></script>
+<!-- <script src="assets/js/jquery-1.11.0.min.js"></script> -->
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" 
+integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
 
         <!--[if lt IE 9]><script src="assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 
@@ -41,19 +47,12 @@
 <link rel="stylesheet" href="assets/js/datatables/responsive/css/datatables.responsive.css">
 
 
-<!--Amcharts-->
-<script src="<?php echo base_url();?>assets/js/amcharts/amcharts.js" type="text/javascript"></script>
-<script src="<?php echo base_url();?>assets/js/amcharts/pie.js" type="text/javascript"></script>
-<script src="<?php echo base_url();?>assets/js/amcharts/serial.js" type="text/javascript"></script>
-<script src="<?php echo base_url();?>assets/js/amcharts/gauge.js" type="text/javascript"></script>
-<script src="<?php echo base_url();?>assets/js/amcharts/funnel.js" type="text/javascript"></script>
-<script src="<?php echo base_url();?>assets/js/amcharts/radar.js" type="text/javascript"></script>
-<script src="<?php echo base_url();?>assets/js/amcharts/exporting/amexport.js" type="text/javascript"></script>
-<script src="<?php echo base_url();?>assets/js/amcharts/exporting/rgbcolor.js" type="text/javascript"></script>
-<script src="<?php echo base_url();?>assets/js/amcharts/exporting/canvg.js" type="text/javascript"></script>
-<script src="<?php echo base_url();?>assets/js/amcharts/exporting/jspdf.js" type="text/javascript"></script>
-<script src="<?php echo base_url();?>assets/js/amcharts/exporting/filesaver.js" type="text/javascript"></script>
-<script src="<?php echo base_url();?>assets/js/amcharts/exporting/jspdf.plugin.addimage.js" type="text/javascript"></script>
+    <!-- Compiled and minified CSS -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+             -->
+
 
 <script>
     function checkDelete()

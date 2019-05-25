@@ -5,7 +5,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
 
 <hr />
 <a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/student_add/');"
-    class="btn btn-primary pull-right <?=get_access_class("student_admission",$this->session->login_type,"student");?>" >
+    class="btn btn-primary pull-right <?=get_access_class("student_admission",$this->session->login_type,"accounts");?>" >
         <?php echo get_phrase('add_new_student');?>
 </a>
 
@@ -16,7 +16,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
 	if($new_class->num_rows() > 0 && $this->db->get_where('student',array('class_id'=>$class_id))->num_rows() > 0){
 ?>
 <a href="javascript:;" onclick="confirm_action('<?php echo base_url();?>index.php?student/student_promote/mass_promotion/<?php echo $class_id;?>');"
-    class="btn btn-primary pull-left promote_student">
+    class="btn btn-primary pull-left promote_student <?=get_access_class("promote_student",$this->session->login_type,"accounts");?>">
         <i class="entypo-forward"></i>
         <?php echo get_phrase('promote_students');?> : <?php echo $new_class->row()->name;?>
 <?php 
@@ -99,6 +99,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                                 </a>
                                         </li>
 
+										<li class="divider"></li>
 
                                         <!-- STUDENT PROFILE LINK -->
                                         <li>
@@ -107,30 +108,33 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                                     <?php echo get_phrase('profile');?>
                                                 </a>
                                         </li>
+                                        
+                                        <li class="divider"></li>
+
 
                                         <!-- STUDENT EDITING LINK -->
-                                        <li class="<?=get_access_class("edit_student",$this->session->login_type,"student");?> ">
+                                        <li class="<?=get_access_class("edit_student",$this->session->login_type,"accounts");?> ">
                                             <a  href="<?php echo base_url();?>index.php?student/student_edit/<?php echo $row['student_id'];?>" >
                                                 <i class="entypo-pencil"></i>
                                                     <?php echo get_phrase('edit');?>
                                                 </a>
                                         </li>
                                         
-                                       <li class="divider <?=get_access_class("edit_student",$this->session->login_type,"student");?>"></li>
+                                       <li class="divider <?=get_access_class("edit_student",$this->session->login_type,"accounts");?>"></li>
 
                                         <!-- STUDENT PROMOTE LINK -->
                                         <?php
 										
                                         	if($this->school_model->highest_class_numeric() !== $class_id){
                                         ?>
-                                        <li class="<?=get_access_class("promote_student",$this->session->login_type,"student");?>">
+                                        <li class="<?=get_access_class("promote_student",$this->session->login_type,"accounts");?>">
                                             <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?student/student_promote/single_promotion/<?php echo $class_id;?>/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-fast-forward"></i>
                                                     <?php echo get_phrase('promote');?>
                                                 </a>
                                         </li>
                                         
-                                       <li class="divider <?=get_access_class("promote_student",$this->session->login_type,"student");?>"></li>
+                                       <li class="divider <?=get_access_class("promote_student",$this->session->login_type,"accounts");?>"></li>
 										
 										 <?php
 											}
@@ -138,7 +142,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                         	if($this->school_model->lowest_class_numeric() !== $class_id){
                                         ?>
                                         <!-- STUDENT DEMOTE LINK -->
-                                        <li class=" <?=get_access_class("demote_student",$this->session->login_type,"student");?>">
+                                        <li class=" <?=get_access_class("demote_student",$this->session->login_type,"accounts");?>">
                                             <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?student/student_promote/single_demotion/<?php echo $class_id;?>/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-fast-backward"></i>
                                                     <?php echo get_phrase('demote');?>
@@ -146,12 +150,12 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                         </li>
                                         
                                        
-                                        <li class="divider <?=get_access_class("demote_student",$this->session->login_type,"student");?>"></li>
+                                        <li class="divider <?=get_access_class("demote_student",$this->session->login_type,"accounts");?>"></li>
 										<?php
 											}
 										?>	
                                         <!-- STUDENT SUSPEND LINK -->
-                                        <li class=" <?=get_access_class("suspend_student",$this->session->login_type,"student");?>">
+                                        <li class=" <?=get_access_class("suspend_student",$this->session->login_type,"accounts");?>">
                                             <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_transition_student/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-trash"></i>
                                                     <?php echo get_phrase('transition');?>
@@ -221,7 +225,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                         <?php
                                         if($row['status'] == 1){
                                         ?>
-                                        <li class="unsuspend_student">
+                                        <li class="<?=get_access_class("reinstate_student",$this->session->login_type,"accounts");?> ">
                                             <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?student/student/<?php echo $class_id;?>/reinstate/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-cw"></i>
                                                     <?php echo get_phrase('reinstate');?>
@@ -291,16 +295,16 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                         </li>
 
                                         <!-- STUDENT EDITING LINK -->
-                                        <li class="edit_student">
+                                        <li class="<?=get_access_class("edit_student",$this->session->login_type,"accounts");?> ">
                                             <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_student_edit/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-pencil"></i>
                                                     <?php echo get_phrase('edit');?>
                                                 </a>
                                         </li>
-                                        <li class="divider edit_student"></li>
+                                        <li class="divider <?=get_access_class("edit_student",$this->session->login_type,"accounts");?>"></li>
 
                                         <!-- STUDENT DELETION LINK -->
-                                        <li class="delete_student">
+                                        <li class="<?=get_access_class("delete_student",$this->session->login_type,"accounts");?>">
                                             <a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?admin/student/<?php echo $class_id;?>/delete/<?php echo $row['student_id'];?>');">
                                                 <i class="entypo-trash"></i>
                                                     <?php echo get_phrase('delete');?>

@@ -41,10 +41,10 @@
 					<div class="row">
 						<div class="col-xs-12">
 							<div class="col-xs-6 pull-right;">	
-					           <h3 style="">
+					           <!-- <h3 style="">
 					           	<i class="entypo-right-circled"></i>
 									<?php echo $page_title;?>
-					           </h3>
+					           </h3> -->
 				           </div>
 				           
 				            <div class="col-xs-6 pull-right;">
@@ -73,7 +73,7 @@
 
 		</div>
 		<?php //include 'chat.php';?>
-
+	
 	</div>
     <?php include 'modal.php';?>
     <?php include 'includes_bottom.php';?>

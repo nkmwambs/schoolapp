@@ -8,12 +8,18 @@
 	}
 </style>
 
+<hr />
+<div class="row">
+	<div class="col-xs-12">
+		<div style="text-align: center;"><h4><?=get_phrase('school_budget_for_year_');?><?=$year;?></h4></div>
+	</div>
+</div>
+
 <div class="row">
 	<div class="col-sm-12">
-	<div class="panel panel-primary" id="">
-						
+	<div class="panel panel-default">
 		<div class="panel-heading">
-			<div class="panel-title"><?=get_phrase('school_budget_for_year_');?><?=$year;?></div>						
+			<div class="panel-title"></div>						
 				<div class="panel-options">
 					<ul class="nav nav-tabs" id="myTab">					
 						<li  class=""><a href="#new-budget-item" data-toggle="tab"><?=get_phrase('new_budget_item');?></a></li>
@@ -678,13 +684,15 @@ $('#frm_schedule').submit(function(ev){
 		$.ajax({
 			url:url,
 			beforeSend:function(){
-				
+				$("#overlay").css('display','block');
 			},
 			success:function(resp){
 				$("#new_budget_month_spread").html(resp);
+				$("#overlay").css('display','none');
 			},
 			error:function(){
 				alert('Error occurred!');
+				$("#overlay").css('display','none');
 			}
 		});
 		

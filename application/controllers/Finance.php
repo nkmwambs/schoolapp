@@ -1202,77 +1202,6 @@ class Finance extends CI_Controller
 		}
 		
 	}
-	
-	
-	function scroll_cashbook($param1=""){
-		if ($this->session->userdata('active_login') != 1)
-            redirect('login', 'refresh');
-		
-		$t_date = date('Y-m-d',$param1);
-		
-		$month = date('m',strtotime($t_date));
-		$year = date('Y',strtotime($t_date));
-		
-		$opening_balance = $this->crud_model->opening_account_balance($t_date);
-		
-		$page_data['cash_balance'] = $opening_balance['cash_balance'];
-		$page_data['bank_balance'] = $opening_balance['bank_balance'];
-        $page_data['page_name']  = 'cash_book';
-		$page_data['page_view'] = "finance";
-        $page_data['page_title'] = get_phrase('cash_book');
-		$page_data['current'] = $t_date;
-		$page_data['transactions'] = $this->db->get_where('cashbook',array('Month(t_date)'=>$month,'Year(t_date)'=>$year))->result_object();
-        $this->load->view('backend/index', $page_data);
-		
-	}
-	
-	
-	function cash_book($param1="") {
-        if ($this->session->userdata('active_login') != 1)
-            redirect('login', 'refresh');
-		
-		$t_date = date('Y-m-d');
-		
-		if($param1==="scroll") $t_date = $this->input->post('t_date'); 
-		
-		if($param1==="") {
-			
-			$t_date = date('Y-m-01');
-			
-			$reconcile = $this->db->get("reconcile");
-			
-			$cashbook = $this->db->get("cashbook");
-			
-			if($reconcile->num_rows() > 0 && $cashbook->num_rows() > 0){
-				
-				$last_reconcile_month = $this->db->select_max("month")->get("reconcile")->row()->month;
-
-				if(date("Y-m-01",strtotime($last_reconcile_month)) < $t_date ){
-					$t_date = date("Y-m-01",strtotime('+1 month',strtotime($last_reconcile_month)));
-				}
-				
-			}elseif($cashbook->num_rows() == 0){
-				$t_date = $this->db->get_where('settings',array('type'=>'system_start_date'))->row()->description;	
-			}elseif($reconcile->num_rows() === 0){
-				$t_date = $this->db->select_max("t_date")->get("cashbook")->row()->t_date;
-			}
-		}
-			
-		$month = date('m',strtotime($t_date));
-		$year = date('Y',strtotime($t_date));
-		
-		$opening_balance = $this->crud_model->opening_account_balance($t_date);
-		
-
-		$page_data['cash_balance'] = $opening_balance['cash_balance'];
-		$page_data['bank_balance'] = $opening_balance['bank_balance'];
-        $page_data['page_name']  = 'cash_book';
-		$page_data['page_view'] = "finance";
-        $page_data['page_title'] = get_phrase('cash_book');
-		$page_data['current'] = $t_date;
-		$page_data['transactions'] = $this->db->get_where('cashbook',array('Month(t_date)'=>$month,'Year(t_date)'=>$year))->result_object();
-        $this->load->view('backend/index', $page_data); 
-    }
 
 	function monthly_reconciliation($param1="",$param2=""){
 		 if ($this->session->userdata('active_login') != 1)
@@ -2264,32 +2193,9 @@ class Finance extends CI_Controller
 		if ($this->session->userdata('active_login') != 1)
             redirect('login', 'refresh');
 		
-		$t_date = date('Y-m-d');
+		$t_date = $this->crud_model->next_transaction_date()->start_date;
 		
 		if($param1=="scroll") $t_date = date('Y-m-d',$param2); 
-		
-		if($param1=="") {
-			
-			$t_date = date('Y-m-01');
-			
-			$reconcile = $this->db->get("reconcile");
-			
-			$cashbook = $this->db->get("transaction");
-			
-			if($reconcile->num_rows() > 0 && $cashbook->num_rows() > 0){
-				
-				$last_reconcile_month = $this->db->select_max("month")->get("reconcile")->row()->month;
-
-				if(date("Y-m-01",strtotime($last_reconcile_month)) < $t_date ){
-					$t_date = date("Y-m-01",strtotime('+1 month',strtotime($last_reconcile_month)));
-				}
-				
-			}elseif($cashbook->num_rows() == 0){
-				$t_date = $this->db->get_where('settings',array('type'=>'system_start_date'))->row()->description;	
-			}elseif($reconcile->num_rows() === 0){
-				$t_date = $this->db->select_max("t_date")->get("transaction")->row()->t_date;
-			}
-		}
 			
 		$month = date('m',strtotime($t_date));
 		$year = date('Y',strtotime($t_date));
@@ -2299,7 +2205,7 @@ class Finance extends CI_Controller
 		//Transactions for the month
 		$this->db->select(array('transaction_id','t_date','batch_number','invoice_id','transaction.description','payee',
 		'transaction.transaction_type_id','transaction_type.description as transaction_type','transaction.transaction_method_id',
-		'cheque_no','amount','cleared','transaction_method.description as transaction_method'));
+		'cheque_no','amount','is_cancelled','reversing_batch_number','cleared','transaction_method.description as transaction_method'));
 		
 		$this->db->join('transaction_type','transaction_type.transaction_type_id=transaction.transaction_type_id');
 		$this->db->join('transaction_method','transaction_method.transaction_method_id=transaction.transaction_method_id');
@@ -2318,6 +2224,103 @@ class Finance extends CI_Controller
 	}
 	
 	function reverse_transaction($transaction_id){
+		//Check if transaction is cancellable
+		
+		$transaction = $this->db->get_where('transaction',
+		array('transaction_id'=>$transaction_id))->row();
+		
+		$msg = get_phrase('data_not_updated');
+		//Update the is_cancelled to 1
+		if($is_cancelled == 0 && $cleared !== 1){
+			
+			$this->db->trans_start();
+				
+			$cancel_status = false;
+				
+			if($transaction->invoice_id != 0){
+			
+				//Reverse School Fees Payment
+				$cancel_status = $this->reverse_school_fees_payment($transaction_id, $transaction->invoice_id);
+			
+			}elseif($transaction->invoice_id == 0 && 
+					($transaction->transaction_type_id = 1 || $transaction->transaction_type_id = 2)){	
+			
+				//Reverse an Income or Expense
+				$cancel_status = $this->reverse_income_or_expense($transaction_id, $transaction->transaction_type_id);
+			
+			}elseif($transaction->transaction_type_id = 3 || $transaction->transaction_type_id = 4){	
+			
+				//Reverse a contra entry
+				$cancel_status = $this->reverse_contra_entry($transaction_id, $transaction->transaction_type_id);
+			
+			}
+			
+			if($cancel_status){
+		
+				$this->db->where(array('transaction_id'=>$transaction_id));
+				$data['is_cancelled'] = 1;
+				//$data['reversing_batch_number'] = $this->crud_model->next_batch_number();//$this->session->last_inserted_transaction_id
+				
+				$this->db->update('transaction',$data);	
+			}
+			
+			
+			if ($this->db->trans_status() === FALSE)
+			{
+			        $this->db->trans_rollback();
+			}
+			else
+			{
+			        $this->db->trans_commit();
+					if($cancel_status){
+						$msg = get_phrase('data_updated');	
+					}else{
+						$msg = get_phrase('reserve_not_allowed');
+					}
+			}
+			
+			
+		}
+		
+		$this->session->set_flashdata('flash_message' ,$msg );
+        redirect(base_url() . 'index.php?finance/cashbook');
+	}
+	
+	function reverse_school_fees_payment($transaction_id,$invoice_id){
+		/**
+		 * Can only reverse a transaction of the last invoice
+		 * When the last invoice is fully paid the invoice becomes active
+		 * If the reversed payment has an overpay the overpay note will be cancelled
+		 */
+		 
+		 $cancel_status = false;
+		 
+		 //Check if is the last invoice for the student
+		 $student = $this->db->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->student_id;
+		 
+		 $last_invoice_id = $this->db->select_max('invoice_id')->get_where('invoice',
+		 array('student_id'=>$student))->row()->invoice_id;
+		 
+		 if($last_invoice_id == $invoice_id){
+		 	
+			//Get this transaction
+			
+		 	/**
+			 * Compute reserval here
+			 */
+		 	$cancel_status = true;
+		 }
+		 
+		 return $cancel_status;
+	}
+	
+	function reverse_income_or_expense($transaction_id, $transaction_type_id){
 		
 	}
+	
+	function reverse_contra_entry($transaction_id, $transaction_type_id){
+		
+	}
+	
+
 }

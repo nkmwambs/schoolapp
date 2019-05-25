@@ -1,6 +1,7 @@
+<hr />
 <div class="row">
 	<div class="col-md-12">
-		<div class="panel panel-primary" data-collapsed="0">
+		<div class="panel panel-default" data-collapsed="0">
         	<div class="panel-heading">
             	<div class="panel-title" >
             		<i class="fa fa-trophy"></i>
@@ -8,8 +9,9 @@
             	</div>
             </div>
 			<div class="panel-body">
-
-				<div class="btn btn-primary btn-icon add_activity" onclick="showAjaxModal('<?=base_url();?>index.php?modal/popup/modal_activity_add');"><i class="fa fa-plus-circle"></i><?=get_phrase('add_activity');?></div>
+				<div class="<?=get_access_class('add_parent_activity','admin','parent_activity');?>">
+					<div class="btn btn-primary btn-icon add_activity" onclick="showAjaxModal('<?=base_url();?>index.php?modal/popup/modal_activity_add');"><i class="fa fa-plus-circle"></i><?=get_phrase('add_activity');?></div>
+				</div>
 				<hr/>
 				<table class="table table-striped" id="table_export">
 					<thead>
@@ -37,25 +39,25 @@
 	                                    <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 
 	                                        <!-- STUDENT MARKSHEET LINK  -->
-	                                        <li class="edit_activity">
+	                                        <li class="<?=get_access_class('edit_activity','admin','parent_activity');?>">
 	                                            <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_activity_edit/<?php echo $activity->activity_id;?>');">
 	                                                <i class="fa fa-edit"></i>
 	                                                    <?php echo get_phrase('edit');?>
 	                                                </a>
 	                                        </li>
 
-											<li class="divider edit_activity"></li>
+											<li class="divider <?=get_access_class('edit_activity','admin','parent_activity');?>"></li>
 
-	                                        <li class="mark_targeted_participants">
+	                                        <li class="<?=get_access_class('mark_targeted_participants','admin','parent_activity');?>">
 	                                            <a href="<?=base_url();?>index.php?parents/parent_add_activity/<?php echo $activity->activity_id;?>"  id="<?php echo $activity->activity_id;?>">
 	                                                <i class="fa fa-eye"></i>
 	                                                    <?php echo get_phrase('targeted_participants');?>
 	                                                </a>
 	                                        </li>
 
-	                                        <li class="divider mark_targeted_participants"></li>
+	                                        <li class="divider <?=get_access_class('mark_targeted_participants','admin','parent_activity');?>"></li>
 
-	                                        <li>
+	                                        <li class="<?=get_access_class('show_or_mark_attendance','admin','parent_activity');?>">
 	                                            <a href="#" onclick="show_attendance(this);" id="<?php echo $activity->activity_id;?>">
 	                                                <i class="fa fa-check"></i>
 	                                                    <?php echo get_phrase('show_or_mark_attendance');?>

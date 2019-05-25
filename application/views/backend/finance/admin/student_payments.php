@@ -147,12 +147,11 @@
 							<td><?php echo $row['amount'];?></td>
                             <td><?php echo $row['amount_due'];?></td>
                             
-                            <?php $paid = $this->db->select_sum('amount')->get_where('transaction',
-                            array('invoice_id'=>$row['invoice_id']))->row()->amount;?>
+                            <?php $paid = $this->crud_model->fees_paid_by_invoice($row['invoice_id']);?>
                             
                             <td><?php echo $paid;?></td>
                            <?php
-                            	$bal = $row['amount_due'] - $paid; 
+                            	$bal = $this->crud_model->fees_balance_by_invoice($row['invoice_id']); 
                             ?>
                             
                             <td><?php echo number_format($bal,2);?></td>
@@ -160,9 +159,10 @@
 							<td>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                    Action <span class="caret"></span>
+                                    <?=get_phrase('action');?> <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-default pull-right" role="menu">
+                                	
 
                                     <?php if ($bal != 0):?>
 
@@ -289,19 +289,12 @@
 			                </table>		
 						</div>
 						
-						
-						<!-- <div class="col-sm-1">
-							<a id="next_year" title="<?=date('Y',strtotime("+1 Year"))?>" href="#cleared"><i style="font-size: 145pt;" class="fa fa-angle-right"></i></a>
-						</div> -->
-	
 					</div>	
-					
 									
 				</div>
 				
 				<div class="tab-pane" id="overpaid">
-						
-					<table  class="table table-bordered datatable example">
+						<table  class="table table-bordered datatable example">
                 	<thead>
                 		<tr>
                 			<th>#</th>
@@ -362,102 +355,12 @@
                         <?php endforeach;?>
                     </tbody>
                 </table>
-									
+								
 				</div>
 				
-				<!-- <div class="tab-pane" id="paid">
-					
-					<table class="table table-bordered datatable example">
-					    <thead>
-					        <tr>
-					            <th><div>#</div></th>
-					            <th><div><?php echo get_phrase('student');?></div></th>
-					            <th><div><?php echo get_phrase('year');?></div></th>
-					            <th><div><?php echo get_phrase('term');?></div></th>
-					            <th><div><?php echo get_phrase('method');?></div></th>
-					            <th><div><?php echo get_phrase('amount');?></div></th>
-					            <th><div><?php echo get_phrase('date');?></div></th>
-					            <th></th>
-					        </tr>
-					    </thead>
-					    <tbody>
-					        <?php 
-					        	$count = 1;
-					        	//$this->db->where('payment_type' , 'income');
-					        	$this->db->order_by('timestamp' , 'desc');
-								$this->db->group_by('serial');
-					        	$payments = $this->db->get('payment')->result_array();
-								//print_r($payments);
-					        	foreach ($payments as $row):
-					        ?>
-					        <tr>
-					        	<td><?php echo $count++;?></td>
-					        	<td><?php echo $this->db->get_where('student',array('student_id'=>$row['student_id']))->row()->name;?></td>
-					            <td><?php echo $row['yr'];?></td>
-					            <td><?php echo $this->db->get_where('terms',array('term_number'=>$row['term']))->row()->name;?></td>
-					            <td>
-					            	<?php 
-					            		if ($row['method'] == 1)
-					            			echo get_phrase('cash');
-					            		if ($row['method'] == 2)
-					            			echo get_phrase('check');
-					            		if ($row['method'] == 3)
-					            			echo get_phrase('card');
-					                    if ($row['method'] == 'paypal')
-					                    	echo 'paypal';
-					            	?>
-					            </td>
-					            <td><?php echo $row['amount'];?></td>
-					            <td><?php echo date('d M,Y', $row['timestamp']);?></td>
-					            <td>
-					            	
-					            	<div class="btn-group">
-									 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-									        Action <span class="caret"></span>
-									 </button>
-									       <ul class="dropdown-menu dropdown-default pull-right" role="menu">
-									                        
-									          
-									            <li>
-									               	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_receipt/<?php echo $row['batch_number'];?>');">
-									                   	<i class="fa fa-eye-slash"></i>
-															<?php echo get_phrase('view_receipt');?>
-									               	</a>
-									             </li>
-									             <li class="divider"></li>
-									                        
-									             
-									             <li>
-									                 <a href="<?=base_url();?>index.php?finance/download_receipt/<?php echo $row['batch_number'];?>" >
-									                     <i class="fa fa-download"></i>
-															<?php echo get_phrase('download_receipt');?>
-									                  </a>
-									             </li>
-									        </ul>
-									</div>
-					            
-					        </tr>
-					        <?php endforeach;?>
-					    </tbody>
-					</table>
-						
-				</div> -->
+				
 				
 				<div class="tab-pane" id="overpay_notes">
-					
-					<!-- <div class="row">
-						
-						<div class="col-sm-12">
-							<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_overpay_add/');" 
-							class="btn btn-primary pull-right add_over_note">
-							<i class="entypo-plus-circled"></i>
-							<?php echo get_phrase('add_note');?>
-							</a> 
-							
-						</div>
-					</div> -->
-					
-					<hr/>
 					
 					<div class="row">	
 						<div class="col-sm-12">
@@ -501,10 +404,10 @@
 							</table>		
 							</div>		
 						</div>
+					
 				</div>
 				
 				<div class="tab-pane" id="cleared_overpay_notes">
-					
 					<div class="row">
 						
 						<div class="col-sm-12">
@@ -561,11 +464,12 @@
 							</table>		
 							</div>		
 						</div>
+					
 				</div>
 	
 				
 				<div class="tab-pane" id="cancelled">
-					<table class="table table-bordered datatable example">
+						<table class="table table-bordered datatable example">
 					    <thead>
 					        <tr>
 					        	<th><div>#</div></th>
@@ -635,7 +539,7 @@
                         </tr>
                         <?php endforeach;?>
 					    </tbody>
-					  </table>  	
+					  </table>  
 				</div>	
 				
 			</div>

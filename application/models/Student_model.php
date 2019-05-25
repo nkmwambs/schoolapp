@@ -10,6 +10,7 @@ class Student_model extends CI_Model {
 	{
 		parent::__construct();
 		$this->load->database();
+		$this->db->db_select($this->session->app); 
 	}
 
 	private function _get_datatables_query()

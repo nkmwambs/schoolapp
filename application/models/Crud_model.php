@@ -957,7 +957,7 @@ class Crud_model extends CI_Model {
 	function get_current_term(){
 		$current_transacting_month = $this->current_transaction_month();
 		
-		$month = date('n',$current_transacting_month);
+		$month = date('n',strtotime($current_transacting_month));
 		
 		$all_terms = $this->db->get('terms')->result_object();	
 		
@@ -998,6 +998,74 @@ class Crud_model extends CI_Model {
 		}
 		
 		return $arr;
+	}
+	
+	function fees_paid_by_invoice($invoice_id){
+		
+		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		$total_paid = $this->db->select_sum('cost')->get_where('transaction_detail',
+		array('invoice_id'=>$invoice_id))->row()->cost;
+		
+		return $total_paid;
+	}
+	
+	function fees_balance_by_invoice($invoice_id){
+		
+		$amount_due = $this->db->select_sum('amount_due')->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->amount_due;
+		
+		$paid = $this->fees_paid_by_invoice($invoice_id);
+		
+		return $amount_due - $paid;
+	}
+	
+	function fees_paid_by_invoice_detail($invoice_details_id){
+		
+		$total_paid = $this->db->select_sum('cost')->get_where('transaction_detail',
+		array('invoice_details_id'=>$invoice_details_id))->row()->cost;
+		
+		return $total_paid;
+	}
+	
+	function fees_balance_by_invoice_detail($invoice_details_id){
+		$amount_due = $this->db->select_sum('amount_due')->get_where('invoice_details',array('invoice_details_id'=>$invoice_details_id))->row()->amount_due;
+		
+		$paid = $this->fees_paid_by_invoice_detail($invoice_details_id);
+		
+		return $amount_due - $paid;
+	}
+	
+	
+	function term_total_paid_fees($year, $term){
+		
+		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		$this->db->join('invoice','invoice.invoice_id=transaction.invoice_id');
+		$total_paid = $this->db->select_sum('cost')->get_where('transaction_detail',
+		array('yr'=>$year,'term'=>$term))->row()->cost;
+		
+		//Terms Overpayments
+		$this->db->join('transaction','transaction.transaction_id=overpay.transaction_id');
+		$this->db->join('invoice','invoice.invoice_id=transaction.invoice_id');
+		$overpaid = $this->db->select_sum('overpay.amount')->get_where('overpay',array('yr'=>$year,'term'=>$term))->row()->amount;
+		
+		return $total_paid - $overpaid; 
+	}
+	
+	function term_total_fees_balance($year, $term){
+		$amount_due = $this->db->select_sum('amount_due')->get_where('invoice',array('yr'=>$year,'term'=>$term))->row()->amount_due;
+		
+		$paid = $this->term_total_paid_fees($year, $term);
+		
+		return $amount_due - $paid;
+	}
+	
+	function get_invoice_transaction_history($invoice_id){
+		$this->db->join('transaction_method','transaction_method.transaction_method_id=transaction.transaction_method_id');
+		
+		$history = $this->db->select(array('t_date','amount','transaction.description as description',
+		'transaction_method.description as transaction_method'))->get_where('transaction',
+		array('invoice_id'=>$invoice_id))->result_object();
+		
+		return $history;
 	}
 	 /**
 	  * End of Upgraded Finance Model

@@ -8,10 +8,12 @@
 
 </style>
 <?php
-
+//$this->db->select(array(''));
+$this->db->join('transaction_type','transaction_type.transaction_type_id=transaction.transaction_type_id');
 $this->db->join('transaction_detail','transaction_detail.transaction_id=transaction.transaction_id');
 $transaction = $this->db->get_where('transaction',array('batch_number'=>$param2))->result_array();
 
+//print_r($transaction);
 
 $row = $transaction[0];
 
@@ -23,11 +25,19 @@ $row = $transaction[0];
         <i class="entypo-print"></i>
     </a>
     
-    <a onclick="confirm_action('<?=base_url();?>index.php?finance/reverse_transaction/<?=$row['transaction_id'];?>');" 
-    	class="btn btn-danger btn-icon icon-left hidden-print pull-left">
-    	<?=get_phrase('reverse_transaction');?>
-        <i class="entypo-ccw"></i>
-    </a>
+    <?php
+    if($row['is_cancelled'] == 0 && $row['can_be_cancelled'] == 1){
+    ?>
+    <div class="<?=get_access_class('reverse_transaction','admin','accounting');?>">
+	    <a onclick="confirm_action('<?=base_url();?>index.php?finance/reverse_transaction/<?=$row['transaction_id'];?>');" 
+	    	class="btn btn-danger btn-icon icon-left hidden-print pull-left">
+	    	<?=get_phrase('reverse_transaction');?>
+	        <i class="entypo-ccw"></i>
+	    </a>
+    </div>
+    <?php
+	}
+    ?>
 </center>
 
     <br><br>

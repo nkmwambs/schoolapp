@@ -1,7 +1,7 @@
 <div class="row" >
-	<div class="col-sm-12 <?=get_access_class('teacher','admin');?>">
+	<div class="col-sm-12">
 		<a href="<?php echo base_url();?>index.php?teacher/teacher_add/"
-            	class="btn btn-primary pull-right <?=get_access_class('add_teacher','admin','teacher');?>">
+            	class="btn btn-primary pull-right <?=get_access_class('add_teacher','admin','accounts');?>">
                 <i class="entypo-plus-circled"></i>
             	<?php echo get_phrase('add_new_teacher');?>
                 </a>
@@ -50,51 +50,51 @@
                                     <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 										
 										<!-- Promote a Teacher to A user -->
-                                        <li class="<?=get_access_class("promote_teacher_to_user",$this->session->login_type,"teacher");?>">
+                                        <li class="<?=get_access_class("promote_teacher_to_user",$this->session->login_type,"accounts");?>">
                                         	<a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?settings/promote_to_user/teacher/<?php echo $row['teacher_id'];?>');">
                                             	<i class="fa fa-thumbs-up"></i>
 													<?php echo get_phrase('promote_to_user');?>
                                                	</a>
                                         </li>
-                                        <li class="divider <?=get_access_class("promote_teacher_to_user",$this->session->login_type,"teacher");?>"></li>
+                                        <li class="divider <?=get_access_class("promote_teacher_to_user",$this->session->login_type,"accounts");?>"></li>
                                         
                                         <?php
                                         	if($user->num_rows()>0){
                                         ?>
                                         
                                         <!-- Reset Password -->
-                                        <li class="<?=get_access_class("reset_teacher_password",$this->session->login_type,"teacher");?>">
+                                        <li class="<?=get_access_class("reset_teacher_password",$this->session->login_type,"accounts");?>">
                                         	<a href="#" onclick="showAjaxModal('<?=base_url();?>index.php?modal/popup/modal_change_password/teacher/<?php echo $row['teacher_id'];?>');">
                                             	<i class="fa fa-reply"></i>
 													<?php echo get_phrase('change_password');?>
                                                	</a>
                                         </li>
-                                        <li class="divider <?=get_access_class("reset_teacher_password",$this->session->login_type,"teacher");?>"></li>
+                                        <li class="divider <?=get_access_class("reset_teacher_password",$this->session->login_type,"accounts");?>"></li>
                                         
                                          <!-- Assign Profile -->
-                                        <li class="<?=get_access_class("assign_profile",$this->session->login_type,"teacher");?>">
+                                        <li class="<?=get_access_class("assign_profile",$this->session->login_type,"accounts");?>">
                                         	<a href="#" onclick="showAjaxModal('<?=base_url();?>index.php?modal/popup/modal_assign_profile/teacher/<?php echo $row['teacher_id'];?>');">
                                             	<i class="fa fa-link"></i>
 													<?php echo get_phrase('change_profile');?>
                                                	</a>
                                         </li>
-                                        <li class="divider <?=get_access_class("assign_profile",$this->session->login_type,"teacher");?>"></li>
+                                        <li class="divider <?=get_access_class("assign_profile",$this->session->login_type,"accounts");?>"></li>
                                         
                                         <?php		
                                         	}
                                         ?>
 										
                                         <!-- teacher EDITING LINK -->
-                                        <li class="<?=get_access_class("edit_teacher",$this->session->login_type,"teacher");?>">
+                                        <li class="<?=get_access_class("edit_teacher",$this->session->login_type,"accounts");?>">
                                         	<a href="<?php echo base_url();?>index.php?teacher/teacher_edit/<?php echo $row['teacher_id'];?>">
                                             	<i class="fa fa-pencil"></i>
 													<?php echo get_phrase('edit');?>
                                                	</a>
                                         </li>
-                                        <li class="divider <?=get_access_class("edit_teacher",$this->session->login_type,"teacher");?>"></li>
+                                        <li class="divider <?=get_access_class("edit_teacher",$this->session->login_type,"accounts");?>"></li>
                                         
                                         <!-- teacher DELETION LINK -->
-                                        <li class="<?=get_access_class("delete_teacher",$this->session->login_type,"teacher");?>">
+                                        <li class="<?=get_access_class("delete_teacher",$this->session->login_type,"accounts");?>">
                                         	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?teacher/teacher/delete/<?php echo $row['teacher_id'];?>');">
                                             	<i class="fa fa-trash-o"></i>
 													<?php echo get_phrase('delete');?>

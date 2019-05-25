@@ -22,52 +22,52 @@
 		        </li>
 		        
 				
-				<li class="opened active has-sub">
+				<li class="opened active has-sub <?=get_access_class('accounts','admin');?>">
 					<a href="#">
 						<i class="entypo-layout"></i>
 						<span class="title"><?=get_phrase('accounts');?></span>
 					</a>
 					<ul class="visible">
 						
-						<li>
+						<li class="<?=get_access_class('view_administrators','admin','accounts');?>">
 							<a href="<?php echo base_url(); ?>index.php?admin/administrator">
 								<span class="title"><?=get_phrase('administrators');?></span>
 							</a>
 						</li>
 						
-						<li>
+						<li class="<?=get_access_class('view_teachers','admin','accounts');?>">
 							<a href="<?php echo base_url(); ?>index.php?teacher/teacher">
 								<span class="title"><?=get_phrase('teachers');?></span>
 							</a>
 						</li>
-						<li>
+						<li class="<?=get_access_class('view_parents','admin','accounts');?>">
 							<a href="<?php echo base_url(); ?>index.php?parents/parent">
 								<span class="title"><?=get_phrase('parents');?></span>
 							</a>
 						</li>
 						
-						<li class="has-sub active">
+						<li class="has-sub active <?=get_access_class('view_students','admin','accounts');?>">
 							<a href="#">
 								<span class="title"><?=get_phrase('students');?></span>
 							</a>
 							<ul>
-								<li>
+								<li class="<?=get_access_class('admit_student','admin','accounts');?>">
 									<a href="<?php echo base_url(); ?>index.php?student/student_add">
 										<span class="title"><?=get_phrase('admit_student');?></span>
 									</a>
 								</li>
-								<li>
+								<li class="<?=get_access_class('admin_student','admin','accounts');?>">
 									<a href="<?php echo base_url(); ?>index.php?student/student_bulk_add">
 										<span class="title"><?=get_phrase('admit_bulk_students');?></span>
 									</a>
 								</li>
-								<li class="has-sub">
+								<li class="has-sub" <?=get_access_class('view_students','admin','accounts');?>>
 									<a href="#">
 										<span class="title"><?=get_phrase('student_information');?></span>
 									</a>
 									<ul>
 										
-					                    	<li class="<?php if ($page_name == 'all_students') echo 'active'; ?> <?=get_access_class('all_students','admin','student');?>">
+					                    	<li class="<?=get_access_class('view_all_students','admin','accounts');?>">
 							                    <a href="<?php echo base_url(); ?>index.php?student/all_students">
 							                        <span><i class="fa fa-users"></i> <?php echo get_phrase('all_students'); ?></span>
 							                    </a>
@@ -80,7 +80,7 @@
 					                        foreach ($classes as $row):
 					                        										
 											    ?>
-					                            <li class="<?php if ($page_name == 'student_information' && $page_name == 'student_marksheet' && $class_id == $row['class_id']) echo 'active'; ?> <?=get_access_class('class_numeric_'.$row['name_numeric'].'_students','admin','student');?>">
+					                            <li class="<?=get_access_class('class_numeric_'.$row['name_numeric'].'_students','admin','accounts');?>">
 					                                <a href="<?php echo base_url(); ?>index.php?student/student_information/<?php echo $row['class_id']; ?>">
 					                                	<?php
 					                                		 $students_count   =   $this->db->get_where('student' , array('class_id'=>$row['class_id'],"active"=>1))->num_rows();
@@ -96,7 +96,7 @@
 							</ul>
 						</li>
 						
-						<li>
+						<li class="<?=get_access_class('change_own_profile','admin','accounts');?>">
 							<a href="<?php echo base_url(); ?>index.php?account/manage_profile">
 								<span class="title"><?=get_phrase('manage_own_account');?></span>
 							</a>
@@ -105,7 +105,7 @@
 					</ul>
 				</li>
 				
-				<li class="<?php if ($page_name == 'dashboard') echo 'active'; ?> <?=get_access_class('dashboard','admin');?>">
+				<li class="<?=get_access_class('parent_activity','admin');?>">
 		            <a href="<?php echo base_url(); ?>index.php?parents/parent_activity">
 		                <i class="fa fa-trophy"></i>
 		                <span><?php echo get_phrase('parent_activity'); ?> </span>
@@ -203,7 +203,7 @@
 					</ul>
 				</li>
 				<li class="has-sub">
-					<a href="extra-icons.html">
+					<a href="#">
 						<i class="entypo-heart"></i>
 						<span class="title"><?=get_phrase('finance');?></span>
 						<!-- <span class="badge badge-secondary">9</span> -->

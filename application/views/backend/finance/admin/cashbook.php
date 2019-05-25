@@ -43,7 +43,9 @@ if(isset($current)){
 	</div>
 	
 	<div class="col-sm-3 create_bank_reconciliation_statement">
+		<div class=" <?=get_access_class('bank_reconcialition','admin','accounting');?>">
 			<a href="<?=base_url();?>index.php?finance/reconcile/<?=$t_date;?>" id="reconcile" class="btn btn-success btn-icon float-left"><i class="fa fa-book"></i><?=get_phrase('bank_reconciliation');?></a>
+		</div>
 	</div>	
 </div>
 
@@ -55,8 +57,8 @@ if(isset($current)){
 		<a href="<?=base_url();?>index.php?finance/cashbook/scroll/<?=strtotime('-1 month',$t_date);?>"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>
 	</div>
 	<div class="col-sm-10">
-		<div class="well well-sm" style="font-weight: bolder;text-align: center;">Cash Book for the Month of <?=date('F-Y',strtotime($current));?></div>
-		<table class="table table-hover table-bordered datatable">
+		<div class="" style="font-weight: bolder;text-align: center;">Cash Book for the Month of <?=date('F-Y',strtotime($current));?></div>
+		<table class="table table-hover table-bordered table-responsive datatable">
 			<thead>
 				<tr>
 					<th colspan="5">&nbsp;</th>
@@ -94,12 +96,19 @@ if(isset($current)){
 					
 					foreach($transactions as $rows):
 						
-					//$type = array('1'=>'Income','2'=>'Expense','3'=>'Bank Deposit from Cash','4'=>'Bank Withdraw to Cash');
+					$btn_color = "btn-default";
+					$btn_title = "";	
+					
+					if($rows->is_cancelled == 1) {
+						$btn_color = "btn-danger";	
+						//$btn_title = "'title'='".get_phrase('reversing_batch_number').":'".$rows->reversing_batch_number."";
+						$btn_title = get_phrase('reversing_batch_number').': '.$rows->reversing_batch_number;
+					}
 				?>
 					
 					<tr>
 						<td><?=$rows->t_date;?></td>
-						<td><div class="btn btn-success" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_transaction/<?=$rows->batch_number?>');"><?=$rows->batch_number?></div></td>
+						<td><div class="btn <?=$btn_color;?>" title="<?=$btn_title;?>" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_transaction/<?=$rows->batch_number?>');"><?=$rows->batch_number?></div></td>
 						<td><?=$rows->payee;?></td>
 						<td><?=substr($rows->description,0,25);?></td>
 						<td><?=ucwords($rows->transaction_type);?></td>
@@ -194,24 +203,21 @@ if(isset($current)){
 	{
 		var datatable = $(".datatable").dataTable({
 			"sPaginationType": "bootstrap",
+			aaSorting: [[1, 'asc']],
 			"sDom": "<'row'<'col-xs-3 col-left'l><'col-xs-9 col-right'<'export-data'T>f>r>t<'row'<'col-xs-3 col-left'i><'col-xs-9 col-right'p>>",
 			"oTableTools": {
 				"aButtons": [
 					
 					{
 						"sExtends": "xls",
-						"mColumns": [0, 2, 3, 4]
-					},
-					{
-						"sExtends": "pdf",
-						"mColumns": [0, 2, 3, 4]
+						
 					},
 					{
 						"sExtends": "print",
 						"fnSetText"	   : "Press 'esc' to return",
 						"fnClick": function (nButton, oConfig) {
-							datatable.fnSetColumnVis(1, false);
-							datatable.fnSetColumnVis(5, false);
+							//datatable.fnSetColumnVis(1, false);
+							//datatable.fnSetColumnVis(5, false);
 							
 							this.fnPrint( true, oConfig );
 							
