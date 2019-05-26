@@ -2189,12 +2189,16 @@ class Finance extends CI_Controller
 	}
 	
 	function reverse_transaction($transaction_id){
-		//Check if transaction is cancellable
 		
+		$msg = get_phrase('data_not_updated');
+		
+		//Check if transaction is cancellable
 		$transaction = $this->db->get_where('transaction',
 		array('transaction_id'=>$transaction_id))->row();
 		
-		$msg = get_phrase('data_not_updated');
+		$is_cancelled = $transaction->is_cancelled;
+		$cleared = $transaction->cleared;
+		
 		//Update the is_cancelled to 1
 		if($is_cancelled == 0 && $cleared !== 1){
 			
@@ -2255,6 +2259,7 @@ class Finance extends CI_Controller
 		/**
 		 * Can only reverse a transaction of the last invoice
 		 * When the last invoice is fully paid the invoice becomes active
+		 * Do not reverse a transaction if the invoice is cancelled
 		 * If the reversed payment has an overpay the overpay note will be cancelled
 		 */
 		 
@@ -2263,16 +2268,25 @@ class Finance extends CI_Controller
 		 //Check if is the last invoice for the student
 		 $student = $this->db->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->student_id;
 		 
+		 //Use this invoice_id from now henceforth
 		 $last_invoice_id = $this->db->select_max('invoice_id')->get_where('invoice',
 		 array('student_id'=>$student))->row()->invoice_id;
 		 
-		 if($last_invoice_id == $invoice_id){
+		 //Is invoice cancelled?
+		 $is_cancelled = $this->db->get_where('invoice',
+		 array('status'=>'cancelled','invoice_id'=>$last_invoice_id))->num_rows();
+		 
+		 if($last_invoice_id == $invoice_id && $is_cancelled == 0){
 		 	
-			//Get this transaction
+			// If active invoice
+			$this->clone_transaction_for_reverse($transaction_id);
 			
-		 	/**
-			 * Compute reserval here
-			 */
+			// If the invoice is cleared
+			
+			// If the invoice is excess paid (Overpaid)
+			
+			
+			 
 		 	$cancel_status = true;
 		 }
 		 
@@ -2287,5 +2301,47 @@ class Finance extends CI_Controller
 		
 	}
 	
+	function clone_transaction_for_reverse($transaction_id){
+		
+		$transaction_header = $this->db->get_where('transaction',
+			array('transaction_id'=>$transaction_id))->result_array();
+		
+		$transaction_header = $transaction_header[0];	
+			
+		$transaction_detail = $this->db->get_where('transaction_detail',
+			array('transaction_id'=>$transaction_id))->result_array();
+			
+		//Create a reversed header
+		$transaction_header['amount'] = - $transaction_header['amount'];
+		$transaction_header['description'] = get_phrase('reversal_of_batch_number')." ".$transaction_header['batch_number'];
+		$transaction_header['batch_number'] = $this->crud_model->next_batch_number();
+		
+		//Remove primary key
+		array_shift($transaction_header);
+		
+		$reverse_header = $transaction_header;
+		
+		$this->db->insert('transaction',$reverse_header);
+		
+		$last_transaction_id = $this->db->insert_id();
+		
+		//print_r($transaction_detail);
+		//Create a reversed detail
+		for ($i=0; $i <count($transaction_detail) ; $i++) {
+			array_shift($transaction_detail[$i]); 
+			$transaction_detail[$i]['unitcost'] = - $transaction_detail[$i]['unitcost'];
+			$transaction_detail[$i]['cost'] = - $transaction_detail[$i]['cost'];
+			$transaction_detail[$i]['transaction_id'] = $last_transaction_id;
+		}
+			
+		$reversed_detail = $transaction_detail;
+						
+		$this->db->insert_batch('transaction_detail',$reversed_detail);
+		
+		//Update the reversed batch number column
+		$this->db->where(array('transaction_id'=>$transaction_id));
+		$update_reversed_batch_number['reversing_batch_number'] = $transaction_header['batch_number'];
+		$this->db->update('transaction',$update_reversed_batch_number);	
+	}
 
 }

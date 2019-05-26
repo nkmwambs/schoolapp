@@ -220,7 +220,7 @@
 							<a id="prev_year" title="<?=date('Y',strtotime("-1 Year"))?>" href="#cleared"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>
 						</div> -->
 						
-						<div class="col-sm-10">
+						<div class="col-sm-12">
 								<table  class="table table-bordered datatable example">
 			                	<thead>
 			                		<tr>
@@ -240,9 +240,6 @@
 			                    <tbody>
 			                    	<?php
 			                    		$count = 1;
-			                    		//$this->db->where('status' , 'paid');
-			                    		//$this->db->order_by('creation_timestamp' , 'desc');
-			                    		//$invoices = $this->db->get('invoice')->result_array();
 			                    		foreach($paid_invoices as $row3):
 			                    	?>
 			                        <tr>

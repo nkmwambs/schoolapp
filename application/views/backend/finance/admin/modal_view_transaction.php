@@ -8,12 +8,10 @@
 
 </style>
 <?php
-//$this->db->select(array(''));
+
 $this->db->join('transaction_type','transaction_type.transaction_type_id=transaction.transaction_type_id');
 $this->db->join('transaction_detail','transaction_detail.transaction_id=transaction.transaction_id');
 $transaction = $this->db->get_where('transaction',array('batch_number'=>$param2))->result_array();
-
-//print_r($transaction);
 
 $row = $transaction[0];
 
