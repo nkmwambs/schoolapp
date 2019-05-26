@@ -5,7 +5,6 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
-DROP TABLE IF EXISTS `access`;
 CREATE TABLE `access` (
   `access_id` int(100) NOT NULL AUTO_INCREMENT,
   `entitlement_id` int(100) NOT NULL,
@@ -18,101 +17,64 @@ CREATE TABLE `access` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `access` (`access_id`, `entitlement_id`, `profile_id`) VALUES
-(28,	376,	1),
-(29,	377,	1),
-(35,	385,	1),
-(36,	386,	1),
-(37,	387,	1),
-(38,	388,	1),
-(39,	389,	1),
-(40,	390,	1),
-(41,	391,	1),
-(42,	392,	1),
-(43,	396,	1),
-(44,	395,	1),
-(47,	394,	1),
-(48,	393,	1),
-(49,	397,	1),
-(50,	399,	1),
-(51,	400,	1),
-(52,	401,	1),
-(53,	402,	1),
-(54,	403,	1),
-(55,	404,	1),
-(56,	405,	1),
-(91,	368,	1),
-(93,	406,	1),
-(94,	419,	1),
-(96,	364,	1),
-(97,	495,	1),
-(98,	502,	1),
-(99,	506,	1),
-(100,	369,	1),
-(101,	372,	1),
-(102,	378,	1),
-(104,	513,	1),
-(106,	514,	1),
-(107,	518,	1),
-(109,	363,	1),
-(110,	407,	1),
-(111,	408,	1),
-(112,	409,	1),
-(113,	410,	1),
-(114,	411,	1),
-(115,	412,	1),
-(116,	413,	1),
-(117,	414,	1),
-(118,	415,	1),
-(119,	416,	1),
-(120,	417,	1),
-(121,	418,	1),
-(122,	365,	1),
-(123,	366,	1),
-(124,	367,	1),
-(125,	420,	1),
-(126,	421,	1),
-(127,	422,	1),
-(128,	432,	1),
-(129,	491,	1),
-(130,	492,	1),
-(131,	493,	1),
-(132,	494,	1),
-(133,	496,	1),
-(134,	497,	1),
-(135,	498,	1),
-(136,	499,	1),
-(137,	500,	1),
-(138,	501,	1),
-(139,	444,	1),
-(140,	427,	1),
-(141,	426,	1),
-(142,	425,	1),
-(143,	424,	1),
-(144,	423,	1),
-(145,	370,	1),
-(146,	371,	1),
-(147,	428,	1),
-(148,	429,	1),
-(149,	430,	1),
-(150,	431,	1),
-(151,	519,	1),
-(153,	521,	1),
-(154,	522,	1),
-(156,	520,	1),
-(157,	383,	1),
-(158,	382,	1),
-(159,	381,	1),
-(160,	380,	1),
-(161,	379,	1),
-(162,	529,	1),
-(163,	530,	1),
-(164,	531,	1),
-(165,	523,	1),
-(166,	524,	1),
-(167,	525,	1),
-(168,	526,	1);
+(242,	796,	1),
+(243,	799,	1),
+(244,	800,	1),
+(245,	801,	1),
+(246,	804,	1),
+(247,	805,	1),
+(248,	869,	1),
+(249,	864,	1),
+(250,	865,	1),
+(251,	866,	1),
+(252,	867,	1),
+(253,	868,	1),
+(254,	863,	1),
+(255,	831,	1),
+(256,	819,	1),
+(257,	820,	1),
+(258,	821,	1),
+(259,	822,	1),
+(260,	823,	1),
+(261,	824,	1),
+(262,	825,	1),
+(263,	826,	1),
+(264,	827,	1),
+(265,	828,	1),
+(266,	829,	1),
+(267,	806,	1),
+(268,	807,	1),
+(269,	808,	1),
+(270,	809,	1),
+(271,	810,	1),
+(272,	812,	1),
+(273,	813,	1),
+(274,	811,	1),
+(275,	814,	1),
+(276,	815,	1),
+(277,	871,	1),
+(278,	872,	1),
+(279,	830,	1),
+(280,	832,	1),
+(281,	833,	1),
+(282,	834,	1),
+(283,	835,	1),
+(284,	836,	1),
+(285,	837,	1),
+(286,	838,	1),
+(287,	839,	1),
+(288,	840,	1),
+(289,	841,	1),
+(290,	842,	1),
+(291,	843,	1),
+(292,	844,	1),
+(293,	845,	1),
+(294,	846,	1),
+(295,	847,	1),
+(296,	848,	1),
+(297,	849,	1),
+(298,	850,	1);
 
-DROP TABLE IF EXISTS `accounts`;
 CREATE TABLE `accounts` (
   `accounts_id` int(10) NOT NULL AUTO_INCREMENT,
   `numeric_code` int(10) NOT NULL,
@@ -126,7 +88,6 @@ INSERT INTO `accounts` (`accounts_id`, `numeric_code`, `name`, `opening_balance`
 (1,	1,	'cash',	75000.00,	'2017-03-01'),
 (2,	2,	'bank',	342870.23,	'2017-03-01');
 
-DROP TABLE IF EXISTS `activity`;
 CREATE TABLE `activity` (
   `activity_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL,
@@ -144,7 +105,6 @@ INSERT INTO `activity` (`activity_id`, `name`, `description`, `start_date`, `end
 (8,	'Closing Day',	'Closing Day',	'2018-06-29',	'2018-06-29',	'2018-06-15 13:33:39'),
 (9,	'Thanks giving day',	'All parents thanks giving day',	'2019-04-18',	'2019-04-18',	'2019-03-30 08:15:35');
 
-DROP TABLE IF EXISTS `activity_attendance`;
 CREATE TABLE `activity_attendance` (
   `activity_attendance_id` int(100) NOT NULL AUTO_INCREMENT,
   `activity_id` int(100) NOT NULL,
@@ -171,7 +131,6 @@ INSERT INTO `activity_attendance` (`activity_attendance_id`, `activity_id`, `par
 (41,	9,	2,	1,	1),
 (42,	9,	3,	1,	0);
 
-DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin` (
   `admin_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
@@ -189,7 +148,6 @@ INSERT INTO `admin` (`admin_id`, `name`, `email`, `birthday`, `sex`, `phone`, `l
 (2,	'Livingstone Onduso',	'livingstoneonduso@gmail.com',	'',	'male',	'0909',	'super'),
 (3,	'Hope Shume',	'hopeshume@gmail.com',	'',	'female',	'87778',	'super');
 
-DROP TABLE IF EXISTS `app`;
 CREATE TABLE `app` (
   `app_id` int(100) NOT NULL AUTO_INCREMENT,
   `app_name` varchar(20) NOT NULL,
@@ -200,7 +158,6 @@ INSERT INTO `app` (`app_id`, `app_name`) VALUES
 (1,	'default'),
 (2,	'schoolapp2');
 
-DROP TABLE IF EXISTS `attendance`;
 CREATE TABLE `attendance` (
   `attendance_id` int(11) NOT NULL AUTO_INCREMENT,
   `status` int(11) NOT NULL COMMENT '0 undefined , 1 present , 2  absent',
@@ -235,7 +192,6 @@ INSERT INTO `attendance` (`attendance_id`, `status`, `student_id`, `date`) VALUE
 (21,	0,	16,	'2019-04-24'),
 (22,	0,	17,	'2019-04-24');
 
-DROP TABLE IF EXISTS `book`;
 CREATE TABLE `book` (
   `book_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -248,7 +204,6 @@ CREATE TABLE `book` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
-DROP TABLE IF EXISTS `budget`;
 CREATE TABLE `budget` (
   `budget_id` int(100) NOT NULL AUTO_INCREMENT,
   `expense_category_id` int(11) NOT NULL,
@@ -267,11 +222,7 @@ CREATE TABLE `budget` (
   CONSTRAINT `budget_ibfk_2` FOREIGN KEY (`terms_id`) REFERENCES `terms` (`terms_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `budget` (`budget_id`, `expense_category_id`, `description`, `fy`, `terms_id`, `qty`, `unitcost`, `often`, `total`, `smtp`) VALUES
-(7,	1,	'Bus Service',	2019,	1,	2.00,	7500.00,	4,	60000.00,	'2019-05-20 16:41:06'),
-(8,	5,	'Staff Salaries',	2019,	1,	15.00,	15400.00,	4,	924000.00,	'2019-05-20 17:22:08');
 
-DROP TABLE IF EXISTS `budget_schedule`;
 CREATE TABLE `budget_schedule` (
   `budget_schedule_id` int(100) NOT NULL AUTO_INCREMENT,
   `budget_id` int(100) NOT NULL,
@@ -283,17 +234,7 @@ CREATE TABLE `budget_schedule` (
   CONSTRAINT `budget_schedule_ibfk_1` FOREIGN KEY (`budget_id`) REFERENCES `budget` (`budget_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `budget_schedule` (`budget_schedule_id`, `budget_id`, `month`, `amount`, `stmp`) VALUES
-(73,	7,	1,	15000.00,	'2019-05-20 16:41:06'),
-(74,	7,	2,	15000.00,	'2019-05-20 16:41:06'),
-(75,	7,	3,	15000.00,	'2019-05-20 16:41:06'),
-(76,	7,	4,	15000.00,	'2019-05-20 16:41:06'),
-(77,	8,	1,	231000.00,	'2019-05-20 17:22:08'),
-(78,	8,	2,	231000.00,	'2019-05-20 17:22:08'),
-(79,	8,	3,	231000.00,	'2019-05-20 17:22:08'),
-(80,	8,	4,	231000.00,	'2019-05-20 17:22:08');
 
-DROP TABLE IF EXISTS `caregiver`;
 CREATE TABLE `caregiver` (
   `caregiver_id` int(100) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) NOT NULL,
@@ -323,21 +264,6 @@ INSERT INTO `caregiver` (`caregiver_id`, `parent_id`, `student_id`) VALUES
 (36,	5,	35),
 (37,	7,	35);
 
-DROP TABLE IF EXISTS `cashbook`;
-CREATE TABLE `cashbook` (
-  `cashbook_id` int(200) NOT NULL AUTO_INCREMENT,
-  `batch_number` int(200) NOT NULL,
-  `t_date` date NOT NULL,
-  `description` varchar(100) NOT NULL,
-  `transaction_type` int(10) NOT NULL COMMENT '1=income,2=expense,3=to_bank,4=to_cash, 5 = funds transfer',
-  `account` int(10) NOT NULL COMMENT '1=cash,2=bank, 3 = funds transfer',
-  `amount` decimal(10,2) NOT NULL,
-  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`cashbook_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-DROP TABLE IF EXISTS `ci_sessions`;
 CREATE TABLE `ci_sessions` (
   `id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
   `ip_address` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
@@ -348,33 +274,64 @@ CREATE TABLE `ci_sessions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `ci_sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
-('0lmcuk1m70bj4pek2sl9vpgp5thch8g1',	'::1',	1558382434,	'__ci_last_regenerate|i:1558382434;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('204c4i6aejfia48r3ade4ibvifbumn5a',	'::1',	1558381781,	'__ci_last_regenerate|i:1558381781;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('3mv6mtk71om3lfclv29hcr7i66n46vsm',	'::1',	1558376872,	'__ci_last_regenerate|i:1558376872;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('4nk5qhto8qhp2t5p7mu8iuvf45oinarl',	'::1',	1558379742,	'__ci_last_regenerate|i:1558379742;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('5p2vhsi5mhpqgoqmog9er1fj9tvr7h9l',	'::1',	1558376086,	'__ci_last_regenerate|i:1558376086;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('6h7nl4vudbmgdafnqectp6v4lbfno2l2',	'::1',	1558384416,	'__ci_last_regenerate|i:1558384416;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"93\";'),
-('6mfgabhms74d12921vjiilc1vb8k9go5',	'::1',	1558380946,	'__ci_last_regenerate|i:1558380946;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('8mqo8q031sqsluh68ipoo20k3j51a7dm',	'::1',	1558378287,	'__ci_last_regenerate|i:1558378287;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('8q8erghfv3vus3gta2ch455pgmka812o',	'::1',	1558382763,	'__ci_last_regenerate|i:1558382763;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('9q5ld2fl4188hjm6ol4me9spi79rkig9',	'::1',	1558377521,	'__ci_last_regenerate|i:1558377521;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('9vnfbp67biesplp1v2csepcrfhk434ge',	'::1',	1558384816,	'__ci_last_regenerate|i:1558384816;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"93\";'),
-('e0oigkuqpmf3vfpabrvamb5q9u52rtm4',	'::1',	1558382097,	'__ci_last_regenerate|i:1558382097;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('g0e6akopc2ijeg4ppiufa2a8o61bk5t2',	'::1',	1558377969,	'__ci_last_regenerate|i:1558377969;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('gu8k07p83b3n5ecqalnj2dvgr28437qu',	'::1',	1558381351,	'__ci_last_regenerate|i:1558381351;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('jv8ubve2q2hpj3emk0cbtj8ei7mravip',	'::1',	1558380633,	'__ci_last_regenerate|i:1558380633;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('lcp83o47mkft2q6uaa033ukplbi4uoia',	'::1',	1558383149,	'__ci_last_regenerate|i:1558383149;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('lqe9o7g1rfc582ig4e3o77rp3auh7vsj',	'::1',	1558377208,	'__ci_last_regenerate|i:1558377208;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('n2jlbn9hjfo4pcrbcsoq5bj0ajq253d8',	'::1',	1558378934,	'__ci_last_regenerate|i:1558378934;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('o9258fckh9dh9feo6hkgpg7hjh84bkng',	'::1',	1558378589,	'__ci_last_regenerate|i:1558378589;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('pe311k66ckfoj519kl2kktvnu3gp795s',	'::1',	1558379280,	'__ci_last_regenerate|i:1558379280;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('pq88gbjhnn64e732kd5l6aubjveo4g0g',	'::1',	1558380270,	'__ci_last_regenerate|i:1558380270;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('rhg7mh0otve1s4suucrjemlldimudt2h',	'::1',	1558376537,	'__ci_last_regenerate|i:1558376537;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('tmbnl7do2fnri541olc58stbccm9f58a',	'::1',	1558384019,	'__ci_last_regenerate|i:1558384019;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('ulp1qpbqagmbg4jgg64pnu1f1tqe6fo8',	'::1',	1558383580,	'__ci_last_regenerate|i:1558383580;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"finance\";last_transaction_id|s:2:\"86\";'),
-('vfaiu1tpj1qhl89b55f7deq3ttvnb1qb',	'::1',	1558384973,	'__ci_last_regenerate|i:1558384816;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";page_type|s:7:\"student\";last_transaction_id|s:2:\"93\";');
+('0icjndvnthgld0g2b3gkc3ptlk12ac1q',	'::1',	1558881392,	'__ci_last_regenerate|i:1558881392;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('1ffhjmc8pskrali5j0252ujnleeg08lg',	'::1',	1558799676,	'__ci_last_regenerate|i:1558799676;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('1rpbhleqmgksc0tj0tqsvq0j5hp0vjvl',	'::1',	1558883342,	'__ci_last_regenerate|i:1558883342;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";last_transaction_id|s:3:\"110\";'),
+('2j9pt9vf2lakmqomed9jor9ori8oloaf',	'::1',	1558882502,	'__ci_last_regenerate|i:1558882502;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('2l13drqii5fjkbllo00se87lmjm1qoq6',	'::1',	1558846414,	'__ci_last_regenerate|i:1558846414;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('38gufog5fmknka4c31lhp7pimlllhqds',	'::1',	1558849139,	'__ci_last_regenerate|i:1558849139;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('3ffus1k5t48s0u2pms0la973imam05ac',	'::1',	1558807749,	'__ci_last_regenerate|i:1558807749;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('43t1b7r8q3m4dferfrf0hpg6stc91e19',	'::1',	1558801435,	'__ci_last_regenerate|i:1558801435;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('5u7lqet35mji4ri4kadvg9rrik55clt9',	'::1',	1558891389,	'__ci_last_regenerate|i:1558891387;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:9:\"dashboard\";'),
+('60f1g9pkn65vvmepe6a7gfku01e21e42',	'::1',	1558800425,	'__ci_last_regenerate|i:1558800425;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:8:\"settings\";'),
+('65f6mbogb7754nhf3n4ggc02e8p6din4',	'::1',	1558846082,	'__ci_last_regenerate|i:1558846082;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('7t7rcqgsuqd0t3dpftao666t199jsdn9',	'::1',	1558805454,	'__ci_last_regenerate|i:1558805454;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:9:\"dashboard\";'),
+('80oqmq9q636jg9n63piuod926srhgerj',	'::1',	1558880733,	'__ci_last_regenerate|i:1558880733;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('9849lue2gdkdcrb751rogiqtjnjs5l8e',	'::1',	1558803118,	'__ci_last_regenerate|i:1558803118;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('99oddjila5oqgvmb1aauaog4tg1ofrja',	'::1',	1558800113,	'__ci_last_regenerate|i:1558800113;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('9lscne4p2an6k356es3qnol7ns18qfer',	'::1',	1558882851,	'__ci_last_regenerate|i:1558882851;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('9m13bu986rddj176sve99t4daoe4beva',	'::1',	1558798943,	'__ci_last_regenerate|i:1558798943;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('au5hcku98t3tvpdoas9d2gdhcnh271i9',	'::1',	1558798019,	'__ci_last_regenerate|i:1558798019;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('blkdmnvesf1pgvs8ae63j2cnn6tgi55o',	'::1',	1558809975,	'__ci_last_regenerate|i:1558809975;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('bpnoi9dl09sp9jjqh9bc41r64chksk5d',	'::1',	1558848336,	'__ci_last_regenerate|i:1558848336;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('c6jl8oc59alfgk3eqc7prmlb5t4qmp04',	'::1',	1558888168,	'__ci_last_regenerate|i:1558888168;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";last_transaction_id|s:3:\"110\";'),
+('cfcolas2d2kb2d36ou9kofjvtvtrnoln',	'::1',	1558890528,	'__ci_last_regenerate|i:1558890528;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('dha92k6vrgqi7hmi8llnr07jq29b5ki0',	'::1',	1558801837,	'__ci_last_regenerate|i:1558801837;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:9:\"dashboard\";'),
+('e8ih52sem69ban22fu1iq2hd322oq1fv',	'::1',	1558811235,	'__ci_last_regenerate|i:1558811235;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('elg9vra82eivoco79fij29or04g70ksu',	'::1',	1558799317,	'__ci_last_regenerate|i:1558799317;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('erv2dtnecfmprdujvce4ujd3tfdvhhf9',	'::1',	1558848824,	'__ci_last_regenerate|i:1558848824;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('f9rhb5h62sum84g7hvvdf855a34t3048',	'::1',	1558891387,	'__ci_last_regenerate|i:1558891387;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('fe4odrlssn4vi9mvoau0lbo817ng9nhd',	'::1',	1558800734,	'__ci_last_regenerate|i:1558800734;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('gvjuvvvcsco92ov6pn4ja7s79uvjnb9r',	'::1',	1558849224,	'__ci_last_regenerate|i:1558849139;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('h3754fbkje6ckhintis26plcr88bgavm',	'::1',	1558810743,	'__ci_last_regenerate|i:1558810743;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('hbuacq744e7rflp6nb0vkdumfd3fs21j',	'::1',	1558803597,	'__ci_last_regenerate|i:1558803597;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:9:\"dashboard\";'),
+('hhrptnqf4o8vm857iba2jnpmb42c10ld',	'::1',	1558889410,	'__ci_last_regenerate|i:1558889410;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('hpa9g09ns6orjmgqa0aitt3tabh8qho0',	'::1',	1558802145,	'__ci_last_regenerate|i:1558802145;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:9:\"dashboard\";'),
+('i53s5nfeibbpqruirc8kmffg4tpin5kg',	'::1',	1558805812,	'__ci_last_regenerate|i:1558805812;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:9:\"dashboard\";'),
+('ivhc4cppo70f49uindrlmq7fq7v4siog',	'::1',	1558810332,	'__ci_last_regenerate|i:1558810332;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('jb8816jcjht7mlajlueak0q2jta6m8n8',	'::1',	1558891005,	'__ci_last_regenerate|i:1558891005;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('kakq2a68nhi3tlljv7avv6v64g06gffe',	'::1',	1558807444,	'__ci_last_regenerate|i:1558807444;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('l81btospabeilloogs5lqjr9quckgasi',	'::1',	1558886170,	'__ci_last_regenerate|i:1558886170;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";last_transaction_id|s:3:\"110\";'),
+('mfo802m27rtaldljqc4u7gj53f9d815i',	'::1',	1558882198,	'__ci_last_regenerate|i:1558882198;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('n64s67v1ls256m7qs8l1cl2u9ef132jg',	'::1',	1558798329,	'__ci_last_regenerate|i:1558798329;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('nel2va20nc7vpsc8raplrv5nn26vgftq',	'::1',	1558803898,	'__ci_last_regenerate|i:1558803898;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:9:\"dashboard\";'),
+('nln13pd70r4ntgtmqcngb5kvtov8flbo',	'::1',	1558885773,	'__ci_last_regenerate|i:1558885773;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";last_transaction_id|s:3:\"110\";'),
+('nta429kgo6ntq426uqd0ltvrr7i5o5tl',	'::1',	1558889893,	'__ci_last_regenerate|i:1558889893;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('oo125pqfknddhb8l7i96scrusct1tmt2',	'::1',	1558795923,	'__ci_last_regenerate|i:1558795923;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:8:\"settings\";'),
+('ot65ihob1codej5o12qn75648id4064c',	'::1',	1558806983,	'__ci_last_regenerate|i:1558806983;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:9:\"dashboard\";'),
+('pg9rs6g7bk8fues0ol4qipceaqa0j4rr',	'::1',	1558801117,	'__ci_last_regenerate|i:1558801117;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('qk2pdmvuc54fcq9o9m44l57o5f7i4srf',	'::1',	1558809185,	'__ci_last_regenerate|i:1558809185;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('s1e1l0fu34mh0n67rf3q50k9dv9lvhku',	'::1',	1558889051,	'__ci_last_regenerate|i:1558889051;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('sc726jlr8jscda3diqb8p5acrg66pjs7',	'::1',	1558888610,	'__ci_last_regenerate|i:1558888610;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";last_transaction_id|s:3:\"110\";'),
+('tg4gv0a2ekm8693a052t0cvo0crsgivr',	'::1',	1558794886,	'__ci_last_regenerate|i:1558794886;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:8:\"settings\";'),
+('u3g2vtom4ktnnpdlmsghtdio442mvah9',	'::1',	1558795611,	'__ci_last_regenerate|i:1558795611;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:9:\"dashboard\";'),
+('u55ibjgav0avg6l9cp9bopflm8gpsfj8',	'::1',	1558879582,	'__ci_last_regenerate|i:1558879582;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('ujtg0523do1cg3a0li1bk4n7b0pkc0r2',	'::1',	1558846865,	'__ci_last_regenerate|i:1558846865;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('vdj2qjicv1i1l68hk8skhb0qc2er1vdp',	'::1',	1558808880,	'__ci_last_regenerate|i:1558808880;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('ve03mib19e91vf2fsd8s4dsfms6aut5r',	'::1',	1558798630,	'__ci_last_regenerate|i:1558798630;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('vrfd01r3qkr8fhjfgnj2n835lvn5k095',	'::1',	1558811235,	'__ci_last_regenerate|i:1558811235;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";'),
+('vseehrqbi6rhit78o8msaqafmme6m4c2',	'::1',	1558879277,	'__ci_last_regenerate|i:1558879277;active_login|s:1:\"1\";login_user_id|s:1:\"1\";login_firstname|s:9:\"Nicodemus\";login_lastname|s:6:\"Karisa\";login_email|s:18:\"nkmwambs@gmail.com\";login_type_id|s:1:\"1\";login_profile|s:1:\"1\";login_type|s:5:\"admin\";profile_id|s:1:\"1\";type_login_user_id|s:1:\"1\";profile|s:11:\"Super Admin\";app|s:9:\"schoolapp\";page_type|s:7:\"finance\";');
 
-DROP TABLE IF EXISTS `class`;
 CREATE TABLE `class` (
   `class_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -398,7 +355,6 @@ INSERT INTO `class` (`class_id`, `name`, `name_numeric`, `teacher_id`) VALUES
 (11,	'Class Seven',	10,	1),
 (12,	'Class Eight',	11,	2);
 
-DROP TABLE IF EXISTS `class_routine`;
 CREATE TABLE `class_routine` (
   `class_routine_id` int(11) NOT NULL AUTO_INCREMENT,
   `class_id` int(11) NOT NULL,
@@ -420,7 +376,6 @@ INSERT INTO `class_routine` (`class_routine_id`, `class_id`, `subject_id`, `time
 (2,	1,	3,	8,	9,	40,	30,	'wednesday'),
 (3,	1,	14,	14,	14,	0,	40,	'thursday');
 
-DROP TABLE IF EXISTS `class_routine_attendance`;
 CREATE TABLE `class_routine_attendance` (
   `class_routine_attendance_id` int(100) NOT NULL AUTO_INCREMENT,
   `class_routine_id` int(11) NOT NULL,
@@ -435,7 +390,15 @@ INSERT INTO `class_routine_attendance` (`class_routine_attendance_id`, `class_ro
 (1,	2,	'2019-04-17',	'Well done'),
 (2,	3,	'2019-04-18',	'Well done');
 
-DROP TABLE IF EXISTS `document`;
+CREATE TABLE `crud` (
+  `crud_id` int(100) NOT NULL AUTO_INCREMENT,
+  `user_access` varchar(20) NOT NULL,
+  `feature` varchar(20) NOT NULL,
+  `operation` varchar(20) NOT NULL,
+  PRIMARY KEY (`crud_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
 CREATE TABLE `document` (
   `document_id` int(11) NOT NULL AUTO_INCREMENT,
   `title` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -449,7 +412,6 @@ CREATE TABLE `document` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
-DROP TABLE IF EXISTS `dormitory`;
 CREATE TABLE `dormitory` (
   `dormitory_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -459,7 +421,6 @@ CREATE TABLE `dormitory` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
-DROP TABLE IF EXISTS `entitlement`;
 CREATE TABLE `entitlement` (
   `entitlement_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -470,120 +431,84 @@ CREATE TABLE `entitlement` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `entitlement` (`entitlement_id`, `name`, `login_type_id`, `derivative_id`, `visibility`) VALUES
-(363,	'dashboard',	1,	0,	1),
-(364,	'student',	1,	0,	1),
-(365,	'student_admission',	1,	364,	1),
-(366,	'bulk_student_admission',	1,	364,	1),
-(367,	'all_student_information',	1,	364,	1),
-(368,	'teacher',	1,	0,	1),
-(369,	'parent',	1,	0,	1),
-(370,	'view_parents',	1,	369,	1),
-(371,	'parents_activity',	1,	369,	1),
-(372,	'classes',	1,	0,	1),
-(373,	'manage_classes',	1,	372,	1),
-(374,	'manage_sections',	1,	372,	1),
-(375,	'subject',	1,	0,	1),
-(376,	'class_routine',	1,	0,	1),
-(377,	'manage_attendance',	1,	0,	1),
-(378,	'examination',	1,	0,	1),
-(379,	'examination_list',	1,	378,	1),
-(380,	'examination_grades',	1,	378,	1),
-(381,	'manage_marks',	1,	378,	1),
-(382,	'send_marks_by_sms',	1,	378,	1),
-(383,	'tabulation_sheet',	1,	378,	1),
-(384,	'accounting',	1,	0,	1),
-(385,	'fees_structure',	1,	384,	1),
-(386,	'cash_book',	1,	384,	1),
-(387,	'budget',	1,	384,	1),
-(388,	'monthly_reconciliation',	1,	384,	1),
-(389,	'financial_report',	1,	384,	1),
-(390,	'fund_balance_report',	1,	384,	1),
-(391,	'expense_variance_report',	1,	384,	1),
-(392,	'income_variance_report',	1,	384,	1),
-(393,	'library',	1,	0,	1),
-(394,	'transport',	1,	0,	1),
-(395,	'dormitory',	1,	0,	1),
-(396,	'noticeboard',	1,	0,	1),
-(397,	'messages',	1,	0,	1),
-(398,	'settings',	1,	0,	1),
-(399,	'general_settings',	1,	398,	1),
-(400,	'sms_settings',	1,	398,	1),
-(401,	'language_settings',	1,	398,	1),
-(402,	'school_settings',	1,	398,	1),
-(403,	'user_profiles',	1,	398,	1),
-(404,	'administrator',	1,	0,	1),
-(405,	'manage_accounts',	1,	0,	1),
-(406,	'create_transaction',	1,	363,	1),
-(407,	'student_count',	1,	363,	1),
-(408,	'teachers_count',	1,	363,	1),
-(409,	'parents_count',	1,	363,	1),
-(410,	'today_students_attendance',	1,	363,	1),
-(411,	'unpaid_invoices_count',	1,	363,	1),
-(412,	'total_fees_balance',	1,	363,	1),
-(413,	'total_fees_received',	1,	363,	1),
-(414,	'total_invoices_cleared',	1,	363,	1),
-(415,	'years_expense_to_date',	1,	363,	1),
-(416,	'budget_to_date',	1,	363,	1),
-(417,	'percent_class_attendance',	1,	363,	1),
-(418,	'percent_lesson_covered',	1,	363,	1),
-(419,	'event_schedule',	1,	363,	1),
-(420,	'edit_student',	1,	364,	1),
-(421,	'promote_student',	1,	364,	1),
-(422,	'suspend_student',	1,	364,	1),
-(423,	'promote_teacher_to_user',	1,	368,	1),
-(424,	'reset_teacher_password',	1,	368,	1),
-(425,	'assign_profile',	1,	368,	1),
-(426,	'edit_teacher',	1,	368,	1),
-(427,	'delete_teacher',	1,	368,	1),
-(428,	'add_parent',	1,	369,	1),
-(429,	'edit_parent',	1,	369,	1),
-(430,	'delete_parent',	1,	369,	1),
-(431,	'assign_beneficiary',	1,	369,	1),
-(432,	'demote_student',	1,	364,	1),
-(444,	'add_teacher',	1,	368,	1),
-(491,	'class_numeric_1_students',	1,	364,	1),
-(492,	'class_numeric_2_students',	1,	364,	1),
-(493,	'class_numeric_3_students',	1,	364,	1),
-(494,	'class_numeric_4_students',	1,	364,	1),
-(495,	'class_numeric_5_students',	1,	364,	1),
-(496,	'class_numeric_6_students',	1,	364,	1),
-(497,	'class_numeric_7_students',	1,	364,	1),
-(498,	'class_numeric_8_students',	1,	364,	1),
-(499,	'class_numeric_9_students',	1,	364,	1),
-(500,	'class_numeric_10_students',	1,	364,	1),
-(501,	'class_numeric_11_students',	1,	364,	1),
-(502,	'class_numeric_1_subjects',	1,	375,	1),
-(503,	'class_numeric_2_subjects',	1,	375,	1),
-(504,	'class_numeric_3_subjects',	1,	375,	1),
-(505,	'class_numeric_4_subjects',	1,	375,	1),
-(506,	'class_numeric_5_subjects',	1,	375,	1),
-(507,	'class_numeric_6_subjects',	1,	375,	1),
-(508,	'class_numeric_7_subjects',	1,	375,	1),
-(509,	'class_numeric_8_subjects',	1,	375,	1),
-(510,	'class_numeric_9_subjects',	1,	375,	1),
-(511,	'class_numeric_10_subjects',	1,	375,	1),
-(512,	'class_numeric_11_subjects',	1,	375,	1),
-(513,	'add_class',	1,	372,	1),
-(514,	'add_administrator',	1,	404,	1),
-(515,	'promote_admin_to_user',	1,	404,	1),
-(516,	'edit_admin',	1,	404,	1),
-(517,	'delete_admin',	1,	404,	1),
-(518,	'assign_profile',	1,	404,	1),
-(519,	'funds_transfers',	1,	384,	1),
-(520,	'take_student_payment',	1,	384,	1),
-(521,	'edit_invoice',	1,	384,	1),
-(522,	'delete_or_cancel_invoice',	1,	384,	1),
-(523,	'take_other_income',	1,	384,	1),
-(524,	'make_expense',	1,	384,	1),
-(525,	'tranfer_funds',	1,	384,	1),
-(526,	'raise_contra_entry',	1,	384,	1),
-(527,	'edit_class',	1,	372,	1),
-(528,	'delete_class',	1,	372,	1),
-(529,	'delete_marks',	1,	378,	1),
-(530,	'del_marks',	1,	378,	1),
-(531,	'all_students',	1,	364,	1);
+(796,	'dashboard',	1,	0,	1),
+(797,	'accounts',	1,	0,	1),
+(798,	'view_administrators',	1,	797,	1),
+(799,	'view_teachers',	1,	797,	1),
+(800,	'view_parents',	1,	797,	1),
+(801,	'view_students',	1,	797,	1),
+(802,	'admit_student',	1,	797,	1),
+(803,	'admin_student',	1,	797,	1),
+(804,	'view_all_students',	1,	797,	1),
+(805,	'class_numeric_1_students',	1,	797,	1),
+(806,	'class_numeric_2_students',	1,	797,	1),
+(807,	'class_numeric_3_students',	1,	797,	1),
+(808,	'class_numeric_4_students',	1,	797,	1),
+(809,	'class_numeric_5_students',	1,	797,	1),
+(810,	'class_numeric_6_students',	1,	797,	1),
+(811,	'class_numeric_7_students',	1,	797,	1),
+(812,	'class_numeric_8_students',	1,	797,	1),
+(813,	'class_numeric_9_students',	1,	797,	1),
+(814,	'class_numeric_10_students',	1,	797,	1),
+(815,	'class_numeric_11_students',	1,	797,	1),
+(816,	'change_own_profile',	1,	797,	1),
+(817,	'parent_activity',	1,	0,	1),
+(818,	'subject',	1,	0,	1),
+(819,	'class_numeric_1_subjects',	1,	818,	1),
+(820,	'class_numeric_2_subjects',	1,	818,	1),
+(821,	'class_numeric_3_subjects',	1,	818,	1),
+(822,	'class_numeric_4_subjects',	1,	818,	1),
+(823,	'class_numeric_5_subjects',	1,	818,	1),
+(824,	'class_numeric_6_subjects',	1,	818,	1),
+(825,	'class_numeric_7_subjects',	1,	818,	1),
+(826,	'class_numeric_8_subjects',	1,	818,	1),
+(827,	'class_numeric_9_subjects',	1,	818,	1),
+(828,	'class_numeric_10_subjects',	1,	818,	1),
+(829,	'class_numeric_11_subjects',	1,	818,	1),
+(830,	'accounting',	1,	0,	1),
+(831,	'create_transaction',	1,	830,	1),
+(832,	'create_transaction',	1,	796,	1),
+(833,	'take_student_payment',	1,	796,	1),
+(834,	'take_other_income',	1,	796,	1),
+(835,	'make_expense',	1,	796,	1),
+(836,	'tranfer_funds',	1,	796,	1),
+(837,	'raise_contra_entry',	1,	796,	1),
+(838,	'student_count',	1,	796,	1),
+(839,	'teachers_count',	1,	796,	1),
+(840,	'parents_count',	1,	796,	1),
+(841,	'today_students_attendance',	1,	796,	1),
+(842,	'unpaid_invoices_count',	1,	796,	1),
+(843,	'total_fees_balance',	1,	796,	1),
+(844,	'total_fees_received',	1,	796,	1),
+(845,	'total_invoices_cleared',	1,	796,	1),
+(846,	'years_expense_to_date',	1,	796,	1),
+(847,	'budget_to_date',	1,	796,	1),
+(848,	'percent_class_attendance',	1,	796,	1),
+(849,	'percent_lesson_covered',	1,	796,	1),
+(850,	'event_schedule',	1,	796,	1),
+(851,	'add_teacher',	1,	797,	1),
+(852,	'promote_teacher_to_user',	1,	797,	1),
+(853,	'edit_teacher',	1,	797,	1),
+(854,	'delete_teacher',	1,	797,	1),
+(855,	'add_parent',	1,	797,	1),
+(856,	'edit_parent',	1,	797,	1),
+(857,	'delete_parent',	1,	797,	1),
+(858,	'assign_beneficiary',	1,	797,	1),
+(859,	'student_admission',	1,	797,	1),
+(860,	'promote_student',	1,	797,	1),
+(861,	'edit_student',	1,	797,	1),
+(862,	'suspend_student',	1,	797,	1),
+(863,	'take_student_payment',	1,	830,	1),
+(864,	'take_other_income',	1,	830,	1),
+(865,	'make_expense',	1,	830,	1),
+(866,	'tranfer_funds',	1,	830,	1),
+(867,	'raise_contra_entry',	1,	830,	1),
+(868,	'bank_reconcialition',	1,	830,	1),
+(869,	'reverse_transaction',	1,	830,	1),
+(870,	'demote_student',	1,	797,	1),
+(871,	'edit_invoice',	1,	830,	1),
+(872,	'delete_or_cancel_invoice',	1,	830,	1);
 
-DROP TABLE IF EXISTS `exam`;
 CREATE TABLE `exam` (
   `exam_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -596,7 +521,6 @@ INSERT INTO `exam` (`exam_id`, `name`, `date`, `comment`) VALUES
 (1,	'Mid Term Term one',	'04/30/2018',	'Exam'),
 (2,	'Opening School Exam - Term Two 2019',	'05/16/2019',	'Opening School Exam - Term Two 2019');
 
-DROP TABLE IF EXISTS `expense_category`;
 CREATE TABLE `expense_category` (
   `expense_category_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -616,7 +540,6 @@ INSERT INTO `expense_category` (`expense_category_id`, `name`, `income_category_
 (7,	'Firewood',	7),
 (8,	'Food',	7);
 
-DROP TABLE IF EXISTS `fees_structure`;
 CREATE TABLE `fees_structure` (
   `fees_id` int(10) NOT NULL AUTO_INCREMENT,
   `name` longtext NOT NULL,
@@ -631,9 +554,11 @@ INSERT INTO `fees_structure` (`fees_id`, `name`, `class_id`, `yr`, `term`) VALUE
 (14,	'class_STD_Two_term_Two_year_2019',	1,	2019,	2),
 (15,	'class_Class_One_term_One_year_2019',	8,	2019,	1),
 (16,	'class_Class_One_term_Two_year_2019',	8,	2019,	2),
-(17,	'class_Class_Seven_term_Two_year_2019',	11,	2019,	1);
+(17,	'class_Class_Seven_term_Two_year_2019',	11,	2019,	1),
+(18,	'class_Class_Four_term_One_year_2019',	4,	2019,	1),
+(19,	'class_Class_Four_term_Two_year_2019',	4,	2019,	2),
+(20,	'class_Class_Four_term_Three_year_2019',	4,	2019,	3);
 
-DROP TABLE IF EXISTS `fees_structure_details`;
 CREATE TABLE `fees_structure_details` (
   `detail_id` int(10) NOT NULL AUTO_INCREMENT,
   `name` longtext NOT NULL,
@@ -674,9 +599,25 @@ INSERT INTO `fees_structure_details` (`detail_id`, `name`, `fees_id`, `income_ca
 (79,	'Balance Brought Forward',	17,	8,	0),
 (80,	'School Transport',	17,	1,	0),
 (81,	'Tuition',	17,	6,	7800),
-(82,	'Exams',	17,	2,	2100);
+(82,	'Exams',	17,	2,	2100),
+(83,	'Balance Brought Forward',	18,	8,	0),
+(84,	'Miscellaneous 1',	18,	3,	5600),
+(85,	'Miscellaneous 2',	18,	3,	2400),
+(86,	'Examination',	18,	2,	1200),
+(87,	'Tuition',	18,	6,	8500),
+(88,	'Boarding Fees',	18,	7,	15000),
+(89,	'School Transport',	18,	1,	0),
+(90,	'Balance Brought Forward',	19,	8,	0),
+(91,	'Transport',	19,	1,	0),
+(92,	'Examination',	19,	2,	1800),
+(93,	'Tuition',	19,	6,	12500),
+(94,	'Boarding',	19,	7,	16700),
+(95,	'Balance Brought Forward',	20,	8,	0),
+(96,	'Transport',	20,	1,	0),
+(97,	'Examination',	20,	2,	1800),
+(98,	'Tuition',	20,	6,	12500),
+(99,	'Boarding',	20,	7,	16700);
 
-DROP TABLE IF EXISTS `grade`;
 CREATE TABLE `grade` (
   `grade_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -693,7 +634,6 @@ INSERT INTO `grade` (`grade_id`, `name`, `grade_point`, `mark_from`, `mark_upto`
 (3,	'Fair',	'2',	40,	59,	''),
 (4,	'Poor',	'1',	0,	39,	'Poor');
 
-DROP TABLE IF EXISTS `income_categories`;
 CREATE TABLE `income_categories` (
   `income_category_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -712,7 +652,6 @@ INSERT INTO `income_categories` (`income_category_id`, `name`, `opening_balance`
 (7,	'Boarding Fees',	34500.00,	0),
 (8,	'Other Incomes',	0.00,	1);
 
-DROP TABLE IF EXISTS `invoice`;
 CREATE TABLE `invoice` (
   `invoice_id` int(11) NOT NULL AUTO_INCREMENT,
   `student_id` int(11) NOT NULL,
@@ -721,8 +660,6 @@ CREATE TABLE `invoice` (
   `term` longtext COLLATE utf8_unicode_ci NOT NULL,
   `amount` int(11) NOT NULL COMMENT 'fees structure amount less transport',
   `amount_due` longtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'amount liable to pay plus transport',
-  `amount_paid` int(100) NOT NULL,
-  `balance` int(100) NOT NULL,
   `creation_timestamp` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `status` longtext COLLATE utf8_unicode_ci NOT NULL COMMENT 'paid, excess, unpaid or cancelled',
   `carry_forward` int(11) NOT NULL DEFAULT '0',
@@ -734,19 +671,21 @@ CREATE TABLE `invoice` (
   CONSTRAINT `invoice_ibfk_2` FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `invoice` (`invoice_id`, `student_id`, `class_id`, `yr`, `term`, `amount`, `amount_due`, `amount_paid`, `balance`, `creation_timestamp`, `status`, `carry_forward`, `transitioned`) VALUES
-(58,	17,	1,	'2019',	'1',	19000,	'11000',	0,	0,	'1556575200',	'excess',	0,	0),
-(70,	17,	1,	'2019',	'2',	25200,	'5200',	0,	0,	'1567202400',	'unpaid',	0,	0);
+INSERT INTO `invoice` (`invoice_id`, `student_id`, `class_id`, `yr`, `term`, `amount`, `amount_due`, `creation_timestamp`, `status`, `carry_forward`, `transitioned`) VALUES
+(58,	17,	1,	'2019',	'1',	19000,	'11000',	'1556575200',	'excess',	0,	0),
+(70,	17,	1,	'2019',	'2',	25200,	'5200',	'1567202400',	'excess',	0,	0),
+(71,	16,	1,	'2019',	'1',	19000,	'30000',	'1556575200',	'excess',	0,	0),
+(72,	16,	1,	'2019',	'2',	25200,	'200',	'1567202400',	'unpaid',	0,	0),
+(73,	3,	4,	'2019',	'1',	32700,	'32700',	'1567202400',	'cancelled',	1,	0),
+(74,	3,	4,	'2019',	'2',	31000,	'49750',	'0',	'unpaid',	0,	0),
+(75,	11,	4,	'2019',	'1',	32700,	'32700',	'1567202400',	'excess',	0,	0),
+(76,	11,	4,	'2019',	'2',	31000,	'10000',	'0',	'unpaid',	0,	0);
 
-DROP TABLE IF EXISTS `invoice_details`;
 CREATE TABLE `invoice_details` (
   `invoice_details_id` int(200) NOT NULL AUTO_INCREMENT,
   `invoice_id` int(200) NOT NULL,
   `detail_id` int(200) NOT NULL,
   `amount_due` int(200) NOT NULL,
-  `amount_paid` int(100) NOT NULL,
-  `balance` int(100) NOT NULL,
-  `last_payment_id` int(100) NOT NULL,
   PRIMARY KEY (`invoice_details_id`),
   KEY `detail_id` (`detail_id`),
   KEY `invoice_id` (`invoice_id`),
@@ -754,14 +693,38 @@ CREATE TABLE `invoice_details` (
   CONSTRAINT `invoice_details_ibfk_2` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`invoice_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `invoice_details` (`invoice_details_id`, `invoice_id`, `detail_id`, `amount_due`, `amount_paid`, `balance`, `last_payment_id`) VALUES
-(293,	58,	56,	2500,	0,	0,	0),
-(294,	58,	57,	8500,	0,	0,	0),
-(328,	70,	61,	0,	0,	0,	0),
-(329,	70,	62,	0,	0,	0,	0),
-(330,	70,	63,	5200,	0,	0,	0);
+INSERT INTO `invoice_details` (`invoice_details_id`, `invoice_id`, `detail_id`, `amount_due`) VALUES
+(293,	58,	56,	2500),
+(294,	58,	57,	8500),
+(328,	70,	61,	0),
+(329,	70,	62,	0),
+(330,	70,	63,	5200),
+(331,	71,	56,	2500),
+(332,	71,	57,	8500),
+(333,	71,	58,	1800),
+(334,	71,	59,	4700),
+(335,	71,	60,	12500),
+(336,	72,	61,	0),
+(337,	72,	62,	0),
+(338,	72,	63,	200),
+(339,	73,	84,	5600),
+(340,	73,	85,	2400),
+(341,	73,	86,	1600),
+(342,	73,	87,	8500),
+(343,	73,	88,	15000),
+(344,	74,	90,	18750),
+(345,	74,	92,	1800),
+(346,	74,	93,	12500),
+(347,	74,	94,	16700),
+(348,	75,	84,	5600),
+(349,	75,	85,	2400),
+(350,	75,	86,	1200),
+(351,	75,	87,	8500),
+(352,	75,	88,	15000),
+(353,	76,	92,	0),
+(354,	76,	93,	0),
+(355,	76,	94,	10000);
 
-DROP TABLE IF EXISTS `language`;
 CREATE TABLE `language` (
   `phrase_id` int(11) NOT NULL AUTO_INCREMENT,
   `phrase` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1574,9 +1537,31 @@ INSERT INTO `language` (`phrase_id`, `phrase`, `english`, `bengali`, `spanish`, 
 (861,	'invoice_number',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
 (862,	'invoice_term',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
 (863,	'invoice_year',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
-(864,	'payment_from',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL);
+(864,	'payment_from',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(865,	'instance_of',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(866,	'reverse_transaction',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(867,	'accounts',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(868,	'admit_bulk_students',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(869,	'manage_own_account',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(870,	'class_attendance',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(871,	'examination',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(872,	'examination_list',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(873,	'examination_grades',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(874,	'marks',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(875,	'finance',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(876,	'fee_structure',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(877,	'financial_reports',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(878,	'inventory',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(879,	'messaging',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(880,	'log_out',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(881,	'reset_password',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(882,	'return_to_login_page',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(883,	'data_not_updated',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(884,	'reversing_batch_number',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(885,	'reserve_not_allowed',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(886,	'reversion_batch_number',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL),
+(887,	'reversal_of_batch_number',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	'',	NULL,	NULL);
 
-DROP TABLE IF EXISTS `lesson_plan`;
 CREATE TABLE `lesson_plan` (
   `lesson_plan_id` int(100) NOT NULL AUTO_INCREMENT,
   `scheme_id` int(100) NOT NULL,
@@ -1610,7 +1595,6 @@ CREATE TABLE `lesson_plan` (
 INSERT INTO `lesson_plan` (`lesson_plan_id`, `scheme_id`, `planned_date`, `attendance_date`, `class_routine_id`, `roll`, `core_competencies`, `introduction`, `lesson_development`, `conclusion`, `summary`, `reflection`, `signed_off_by`, `signed_off_date`, `createdby`, `lastmodifiedby`, `createddate`, `lastmodifieddate`) VALUES
 (5,	1,	'2019-05-22',	'2019-04-24',	1,	42,	'Taking turns in watering flowerbeds promotes the values of caring for plants, responsibility and respect for one another.  ',	'Learners are guided to watch age appropriate media on watering flowers to develop interest and curiosity in watering flowerbeds or study photographs/newspaper cuttings showing watering flowerbeds',	'Step 1: Learners to suggest reasons for watering flowers \r\nStep 2:  Using the key inquiry questions, synthesize learners, responses on when and how to water flowers \r\n Step 3: Teacher to demonstrate watering flowerbeds \r\nStep 4: Learners practice watering flowerbeds at school. ',	'• Keenly observe and guide learners on the procedure of watering flowerbeds \r\n• Learners carry out related activities in the workbook ',	'Some of the plants in our surroundings are flowers. Flowers need water to grow. We can take care of plants by watering the flowerbeds.',	'Happy to have taught this. See this! ',	NULL,	NULL,	1,	1,	'2019-04-25 02:27:40',	'2019-04-25 02:17:02');
 
-DROP TABLE IF EXISTS `login_type`;
 CREATE TABLE `login_type` (
   `login_type_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(10) NOT NULL,
@@ -1623,7 +1607,6 @@ INSERT INTO `login_type` (`login_type_id`, `name`) VALUES
 (3,	'student'),
 (4,	'parent');
 
-DROP TABLE IF EXISTS `mark`;
 CREATE TABLE `mark` (
   `mark_id` int(11) NOT NULL AUTO_INCREMENT,
   `student_id` int(11) NOT NULL,
@@ -1694,7 +1677,6 @@ INSERT INTO `mark` (`mark_id`, `student_id`, `subject_id`, `class_id`, `exam_id`
 (80,	32,	2,	1,	1,	75,	100,	''),
 (81,	33,	2,	1,	1,	77,	100,	'');
 
-DROP TABLE IF EXISTS `message`;
 CREATE TABLE `message` (
   `message_id` int(11) NOT NULL AUTO_INCREMENT,
   `message_thread_code` longtext NOT NULL,
@@ -1709,7 +1691,6 @@ INSERT INTO `message` (`message_id`, `message_thread_code`, `message`, `sender`,
 (1,	'8cbce2aa38abde1',	'Hey',	'admin-1',	'1522852035',	0),
 (2,	'd41d8cd98f00b20',	'Welocme here',	'admin-1',	'1553505210',	0);
 
-DROP TABLE IF EXISTS `message_thread`;
 CREATE TABLE `message_thread` (
   `message_thread_id` int(11) NOT NULL AUTO_INCREMENT,
   `message_thread_code` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1723,7 +1704,6 @@ INSERT INTO `message_thread` (`message_thread_id`, `message_thread_code`, `sende
 (1,	'8cbce2aa38abde1',	'admin-1',	'parent-3',	''),
 (2,	'd41d8cd98f00b20',	'admin-1',	'student-1',	'');
 
-DROP TABLE IF EXISTS `noticeboard`;
 CREATE TABLE `noticeboard` (
   `notice_id` int(11) NOT NULL AUTO_INCREMENT,
   `notice_title` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1735,7 +1715,6 @@ CREATE TABLE `noticeboard` (
 INSERT INTO `noticeboard` (`notice_id`, `notice_title`, `notice`, `create_timestamp`) VALUES
 (1,	'Academic Day',	'Academic Day',	1524002400);
 
-DROP TABLE IF EXISTS `overpay`;
 CREATE TABLE `overpay` (
   `overpay_id` int(100) NOT NULL AUTO_INCREMENT,
   `student_id` int(100) NOT NULL,
@@ -1753,9 +1732,30 @@ CREATE TABLE `overpay` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `overpay` (`overpay_id`, `student_id`, `transaction_id`, `amount`, `amount_due`, `description`, `status`, `creation_timestamp`) VALUES
-(10,	17,	62,	20000,	0,	'Excess payment',	'cleared',	'2019-05-20 12:59:45');
+(10,	17,	62,	20000,	0,	'Excess payment',	'cleared',	'2019-05-20 12:59:45'),
+(11,	16,	95,	25000,	0,	'Excess payment',	'cleared',	'2019-05-21 15:44:02'),
+(12,	17,	96,	18000,	0,	'Overpaid',	'active',	'2019-05-26 14:15:42'),
+(13,	11,	109,	21000,	0,	'Excess',	'cleared',	'2019-05-26 15:03:48');
 
-DROP TABLE IF EXISTS `parent`;
+CREATE TABLE `overpay_charge_detail` (
+  `overpay_detail_id` int(100) NOT NULL AUTO_INCREMENT,
+  `overpay_id` int(100) NOT NULL,
+  `invoice_id` int(11) NOT NULL,
+  `amount_redeemed` int(100) NOT NULL,
+  `createddate` date NOT NULL,
+  `createdby` int(100) NOT NULL,
+  `lastmodifieddate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `lastmodifiedby` int(100) NOT NULL,
+  PRIMARY KEY (`overpay_detail_id`),
+  KEY `overpay_id` (`overpay_id`),
+  KEY `invoice_id` (`invoice_id`),
+  CONSTRAINT `overpay_charge_detail_ibfk_2` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`invoice_id`),
+  CONSTRAINT `overpay_charge_detail_ibfk_3` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`invoice_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `overpay_charge_detail` (`overpay_detail_id`, `overpay_id`, `invoice_id`, `amount_redeemed`, `createddate`, `createdby`, `lastmodifieddate`, `lastmodifiedby`) VALUES
+(1,	13,	76,	21000,	'2019-05-26',	1,	'2019-05-26 15:03:48',	1);
+
 CREATE TABLE `parent` (
   `parent_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1782,7 +1782,6 @@ INSERT INTO `parent` (`parent_id`, `name`, `email`, `phone`, `address`, `relatio
 (8,	'Martina Chengo Garama',	'machess@gmail.com',	'075787578',	'80788',	2,	'primary',	'Air Hostess',	1),
 (9,	'Lilian Njeru',	'lnjeru@gmail.com',	'0711635873',	'Nairobi',	2,	'primary',	'Teacher',	1);
 
-DROP TABLE IF EXISTS `profile`;
 CREATE TABLE `profile` (
   `profile_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -1796,7 +1795,6 @@ INSERT INTO `profile` (`profile_id`, `name`, `login_type_id`, `description`) VAL
 (2,	'None Class Teachers',	2,	'None Class Teachers'),
 (3,	'Secretary',	1,	'Admin Sec');
 
-DROP TABLE IF EXISTS `reconcile`;
 CREATE TABLE `reconcile` (
   `reconcile_id` int(100) NOT NULL AUTO_INCREMENT,
   `statement_amount` decimal(10,2) NOT NULL,
@@ -1806,9 +1804,9 @@ CREATE TABLE `reconcile` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `reconcile` (`reconcile_id`, `statement_amount`, `month`, `timestamp`) VALUES
-(1,	392270.23,	'2019-04-30',	'2019-05-20 19:08:00');
+(1,	392270.23,	'2019-04-30',	'2019-05-20 19:08:00'),
+(2,	351520.23,	'2019-05-31',	'2019-05-23 15:41:13');
 
-DROP TABLE IF EXISTS `relationship`;
 CREATE TABLE `relationship` (
   `relationship_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
@@ -1823,7 +1821,6 @@ INSERT INTO `relationship` (`relationship_id`, `name`) VALUES
 (5,	'Uncle'),
 (6,	'Aunt');
 
-DROP TABLE IF EXISTS `scheme`;
 CREATE TABLE `scheme` (
   `scheme_id` int(100) NOT NULL AUTO_INCREMENT,
   `scheme_header_id` int(100) NOT NULL,
@@ -1854,7 +1851,6 @@ INSERT INTO `scheme` (`scheme_id`, `scheme_header_id`, `week`, `lesson`, `strand
 (2,	3,	1,	2,	'Care for the environment',	'Caring for plants - watering flower beds ',	' Water flower beds appropriately within the school environment.                        ',	'N/A',	'-In groups, learners to identify things used for watering flowers (watering can, sprinkler, hose pipe, bucket, improvised watering can).     ',	'Watering can Sprinkler Hose pipe Improvised watering can, bucket     ',	'Observing the procedure of watering flowers           ',	1,	1,	'2019-04-25 12:39:40',	'2019-04-24 22:39:40'),
 (3,	4,	1,	2,	'Numbers ',	'Number Concept',	'By the end of the sub-strand, the\r\nlearner should be able to:\r\na) sort and group objects\r\naccording to different attributes\r\nwithin the classroom,\r\nb) pair and match objects in the\r\nenvironment,\r\nc) order and sequence objects in\r\nascending and descending\r\norder,\r\nd) make patterns using real\r\nobjects,\r\ne) recite number names in order\r\nup to 50,\r\nf) represent numbers 1-30 using\r\nconcrete objects,\r\ng) demonstrate through counting\r\nthat a group in all situations has\r\nonly one count,\r\nh) appreciate the use of sorting\r\nand grouping items in day to\r\nday activities.',	'1) How can we find\r\nout which group\r\nhas more objects\r\nthan another?\r\n2) How can we\r\ngroup items?',	'? Learners in pairs/groups to collect different types of\r\nsafe objects.\r\n? Learners in pairs/groups to sort objects with same\r\nattribute and group them together.\r\n? Learners to play digital games involving sorting and\r\ngrouping according to different attributes.\r\n? Learners in pairs/groups to pair and match objectsto\r\nestablish “equal to”, “more than” and “less than.”\r\n? Learners to order objects according to size from\r\nsmallest to biggest and vice versa.\r\n? Learners to make patterns using real objects.\r\n? Learners to recite number names up to 50.\r\n? Learners to represent numbers 1-30 using concrete\r\nobjects as well as their body parts.\r\n? Learners to demonstrate that any given group has\r\nonly one count.\r\n? Learner in pairs/groups to collect and sort litter in\r\nthe environment and put it in various groups\r\naccording to an attribute of their choice and give\r\nreasons for the grouping.\r\n? Learners in pairs/groups could assist in arranging,\r\nedible items like fruits, cabbages according to size\r\nand colour in the school store.\r\n? Learners could visit a market for them to observe\r\nthe sorting and grouping of fruits and vegetables',	'Counting balls',	'Student can count',	1,	1,	'2019-04-25 08:28:27',	'2019-04-25 18:28:27');
 
-DROP TABLE IF EXISTS `scheme_header`;
 CREATE TABLE `scheme_header` (
   `scheme_header_id` int(100) NOT NULL AUTO_INCREMENT,
   `class_id` int(100) NOT NULL,
@@ -1882,7 +1878,6 @@ INSERT INTO `scheme_header` (`scheme_header_id`, `class_id`, `subject_id`, `term
 (3,	1,	2,	2,	2019,	1,	1,	'2019-04-24 11:35:34',	'2019-04-24 21:35:34'),
 (4,	1,	2,	1,	2019,	1,	1,	'2019-04-25 08:23:15',	'2019-04-25 18:23:15');
 
-DROP TABLE IF EXISTS `section`;
 CREATE TABLE `section` (
   `section_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -1904,7 +1899,6 @@ INSERT INTO `section` (`section_id`, `name`, `nick_name`, `class_id`, `teacher_i
 (6,	'David',	'David',	9,	2),
 (7,	'Joseph',	'Joseph',	9,	1);
 
-DROP TABLE IF EXISTS `settings`;
 CREATE TABLE `settings` (
   `settings_id` int(11) NOT NULL AUTO_INCREMENT,
   `type` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
@@ -1913,8 +1907,8 @@ CREATE TABLE `settings` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 INSERT INTO `settings` (`settings_id`, `type`, `description`) VALUES
-(1,	'system_name',	'School Management System'),
-(2,	'system_title',	'KPV Academy'),
+(1,	'system_name',	'Techsys School Management System'),
+(2,	'system_title',	'Main System'),
 (3,	'address',	'80-80200 Malindi'),
 (4,	'phone',	'254764837462'),
 (5,	'paypal_email',	'admin@techsys.com'),
@@ -1934,7 +1928,6 @@ INSERT INTO `settings` (`settings_id`, `type`, `description`) VALUES
 (22,	'version',	'2019040100'),
 (23,	'sidebar-collapsed',	'no');
 
-DROP TABLE IF EXISTS `student`;
 CREATE TABLE `student` (
   `student_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
@@ -1980,7 +1973,6 @@ INSERT INTO `student` (`student_id`, `name`, `birthday`, `sex`, `religion`, `blo
 (35,	'Miriam Karo',	'',	'female',	'',	'',	'',	'',	'',	5,	0,	9,	'5678',	'8968',	0,	0,	'',	1),
 (36,	'Belinda Mukori',	'02/03/2009',	'male',	'',	'',	'',	'',	'',	11,	0,	1,	'76852',	'906897',	1,	0,	'',	1);
 
-DROP TABLE IF EXISTS `subject`;
 CREATE TABLE `subject` (
   `subject_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -2004,7 +1996,6 @@ INSERT INTO `subject` (`subject_id`, `name`, `class_id`, `teacher_id`) VALUES
 (13,	'French',	9,	3),
 (14,	'CRE',	1,	3);
 
-DROP TABLE IF EXISTS `teacher`;
 CREATE TABLE `teacher` (
   `teacher_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -2023,7 +2014,6 @@ INSERT INTO `teacher` (`teacher_id`, `name`, `birthday`, `sex`, `religion`, `blo
 (1,	'Patty Kamau Karanja',	'02/23/1981',	'female',	'',	'',	'Nairobi',	'07206876543',	'purityKamau2018@gmail.com',	1),
 (2,	'Macmillan Ben ',	'06/12/1979',	'male',	'',	'',	'122 Nairobi',	'0728367826',	'macben@gmail.com',	1);
 
-DROP TABLE IF EXISTS `terms`;
 CREATE TABLE `terms` (
   `terms_id` int(100) NOT NULL AUTO_INCREMENT,
   `term_number` int(5) NOT NULL,
@@ -2038,7 +2028,6 @@ INSERT INTO `terms` (`terms_id`, `term_number`, `name`, `start_month`, `end_mont
 (2,	2,	'Two',	5,	8),
 (3,	3,	'Three',	9,	12);
 
-DROP TABLE IF EXISTS `transaction`;
 CREATE TABLE `transaction` (
   `transaction_id` int(100) NOT NULL AUTO_INCREMENT,
   `t_date` date NOT NULL,
@@ -2052,6 +2041,8 @@ CREATE TABLE `transaction` (
   `amount` decimal(10,2) NOT NULL,
   `cleared` int(5) NOT NULL COMMENT '0-oustanding,1-cleared',
   `clearedMonth` date NOT NULL,
+  `is_cancelled` int(5) NOT NULL DEFAULT '0',
+  `reversing_batch_number` varchar(20) NOT NULL,
   `createddate` datetime NOT NULL,
   `createdby` int(100) NOT NULL,
   `lastmodifieddate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -2063,25 +2054,52 @@ CREATE TABLE `transaction` (
   CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`transaction_method_id`) REFERENCES `transaction_method` (`transaction_method_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `transaction` (`transaction_id`, `t_date`, `batch_number`, `invoice_id`, `description`, `payee`, `transaction_type_id`, `transaction_method_id`, `cheque_no`, `amount`, `cleared`, `clearedMonth`, `createddate`, `createdby`, `lastmodifieddate`, `lastmodifiedby`) VALUES
-(62,	'2019-04-01',	'190401',	58,	'Fees with Excess',	'Ken',	1,	2,	0,	31000.00,	1,	'2019-04-30',	'0000-00-00 00:00:00',	1,	'2019-05-20 18:59:18',	1),
-(79,	'2019-04-01',	'190402',	0,	'Internal Funds Transfer',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	'2019-05-20 02:59:45',	1,	'2019-05-20 12:59:45',	1),
-(80,	'2019-04-02',	'190403',	70,	'Fees Payment',	'Joan',	1,	1,	0,	2500.00,	0,	'0000-00-00',	'0000-00-00 00:00:00',	1,	'2019-05-20 13:02:17',	1),
-(81,	'2019-04-02',	'190404',	0,	'Sale of Vegetables and Eggs',	'Uma Groceries',	1,	1,	0,	6775.00,	0,	'0000-00-00',	'0000-00-00 00:00:00',	1,	'2019-05-20 14:00:24',	1),
-(82,	'2019-04-03',	'190405',	0,	'Purchase of fuel and service',	'Kobil Service Station',	2,	1,	0,	8075.00,	0,	'0000-00-00',	'0000-00-00 00:00:00',	1,	'2019-05-20 14:09:34',	1),
-(83,	'2019-04-04',	'190406',	0,	'Internal Funds Transfer',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	'2019-05-20 04:39:22',	1,	'2019-05-20 14:39:22',	1),
-(84,	'2019-04-04',	'190407',	0,	'Internal Funds Transfer',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	'2019-05-20 04:43:59',	1,	'2019-05-20 14:43:59',	1),
-(85,	'2019-04-05',	'190408',	0,	'Internal Funds Transfer',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	'2019-05-20 04:45:19',	1,	'2019-05-20 14:45:19',	1),
-(86,	'2019-04-05',	'190409',	0,	'Funds Transfer: Monthly policy funds transfers',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	'2019-05-20 04:47:19',	1,	'2019-05-20 14:47:19',	1),
-(87,	'2019-04-05',	'190410',	0,	'Bank Withdrawal',	'System Generated',	4,	4,	0,	25000.00,	0,	'0000-00-00',	'2019-04-05 00:00:00',	1,	'2019-05-20 15:05:39',	1),
-(88,	'2019-04-08',	'190411',	0,	'Cash deposit to bank',	'System Generated',	3,	4,	0,	95000.00,	0,	'0000-00-00',	'2019-04-08 00:00:00',	1,	'2019-05-20 15:08:24',	1),
-(90,	'2019-04-08',	'190412',	0,	'Activity Fees',	'Various Students',	1,	2,	0,	3000.00,	0,	'0000-00-00',	'2019-04-08 00:00:00',	1,	'2019-05-20 18:58:08',	1),
-(91,	'2019-04-09',	'190413',	0,	'Contractor Wages',	'Contractors',	2,	2,	1,	52400.00,	0,	'0000-00-00',	'0000-00-00 00:00:00',	1,	'2019-05-20 19:05:43',	1),
-(92,	'2019-05-01',	'190501',	70,	'School Fees',	'Linet',	1,	1,	0,	1200.00,	0,	'0000-00-00',	'0000-00-00 00:00:00',	1,	'2019-05-20 19:09:08',	1),
-(93,	'2019-05-01',	'190502',	0,	'Funds Transfer: Resolving over transfer in transport',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	'2019-05-20 10:29:11',	1,	'2019-05-20 20:29:11',	1),
-(94,	'2019-05-02',	'190503',	0,	'Electricity Bill',	'KPLC',	2,	1,	0,	800.00,	0,	'0000-00-00',	'0000-00-00 00:00:00',	1,	'2019-05-20 20:35:23',	1);
+INSERT INTO `transaction` (`transaction_id`, `t_date`, `batch_number`, `invoice_id`, `description`, `payee`, `transaction_type_id`, `transaction_method_id`, `cheque_no`, `amount`, `cleared`, `clearedMonth`, `is_cancelled`, `reversing_batch_number`, `createddate`, `createdby`, `lastmodifieddate`, `lastmodifiedby`) VALUES
+(62,	'2019-04-01',	'190401',	58,	'Fees with Excess',	'Ken',	1,	2,	0,	31000.00,	1,	'2019-04-30',	0,	'0',	'0000-00-00 00:00:00',	1,	'2019-05-25 15:54:29',	1),
+(79,	'2019-04-01',	'190402',	0,	'Internal Funds Transfer',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	0,	'0',	'2019-05-20 02:59:45',	1,	'2019-05-25 15:54:29',	1),
+(80,	'2019-04-02',	'190403',	70,	'Fees Payment',	'Joan',	1,	1,	0,	2500.00,	0,	'0000-00-00',	0,	'0',	'0000-00-00 00:00:00',	1,	'2019-05-25 15:54:29',	1),
+(81,	'2019-04-02',	'190404',	0,	'Sale of Vegetables and Eggs',	'Uma Groceries',	1,	1,	0,	6775.00,	0,	'0000-00-00',	0,	'0',	'0000-00-00 00:00:00',	1,	'2019-05-25 15:54:29',	1),
+(82,	'2019-04-03',	'190405',	0,	'Purchase of fuel and service',	'Kobil Service Station',	2,	1,	0,	8075.00,	0,	'0000-00-00',	0,	'0',	'0000-00-00 00:00:00',	1,	'2019-05-25 15:54:29',	1),
+(83,	'2019-04-04',	'190406',	0,	'Internal Funds Transfer',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	0,	'0',	'2019-05-20 04:39:22',	1,	'2019-05-25 15:54:29',	1),
+(84,	'2019-04-04',	'190407',	0,	'Internal Funds Transfer',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	0,	'0',	'2019-05-20 04:43:59',	1,	'2019-05-25 15:54:29',	1),
+(85,	'2019-04-05',	'190408',	0,	'Internal Funds Transfer',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	0,	'0',	'2019-05-20 04:45:19',	1,	'2019-05-25 15:54:29',	1),
+(86,	'2019-04-05',	'190409',	0,	'Funds Transfer: Monthly policy funds transfers',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	0,	'0',	'2019-05-20 04:47:19',	1,	'2019-05-25 15:54:29',	1),
+(87,	'2019-04-05',	'190410',	0,	'Bank Withdrawal',	'System Generated',	4,	4,	0,	25000.00,	0,	'0000-00-00',	0,	'0',	'2019-04-05 00:00:00',	1,	'2019-05-25 15:54:29',	1),
+(88,	'2019-04-08',	'190411',	0,	'Cash deposit to bank',	'System Generated',	3,	4,	0,	95000.00,	0,	'0000-00-00',	0,	'0',	'2019-04-08 00:00:00',	1,	'2019-05-25 15:54:29',	1),
+(90,	'2019-04-08',	'190412',	0,	'Activity Fees',	'Various Students',	1,	2,	0,	3000.00,	0,	'0000-00-00',	0,	'0',	'2019-04-08 00:00:00',	1,	'2019-05-25 15:54:29',	1),
+(91,	'2019-04-09',	'190413',	0,	'Contractor Wages',	'Contractors',	2,	2,	1,	52400.00,	1,	'2019-05-31',	0,	'0',	'0000-00-00 00:00:00',	1,	'2019-05-25 15:54:29',	1),
+(92,	'2019-05-01',	'190501',	70,	'School Fees',	'Linet',	1,	1,	0,	1200.00,	0,	'0000-00-00',	0,	'0',	'0000-00-00 00:00:00',	1,	'2019-05-25 15:54:29',	1),
+(93,	'2019-05-01',	'190502',	0,	'Funds Transfer: Resolving over transfer in transport',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	0,	'0',	'2019-05-20 10:29:11',	1,	'2019-05-25 15:54:29',	1),
+(94,	'2019-05-02',	'190503',	0,	'Electricity Bill',	'KPLC',	2,	1,	0,	800.00,	0,	'0000-00-00',	0,	'0',	'0000-00-00 00:00:00',	1,	'2019-05-25 15:54:29',	1),
+(95,	'2019-05-02',	'190504',	71,	'School Fees',	'Ken',	1,	2,	0,	55000.00,	1,	'2019-05-31',	0,	'0',	'0000-00-00 00:00:00',	1,	'2019-05-25 15:54:29',	1),
+(96,	'2019-05-02',	'190505',	70,	'School Fees',	'John',	1,	1,	0,	19500.00,	0,	'0000-00-00',	0,	'0',	'0000-00-00 00:00:00',	1,	'2019-05-25 15:54:29',	1),
+(97,	'2019-05-02',	'190506',	0,	'Internal Funds Transfer',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	0,	'0',	'2019-05-21 05:44:02',	1,	'2019-05-25 15:54:29',	1),
+(98,	'2019-05-03',	'190507',	72,	'School Fees',	'Tom',	1,	1,	0,	200.00,	0,	'0000-00-00',	1,	'190618',	'0000-00-00 00:00:00',	1,	'2019-05-26 17:16:55',	1),
+(99,	'2019-05-03',	'190508',	0,	'Cash deposit to bank',	'System Generated',	3,	4,	0,	75000.00,	0,	'0000-00-00',	0,	'0',	'2019-05-03 00:00:00',	1,	'2019-05-25 15:54:29',	1),
+(100,	'2019-05-06',	'190509',	0,	'Funds Transfer: Policy funds transfer to reserve',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	0,	'0',	'2019-05-21 06:11:24',	1,	'2019-05-25 15:54:29',	1),
+(101,	'2019-05-06',	'190510',	0,	'Funds Transfer: Transfer funds from Reserve to Maintanance',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	0,	'0',	'2019-05-21 06:17:54',	1,	'2019-05-25 15:54:29',	1),
+(102,	'2019-05-06',	'190511',	0,	'Payment for lost books',	'Joan Karanja',	1,	1,	0,	350.00,	0,	'0000-00-00',	0,	'0',	'2019-05-06 00:00:00',	1,	'2019-05-25 15:54:29',	1),
+(103,	'2019-05-06',	'190512',	0,	'School Trip Contribution',	'Various',	1,	1,	0,	1500.00,	0,	'0000-00-00',	0,	'0',	'2019-05-06 00:00:00',	1,	'2019-05-25 15:54:29',	1),
+(104,	'2019-05-07',	'190513',	0,	'Bus Service and Fuel',	'Kobil Service Station',	2,	2,	2,	11650.00,	0,	'0000-00-00',	0,	'0',	'0000-00-00 00:00:00',	1,	'2019-05-25 15:54:29',	1),
+(105,	'2019-06-03',	'190601',	0,	'Wages',	'Grounds Man ',	2,	1,	0,	4500.00,	0,	'0000-00-00',	0,	'0',	'0000-00-00 00:00:00',	1,	'2019-05-25 15:54:29',	1),
+(106,	'2019-06-04',	'190602',	73,	'Fees Payment',	'Juma',	1,	1,	0,	800.00,	0,	'0000-00-00',	0,	'',	'0000-00-00 00:00:00',	1,	'2019-05-25 18:32:39',	1),
+(107,	'2019-06-04',	'190603',	73,	'School Fees Payment',	'Lilian Juma',	1,	2,	0,	13150.00,	0,	'0000-00-00',	0,	'',	'0000-00-00 00:00:00',	1,	'2019-05-25 18:52:12',	1),
+(108,	'2019-06-05',	'190604',	75,	'School Fees Payment',	'Paul',	1,	2,	0,	17300.00,	0,	'0000-00-00',	0,	'',	'0000-00-00 00:00:00',	1,	'2019-05-26 14:01:17',	1),
+(109,	'2019-06-05',	'190605',	75,	'School Fee Payment with Excess',	'Trizer',	1,	2,	0,	36400.00,	0,	'0000-00-00',	0,	'',	'0000-00-00 00:00:00',	1,	'2019-05-26 14:06:22',	1),
+(110,	'2019-06-05',	'190606',	0,	'Internal Funds Transfer',	'System Generated',	5,	4,	0,	0.00,	0,	'0000-00-00',	0,	'',	'2019-05-26 05:03:48',	1,	'2019-05-26 15:03:48',	1),
+(111,	'2019-06-06',	'190607',	74,	'Fees Payment',	'Jack',	1,	1,	0,	8400.00,	0,	'0000-00-00',	1,	'',	'0000-00-00 00:00:00',	1,	'2019-05-26 16:45:28',	1),
+(112,	'2019-06-06',	'190608',	74,	'Fees Payment',	'Jack',	1,	1,	0,	-8400.00,	0,	'0000-00-00',	0,	'',	'0000-00-00 00:00:00',	1,	'2019-05-26 16:30:02',	1),
+(113,	'2019-06-06',	'190609',	76,	'School Fees Payment',	'Ken',	1,	1,	0,	5000.00,	0,	'0000-00-00',	1,	'',	'0000-00-00 00:00:00',	1,	'2019-05-26 16:50:48',	1),
+(114,	'2019-06-06',	'190610',	76,	'School Fees Payment',	'Ken',	1,	1,	0,	-5000.00,	0,	'0000-00-00',	0,	'',	'0000-00-00 00:00:00',	1,	'2019-05-26 16:51:54',	1),
+(115,	'2019-06-06',	'190611',	76,	'Fees payment corrected',	'Thomas',	1,	1,	0,	8500.00,	0,	'0000-00-00',	1,	'',	'0000-00-00 00:00:00',	1,	'2019-05-26 16:53:03',	1),
+(116,	'2019-06-06',	'190612',	76,	'Reversion Batch Number 190611',	'Thomas',	1,	1,	0,	-8500.00,	0,	'0000-00-00',	0,	'',	'0000-00-00 00:00:00',	1,	'2019-05-26 16:52:40',	1),
+(117,	'2019-06-07',	'190613',	74,	'Payment of school of fees',	'Teddy',	1,	1,	0,	18500.00,	0,	'0000-00-00',	1,	'190614',	'0000-00-00 00:00:00',	1,	'2019-05-26 16:59:18',	1),
+(118,	'2019-06-07',	'190614',	74,	'Reversal Of Batch Number 190613',	'Teddy',	1,	1,	0,	-18500.00,	0,	'0000-00-00',	0,	'',	'0000-00-00 00:00:00',	1,	'2019-05-26 16:59:01',	1),
+(119,	'2019-06-07',	'190615',	74,	'School Fees Payment',	'Candy',	1,	1,	0,	5900.00,	0,	'0000-00-00',	0,	'',	'0000-00-00 00:00:00',	1,	'2019-05-26 17:09:45',	1),
+(120,	'2019-06-07',	'190616',	74,	'School fees payment',	'Teddy',	1,	1,	0,	10700.00,	0,	'0000-00-00',	1,	'190617',	'0000-00-00 00:00:00',	1,	'2019-05-26 17:11:10',	1),
+(121,	'2019-06-07',	'190617',	74,	'Reversal Of Batch Number 190616',	'Teddy',	1,	1,	0,	-10700.00,	0,	'0000-00-00',	0,	'',	'0000-00-00 00:00:00',	1,	'2019-05-26 17:10:33',	1),
+(122,	'2019-05-03',	'190618',	72,	'Reversal Of Batch Number 190507',	'Tom',	1,	1,	0,	-200.00,	0,	'0000-00-00',	0,	'0',	'0000-00-00 00:00:00',	1,	'2019-05-25 15:54:29',	1);
 
-DROP TABLE IF EXISTS `transaction_detail`;
 CREATE TABLE `transaction_detail` (
   `transaction_detail_id` int(100) NOT NULL AUTO_INCREMENT,
   `transaction_id` int(100) NOT NULL,
@@ -2128,9 +2146,85 @@ INSERT INTO `transaction_detail` (`transaction_detail_id`, `transaction_id`, `in
 (180,	92,	330,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	1200.00,	1200.00),
 (181,	93,	0,	0,	8,	1.00,	'Funds Transfer: Resolving over transfer in transport',	-46000.00,	-46000.00),
 (182,	93,	0,	0,	1,	1.00,	'Funds Transfer: Resolving over transfer in transport',	46000.00,	46000.00),
-(183,	94,	0,	2,	0,	1.00,	'Bill',	800.00,	800.00);
+(183,	94,	0,	2,	0,	1.00,	'Bill',	800.00,	800.00),
+(184,	95,	331,	0,	2,	1.00,	'School Fees Payment For Examinations',	2500.00,	2500.00),
+(185,	95,	332,	0,	6,	1.00,	'School Fees Payment For Tuition',	8500.00,	8500.00),
+(186,	95,	333,	0,	3,	1.00,	'School Fees Payment For Miscellaneous',	1800.00,	1800.00),
+(187,	95,	334,	0,	4,	1.00,	'School Fees Payment For Academic Trips',	4700.00,	4700.00),
+(188,	95,	335,	0,	1,	1.00,	'School Fees Payment For Transport Revenue',	12500.00,	12500.00),
+(189,	95,	0,	0,	8,	1.00,	'Excess Payment',	25000.00,	25000.00),
+(190,	96,	330,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	1500.00,	1500.00),
+(191,	96,	0,	0,	8,	1.00,	'Excess Payment',	18000.00,	18000.00),
+(192,	97,	0,	0,	8,	1.00,	'Internal Funds Transfer',	-1500.00,	-1500.00),
+(193,	97,	0,	0,	2,	1.00,	'Internal Funds Transfer',	1500.00,	1500.00),
+(194,	97,	0,	0,	8,	1.00,	'Internal Funds Transfer',	-8700.00,	-8700.00),
+(195,	97,	0,	0,	6,	1.00,	'Internal Funds Transfer',	8700.00,	8700.00),
+(196,	97,	0,	0,	8,	1.00,	'Internal Funds Transfer',	-14800.00,	-14800.00),
+(197,	97,	0,	0,	7,	1.00,	'Internal Funds Transfer',	14800.00,	14800.00),
+(198,	98,	338,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	200.00,	200.00),
+(199,	99,	0,	0,	0,	1.00,	'Contra Entry: To Bank Contra Entry',	75000.00,	75000.00),
+(200,	100,	0,	0,	6,	1.00,	'Funds Transfer: Policy funds transfer to reserve',	-21500.00,	-21500.00),
+(201,	100,	0,	0,	8,	1.00,	'Funds Transfer: Policy funds transfer to reserve',	21500.00,	21500.00),
+(202,	101,	0,	0,	8,	1.00,	'Funds Transfer: Transfer funds from Reserve to Maintanance',	-10000.00,	-10000.00),
+(203,	101,	0,	0,	5,	1.00,	'Funds Transfer: Transfer funds from Reserve to Maintanance',	10000.00,	10000.00),
+(204,	102,	0,	0,	8,	1.00,	'Lost science macmillan book refund',	350.00,	350.00),
+(205,	103,	0,	0,	4,	1.00,	'Stella Mutua',	500.00,	500.00),
+(206,	103,	0,	0,	4,	1.00,	'David Munga',	500.00,	500.00),
+(207,	103,	0,	0,	4,	1.00,	'Susan John',	500.00,	500.00),
+(208,	104,	0,	1,	0,	30.00,	'Liters of Diesel',	105.00,	3150.00),
+(209,	104,	0,	1,	0,	1.00,	'Bus Service charge',	8500.00,	8500.00),
+(210,	105,	0,	2,	0,	1.00,	'Wages',	4500.00,	4500.00),
+(211,	106,	340,	0,	3,	1.00,	'School Fees Payment For Miscellaneous',	800.00,	800.00),
+(212,	107,	339,	0,	3,	1.00,	'School Fees Payment For Miscellaneous',	2100.00,	2100.00),
+(213,	107,	340,	0,	3,	1.00,	'School Fees Payment For Miscellaneous',	700.00,	700.00),
+(214,	107,	341,	0,	2,	1.00,	'School Fees Payment For Examinations',	350.00,	350.00),
+(215,	107,	342,	0,	6,	1.00,	'School Fees Payment For Tuition',	2500.00,	2500.00),
+(216,	107,	343,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	7500.00,	7500.00),
+(217,	108,	348,	0,	3,	1.00,	'School Fees Payment For Miscellaneous',	2500.00,	2500.00),
+(218,	108,	349,	0,	3,	1.00,	'School Fees Payment For Miscellaneous',	1800.00,	1800.00),
+(219,	108,	350,	0,	2,	1.00,	'School Fees Payment For Examinations',	500.00,	500.00),
+(220,	108,	351,	0,	6,	1.00,	'School Fees Payment For Tuition',	4500.00,	4500.00),
+(221,	108,	352,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	8000.00,	8000.00),
+(222,	109,	348,	0,	3,	1.00,	'School Fees Payment For Miscellaneous',	3100.00,	3100.00),
+(223,	109,	349,	0,	3,	1.00,	'School Fees Payment For Miscellaneous',	600.00,	600.00),
+(224,	109,	350,	0,	2,	1.00,	'School Fees Payment For Examinations',	700.00,	700.00),
+(225,	109,	351,	0,	6,	1.00,	'School Fees Payment For Tuition',	4000.00,	4000.00),
+(226,	109,	352,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	7000.00,	7000.00),
+(227,	109,	0,	0,	8,	1.00,	'Excess Payment',	21000.00,	21000.00),
+(228,	110,	0,	0,	8,	1.00,	'Internal Funds Transfer',	-1800.00,	-1800.00),
+(229,	110,	0,	0,	2,	1.00,	'Internal Funds Transfer',	1800.00,	1800.00),
+(230,	110,	0,	0,	8,	1.00,	'Internal Funds Transfer',	-12500.00,	-12500.00),
+(231,	110,	0,	0,	6,	1.00,	'Internal Funds Transfer',	12500.00,	12500.00),
+(232,	110,	0,	0,	8,	1.00,	'Internal Funds Transfer',	-6700.00,	-6700.00),
+(233,	110,	0,	0,	7,	1.00,	'Internal Funds Transfer',	6700.00,	6700.00),
+(234,	111,	344,	0,	8,	1.00,	'School Fees Payment For Other Incomes',	2500.00,	2500.00),
+(235,	111,	345,	0,	2,	1.00,	'School Fees Payment For Examinations',	600.00,	600.00),
+(236,	111,	346,	0,	6,	1.00,	'School Fees Payment For Tuition',	2100.00,	2100.00),
+(237,	111,	347,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	3200.00,	3200.00),
+(238,	112,	344,	0,	8,	1.00,	'School Fees Payment For Other Incomes',	-2500.00,	-2500.00),
+(239,	112,	345,	0,	2,	1.00,	'School Fees Payment For Examinations',	-600.00,	-600.00),
+(240,	112,	346,	0,	6,	1.00,	'School Fees Payment For Tuition',	-2100.00,	-2100.00),
+(241,	112,	347,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	-3200.00,	-3200.00),
+(242,	113,	355,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	5000.00,	5000.00),
+(243,	114,	355,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	-5000.00,	-5000.00),
+(244,	115,	355,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	8500.00,	8500.00),
+(245,	116,	355,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	-8500.00,	-8500.00),
+(246,	117,	344,	0,	8,	1.00,	'School Fees Payment For Other Incomes',	12000.00,	12000.00),
+(247,	117,	346,	0,	6,	1.00,	'School Fees Payment For Tuition',	6500.00,	6500.00),
+(248,	118,	344,	0,	8,	1.00,	'School Fees Payment For Other Incomes',	-12000.00,	-12000.00),
+(249,	118,	346,	0,	6,	1.00,	'School Fees Payment For Tuition',	-6500.00,	-6500.00),
+(250,	119,	344,	0,	8,	1.00,	'School Fees Payment For Other Incomes',	2500.00,	2500.00),
+(251,	119,	345,	0,	2,	1.00,	'School Fees Payment For Examinations',	400.00,	400.00),
+(252,	119,	346,	0,	6,	1.00,	'School Fees Payment For Tuition',	1500.00,	1500.00),
+(253,	119,	347,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	1500.00,	1500.00),
+(254,	120,	344,	0,	8,	1.00,	'School Fees Payment For Other Incomes',	5400.00,	5400.00),
+(255,	120,	346,	0,	6,	1.00,	'School Fees Payment For Tuition',	1800.00,	1800.00),
+(256,	120,	347,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	3500.00,	3500.00),
+(257,	121,	344,	0,	8,	1.00,	'School Fees Payment For Other Incomes',	-5400.00,	-5400.00),
+(258,	121,	346,	0,	6,	1.00,	'School Fees Payment For Tuition',	-1800.00,	-1800.00),
+(259,	121,	347,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	-3500.00,	-3500.00),
+(260,	122,	338,	0,	7,	1.00,	'School Fees Payment For Boarding Fees',	-200.00,	-200.00);
 
-DROP TABLE IF EXISTS `transaction_method`;
 CREATE TABLE `transaction_method` (
   `transaction_method_id` int(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -2145,22 +2239,21 @@ INSERT INTO `transaction_method` (`transaction_method_id`, `name`, `description`
 (3,	'mpesa',	'M-Pesa',	1),
 (4,	'funds_transfer',	'Funds Transfer',	0);
 
-DROP TABLE IF EXISTS `transaction_type`;
 CREATE TABLE `transaction_type` (
   `transaction_type_id` int(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `description` varchar(100) NOT NULL,
+  `can_be_cancelled` int(5) NOT NULL DEFAULT '1' COMMENT '1=can be cancelled, 0= can''t be cancelled',
   PRIMARY KEY (`transaction_type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-INSERT INTO `transaction_type` (`transaction_type_id`, `name`, `description`) VALUES
-(1,	'income',	'Income'),
-(2,	'expense',	'Expense'),
-(3,	'contra_entry_to_bank',	'To Bank Contra Entry'),
-(4,	'contra_entry_to_cash',	'To Cash Contra Entry'),
-(5,	'funds_transfer',	'Funds Transfer');
+INSERT INTO `transaction_type` (`transaction_type_id`, `name`, `description`, `can_be_cancelled`) VALUES
+(1,	'income',	'Income',	1),
+(2,	'expense',	'Expense',	1),
+(3,	'contra_entry_to_bank',	'To Bank Contra Entry',	1),
+(4,	'contra_entry_to_cash',	'To Cash Contra Entry',	1),
+(5,	'funds_transfer',	'Funds Transfer',	0);
 
-DROP TABLE IF EXISTS `transition`;
 CREATE TABLE `transition` (
   `transition_id` int(100) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
@@ -2172,7 +2265,6 @@ INSERT INTO `transition` (`transition_id`, `name`) VALUES
 (2,	'completion'),
 (3,	'suspend');
 
-DROP TABLE IF EXISTS `transition_detail`;
 CREATE TABLE `transition_detail` (
   `transition_detail_id` int(100) NOT NULL AUTO_INCREMENT,
   `transition_id` int(100) NOT NULL,
@@ -2188,7 +2280,6 @@ CREATE TABLE `transition_detail` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
-DROP TABLE IF EXISTS `transport`;
 CREATE TABLE `transport` (
   `transport_id` int(11) NOT NULL AUTO_INCREMENT,
   `route_name` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -2201,7 +2292,6 @@ CREATE TABLE `transport` (
 INSERT INTO `transport` (`transport_id`, `route_name`, `number_of_vehicle`, `description`, `route_fare`) VALUES
 (1,	'Ngong Road',	'KBX 541V',	'Ngong to Vet Area',	'12500');
 
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `user_id` int(100) NOT NULL AUTO_INCREMENT,
   `firstname` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
@@ -2212,15 +2302,15 @@ CREATE TABLE `user` (
   `login_type_id` tinyint(10) NOT NULL,
   `profile_id` tinyint(5) NOT NULL,
   `type_user_id` int(100) NOT NULL,
-  `app_id` int(100) NOT NULL DEFAULT '1',
+  `app_id` int(100) NOT NULL DEFAULT '2',
   `auth` tinyint(5) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `user` (`user_id`, `firstname`, `lastname`, `email`, `password`, `phone`, `login_type_id`, `profile_id`, `type_user_id`, `app_id`, `auth`) VALUES
-(1,	'Nicodemus',	'Karisa',	'nkmwambs@gmail.com',	'fbdf9989ea636d6b339fd6b85f63e06e',	'254711808071',	1,	1,	1,	2,	1),
-(2,	'Livingstone',	'Onduso',	'livingstoneonduso@gmail.com',	'fbdf9989ea636d6b339fd6b85f63e06e',	'0909',	1,	1,	2,	1,	1),
-(7,	'Hope',	'Shume',	'hopeshume@gmail.com',	'd41d8cd98f00b204e9800998ecf8427e',	'87778',	1,	3,	3,	1,	1);
+(1,	'Nicodemus',	'Karisa',	'nkmwambs@gmail.com',	'fbdf9989ea636d6b339fd6b85f63e06e',	'254711808071',	1,	1,	1,	0,	1),
+(2,	'Livingstone',	'Onduso',	'livingstoneonduso@gmail.com',	'fbdf9989ea636d6b339fd6b85f63e06e',	'0909',	1,	1,	2,	2,	1),
+(7,	'Hope',	'Shume',	'hopeshume@gmail.com',	'fbdf9989ea636d6b339fd6b85f63e06e',	'87778',	1,	3,	3,	3,	1);
 
--- 2019-05-20 20:45:38
+-- 2019-05-26 17:24:07

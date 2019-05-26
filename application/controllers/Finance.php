@@ -2278,14 +2278,25 @@ class Finance extends CI_Controller
 		 
 		 if($last_invoice_id == $invoice_id && $is_cancelled == 0){
 		 	
-			// If active invoice
+			//Get cancellable invoice
+			$cancellable = $this->db->get_where('invoice',
+			 	array('invoice_id'=>$last_invoice_id))->row();
+			
+			if($cancellable->status == 'unpaid'){
+				// If active invoice - Put here anything to be done when cancelling a transaction affecting unpaid invoice
+				
+			}elseif($cancellable->status == 'paid'){
+				// If the invoice is cleared - Put here anything to be done when cancelling a transaction affecting cleared invoice
+				$this->db->where(array('invoice_id'=>$last_invoice_id));
+				$update_status_to_unpaid['status'] = 'unpaid';
+				$this->db->update('invoice',$update_status_to_unpaid);
+				
+			}elseif($cancellable->status == 'excess'){
+				// If the invoice is excess paid (Overpaid)  - Put here anything to be done when cancelling a transaction affecting excess invoice
+				
+			}
+			
 			$this->clone_transaction_for_reverse($transaction_id);
-			
-			// If the invoice is cleared
-			
-			// If the invoice is excess paid (Overpaid)
-			
-			
 			 
 		 	$cancel_status = true;
 		 }
