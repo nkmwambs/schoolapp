@@ -954,6 +954,20 @@ class Crud_model extends CI_Model {
 		return $payment_history;		
 	}
 	
+	function redeemed_overpay($overpay_id){
+		
+		return $this->db->select_sum('amount_redeemed')->get_where('overpay_charge_detail',
+		array('overpay_id'=>$overpay_id))->row()->amount_redeemed;
+	}
+	
+	function overpay_balance($overpay_id){
+		$overpay_amount = $this->db->get_where('overpay',array('overpay_id'=>$overpay_id))->row()->amount;
+		
+		$redeemed_overpay = $this->redeemed_overpay($overpay_id);
+		
+		return $overpay_amount - $redeemed_overpay;
+	}
+	
 	function get_current_term(){
 		$current_transacting_month = $this->current_transaction_month();
 		
@@ -1024,6 +1038,19 @@ class Crud_model extends CI_Model {
 		array('invoice_details_id'=>$invoice_details_id))->row()->cost;
 		
 		return $total_paid;
+	}
+	
+	function student_unpaid_invoice_balance($student_id){
+		$invoice_id_obj = $this->db->get_where('invoice',array('student_id'=>$student_id,'status'=>'unpaid'));
+		
+		$unpaid = 0;
+		
+		if($invoice_id_obj->num_rows() > 0){
+			$invoice_id = $invoice_id_obj->row()->invoice_id;
+			$unpaid = $this->fees_balance_by_invoice($invoice_id);
+		}
+		
+		return $unpaid;
 	}
 	
 	function fees_balance_by_invoice_detail($invoice_details_id){

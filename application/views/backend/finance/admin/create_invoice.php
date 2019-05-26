@@ -1,5 +1,5 @@
 <?php
-echo $term;
+//echo $term;
 ?>
 <div class="row">
 	<div class="col-md-12">

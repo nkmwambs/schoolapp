@@ -144,12 +144,12 @@
 							<td><?php echo $row['yr'];?></td>
 							<td><?php echo $row['term'];?></td>
 							<td><?php echo $this->crud_model->get_type_name_by_id('class',$row['class_id']);?></td>
-							<td><?php echo $row['amount'];?></td>
-                            <td><?php echo $row['amount_due'];?></td>
+							<td><?php echo number_format($row['amount'],2);?></td>
+                            <td><?php echo number_format($row['amount_due'],2);?></td>
                             
                             <?php $paid = $this->crud_model->fees_paid_by_invoice($row['invoice_id']);?>
                             
-                            <td><?php echo $paid;?></td>
+                            <td><?php echo number_format($paid,2);?></td>
                            <?php
                             	$bal = $this->crud_model->fees_balance_by_invoice($row['invoice_id']); 
                             ?>
@@ -251,13 +251,13 @@
 										<td><?php echo $row3['yr'];?></td>
 										<td><?php echo $row3['term'];?></td>
 										<td><?php echo $this->crud_model->get_type_name_by_id('class',$row['class_id']);?></td>
-										<td><?php echo $row3['amount'];?></td>
-			                            <td><?php echo $row3['amount_due'];?></td>
+										<td><?php echo number_format($row3['amount'],2);?></td>
+			                            <td><?php echo number_format($row3['amount_due'],2);?></td>
 			                            
 			                             <?php $paid = $this->db->select_sum('amount')->get_where('transaction',
 				                            array('invoice_id'=>$row3['invoice_id']))->row()->amount;?>
 				                            
-				                            <td><?php echo $paid;?></td>
+				                            <td><?php echo number_format($paid,2);?></td>
 				                           <?php
 				                            	$balance = $row3['amount_due'] - $paid; 
 				                            ?>
@@ -300,6 +300,7 @@
                 			<th>#</th>
                     		<th><div><?php echo get_phrase('student');?></div></th>
                     		<th><div><?php echo get_phrase('year');?></div></th>
+                    		<th><div><?php echo get_phrase('term');?></div></th>
                             <th><div><?php echo get_phrase('fee_structure_total');?></div></th>
                             <th><div><?php echo get_phrase('payable_amount');?></div></th>
                             <th><div><?php echo get_phrase('actual_amount');?></div></th>
@@ -320,6 +321,7 @@
                         	<td><?php echo $count++;?></td>
 							<td><?php echo $this->crud_model->get_type_name_by_id('student',$row3['student_id']);?></td>
 							<td><?php echo $row3['yr'];?></td>
+							<td><?php echo $row3['term'];?></td>
 							<td><?php echo number_format($row3['amount'],2);?></td>
                             <td><?php echo number_format($row3['amount_due'],2);?></td>
                             <?php $paid = $this->db->select_sum('amount')->get_where('transaction',

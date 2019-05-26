@@ -25,7 +25,7 @@
 	
 
 </head>
-<body class="page-body <?php if ($skin_colour != '') echo 'skin-' . $skin_colour;?>" >
+<body class="page-body <?php if ($skin_colour != '') echo 'skin-' . $skin_colour;?>"  data-url="http://neon.dev">
 	<!-- <div class="page-container <?=$sidebar_collapsed;?> <?php if ($text_align == 'right-to-left') echo 'right-sidebar';?>" > -->
 	<div class="page-container horizontal-menu">	
 		<?php include 'navigation_'.$account_type.'.php';?>

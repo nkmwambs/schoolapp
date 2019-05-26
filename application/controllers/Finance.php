@@ -364,20 +364,39 @@ class Finance extends CI_Controller
 			
 			if($charge_overpay > 0){
 				
-				$active_note = $this->db->get_where("overpay",array("student_id"=>$this->input->post('student_id'),"status"=>"active"));
+				$active_note = $this->db->get_where("overpay",
+				array("student_id"=>$this->input->post('student_id'),"status"=>"active"));
 				
 				if($active_note->num_rows() > 0){
 					$this->db->where(array("student_id"=>$this->input->post('student_id'),"status"=>"active"));
 					$amount = $active_note->row()->amount;
-					$current_amount_due = $active_note->row()->amount_due;
-					$new_amount_due = $current_amount_due - $charge_overpay;
+					//Consider using overpay_charge_detail table to record this
+					// $current_amount_due = $active_note->row()->amount_due;
+					// $new_amount_due = $current_amount_due - $charge_overpay;
+// 					
+					// $data8['amount_due'] = $new_amount_due;
+					// if($new_amount_due === 0){
+						// $data8['status'] = "cleared";
+					// }
+					// $this->db->update("overpay",$data8);
 					
-					$data8['amount_due'] = $new_amount_due;
-					if($new_amount_due === 0){
-						$data8['status'] = "cleared";
+					$overpay_charge_data['invoice_id'] = $invoice_id;
+					$overpay_charge_data['overpay_id'] = $active_note->row()->overpay_id;
+					$overpay_charge_data['amount_redeemed'] = $charge_overpay;
+					$overpay_charge_data['createddate'] = date('Y-m-d h:i:s');
+					$overpay_charge_data['createdby'] = $this->session->login_user_id;
+					$overpay_charge_data['lastmodifiedby'] = $this->session->login_user_id;
+					
+					$this->db->insert('overpay_charge_detail',$overpay_charge_data);
+					
+					//Update the overpay status to cleared if redeeming is complete
+					$sum_redeemed_amount = $this->crud_model->overpay_balance($active_note->row()->overpay_id);
+					
+					if($sum_redeemed_amount == 0){
+						$this->db->where(array('overpay_id'=>$active_note->row()->overpay_id));
+						$clear_overpay_note['status'] = 'cleared';
+						$this->db->update("overpay",$clear_overpay_note);
 					}
-					$this->db->update("overpay",$data8);
-					
 					
 				}
 				
@@ -639,7 +658,8 @@ class Finance extends CI_Controller
 	
 	function get_fees_items($term="",$year="",$class="",$student=""){
 		
-		$fees = $this->db->get_where('fees_structure',array("term"=>$term,"yr"=>$year,"class_id"=>$class));
+		$fees = $this->db->get_where('fees_structure',
+		array("term"=>$term,"yr"=>$year,"class_id"=>$class));
 
 		$body = "";
 		
@@ -660,7 +680,7 @@ class Finance extends CI_Controller
 							$amount = $row->amount;
 							
 							if($this->default_income_category_fees_structure_detail($term,$year,$class)->detail_id == $row->detail_id){
-								$amount = $this->db->get_where('invoice',array('student_id'=>$student,'status'=>'unpaid'))->row()->balance;
+								$amount = $this->crud_model->student_unpaid_invoice_balance($student);
 							}
 							
 							$body .= "<tr>
@@ -881,7 +901,7 @@ class Finance extends CI_Controller
 		$obj = $this->db->get_where("overpay",array("status"=>"active","student_id"=>$param1));
 		
 		if($obj->num_rows() > 0){
-			$overpay = $obj->row()->amount_due;
+			$overpay = $obj->row()->amount;
 		}
 		
 		echo $overpay;
@@ -1862,63 +1882,8 @@ class Finance extends CI_Controller
 		$page_data['page_view'] = "finance";
         $page_data['page_title'] = get_phrase('create_transaction');
         $this->load->view('backend/index', $page_data);			
-	}
-	
-	// function create_transfer_income_transaction($input_array){
-// 			
-			// $data['payee']        			=   $this->school_model->system_title();
-			// $data['batch_number']   		=   $this->crud_model->next_batch_number();//$this->crud_model->populate_batch_number($this->input->post('t_date'));   
-			// $data['t_date']        			=   $input_array['t_date'];		
-          	// $data['invoice_id']     		= 	0;
-		    // $data['description']    		=   get_phrase('funds_transfer').': '.$input_array['description'];			
-            // $data['transaction_method_id']  =   4;	
-			// $data['transaction_type_id']	=   5;
-			// $data['cheque_no']				= 	0;
-			// $data['cleared']				= 	0;
-            // $data['amount']         		=   $input_array['amount'];
-            // $data['createddate']      		=   $input_array['t_date'];
-			// $data['createdby']				= 	$this->session->login_user_id;
-			// $data['lastmodifiedby']			= 	$this->session->login_user_id;
-// 			
-            // $this->db->insert('transaction' , $data);
-// 			
-// 			
-			// $transaction_id = $this->db->insert_id();
-// 			
-			// $data2['payment_id'] = $payment_id;
-			// $data2['qty'] = 1;
-			// $data2['description'] = get_phrase('funds_transfer');
-			// $data2['unitcost'] = $input_array['amount'];
-			// $data2['cost'] = $input_array['amount'];
-			// $data2['income_category_id'] = $input_array['account_to'];
-// 				
-			// $this->db->insert('other_payment_details' , $data2);
-	// }
-// 	
-	// function create_transfer_expense_transaction($input_array){
-			// $data['payee']        	=   $this->school_model->system_title();  
-			// $data['batch_number']   =   $this->crud_model->next_serial_number();  
-			// $data['t_date']        	=   $input_array['t_date'];		
-            // $data['description']    =   get_phrase('funds_transfer');		
-            // $data['method']         =   "3";	
-			// $data['cheque_no']      =   "0";			    	
-            // $data['amount']         =   $input_array['amount'];
-            // $data['timestamp']      =   strtotime($input_array['t_date']);
-            // $this->db->insert('expense' , $data);
-// 			
-			// $expense_id = $this->db->insert_id();
-// 			
-			// $data2['expense_id'] = $expense_id;
-			// $data2['qty'] = 1;
-			// $data2['description'] = get_phrase('funds_transfer');
-			// $data2['unitcost'] = $input_array['amount'];
-			// $data2['cost'] = $input_array['amount'];
-			// $data2['expense_category_id'] = $input_array['account_from'];
-// 				
-			// $this->db->insert('expense_details' , $data2);
-// 			
-// 			
-	// }
+	}	
+
 	
 	function funds_transfer(){
         
@@ -2082,7 +2047,7 @@ class Finance extends CI_Controller
 				$overpay['student_id'] = $student_id;
 				$overpay['transaction_id'] = $last_transaction_id;
 				$overpay['amount'] = $this->input->post('overpayment');
-				$overpay['amount_due'] = $this->input->post('overpayment');
+				//$overpay['amount_due'] = $this->input->post('overpayment');
 				$overpay['description'] = $this->input->post('overpayment_description');
 				
 				$this->db->insert('overpay',$overpay);
