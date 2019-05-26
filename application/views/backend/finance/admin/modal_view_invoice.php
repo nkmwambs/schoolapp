@@ -119,6 +119,17 @@ foreach ($edit_data as $row):
 						$tot_due = array_sum(array_column($invoice_details, 'amount_due'));
 						$tot_paid = $this->crud_model->fees_paid_by_invoice($row['invoice_id']);
 						$tot_bal  = $this->crud_model->fees_balance_by_invoice($row['invoice_id']);
+						
+						if($this->crud_model->fees_balance_by_invoice($row['invoice_id']) < 0){
+					?>
+						<tr>
+							<td><?=get_phrase('overpayment');?></td>
+							<td><?=number_format(0,2);?></td>
+							<td><?=number_format(abs($this->crud_model->fees_balance_by_invoice($row['invoice_id'])),2);?></td>
+							<td><?=number_format($this->crud_model->fees_balance_by_invoice($row['invoice_id']),2);?></td>
+						</tr>
+					<?php
+						}
 					?>
 						<tr>
 							<td><?=get_phrase('total')?></td>
