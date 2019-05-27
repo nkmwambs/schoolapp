@@ -83,7 +83,7 @@
 		                    <div class="icon"><i class="entypo-user"></i></div>
 		                    <?php // $this->db->where('student.active',1);
 								// $this->db->join('student','student.parent_id=parent.parent_id');
-								$parents = $this -> db -> get('parent', array('status' => 1)) -> num_rows();
+								$parents = $this -> db -> get_where('parent', array('status' => 1)) -> num_rows();
 		                    ?>
 		                    <div class="num" data-start="0" data-end="<?php echo $parents; ?>" 
 		                    		data-postfix="" data-duration="500" data-delay="0">0</div>

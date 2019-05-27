@@ -1473,14 +1473,15 @@ class Finance extends CI_Controller
 	
 	function year_income_to_date($income_category_id,$month_start_date){
 		
-		$this->db->where(array('payment.t_date>='=>date('Y-m-01',strtotime('first day of january',$month_start_date))));		
-		$this->db->where(array('payment.t_date<='=>date('Y-m-t',strtotime($month_start_date))));
+		$this->db->where(array('transaction.t_date>='=>date('Y-m-01',strtotime('first day of january',$month_start_date))));		
+		$this->db->where(array('transaction.t_date<='=>date('Y-m-t',strtotime($month_start_date))));
 		$this->db->where(array('fees_structure_details.income_category_id'=>$income_category_id));		
 		
-		$this->db->join('payment','payment.payment_id=student_payment_details.payment_id');
-		$this->db->join('fees_structure_details','fees_structure_details.detail_id=student_payment_details.detail_id');
+		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		$this->db->join('invoice_details','invoice_details.invoice_details_id=transaction_detail.invoice_details_id');
+		$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');
 		
-		$total_income_to_date = $this->db->select_sum('student_payment_details.amount')->get('student_payment_details')->row()->amount;
+		$total_income_to_date = $this->db->select_sum('transaction_detail.cost')->get('transaction_detail')->row()->amount;
 		
 		return $total_income_to_date;			
 	}
@@ -1913,20 +1914,20 @@ class Finance extends CI_Controller
 	
 	function year_funds_transfers($year){
 		
-		$this->db->select(array('cashbook.batch_number','cashbook.t_date','cashbook.amount',
+		$this->db->select(array('batch_number','t_date','amount',
 		'income_categories.name as account_to','expense_category.name as account_from'));
 		
 		
 		
-		$this->db->join('payment','payment.batch_number=cashbook.batch_number');
-		$this->db->join('other_payment_details','other_payment_details.payment_id=payment.payment_id');
-		$this->db->join('income_categories','income_categories.income_category_id=other_payment_details.income_category_id');
+		//$this->db->join('transaction','transaction.batch_number=cashbook.batch_number');
+		//$this->db->join('other_payment_details','other_payment_details.payment_id=payment.payment_id');
+		$this->db->join('income_categories','income_categories.income_category_id=transaction_detail.income_category_id');
 		
-		$this->db->join('expense','expense.batch_number=cashbook.batch_number');
-		$this->db->join('expense_details','expense_details.expense_id=expense.expense_id');
-		$this->db->join('expense_category','expense_category.expense_category_id=expense_details.expense_category_id');
+		$this->db->join('transaction_detail','transaction_detail.income_category_id=income_categories.income_category_id');
+		//$this->db->join('expense_details','expense_details.expense_id=expense.expense_id');
+		$this->db->join('transaction_detail','transaction_detail.expense_category_id=expense_category.expense_category_id');
 		
-		$transfer = $this->db->get_where('cashbook',array('transaction_type'=>5,'YEAR(cashbook.t_date)'=>$year))->result_object();
+		$transfer = $this->db->get_where('transaction',array('transaction_type_id'=>5,'YEAR(transaction.t_date)'=>$year))->result_object();
 		
 		return $transfer;
 	}
@@ -2244,7 +2245,7 @@ class Finance extends CI_Controller
 					if($cancel_status){
 						$msg = get_phrase('data_updated');	
 					}else{
-						$msg = get_phrase('reserve_not_allowed');
+						$msg = get_phrase('reverse_not_allowed');
 					}
 			}
 			
@@ -2296,20 +2297,20 @@ class Finance extends CI_Controller
 				
 			}
 			
-			$this->clone_transaction_for_reverse($transaction_id);
+			$cancel_status = $this->clone_transaction_for_reverse($transaction_id);
 			 
-		 	$cancel_status = true;
+		 	//$cancel_status = true;
 		 }
 		 
 		 return $cancel_status;
 	}
 	
-	function reverse_income_or_expense($transaction_id, $transaction_type_id){
-		
+	function reverse_income_or_expense($transaction_id){
+		return $this->clone_transaction_for_reverse($transaction_id);
 	}
 	
-	function reverse_contra_entry($transaction_id, $transaction_type_id){
-		
+	function reverse_contra_entry($transaction_id){
+		return $this->clone_transaction_for_reverse($transaction_id);
 	}
 	
 	function clone_transaction_for_reverse($transaction_id){
@@ -2354,6 +2355,10 @@ class Finance extends CI_Controller
 		$this->db->where(array('transaction_id'=>$transaction_id));
 		$update_reversed_batch_number['reversing_batch_number'] = $transaction_header['batch_number'];
 		$this->db->update('transaction',$update_reversed_batch_number);	
+		
+		$cancel_status = true;
+		
+		return $cancel_status;
 	}
 
 	function get_invoice_info($type,$year){

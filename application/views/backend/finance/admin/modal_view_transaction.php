@@ -134,8 +134,14 @@ $row = $transaction[0];
 								if($details['expense_category_id'] >  0){
 									echo $this->crud_model->get_type_name_by_id('expense_category',$details['expense_category_id']);
 								}else{
-									echo $this->db->select('name')->get_where('income_categories',
-									array('income_category_id'=> $details['income_category_id']))->row()->name;
+									$income_category_name_obj = $this->db->select('name')->get_where('income_categories',
+									array('income_category_id'=> $details['income_category_id']));
+									
+									if($income_category_name_obj->num_rows() == 0){
+										echo "";
+									}else{
+										$income_category_name_obj->row()->name;
+									}
 								}
 								
 							?>
