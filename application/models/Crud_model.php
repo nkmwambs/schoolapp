@@ -432,7 +432,7 @@ class Crud_model extends CI_Model {
 		$month = date('m',strtotime($t_date));
 		$year = date('Y',strtotime($t_date));
 		$opening_balance = $this->crud_model->opening_account_balance(date('Y-m-t',strtotime($t_date)));
-		$transactions = $this->db->get_where('cashbook',array('Month(t_date)'=>$month,'Year(t_date)'=>$year))->result_object();
+		$transactions = $this->db->get_where('transaction',array('Month(t_date)'=>$month,'Year(t_date)'=>$year))->result_object();
 		
 		$sum_bank_income = 0;
 		$sum_bank_expense = 0;
@@ -440,11 +440,11 @@ class Crud_model extends CI_Model {
 							
 		foreach($transactions as $rows){
 			$bank_income = 0;
-			if(($rows->transaction_type==='1' && $rows->account==='2')||$rows->transaction_type==='3') $bank_income = $rows->amount;		
+			if(($rows->transaction_type_id==='1' && $rows->transaction_method_id==='2')||$rows->transaction_type_id==='3') $bank_income = $rows->amount;		
 			$sum_bank_income +=	$bank_income;
 			
 			$bank_expense = 0;
-			if(($rows->transaction_type==='2' && $rows->account==='2')||$rows->transaction_type==='4') $bank_expense = $rows->amount;
+			if(($rows->transaction_type_id==='2' && $rows->transaction_method_id==='2')||$rows->transaction_type_id==='4') $bank_expense = $rows->amount;
 			$sum_bank_expense +=	$bank_expense;
 				
 		}
@@ -487,15 +487,14 @@ class Crud_model extends CI_Model {
 	}
 		
 	function next_serial_number(){
-		
-			
+				
 		$this->db->select_max('batch_number');
-		$max_serial_number = $this->db->get('cashbook')->row()->batch_number + 1;
+		$max_serial_number = $this->db->get('transaction')->row()->batch_number + 1;
 		
 		$current_transaction_month = strtotime($this->current_transaction_month());
 		$last_reconciled_month = strtotime($this->last_reconciled_month());
 		
-		$count_of_transactions_in_current_transacting_month = $this->db->get_where('cashbook',
+		$count_of_transactions_in_current_transacting_month = $this->db->get_where('transaction',
 		array('t_date>='=>$this->current_transaction_month()))->num_rows();
 		
 		if($current_transaction_month > $last_reconciled_month && 
@@ -503,7 +502,8 @@ class Crud_model extends CI_Model {
 		 	$max_serial_number = date('y').date('m',$current_transaction_month).'01';
 		}				
  		
-		return $max_serial_number;
+		return $max_serial_number;	
+	
 	}
 
 	// function populate_batch_number($cur_date){
@@ -670,44 +670,44 @@ class Crud_model extends CI_Model {
 	
 	function next_cashbook_date(){
 		
-		//Get Cashbook Object
-		$cashbook_obj = $this->db->get("cashbook");
-		
-		$system_start_date = $this->db->get_where("settings",array("type"=>"system_start_date"))->row()->description;
-		$start_date = date("Y-m-01",strtotime($system_start_date));
-		$end_date = date("Y-m-t",strtotime($system_start_date));
-		
-		if($cashbook_obj->num_rows() > 0){
-		
-			/**Get Max data in the Cash Book**/
+			//Get Cashbook Object
+			$cashbook_obj = $this->db->get("transaction");
 			
-			$max_id = $this->db->select_max("cashbook_id")->get("cashbook")->row()->cashbook_id;
-			$last_transaction = $this->db->get_where("cashbook",array("cashbook_id"=>$max_id))->row();
-			$reconcile = $this->db->get("reconcile");
+			$system_start_date = $this->db->get_where("settings",array("type"=>"system_start_date"))->row()->description;
+			$start_date = date("Y-m-01",strtotime($system_start_date));
+			$end_date = date("Y-m-t",strtotime($system_start_date));
 			
-			$start_date = $last_transaction->t_date;
-			$end_date = date('Y-m-t',strtotime($last_transaction->t_date));
+			if($cashbook_obj->num_rows() > 0){
 			
-			if($reconcile->num_rows() > 0){
-				$last_reconcile_month = $this->db->select_max("month")->get("reconcile")->row()->month;
-				if(strtotime($last_transaction->t_date) < strtotime($last_reconcile_month) || 
-				strtotime($last_transaction->t_date) == strtotime($last_reconcile_month)){
-					$start_date = date("Y-m-01",strtotime('first day of next month',strtotime($last_reconcile_month)));
-					$end_date = date("Y-m-t",strtotime('first day of next month',strtotime($last_reconcile_month)));
+				/**Get Max data in the Cash Book**/
+				
+				$max_id = $this->db->select_max("transaction_id")->get("transaction")->row()->transaction_id;
+				$last_transaction = $this->db->get_where("transaction",array("transaction_id"=>$max_id))->row();
+				$reconcile = $this->db->get("reconcile");
+				
+				$start_date = $last_transaction->t_date;
+				$end_date = date('Y-m-t',strtotime($last_transaction->t_date));
+				
+				if($reconcile->num_rows() > 0){
+					$last_reconcile_month = $this->db->select_max("month")->get("reconcile")->row()->month;
+					if(strtotime($last_transaction->t_date) < strtotime($last_reconcile_month) || 
+					strtotime($last_transaction->t_date) == strtotime($last_reconcile_month)){
+						$start_date = date("Y-m-01",strtotime('first day of next month',strtotime($last_reconcile_month)));
+						$end_date = date("Y-m-t",strtotime('first day of next month',strtotime($last_reconcile_month)));
+					}
+					
+					
 				}
-				
-				
 			}
-		}
-		/**Derive Start and End Dates**/
-		
-		$cashbook_dates['start_date'] = $start_date;
-		$cashbook_dates['end_date'] = $end_date;
-		//$cashbook_dates['extra'] = $max_id;
-		
-		/** Create Date Object**/
-		
-		return (object)$cashbook_dates;
+			/**Derive Start and End Dates**/
+			
+			$cashbook_dates['start_date'] = $start_date;
+			$cashbook_dates['end_date'] = $end_date;
+			//$cashbook_dates['extra'] = $max_id;
+			
+			/** Create Date Object**/
+			
+			return (object)$cashbook_dates;
 	}
 
 	/**USER PREVILEDGES**/
