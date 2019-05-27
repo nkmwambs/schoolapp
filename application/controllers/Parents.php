@@ -19,7 +19,7 @@ class Parents extends CI_Controller
 		parent::__construct();
 		$this->load->database();
         $this->load->library('session');
-		$this->db->db_select($this->session->app);
+		//$this->db->db_select($this->session->app);
 		
 
        /*cache control*/

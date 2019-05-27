@@ -18,7 +18,7 @@ class Mobile extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->database();
-		$this->db->db_select($this->session->app);
+		//$this->db->db_select($this->session->app);
 		
         // Authenticate data manipulation with the user level security key
         if ($this->validate_auth_key() != 'success')

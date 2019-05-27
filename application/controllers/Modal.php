@@ -14,7 +14,7 @@ class Modal extends CI_Controller {
         parent::__construct();
 		$this->load->database();
 		$this->load->library('session');
-		$this->db->db_select($this->session->app);
+		//$this->db->db_select($this->session->app);
 		
 		/*cache control*/
 		$this->output->set_header('Last-Modified: ' . gmdate("D, d M Y H:i:s") . ' GMT');

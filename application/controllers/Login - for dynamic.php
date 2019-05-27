@@ -19,7 +19,7 @@ class Login extends CI_Controller {
 		$this->load->library('session');
 		$this->config->load('localrepositoryvars');
 		$this->load->database();
-        $this->db->db_select($this->config->item('db_prefix').'_default',true);
+        //$this->db->db_select($this->config->item('db_prefix').'_default',true);
         
         /* cache control */
         $this->output->set_header('Last-Modified: ' . gmdate("D, d M Y H:i:s") . ' GMT');

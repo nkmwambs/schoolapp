@@ -28,7 +28,7 @@ class Login extends CI_Controller {
 
     //Default function, redirects to logged in user area
     public function index() {
-		$this->db->db_select($this->session->app);
+		//$this->db->db_select($this->session->app);
       if ($this->session->userdata('active_login') == 1)
           redirect(base_url() . 'index.php?dashboard', 'refresh');
 
@@ -97,11 +97,11 @@ class Login extends CI_Controller {
  			
 			$this->session->set_userdata('type_login_user_id',  $type_table_id);
 			
-			if($row->app_id > 0){
-				$this->session->set_userdata('app', $this->config->item('db_prefix').'_app'.$row->app_id);
-			}else{
-				$this->session->set_userdata('app', $this->config->item('default_app_db'));
-			}
+			// if($row->app_id > 0){
+				// $this->session->set_userdata('app', $this->config->item('db_prefix').'_app'.$row->app_id);
+			// }else{
+				// $this->session->set_userdata('app', $this->config->item('default_app_db'));
+			// }
 			
 			
 			
