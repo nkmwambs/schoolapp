@@ -9,3 +9,4 @@ readme.rst
 /application/**/config/config.php
 /application/**/config/database.php
 /application/**/config/localrepositoryvars.php
+/uploads/logo.png
