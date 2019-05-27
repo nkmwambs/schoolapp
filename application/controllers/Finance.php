@@ -2355,4 +2355,10 @@ class Finance extends CI_Controller
 		$this->db->update('transaction',$update_reversed_batch_number);	
 	}
 
+	function get_invoice_info($type,$year){
+		$data['select_type'] = $type;
+		$data['year'] = $year;
+		echo $this->load->view('backend/finance/admin/load_invoice_info',$data,true);
+	}
+
 }
