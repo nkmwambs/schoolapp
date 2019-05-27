@@ -1094,6 +1094,10 @@ class Crud_model extends CI_Model {
 		
 		return $history;
 	}
+	
+	function max_transaction_date(){
+		return $this->db->select_max('t_date')->get('transaction')->row()->t_date;
+	}
 	 /**
 	  * End of Upgraded Finance Model
 	  */

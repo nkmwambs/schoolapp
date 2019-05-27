@@ -2326,6 +2326,7 @@ class Finance extends CI_Controller
 		$transaction_header['amount'] = - $transaction_header['amount'];
 		$transaction_header['description'] = get_phrase('reversal_of_batch_number')." ".$transaction_header['batch_number'];
 		$transaction_header['batch_number'] = $this->crud_model->next_batch_number();
+		$transaction_header['t_date'] = $this->crud_model->max_transaction_date();
 		
 		//Remove primary key
 		array_shift($transaction_header);
