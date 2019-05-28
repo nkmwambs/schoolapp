@@ -42,6 +42,14 @@ class Email_model extends CI_Model {
 		}
 	}
 	
+	function period_reports($user_id){
+		$email_msg	= "Test email";
+
+		$email_sub	=	"Test Email";
+		$email_to	=	$this->db->get_where('user',array('user_id'=>$user_id))->row()->email;
+		$this->do_email($email_msg , $email_sub , $email_to);
+	}
+	
 	function approval_confirmation($approval_id){
 				
 			$query			=	$this->db->get_where('approval' , array('approval_id' => $approval_id));
