@@ -37,11 +37,24 @@ class General extends CI_Controller
 	
 	function external_approval($approval_id){
 		
-		$data['approval_status'] = 1;
-		$this->db->where(array('approval_id'=>$approval_id));
-		$this->db->update('approval',$data);
+		$msg = "Approval Failed. Someone has already approved this request";
+		
+		//Check if already approved
+		$approval_status = $this->db->get_where('approval',
+		array('approval_id'=>$approval_id))->row()->approval_status;
+		
+		if($approval_status == 0){
+			$data['approval_status'] = 1;
+			$data['lastmodifieddate'] = date('Y-m-d h:i:s');
+			$this->db->where(array('approval_id'=>$approval_id));
+			$this->db->update('approval',$data);
+			
+			$msg = "Approval Successful";
+		}		
 		
 		//Trigger an email to the originator
+		
+		$page_data['message'] = $msg;
 		
 		$this->load->view('backend/external', $page_data); 		
 	} 
