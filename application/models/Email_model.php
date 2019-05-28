@@ -42,11 +42,29 @@ class Email_model extends CI_Model {
 		}
 	}
 	
+	function approval_confirmation($approval_id){
+				
+			$query			=	$this->db->get_where('approval' , array('approval_id' => $approval_id));
+			
+			$approver_object = $this->db->get_where('admin',array('is_approver'=>1))->result_array();
+			$approvers_emails_array = array_column($approver_object, 'email');
+			
+			$originator = $this->db->get_where('user',array('user_id'=>$query->row()->createdby))->row()->email;
+			
+			$approvers_emails_array[] = $originator;
+
+			$email_msg	= "This request has been approved successfully<br/>";
+			$email_msg	.=	"<span style='background-color:yellow;'>".$query->row()->approval_detail."</span><br/>";
+			
+			$email_sub	=	"Request approved successfully";
+			$email_to	=	$approvers_emails_array;
+			$this->do_email($email_msg , $email_sub , $email_to);		
+	}
+	
 	function approval_request($approval_id){
 			
 			$approver_object = $this->db->get_where('admin',array('is_approver'=>1))->result_array();
 			$approvers_emails_array = array_column($approver_object, 'email');
-			//$approvers_email_stringify = implode(";", $approvers_emails_array); 
 			
 			$query			=	$this->db->get_where('approval' , array('approval_id' => $approval_id));
 	

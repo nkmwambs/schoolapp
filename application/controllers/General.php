@@ -53,6 +53,7 @@ class General extends CI_Controller
 		}		
 		
 		//Trigger an email to the originator
+		$this->email_model->approval_confirmation($approval_id);
 		
 		$page_data['message'] = $msg;
 		
