@@ -2412,7 +2412,7 @@ class Finance extends CI_Controller
 		$this->db->insert(approval,$data);
 		
 		//Trigger email to the approver
-		$this->email_model->approval_request();
+		$this->email_model->approval_request($this->db->insert_id());
 		
 		$this->session->set_flashdata('flash_message' , get_phrase('record_already_exists'));
 		redirect(base_url() . 'index.php?finance/cashbook');
