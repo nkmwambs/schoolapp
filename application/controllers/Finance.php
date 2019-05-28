@@ -2361,6 +2361,16 @@ class Finance extends CI_Controller
 		$update_reversed_batch_number['reversing_batch_number'] = $transaction_header['batch_number'];
 		$this->db->update('transaction',$update_reversed_batch_number);	
 		
+		//Update the approval table to approval status of 2
+		
+		$this->db->where(array('affected_table_name'=>'transaction','affected_record_id'=>$transaction_id,
+		'affected_table_field'=>'is_cancelled'));
+		
+		$approval_data['approval_status'] = 2;
+		
+		$this->db->update('approval',$approval_data);
+		
+		
 		$cancel_status = true;
 		
 		return $cancel_status;
@@ -2370,6 +2380,42 @@ class Finance extends CI_Controller
 		$data['select_type'] = $type;
 		$data['year'] = $year;
 		echo $this->load->view('backend/finance/admin/load_invoice_info',$data,true);
+	}
+	
+	function reverse_transaction_approval_request($transaction_id){
+		
+		$affected = $this->db->get_where('transaction',array('transaction_id'=>$transaction_id))->row();
+		
+		$detail = "Kindly approve the reversal of the record with details below:<br/>";
+		$detail .= "Transaction Date: ".$affected->t_date."<br/>";
+		$detail .= "Transaction Type: ".$affected->transaction_type_id."<br/>";
+		$detail .= "Transaction Method: ".$affected->transaction_method_id."<br/>";
+		$detail .= "Batch Number: ".$affected->batch_number."<br/>";
+		$detail .= "Payee: ".$affected->payee."<br/>";
+		$detail .= "Description: ".$affected->description."<br/>";
+		$detail .= "Amount: ".$affected->amount."<br/>";
+		
+		//$detail .= "Thanks in advance: ";
+		
+		$data['affected_table_name'] = 'transaction';
+		$data['affected_record_id'] = $transaction_id;
+		$data['affected_table_field'] = 'is_cancelled';
+		$data['affected_table_field_value'] = 1;
+		$data['action_to_approve'] = 'reverse_transaction';
+		$data['approval_status'] = 0;
+		$data['approval_detail'] = $detail;
+		
+		$data['createdby'] = $this->session->login_user_id;
+		$data['lastmodifiedby'] = $this->session->login_user_id;
+		$data['createddate'] = date('Y-m-d h:i:s');
+		
+		$this->db->insert(approval,$data);
+		
+		//Trigger email to the approver
+		$this->email_model->approval_request();
+		
+		$this->session->set_flashdata('flash_message' , get_phrase('record_already_exists'));
+		redirect(base_url() . 'index.php?finance/cashbook');
 	}
 
 }

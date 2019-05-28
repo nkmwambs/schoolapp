@@ -1,6 +1,6 @@
 <?php
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
+// if (!defined('BASEPATH'))
+    // exit('No direct script access allowed');
 
     /*
      *	@author 	: Nicodemus Karisa Mwambire
@@ -33,6 +33,17 @@ class General extends CI_Controller
 		
 		$this->db->where($field,$value);
 		echo $this->db->get($table)->num_rows();
-	}    
+	}   
+	
+	function external_approval($approval_id){
+		
+		$data['approval_status'] = 1;
+		$this->db->where(array('approval_id'=>$approval_id));
+		$this->db->update('approval',$data);
+		
+		//Trigger an email to the originator
+		
+		$this->load->view('backend/external', $page_data); 		
+	} 
 
 }

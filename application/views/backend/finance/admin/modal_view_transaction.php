@@ -28,11 +28,40 @@ $row = $transaction[0];
     if($row['is_cancelled'] == 0 && $row['can_be_cancelled'] == 1){
     ?>
     <div class="<?=get_access_class('reverse_transaction','admin','accounting');?>">
-	    <a onclick="confirm_action('<?=base_url();?>index.php?finance/reverse_transaction/<?=$row['transaction_id'];?>');" 
-	    	class="btn btn-danger btn-icon icon-left hidden-print pull-left">
-	    	<?=get_phrase('reverse_transaction');?>
-	        <i class="entypo-ccw"></i>
-	    </a>
+    	<?php
+    		$approval_status =  $this->crud_model->check_transaction_reverse_approval($row['transaction_id']);
+    		//echo $approval_status;
+    		if($approval_status == -1){
+    			//Request for approval
+    	?>
+    			<a onclick="confirm_action('<?=base_url();?>index.php?finance/reverse_transaction_approval_request/<?=$row['transaction_id'];?>');"
+    				  class="btn btn-danger btn-icon icon-left hidden-print pull-left">
+			    	<?=get_phrase('request_reversal_approval');?>
+			        <i class="entypo-ccw"></i>
+			    </a>
+    	<?php		
+    		}elseif($approval_status == 0){
+    			//Pending Approval
+    	?>
+    			<a onclick="javascript:alert('<?=get_phrase('pending_aproval')?>');" 
+			    	class="btn btn-info btn-icon icon-left hidden-print pull-left">
+			    	<?=get_phrase('pending_reversal_approval');?>
+			        <i class="entypo-ccw"></i>
+			    </a>
+    	<?php		
+    		}elseif($approval_status == 1){
+    			//Approved
+    	?>
+	    		<a onclick="confirm_action('<?=base_url();?>index.php?finance/reverse_transaction/<?=$row['transaction_id'];?>');" 
+			    	class="btn btn-success btn-icon icon-left hidden-print pull-left">
+			    	<?=get_phrase('reverse_transaction');?>
+			        <i class="entypo-ccw"></i>
+			    </a>	
+    	<?php		
+    		}
+    	?>	
+	    
+    
     </div>
     <?php
 	}

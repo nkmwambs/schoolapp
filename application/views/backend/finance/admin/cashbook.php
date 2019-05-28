@@ -104,6 +104,17 @@ if(isset($current)){
 						//$btn_title = "'title'='".get_phrase('reversing_batch_number').":'".$rows->reversing_batch_number."";
 						$btn_title = get_phrase('reversing_batch_number').': '.$rows->reversing_batch_number;
 					}
+					
+					$approval_status =  $this->crud_model->check_transaction_reverse_approval($rows->transaction_id);
+					
+					if($approval_status == 0){
+						$btn_color = "btn-info";	
+						$btn_title = get_phrase('pending_reversal_request');
+					}elseif($approval_status == 1){
+						$btn_color = "btn-success";	
+						$btn_title = get_phrase('reversal_request_approved');
+					}
+					
 				?>
 					
 					<tr>

@@ -42,6 +42,28 @@ class Email_model extends CI_Model {
 		}
 	}
 	
+	function approval_request($approval_id){
+		
+		$query			=	$this->db->get_where('approval' , array('approval_id' => $approval_id));
+		if($query->num_rows() > 0)
+		{
+			
+			$email_msg	=	$query->row()->approval_detail;
+			$email_msg .= 	"<p>To approve click <a href='".base_url()."index.php?general/external_approval/".$approval_id."'>this</a> link</p>";
+		
+			$email_sub	=	"Approval Request";
+			$email_to	=	'nkmwambs@gmail.com';
+			$this->do_email($email_msg , $email_sub , $email_to);
+			return true;
+		}
+		else
+		{	
+			return false;
+		
+		}
+		
+	}
+	
 	/***custom email sender****/
 	function do_email($msg=NULL, $sub=NULL, $to=NULL, $from=NULL)
 	{

@@ -1098,6 +1098,21 @@ class Crud_model extends CI_Model {
 	function max_transaction_date(){
 		return $this->db->select_max('t_date')->get('transaction')->row()->t_date;
 	}
+	
+	function check_transaction_reverse_approval($transaction_id){
+		
+		$approval_obj =$this->db->get_where('approval',
+		array('affected_table_name'=>'transaction','action_to_approve'=>'reverse_transaction',
+		'affected_record_id'=>$transaction_id));
+		
+		$approval_status = -1;
+		
+		if($approval_obj->num_rows() > 0){
+			$approval_status = $approval_obj->row()->approval_status;
+		}
+		
+		return $approval_status;
+	}
 	 /**
 	  * End of Upgraded Finance Model
 	  */
