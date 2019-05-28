@@ -2384,16 +2384,22 @@ class Finance extends CI_Controller
 	
 	function reverse_transaction_approval_request($transaction_id){
 		
+		$this->db->select(array('t_date','transaction_type.name as transaction_type',
+		'transaction_method.name as transaction_method','batch_number','transaction.description','amount'));
+		$this->db->join('transaction_method','transaction_method.transaction_method_id=transaction.transaction_method_id');
+		$this->db->join('transaction_type','transaction_type.transaction_type_id=transaction.transaction_type_id');
 		$affected = $this->db->get_where('transaction',array('transaction_id'=>$transaction_id))->row();
 		
 		$detail = "Kindly approve the reversal of the record with details below:<br/>";
-		$detail .= "Transaction Date: ".$affected->t_date."<br/>";
-		$detail .= "Transaction Type: ".$affected->transaction_type_id."<br/>";
-		$detail .= "Transaction Method: ".$affected->transaction_method_id."<br/>";
+		$detail .= "Transaction Date: ".date('jS F Y',strtotime($affected->t_date))."<br/>";
+		$detail .= "Transaction Type: ".ucfirst($affected->transaction_type)."<br/>";
+		$detail .= "Transaction Method: ".ucfirst($affected->transaction_method)."<br/>";
 		$detail .= "Batch Number: ".$affected->batch_number."<br/>";
 		$detail .= "Payee: ".$affected->payee."<br/>";
 		$detail .= "Description: ".$affected->description."<br/>";
-		$detail .= "Amount: ".$affected->amount."<br/>";
+		$detail .= "Amount: ".number_format($affected->amount,2)."<br/>";
+		$detail .= "Originator: ".$this->db->get_where('user',
+		array('user_id'=>$this->session->login_user_id))->row()->firstname."<br/>";
 		
 		//$detail .= "Thanks in advance: ";
 		
