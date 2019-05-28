@@ -43,14 +43,18 @@ class Email_model extends CI_Model {
 	}
 	
 	function approval_request($approval_id){
-		
+			
+			$approver_object = $this->db->get_where('admin',array('is_approver'=>1))->result_array();
+			$approvers_emails_array = array_column($approver_object, 'email');
+			//$approvers_email_stringify = implode(";", $approvers_emails_array); 
+			
 			$query			=	$this->db->get_where('approval' , array('approval_id' => $approval_id));
 	
 			$email_msg	=	$query->row()->approval_detail;
 			$email_msg .= 	"<p>To approve click <a href='".base_url()."index.php?general/external_approval/".$approval_id."'>this</a> link</p>";
 		
 			$email_sub	=	"Approval Request";
-			$email_to	=	'nkmwambs@gmail.com';
+			$email_to	=	$approvers_emails_array;
 			$this->do_email($email_msg , $email_sub , $email_to);
 		
 	}
