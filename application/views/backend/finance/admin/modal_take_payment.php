@@ -93,13 +93,21 @@ $row = $edit_data[0];
 		            <div class="form-group">
                         <label class="col-sm-3 control-label"><?php echo get_phrase('method');?></label>
                         <div class="col-sm-6">
-                            <select name="method" class="form-control" required="required">
+                            <select name="method" id="method" class="form-control" required="required">
                                 <option value="1"><?php echo get_phrase('cash');?></option>
-                                <option value="2"><?php echo get_phrase('check');?></option>
-
+                                <option value="2"><?php echo get_phrase('cheque');?></option>
+								<option value="2"><?php echo get_phrase('lipa_karo_mpesa');?></option>
+								<!-- <option value="2"><?php echo get_phrase('mpesa_paybill');?></option> -->
                             </select>
                         </div>
                     </div>
+                    
+                    <div class="form-group" style="display: none;">
+		                <label class="col-sm-3 control-label"><?php echo get_phrase('reference_number');?></label>
+		                <div class="col-sm-6">
+		                    <input type="text" required="required" class="form-control" name="ref" id="ref" placeholder="<?php echo get_phrase('payee');?>"/>
+		                </div>
+		            </div>
 
                     <div class="form-group">
 	                    <label class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
@@ -137,10 +145,17 @@ $row = $edit_data[0];
 
 <?php //endforeach;?>
 
+
 <script>
 
+	$("#method").on('change',function(){
+		if($(this).val() == 2){
+			$("#ref").closest("div.form-group").css('display','block');
+		}else{
+			$("#ref").closest("div.form-group").css('display','none');
+		}
+	});
 
-	
 	function get_total_payment(){
 		var tot = 0;
 		$('.paying').each(function(){

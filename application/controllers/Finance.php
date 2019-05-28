@@ -1983,6 +1983,11 @@ class Finance extends CI_Controller
 			$data_payment['invoice_id'] 			= 	$this->input->post('invoice_id');
 			$data_payment['transaction_method_id']	=   $this->input->post('method');
 			$data_payment['description']			=   $this->input->post('description');
+			
+			if($this->input->post('ref')){
+				$data_payment['description']			=   $this->input->post('description').' - '.get_phrase('reference_number').': '.$this->input->post('ref');
+			}
+			
 			$data_payment['payee']					=   $this->input->post('payee');
 			$data_payment['transaction_type_id']	=   "1";
 			
