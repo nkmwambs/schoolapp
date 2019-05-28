@@ -13,6 +13,7 @@ $this->db->join('transaction_type','transaction_type.transaction_type_id=transac
 $this->db->join('transaction_detail','transaction_detail.transaction_id=transaction.transaction_id');
 $transaction = $this->db->get_where('transaction',array('batch_number'=>$param2))->result_array();
 
+
 $row = $transaction[0];
 
 ?>
@@ -121,7 +122,7 @@ $row = $transaction[0];
             </thead>
             <tbody>
             	<?php
-															
+					//print_r($transaction);											
 					foreach($transaction as $details):
 				?>
 					<tr>
@@ -140,7 +141,7 @@ $row = $transaction[0];
 									if($income_category_name_obj->num_rows() == 0){
 										echo "";
 									}else{
-										$income_category_name_obj->row()->name;
+										echo $income_category_name_obj->row()->name;
 									}
 								}
 								

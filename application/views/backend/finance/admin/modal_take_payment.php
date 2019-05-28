@@ -154,13 +154,13 @@ $row = $edit_data[0];
 			tot = parseInt(tot)+parseInt(amt);
 		});
 		
-		var excess_paid = parseInt(tot) - parseInt(accounting.unformat(<?=$this->crud_model->fees_balance_by_invoice($param2);?>));
+		//alert(tot);
 		
+		$("#total_payment").val(tot);		
 		
-		
-		if(parseInt(tot) == parseInt(accounting.unformat(<?=$this->crud_model->fees_balance_by_invoice($param2);?>))){
+		if(parseInt(tot) == parseInt(<?=$this->crud_model->fees_balance_by_invoice($param2);?>)){
 			$(".overpay").removeAttr('readonly');	
-		}else if(parseInt(tot) < parseInt(accounting.unformat(<?=$this->crud_model->fees_balance_by_invoice($param2);?>))){
+		}else if(parseInt(tot) < parseInt(<?=$this->crud_model->fees_balance_by_invoice($param2);?>)){
 			$(".overpay").val(0);
 			$(".overpay").prop("readonly","readonly");
 		}

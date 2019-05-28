@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-md-12">
-		<div class="panel panel-primary" data-collapsed="0">
+		<div class="panel panel-default" data-collapsed="0">
         	<div class="panel-heading">
             	<div class="panel-title" >
             		<i class="entypo-plus-circled"></i>
@@ -134,10 +134,10 @@ function validate_cheque_number(cheque_number){
 		$('#tbl_details tbody').append(
 										'<tr>'+
 										'<td><button class="btn btn-warning" onclick="return remove_row(this);"><?=get_phrase('delete');?></button>'+
-										'</td><td><input value="0" type="text" class="form-control" id="qty_'+row+'" name="qty[]" onkeyup="return calculate_cost('+row+');" required="required"/></td>'+
+										'</td><td><input value="0" type="number" class="form-control" min="0.1" id="qty_'+row+'" name="qty[]" onkeyup="return calculate_cost('+row+');" required="required"/></td>'+
 										'<td><input type="text" class="form-control" id="desc_'+row+'" name="desc[]"  required="required"/></td>'+
-										'<td><input value="0" type="text" class="form-control" id="unitcost_'+row+'"  name="unitcost[]" onkeyup="return calculate_cost('+row+');"  required="required"/></td>'+
-										'<td><input value="0" readonly="readonly" type="text" class="form-control cost" id="cost_'+row+'"  name="cost[]"  required="required"/></td>'+
+										'<td><input value="0" type="number" class="form-control" min="0.1" id="unitcost_'+row+'"  name="unitcost[]" onkeyup="return calculate_cost('+row+');"  required="required"/></td>'+
+										'<td><input value="0" readonly="readonly" type="number" class="form-control cost" id="cost_'+row+'"  name="cost[]"  required="required"/></td>'+
 										'<td><select  class="form-control"  required="required" id="category_'+row+'"  name="category[]">'+
 										'<option value="" selected="selected" disabled="disabled"><?=get_phrase('select');?></option>'+
 										<?php

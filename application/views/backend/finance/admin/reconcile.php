@@ -42,7 +42,12 @@ $this->db->where($str);
 $this->db->where(array("transaction_method_id"=>2,'transaction_type_id'=>1));
 $deposit_in_transit = 0;
 $deposit_in_transit_obj = $this->db->select("SUM(amount) as amount")->get("transaction");
-if($deposit_in_transit_obj->row()) $deposit_in_transit = $deposit_in_transit_obj->row()->amount;
+
+if($deposit_in_transit_obj->row()->amount !== null) {
+	$deposit_in_transit = $deposit_in_transit_obj->row()->amount;
+}
+
+
 
 /** Outstanding Cheques in statement**/
 
@@ -50,7 +55,7 @@ $this->db->where($str);
 $this->db->where(array("transaction_method_id"=>2,'transaction_type_id'=>2));
 $outstanding_cheque = 0;
 $outstanding_cheque_obj = $this->db->select("SUM(amount) as amount")->get("transaction");
-if($outstanding_cheque_obj->row()->amount) $outstanding_cheque = $outstanding_cheque_obj->row()->amount;
+if($outstanding_cheque_obj->row()->amount !== null) $outstanding_cheque = $outstanding_cheque_obj->row()->amount;
 
 /** Cashbook Balance i statement **/
 
@@ -160,7 +165,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 					<div class="form-group">
 						<label class="control-label col-sm-3">Adjusted Balance</label>
 						<div class="col-sm-6">
-							<input type="text" id="adjusted_bank_amount" readonly="readonly" name="adjusted_bank_amount" class="form-control" value="" />
+							<input type="text" id="adjusted_bank_amount" readonly="readonly" name="adjusted_bank_amount" class="form-control" value="0" />
 						</div>
 					</div>
 					

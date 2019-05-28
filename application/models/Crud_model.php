@@ -475,7 +475,7 @@ class Crud_model extends CI_Model {
 		return $month_start_date;
 	}
 	
-		function last_reconciled_month(){
+	function last_reconciled_month(){
 		
 		$last_reconcile_date = date('Y-m-01',strtotime('-1 month',strtotime($this->db->get_where('settings' , array('type'=>'system_start_date'))->row()->description))); 
 		

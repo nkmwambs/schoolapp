@@ -470,7 +470,7 @@ class Settings extends CI_Controller
 			$data['firstname'] = array_shift($name_array);
 			$data['lastname'] = implode(" ", $name_array);
 			$data['email'] = $email;
-			$data['password'] = "default";
+			$data['password'] = md5("default");
 			$data['phone'] = $phone;
 			$data['login_type_id'] = $this->db->get_where("login_type",array("name"=>"teacher"))->row()->login_type_id;
 			$data['profile_id'] = 0;
@@ -499,10 +499,10 @@ class Settings extends CI_Controller
 			$data['firstname'] = array_shift($name_array);
 			$data['lastname'] = implode(" ", $name_array);
 			$data['email'] = $email;
-			$data['password'] = "default";
+			$data['password'] = md5("default");
 			$data['phone'] = $phone;
 			$data['login_type_id'] = $this->db->get_where("login_type",array("name"=>"admin"))->row()->login_type_id;
-			$data['profile_id'] = 0;
+			$data['profile_id'] = 1;
 			$data['type_user_id'] = $admin_id;
 			$data['auth'] = 1;
 			

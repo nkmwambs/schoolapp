@@ -259,11 +259,11 @@
 										<span class="title"><?=get_phrase('income_variance');?></span>
 									</a>
 								</li>
-								<!-- <li>
+								<li>
 									<a href="<?php echo base_url(); ?>index.php?finance/funds_transfers_report">
 										<span class="title"><?=get_phrase('funds_transfers');?></span>
 									</a>
-								</li> -->
+								</li>
 							</ul>
 						</li>
 														

@@ -1012,7 +1012,7 @@ class Finance extends CI_Controller
             redirect('login', 'refresh');
             
         if ($param1 == 'create') {
-       		$res = $this->db->get("payment")->row()->serial;
+       		//$res = $this->db->get("payment")->row()->serial;
 			
 			$this->db->trans_start();
         	
