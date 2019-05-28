@@ -2414,7 +2414,7 @@ class Finance extends CI_Controller
 		//Trigger email to the approver
 		$this->email_model->approval_request($this->db->insert_id());
 		
-		$this->session->set_flashdata('flash_message' , get_phrase('record_already_exists'));
+		$this->session->set_flashdata('flash_message' , get_phrase('approval_request_submitted'));
 		redirect(base_url() . 'index.php?finance/cashbook');
 	}
 
