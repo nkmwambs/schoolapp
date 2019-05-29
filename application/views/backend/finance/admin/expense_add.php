@@ -145,7 +145,7 @@ function validate_cheque_number(cheque_number){
 											
 											foreach($exp_cat as $cat):
 										?>
-											'<option value="<?=$cat->expense_category_id;?>"><?=$cat->name;?></option>'+
+											'<option value="<?=$cat->expense_category_id;?>"><?=addslashes($cat->name);?></option>'+
 										<?php
 											endforeach;
 										?>
