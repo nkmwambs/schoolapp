@@ -496,12 +496,12 @@ class Settings extends CI_Controller
 			
 			$name_array = explode(" ", $name);
 			
-			$password = md5(substr(rand(1000000,10000000000),1,6));
+			$password = substr(rand(1000000,10000000000),1,6);
 			
 			$data['firstname'] = array_shift($name_array);
 			$data['lastname'] = implode(" ", $name_array);
 			$data['email'] = $email;
-			$data['password'] = $password;
+			$data['password'] = md5($password);
 			$data['phone'] = $phone;
 			$data['login_type_id'] = $this->db->get_where("login_type",array("name"=>"admin"))->row()->login_type_id;
 			$data['profile_id'] = 1;
