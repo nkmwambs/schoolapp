@@ -496,10 +496,12 @@ class Settings extends CI_Controller
 			
 			$name_array = explode(" ", $name);
 			
+			$password = md5(substr(rand(1000000,10000000000),1,6));
+			
 			$data['firstname'] = array_shift($name_array);
 			$data['lastname'] = implode(" ", $name_array);
 			$data['email'] = $email;
-			$data['password'] = md5("default");
+			$data['password'] = $password;
 			$data['phone'] = $phone;
 			$data['login_type_id'] = $this->db->get_where("login_type",array("name"=>"admin"))->row()->login_type_id;
 			$data['profile_id'] = 1;
@@ -513,6 +515,7 @@ class Settings extends CI_Controller
 			if($exists == 0) {
 				$this->db->insert("user",$data);
 				$msg = get_phrase("success");
+				$this->email_model->account_opening_email('admin',$email,$password);
 			}
 			
 			$this->session->set_flashdata('flash_message' , $msg);
