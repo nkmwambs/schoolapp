@@ -108,7 +108,7 @@
 											
 											foreach($inc_cat as $cat):
 										?>
-											'<option value="<?=$cat->income_category_id;?>"><?=$cat->name;?></option>'+
+											'<option value="<?=$cat->income_category_id;?>"><?=addslashes($cat->name);?></option>'+
 										<?php
 											endforeach;
 										?>

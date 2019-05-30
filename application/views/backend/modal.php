@@ -156,7 +156,9 @@
 		function go_forward() {
 		  window.history.forward();
 		}
-
+	
+	
+		
 </script>
 
 <style>
