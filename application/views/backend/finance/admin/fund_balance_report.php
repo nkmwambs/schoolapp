@@ -1,6 +1,6 @@
 <hr />
 <?php
-//print_r($fund_balances);
+print_r($fund_balances);
 ?>
 <p></p>
 <div class="row">
