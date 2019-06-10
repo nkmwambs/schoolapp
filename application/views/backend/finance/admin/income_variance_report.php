@@ -22,8 +22,8 @@
 					<th>Income Category</th>
 					<th style="text-align: right;">Project Income</th>
 					<th style="text-align: right;">Income to date</th>
-					<th style="text-align: right;">Income Variance</th>
-					<th style="text-align: right;">% Variance</th>
+					<th style="text-align: right;">Uncollected Income</th>
+					<th style="text-align: right;">% Collection</th>
 				</tr>
 			</thead>
 			
@@ -34,7 +34,7 @@
 						$project_income = $variances['projected_income'][$category_id];
 						$income_to_date = $variances['income_to_date'][$category_id];
 						$variance = $project_income - $income_to_date;
-						$percent_variance = $project_income!=0?$variance/$project_income:0;
+						$percent_variance = $project_income!=0?$income_to_date/$project_income:0;
 						
 				?>
 					<tr>
@@ -42,7 +42,7 @@
 						<td style="text-align: right;"><?=number_format($project_income,2);?></td>
 						<td style="text-align: right;"><?=number_format($income_to_date,2);?></td>
 						<td style="text-align: right;"><?=number_format($variance,2);?></td>
-						<td style="text-align: right;"><?=number_format($percent_variance,2);?></td>
+						<td style="text-align: right;"><?=number_format($percent_variance,2)*100;?>%</td>
 					</tr>
 				<?php
 					}
