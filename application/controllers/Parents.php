@@ -27,6 +27,16 @@ class Parents extends CI_Controller
 		$this->output->set_header('Pragma: no-cache');
 
     }
+	
+	 function parent_add(){
+	 	if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');
+		
+		$page_data['page_name']  = 'parent_add';
+		$page_data['page_view'] = "parent";
+        $page_data['page_title'] = get_phrase('add_parent');
+        $this->load->view('backend/index', $page_data);
+	 }
 
     function parent($param1 = '', $param2 = '', $param3 = '')
     {

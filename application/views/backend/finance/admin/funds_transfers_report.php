@@ -29,11 +29,11 @@
 					foreach($transfers as $row){
 				?>
 					<tr>
-						<td><?=$row->t_date;?></td>
-						<td><?=$row->batch_number;?></td>
-						<td><?=$row->account_from;?></td>
-						<td><?=$row->account_to;?></td>
-						<td><?=number_format($row->amount,2);?></td>
+						<td><?=$row['t_date'];?></td>
+						<td><?=$row['batch_number'];?></td>
+						<td><?=$row['account_from'];?></td>
+						<td><?=$row['account_to'];?></td>
+						<td><?=number_format($row['amount'],2);?></td>
 					</tr>
 				<?php
 					}

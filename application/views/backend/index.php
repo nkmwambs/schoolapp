@@ -58,7 +58,7 @@
 						</div>
 					</div>
 			
-			
+					<hr />
 					<?php 
 							if(file_exists(APPPATH."/views/backend/".$page_view.'/'.$account_type.'/'.$page_name.'.php')){
 								include $page_view.'/'.$account_type.'/'.$page_name.'.php';

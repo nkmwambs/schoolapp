@@ -968,6 +968,94 @@ class Crud_model extends CI_Model {
 		return $overpay_amount - $redeemed_overpay;
 	}
 	
+	function get_term_range_of_months($date){
+		$month = date('n',strtotime($date));
+		
+		$all_terms = $this->db->get('terms')->result_object();	
+		
+		$range = array();
+		
+		foreach($all_terms as $term){
+			$term_months[$term->terms_id] = range($term->start_month, $term->end_month);
+			
+			if(in_array($month, $term_months[$term->terms_id])){
+				$range = range($term->start_month, $term->end_month);
+				break;
+			}
+		}
+		
+		return $range;
+	}
+	
+	function get_month_key_in_term($date){
+		$month = date('n',strtotime($date));
+		
+		 $all_terms = $this->db->get('terms')->result_object();	
+		 
+		 $key = 1;
+		 
+		 foreach($all_terms as $term){
+			$term_months[$term->terms_id] = range($term->start_month, $term->end_month);
+	
+			if(in_array($month, $term_months[$term->terms_id])){
+				$key = array_search($month, $term_months[$term->terms_id]) + 1;
+				break;
+			}
+		}
+		 
+		return $key;
+	}
+	
+	function get_current_term_based_on_date($date){
+		$month = date('n',strtotime($date));
+		 
+		 $all_terms = $this->db->get('terms')->result_object();	
+		 
+		 $term_data = array();
+		 
+		 foreach($all_terms as $term){
+			$term_months[$term->terms_id] = range($term->start_month, $term->end_month);
+	
+			if(in_array($month, $term_months[$term->terms_id])){
+				$term_data['term_id'] = $term->terms_id;
+				$term_data['key'] = array_search($month, $term_months[$term->terms_id]) + 1;
+				break;
+			}
+		}
+		 
+		return $term_data; 
+	}
+	
+	function get_current_term_limit_dates($date){
+		/**
+		 * Compute term last and start dates and return them in an array of two elements with 
+		 * keys term_start_date and term_end_date
+		 */
+		 
+		 $month = date('n',strtotime($date));
+		 
+		 $year = date('Y',strtotime($date));
+		 
+		 $all_terms = $this->db->get('terms')->result_object();	
+		 
+		 $term_limits = array();
+		 
+		 foreach($all_terms as $term){
+			$term_months[$term->terms_id] = range($term->start_month, $term->end_month);
+			 
+			 $start_month = strlen($term->start_month) == 1 ? '0'.$term->start_month:$term->start_month;
+			 $end_month = strlen($term->end_month) == 1 ? '0'.$term->end_month:$term->end_month;
+			
+			if(in_array($month, $term_months[$term->terms_id])){
+				$term_limits['term_start_date'] = $year.'-'.$start_month.'-01';
+				$term_limits['term_end_date'] = date('Y-m-t',strtotime($year.'-'.$end_month.'-01'));
+				break;
+			}
+		}
+		 
+		return $term_limits; 
+	}
+	
 	function get_current_term(){
 		$current_transacting_month = $this->current_transaction_month();
 		

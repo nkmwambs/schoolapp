@@ -1,5 +1,13 @@
 <?php
-//print_r($this->crud_model->months_in_a_term_short_name(3));
+$this->db->select(array('expense_category_id','expense_category.name as expense_category','income_categories.name as income_category'));
+$this->db->join('income_categories','income_categories.income_category_id=expense_category.income_category_id');
+//$this->db->where(array('income_categories.income_category_id'=>8));
+$exp_categories = $this->db->get('expense_category')->result_array();
+
+$grouped_expenses_accounts = group_array_by_key($exp_categories,'income_category');
+
+//print_r($exp_categories);
+
 ?>
 
 <style>
@@ -54,11 +62,19 @@
 										<select name="expense_category_id" id="expense_category_id" class="form-control"  required="required">
 											<option selected disabled value=""><?=get_phrase('select');?></option>
 											<?php
-												$exp_acc = $this->db->get('expense_category')->result();
+												//$exp_acc = $this->db->get('expense_category')->result();
 												
-												foreach($exp_acc as $acc):
+												foreach($grouped_expenses_accounts as $income_acc => $exp_acc):
 											?>
-												<option value="<?=$acc->expense_category_id;?>"><?=$acc->name;?></option>
+												<optgroup label="<?=$income_acc;?>">
+												<?php
+													foreach($exp_acc as $acc){
+												?>
+													<option value="<?=$acc['expense_category_id'];?>"><?=$acc['expense_category'];?></option>
+												<?php
+													}
+												?>	
+												</optgroup>
 											<?php
 												endforeach;
 											?>
@@ -149,10 +165,13 @@
 									<tbody>
 										<tr>
 											<?php
+												$months_in_term = $this->crud_model->months_in_a_term($current_term);
+												$cnt = 0;
 												foreach($months_in_term_short as $month_short){									
 											?>
 												<td><input type="text" style="min-width: 80px;" class="form-control months spread" name="months[]" id="<?=$month_short;?>" value="0" required="required"/></td>
 											<?php
+												$cnt++;
 											}
 											?>
 										</tr>
@@ -204,7 +223,7 @@
 							
 						</div>
 					
-					<hr />
+					<!-- <hr />
 					<caption><?=get_phrase('summary_by_expense_categories');?></caption>
 					<table class="table table-bordered table-striped">
 						<thead>
@@ -268,7 +287,7 @@
 								
 							</tr>
 						</tfoot>
-					</table>
+					</table> -->
 					
 					<hr/>
 					

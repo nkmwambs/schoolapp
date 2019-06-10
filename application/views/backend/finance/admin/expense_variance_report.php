@@ -1,12 +1,18 @@
 <hr />
 <?php
-//print_r($variances);
+//echo $this->crud_model->get_month_key_in_term($t_date);
+//print_r($this->crud_model->get_term_range_of_months($t_date));
+
+extract($this->crud_model->get_current_term_limit_dates($t_date));
 ?>
 
 <p></p>
 <div class="row">
 	<div class="col-xs-12" style="text-align: center;font-weight: bold;font-size: 18pt;">
 		<?=get_phrase('expense_variance');?>: <?=date('F Y',strtotime($t_date));?>
+		<p>
+			<?=get_phrase('term_starting_from');?> <?=date('jS F, Y',strtotime($term_start_date));?> 
+		</p>
 	</div>
 </div>
 <p></p>

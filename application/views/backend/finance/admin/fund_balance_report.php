@@ -1,7 +1,6 @@
 <hr />
 <?php
-//echo $this->crud_model->current_transaction_month();
-
+//print_r($fund_balances);
 ?>
 <p></p>
 <div class="row">

@@ -11,7 +11,7 @@
 			<div class="panel-body">
 				
 				
-	            <a href="javascript:;" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_parent_add/');" 
+	            <a href="<?php echo base_url(); ?>index.php?parents/parent_add/" 
 	                class="btn btn-primary pull-right <?=get_access_class("add_parent",$this->session->login_type,"accounts")?>">
 	                <i class="entypo-plus-circled"></i>
 	                <?php echo get_phrase('add_new_parent'); ?>
