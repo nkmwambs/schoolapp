@@ -1300,45 +1300,46 @@ class Finance extends CI_Controller
 	}
 	
 	function student_collection_tally($year,$filter = ""){
+		 if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');
+		 
+		$term = 2;
+		 
+		//Get all unpaid invoices for the term
+		$this->db->select(array('student.name as student','invoice.student_id','student.roll as roll',
+		'fees_structure_details.income_category_id','invoice.invoice_id','income_categories.name as category','class.name as class'));
 		
-		$this->db->select_sum('invoice_details.amount_due');	
-		$this->db->select_sum('invoice_details.amount_paid');
-		$this->db->select_sum('invoice_details.balance');
-		$this->db->select(array('student.name as student','student.student_id as student_id','income_categories.name category',
-		'roll','class.name as class'));
+		$this->db->select_sum('invoice_details.amount_due');
+		
+		$this->db->join('invoice','invoice.invoice_id=invoice_details.invoice_id');
+		$this->db->join('student','student.student_id=invoice.student_id');
+		$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');
+		$this->db->join('income_categories','income_categories.income_category_id=fees_structure_details.income_category_id');
+		$this->db->join('class','class.class_id = invoice.class_id');
 		
 		$this->db->group_by('student.student_id');	
-		$this->db->group_by('income_categories.name');
-
+		$this->db->group_by('fees_structure_details.income_category_id');
 		
-		if($filter == 'filter'){
-			$str = " invoice.balance".$this->input->post('operator').$this->input->post('filter_amount');
-			$this->db->where($str);
-			$this->db->where(array('yr'=>$year, 'invoice.status'=>'unpaid'));			
-		}else{
-			$this->db->where(array('yr'=>$year, 'invoice.status'=>'unpaid'));
-		}
-		
-		$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');
-		$this->db->join('income_categories','income_categories.income_category_id = fees_structure_details.income_category_id');
-		$this->db->join('invoice','invoice.invoice_id = invoice_details.invoice_id');
-		$this->db->join('class','class.class_id = invoice.class_id');
-		$this->db->join('student','student.student_id = invoice.student_id');
-		$ungrouped_payments = $this->db->get('invoice_details')->result_object();
-		
-		$payments = array();
+		$ungrouped_payments = $this->db->get_where('invoice_details',array('yr'=>$year,'term'=>$term,'status'=>'unpaid'))->result_object();
 		
 		foreach($ungrouped_payments as $row){
+			$this->db->select_sum('cost');
+			$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+			$this->db->join('invoice','invoice.invoice_id=transaction.invoice_id');
+			
+			$this->db->group_by('transaction_detail.income_category_id');
+			
+			$this->db->where(array('transaction.invoice_id'=>$row->invoice_id,'income_category_id'=>$row->income_category_id));
+			$paid = $this->db->get('transaction_detail')->row()->cost;
+			
 			$payments[$row->student_id]['fees'][$row->category]['due'] = $row->amount_due;
-			$payments[$row->student_id]['fees'][$row->category]['paid'] = $row->amount_paid;
-			$payments[$row->student_id]['fees'][$row->category]['balance'] = $row->balance;
+			$payments[$row->student_id]['fees'][$row->category]['paid'] = $paid;
+			$payments[$row->student_id]['fees'][$row->category]['balance'] = $row->amount_due - $paid;
 			$payments[$row->student_id]['student']['name'] = $row->student;
 			$payments[$row->student_id]['student']['class'] = $row->class;
 			$payments[$row->student_id]['student']['roll'] = $row->roll;
 		}
 		
-		$page_data['year'] 			= $year;
-		$page_data['term'] 			= $term;
 		$page_data['payments'] 		= $payments;
         $page_data['page_name']  	= __FUNCTION__;
 		$page_data['current_date'] 	= $t_date;

@@ -5,7 +5,7 @@ $income_categories = $this->db->get('income_categories')->result_object();
 //print_r($income_categories);
 ?>
 <hr/>
-<div class="row">
+<!-- <div class="row">
 	<div class="col-xs-12">
 		<?php echo form_open(base_url() . 'index.php?finance/student_collection_tally/'.$year.'/'.$term.'/filter', array(
 					'class' => 'form-horizontal form-groups-bordered validate','target'=>'_top','id'=>'frm_payment'));?>
@@ -33,7 +33,7 @@ $income_categories = $this->db->get('income_categories')->result_object();
 		</form>
 	</div>
 </div>
-<p></p>
+<p></p> -->
 <div class="row">
 	<div class="col-xs-12">
 		<table class="table table-bordered datatable">
