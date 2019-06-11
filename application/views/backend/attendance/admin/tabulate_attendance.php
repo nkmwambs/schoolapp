@@ -87,7 +87,7 @@ $attendance_key = array('','P','A');
 	
 <div class="row">
 	<div class="col-xs-12">
-		<table class="table table-bordered datatable">
+		<table class="table table-bordered datatable" id="table_export">
 			<thead>
 				<tr>
 					<th rowspan="3"><?=get_phrase('student_name');?></th>
@@ -158,3 +158,54 @@ $attendance_key = array('','P','A');
 </div>
 
 <?php endif;?>
+
+<!-----  DATA TABLE EXPORT CONFIGURATIONS ---->                      
+<script type="text/javascript">
+
+    jQuery(document).ready(function($)
+    {
+        
+
+        var datatable = $("#table_export").dataTable({
+            "sPaginationType": "bootstrap",
+            "sDom": "<'row'<'col-xs-3 col-left'l><'col-xs-9 col-right'<'export-data'T>f>r>t<'row'<'col-xs-3 col-left'i><'col-xs-9 col-right'p>>",
+            "oTableTools": {
+                "aButtons": [
+                    
+                    {
+                        "sExtends": "xls",
+                        
+                    },
+                    {
+                        "sExtends": "pdf",
+                        
+                    },
+                    {
+                        "sExtends": "print",
+                        "fnSetText"    : "Press 'esc' to return",
+                        "fnClick": function (nButton, oConfig) {
+                            datatable.fnSetColumnVis(5, false);
+                            
+                            this.fnPrint( true, oConfig );
+                            
+                            window.print();
+                            
+                            $(window).keyup(function(e) {
+                                  if (e.which == 27) {
+                                      datatable.fnSetColumnVis(5, true);
+                                  }
+                            });
+                        },
+                        
+                    },
+                ]
+            },
+            
+        });
+        
+        $(".dataTables_wrapper select").select2({
+            minimumResultsForSearch: -1
+        });
+    });
+        
+</script>
