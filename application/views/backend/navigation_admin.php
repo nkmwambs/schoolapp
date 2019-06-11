@@ -160,10 +160,22 @@
 				            </ul>
 						</li>
 						
-						<li>
-							<a href="<?php echo base_url(); ?>index.php?attendance/manage_attendance/<?php echo date("d/m/Y"); ?>">
+						<li class="has-sub">
+							<a href="#">
 								<span class="title"><?=get_phrase('class_attendance');?></span>
 							</a>
+							<ul>
+								<li>
+									<a href="<?php echo base_url(); ?>index.php?attendance/manage_attendance/<?php echo date("d/m/Y"); ?>">
+										<?=get_phrase('mark_attendance');?>
+									</a>
+								</li>	
+								<li>
+									<a href="<?php echo base_url(); ?>index.php?attendance/tabulate_attendance/<?php echo date("m/Y"); ?>">
+										<?=get_phrase('tabulate_attendance');?>
+									</a>
+								</li>
+							</ul>
 						</li>
 						
 					</ul>

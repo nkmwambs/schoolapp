@@ -6,7 +6,7 @@
 ?>
 <div class="row">
 	<div class="col-xs-12 <?= get_access_class('dashboard', 'admin'); ?>">
-		<hr />
+
 		<div class="row  <?= get_access_class('create_transaction', 'admin', 'accounting'); ?>">
 			<div class="col-xs-12">
 				<div class="col-xs-3 <?= get_access_class('create_transaction', 'admin', 'dashboard'); ?>">
@@ -97,7 +97,7 @@
 		            
 		                <div class="tile-stats tile-blue <?= get_access_class('today_students_attendance', 'admin', 'dashboard'); ?>">
 		                    <div class="icon"><i class="entypo-chart-bar"></i></div>
-		                    <?php $check = array('date' => date('Y-m-d'), 'status' => '1');
+		                    <?php $check = array('date' => date('Y-m-d'), 'afternoon' => '1');
 								$query = $this -> db -> get_where('attendance', $check);
 								$present_today = $query -> num_rows();
 								?>

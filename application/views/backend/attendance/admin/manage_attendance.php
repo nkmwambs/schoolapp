@@ -1,7 +1,6 @@
 <?php
     $active_sms_service = $this->db->get_where('settings' , array('type' => 'active_sms_service'))->row()->description;
 ?>
-<hr />
 <div class="row">
 
     <table cellpadding="0" cellspacing="0" border="0" class="table table-bordered">
@@ -123,7 +122,8 @@
                 <tr>
                     <td><?php echo get_phrase('roll');?></td>
                     <td><?php echo get_phrase('name');?></td>
-                    <td><?php echo get_phrase('status');?></td>
+                    <td><?php echo get_phrase('morning');?></td>
+                    <td><?php echo get_phrase('afternoon');?></td>
                 </tr>
             </thead>
             <tbody>
@@ -142,23 +142,53 @@
                                 if($query->num_rows() < 1)
                                 $this->db->insert('attendance' , $verify_data);
 
-                                //showing the attendance status editing option
-                                $attendance = $this->db->get_where('attendance' , $verify_data)->row();
-                                $status     = $attendance->status;
+                               
                             ?>
-                        <?php if ($status == 1):?>
+                        
+                        
+                        <!--Morning Attendance-->
+                        <?php
+                        		//Morning - showing the attendance status editing option
+                                $attendance = $this->db->get_where('attendance' , $verify_data)->row();
+                                $morning_status     = $attendance->morning;
+                        ?>
+                        
+                         <?php if ($morning_status == 1):?>
                             <td align="center">
                               <span class="badge badge-success"><?php echo get_phrase('present');?></span>
                             </td>
                         <?php endif;?>
-                        <?php if ($status == 2):?>
+                        <?php if ($morning_status == 2):?>
                             <td align="center">
-                              <span class="badge badge-danger"><?php echo get_phrase('absent');?></span>
+                              <span class="badge badge-danger"><span style="color:orange;"><?php echo get_phrase('absent');?></span></span>
                             </td>
                         <?php endif;?>
-                        <?php if ($status == 0):?>
+                        <?php if ($morning_status == 0):?>
                             <td></td>
                         <?php endif;?>
+                        
+                        
+                        <!--Afternoon Attendance-->
+                        <?php
+                        		//Afternoon - showing the attendance status editing option
+                                $attendance = $this->db->get_where('attendance' , $verify_data)->row();
+                                $afternoon_status     = $attendance->afternoon;
+                        ?>
+                        
+                         <?php if ($afternoon_status == 1):?>
+                            <td align="center">
+                              <span class="badge badge-success"><?php echo get_phrase('present');?></span>
+                            </td>
+                        <?php endif;?>
+                        <?php if ($afternoon_status == 2):?>
+                            <td align="center">
+                              <span class="badge badge-danger"><span style="color:orange;"><?php echo get_phrase('absent');?></span></span>
+                            </td>
+                        <?php endif;?>
+                        <?php if ($afternoon_status == 0):?>
+                            <td></td>
+                        <?php endif;?>
+                        
                         </tr>
                     <?php endforeach;?>
             </tbody>
@@ -180,7 +210,8 @@
     			<tr class="gradeA">
                 	<th><?php echo get_phrase('roll');?></th>
                 	<th><?php echo get_phrase('name');?></th>
-                	<th><?php echo get_phrase('status');?></th>
+                	<th><?php echo get_phrase('morning');?></th>
+                	<th><?php echo get_phrase('afternoon');?></th>
     			</tr>
             </thead>
             <tbody>
@@ -195,7 +226,7 @@
     				<tr class="gradeA">
     					<td><?php echo $row['roll'];?></td>
     					<td><?php echo $row['name'];?></td>
-    					<td align="center">
+    				
     						<?php
     						//inserting blank data for students attendance if unavailable
     						$verify_data	=	array(	'student_id' => $row['student_id'],
@@ -204,18 +235,37 @@
     						if($query->num_rows() < 1)
     						$this->db->insert('attendance' , $verify_data);
 
-    						//showing the attendance status editing option
+    						?>
+
+                        <td>
+                        	<?php
+
+    						//Morning - showing the attendance status editing option
     						$attendance = $this->db->get_where('attendance' , $verify_data)->row();
-    						$status		= $attendance->status;
+    						$morning_status		= $attendance->morning;
                         	?>
 
 
-                                <select name="status_<?php echo $row['student_id'];?>" class="form-control" style="width:100px; float:left;">
-                                    <option value="0" <?php if($status == 0)echo 'selected="selected"';?>></option>
-                                    <option value="1" <?php if($status == 1)echo 'selected="selected"';?>>Present</option>
-                                    <option value="2" <?php if($status == 2)echo 'selected="selected"';?>>Absent</option>
+                                <select name="morning_status_<?php echo $row['student_id'];?>" class="form-control" style="width:100px; float:left;">
+                                    <option value="0" <?php if($morning_status == 0)echo 'selected="selected"';?>></option>
+                                    <option value="1" <?php if($morning_status == 1)echo 'selected="selected"';?>>Present</option>
+                                    <option value="2" <?php if($morning_status == 2)echo 'selected="selected"';?>>Absent</option>
                                 </select>
+                        </td>
+                        <td>
+                        	<?php
+    						
+    						//Afternoon - showing the attendance status editing option
+    						$attendance = $this->db->get_where('attendance' , $verify_data)->row();
+    						$afternoon_status		= $attendance->afternoon;
+                        	?>
 
+
+                                <select name="afternoon_status_<?php echo $row['student_id'];?>" class="form-control" style="width:100px; float:left;">
+                                    <option value="0" <?php if($afternoon_status == 0)echo 'selected="selected"';?>></option>
+                                    <option value="1" <?php if($afternoon_status == 1)echo 'selected="selected"';?>>Present</option>
+                                    <option value="2" <?php if($afternoon_status == 2)echo 'selected="selected"';?>>Absent</option>
+                                </select>
                         </td>
     				</tr>
     				<?php
