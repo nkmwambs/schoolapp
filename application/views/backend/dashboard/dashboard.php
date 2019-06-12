@@ -1,8 +1,6 @@
 <?php
-//print_r($this->crud_model->grep_db('schoolapp','James'));
-//echo $this->session->app;
-//echo $this->crud_model->get_current_term();
-//print_r($this->crud_model->get_invoice_transaction_history(58));
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 ?>
 <div class="row">
 	<div class="col-xs-12 <?= get_access_class('dashboard', 'admin'); ?>">

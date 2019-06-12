@@ -1,3 +1,7 @@
+<?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
+?>
 	<header class="navbar navbar-fixed-top"><!-- set fixed position by adding class "navbar-fixed-top" -->
 		
 		<div class="navbar-inner">

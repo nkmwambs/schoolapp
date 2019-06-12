@@ -1,4 +1,7 @@
+<?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+?>
 <link href="assets/js/jquery-ui/css/jquery-ui.1.10.3.custom.css" rel="stylesheet">
 	<!-- <script src="assets/js/jquery-ui/js/jquery-1.9.1.js"></script> -->
 
