@@ -1,4 +1,5 @@
 <?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 $reconcile_obj = $this->db->get("reconcile");
 

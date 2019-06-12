@@ -1,3 +1,7 @@
+<?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
+?>
 <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <div class="fixed-action-btn">

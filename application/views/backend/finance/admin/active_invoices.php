@@ -1,4 +1,7 @@
 <?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
+
 	$this->db->where('status' , 'unpaid');
 	$this->db->where('yr' , $year);
     $this->db->order_by('creation_timestamp' , 'desc');

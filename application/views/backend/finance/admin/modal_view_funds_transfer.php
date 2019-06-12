@@ -1,4 +1,5 @@
 <?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 $record = $this->school_model->funds_transfer_by_batch_number($param2);//$this->db->get_where('payment',array('batch_number'=>$param2))->row();
 //print_r($record);

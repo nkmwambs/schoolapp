@@ -1,5 +1,6 @@
-<hr />
 <?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 if($select_type == 'unpaid'){
 
 	$this->db->where('status' , 'unpaid');

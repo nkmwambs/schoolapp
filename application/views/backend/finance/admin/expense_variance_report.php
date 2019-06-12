@@ -1,5 +1,5 @@
-<hr />
 <?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
 //echo $this->crud_model->get_month_key_in_term($t_date);
 //print_r($this->crud_model->get_term_range_of_months($t_date));
 

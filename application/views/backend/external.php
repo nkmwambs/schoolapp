@@ -1,4 +1,6 @@
 <?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 	include "includes_top.php";
 ?>
 <div class="row" style="margin: 25px;">

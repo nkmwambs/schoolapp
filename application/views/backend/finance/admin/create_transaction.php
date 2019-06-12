@@ -1,7 +1,5 @@
-<hr />
 <?php
-//echo $next_serial_number;
-//echo $this->crud_model->next_serial_number();
+if (!defined('BASEPATH')) exit('No direct script access allowed');
 ?>
 <div class="row">
 	<div class="col-xs-12">

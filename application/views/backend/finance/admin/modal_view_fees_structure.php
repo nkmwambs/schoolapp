@@ -1,4 +1,6 @@
 <?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 $structure_details = $this->db->get_where('fees_structure_details', array('fees_id' => $param2))->result_array();
 //foreach ($edit_data as $row):
 ?>

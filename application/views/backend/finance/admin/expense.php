@@ -1,3 +1,6 @@
+<?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+?>
 <hr />
 <p></p>
 <div class="row">

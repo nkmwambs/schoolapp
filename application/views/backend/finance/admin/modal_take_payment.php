@@ -1,4 +1,6 @@
 <?php 
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 $edit_data	=	$this->db->get_where('invoice' , array('invoice_id' => $param2) )->result_array();
 $row = $edit_data[0];
 

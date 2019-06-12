@@ -1,4 +1,6 @@
 <?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 $edit_data = $this->db->get_where('invoice', array('invoice_id' => $param2))->result_array();
 foreach ($edit_data as $row):
 	$this->db->select(array('route_name'));

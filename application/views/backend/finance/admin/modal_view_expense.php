@@ -1,4 +1,5 @@
 <?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 $expense_id = $this->db->get_where('expense',array('batch_number'=>$param2))->row()->expense_id;
 

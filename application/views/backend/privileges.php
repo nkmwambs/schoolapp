@@ -1,3 +1,8 @@
+<?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
+?>
+
 <style>
 <?php
 	$entitlements = $this->db->get("entitlement")->result_object();

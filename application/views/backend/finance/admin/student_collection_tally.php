@@ -1,4 +1,6 @@
 <?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 //print_r($payments);
 //echo get_term_number(date('w'));
 $income_categories = $this->db->get('income_categories')->result_object();

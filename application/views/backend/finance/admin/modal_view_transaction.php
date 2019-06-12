@@ -1,3 +1,6 @@
+<?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+?>
 <style>
 	/* style sheet for "A4" printing */
 @media print and (width: 74mm) and (height: 105mm) {

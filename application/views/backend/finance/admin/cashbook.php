@@ -1,4 +1,6 @@
 <?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 $t_date = strtotime(date('Y-m-d'));
 
 if(isset($current)){

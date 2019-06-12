@@ -1,4 +1,6 @@
 <?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 	$invoice = $this->db->get_where("invoice",array("invoice_id"=>$param2))->row();
 	
 	$this->db->select(array('fees_structure_details.detail_id','fees_structure_details.name',

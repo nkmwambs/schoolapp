@@ -1,4 +1,5 @@
 <?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 $income = $this->db->get_where('payment',array('batch_number'=>$param2))->row();
 

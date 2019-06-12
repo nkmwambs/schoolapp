@@ -1,4 +1,5 @@
 <?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 $details = $this->db->get_where('fees_structure_details',array('detail_id'=>$param2))->row();
 

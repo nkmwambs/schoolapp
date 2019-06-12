@@ -1,4 +1,6 @@
 <?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 $transaction_type = array("1"=>"Student Fees","2"=>"Other Income");
 $payment_method = array("1"=>"Cash","2"=>"Bank");
 

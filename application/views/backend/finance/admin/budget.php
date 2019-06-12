@@ -1,4 +1,7 @@
 <?php
+if (!defined('BASEPATH')) exit('No direct script access allowed');
+
+
 $this->db->select(array('expense_category_id','expense_category.name as expense_category','income_categories.name as income_category'));
 $this->db->join('income_categories','income_categories.income_category_id=expense_category.income_category_id');
 //$this->db->where(array('income_categories.income_category_id'=>8));
