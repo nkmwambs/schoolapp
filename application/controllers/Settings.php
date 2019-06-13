@@ -23,6 +23,7 @@ class Settings extends CI_Controller
 		$this->load->database();
         $this->load->library('session');
 		//$this->db->db_select($this->session->app);
+		$this->load->library('africastalking');
 		
        /*cache control*/
 		$this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
@@ -540,21 +541,10 @@ class Settings extends CI_Controller
 	
 	function send_bulksms(){
 		
-		$this->load->library('AfricasTalking');
-				
-		$username = "nkmwambs";
-		$apiKey = "af56b1ac66b4bd5f676abdd4fc916cb52135357cca0403f8d61740662a5e981c";
-		
-		$AT = new AfricasTalking($username, $apiKey);
-
-	    $sms = $AT->sms();
-	    $response = $sms->send(array(
-	        "to" => $this->input->post('phone'),
-	        "from" => "AT2FA",
-	        "message" => $this->input->post('message'),
-	    ));
-	    header("Content-Type: application/json; charset=UTF-8");
-	    echo json_encode($response);
+	    $recipients = $this->input->post('phone');
+		$message = $this->input->post('message');
+	    $response = $this->africastalking->sendMessage($recipients, $message);
+		echo json_encode($response);
 	}
 	
 }	
