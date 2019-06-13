@@ -538,7 +538,10 @@ class Settings extends CI_Controller
         $this->load->view('backend/index', $page_data);		
 	}
 	
-	function send_bulksms(){		
+	function send_bulksms(){
+		
+		$this->load->library('AfricasTalking');
+				
 		$username = "nkmwambs";
 		$apiKey = "af56b1ac66b4bd5f676abdd4fc916cb52135357cca0403f8d61740662a5e981c";
 		
