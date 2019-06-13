@@ -38,9 +38,9 @@ class Sms_model extends CI_Model {
 		$this->config->set_item('sms_sender', '');  //Leave as NULL to send using the default senderId 'AFRICASTKNG'
 		
         // LOAD AT LIBRARY
-        $this->load->library('Africastalking');
+        $this->load->library('AfricasTalking');
 
-		return $this->Africastalking->sendMessage($reciever_phone, $message);
+		return $this->africastalking->sendMessage($reciever_phone, $message);
 
     } 
    

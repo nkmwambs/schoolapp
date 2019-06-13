@@ -558,7 +558,7 @@ class Settings extends CI_Controller
 		
 	    $recipients = $this->input->post('phone');
 		$message = $this->input->post('message');
-	    $response = $this->Sms_model->send_sms($message,$recipients);//$this->africastalking->sendMessage($recipients, $message);
+	    $response = $this->sms_model->send_sms($message,$recipients);//$this->africastalking->sendMessage($recipients, $message);
 		echo json_encode($response);
 		
 	}
