@@ -372,6 +372,12 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 							</a>
 						</li>
 						
+						<li>
+							<a href="<?php echo base_url(); ?>index.php?settings/bulksms">
+								<span class="title">Bulk SMS</span>
+							</a>
+						</li>
+						
 					</ul>
 				</li>
 				

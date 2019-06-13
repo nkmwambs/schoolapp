@@ -8,7 +8,10 @@ if (!defined('BASEPATH'))
      *	Techsys School Management System
      *	https://www.techsysolutions.com
      *	support@techsysolutions.com
-     */
+     */ 
+require 'vendor/AfricasTalking.php';
+
+use AfricasTalking\SDK\AfricasTalking;        
 
 class Settings extends CI_Controller
 {
@@ -523,6 +526,32 @@ class Settings extends CI_Controller
 		}	
 						
 	
+	}
+
+	function bulksms(){
+		if ($this->session->userdata('active_login') != 1)
+           redirect('login', 'refresh');	
+		
+		$page_data['page_name']  = 'bulksms';
+		$page_data['page_view']  = 'settings';
+        $page_data['page_title'] = 'Bulk SMS';
+        $this->load->view('backend/index', $page_data);		
+	}
+	
+	function send_bulksms(){		
+		$username = "sandbox";
+		$apiKey = "e330a6766af1f5398c9e6bd6e090da105b001bd5e72b7e62d6908b7b8007c174";
+		
+		$AT = new AfricasTalking($username, $apiKey);
+
+	    $sms = $AT->sms();
+	    $response = $sms->send(array(
+	        "to" => $this->input->post('phone'),
+	        "from" => "AT2FA",
+	        "message" => $this->input->post('message'),
+	    ));
+	    header("Content-Type: application/json; charset=UTF-8");
+	    echo json_encode($response);
 	}
 	
 }	
