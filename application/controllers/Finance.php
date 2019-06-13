@@ -1685,7 +1685,32 @@ class Finance extends CI_Controller
         $this->load->view('backend/index', $page_data);
 	}
 	
-	
+	function add_expense_variance_note($income_category_id,$start_month_date){
+		
+		$msg = 'Note Posted Successful';
+		
+		$data['month'] = $start_month_date;
+		$data['income_category_id'] = $income_category_id;
+		$data['note'] = $this->input->post('note');
+		
+		$note_cond = array('month'=>$start_month_date,'income_category_id'=>$income_category_id);
+		$count_note_exists = $this->db->get_where('expense_variance_note',$note_cond)->num_rows();
+		
+		if($count_note_exists > 0){
+			$this->db->where($note_cond);
+			$data2['note'] = $this->input->post('note');
+			$this->db->update('expense_variance_note',$data2);
+			
+			$msg = "Note updated successful";
+		}else{
+			$this->db->insert('expense_variance_note',$data);
+		}
+		
+		
+		
+		$this->session->set_flashdata('flash_message', $msg);
+        redirect(base_url() . 'index.php?finance/expense_variance_report/'.strtotime($start_month_date), 'refresh');
+	}
 	
 	function expense_variance_report($start_month_date = ""){
         if ($this->session->userdata('active_login') != 1)

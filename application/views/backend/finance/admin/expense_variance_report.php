@@ -54,7 +54,23 @@ extract($this->crud_model->get_current_term_limit_dates($t_date));
 						<td style="text-align: right;"><?=number_format($expense_to_date,2);?></td>
 						<td style="text-align: right;"><?=number_format($budget_to_date,2);?></td>
 						<td style="text-align: right;"><?=number_format($variance,2);?></td>
-						<td style="text-align: right;"><?=number_format($percent_variance*100,2);?></td>
+						<td style="text-align: right;"><?=number_format($percent_variance*100,2);?>  
+						<?php 
+							$lower_allowable_variance = $this->db->get_where('settings',array('type'=>'allowable_variance_lower_limit'))->row()->description;
+							$upper_allowable_variance = $this->db->get_where('settings',array('type'=>'allowable_variance_upper_limit'))->row()->description;
+							
+							$note_exists = $this->db->get_where('expense_variance_note',array('month'=>$t_date,'income_category_id'=>$category_id))->num_rows();
+							
+							$color = 'style="color:red;"';
+							
+							if($note_exists > 0){
+								$color = 'style="color:green;"';
+							}
+															
+							if(($percent_variance > $lower_allowable_variance || $percent_variance < $upper_allowable_variance) && $percent_variance!== 0){?>	
+								<a href="#" onclick="showAjaxModal('<?=base_url();?>index.php?modal/popup/modal_expense_variance_note/<?=$category_id;?>/<?=$t_date;?>');"><span <?=$color?> ><i class="entypo-chat"></i></span></a>
+						<?php }?>
+						</td>
 					</tr>
 				<?php
 				}
