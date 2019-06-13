@@ -9,9 +9,9 @@ if (!defined('BASEPATH'))
      *	https://www.techsysolutions.com
      *	support@techsysolutions.com
      */ 
-require 'vendor/AfricasTalking.php';
+//require 'vendor/autoload.php';
 
-use AfricasTalking\SDK\AfricasTalking;        
+//use AfricasTalking\SDK\AfricasTalking;        
 
 class Settings extends CI_Controller
 {
