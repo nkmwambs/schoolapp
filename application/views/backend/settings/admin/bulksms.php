@@ -1,14 +1,16 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" />
+
 <div class="row">
 	<div class="col-xs-12">
 		<?php echo form_open(base_url() . 'index.php?settings/send_bulksms', array('id'=>'frm_sms','class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
 			<div class="form-group">
 				<label class="control-label col-xs-4"></label>
 				<div class="col-xs-6">
-					 <select class="form-control select2" name="reciever[]" multiple="multiple" required>
+					 <select class="form-control" id="multiselect" name="reciever[]" multiple="multiple" required>
 
-			            <option value="" disabled="disabled"><?php echo get_phrase('select_a_user'); ?></option>
-			           
-			            <optgroup label="<?php echo get_phrase('parent'); ?>">
+			            <!-- <option value=""><?php echo get_phrase('select_a_user'); ?></option>
+			            -->
+			            <!-- <optgroup label="<?php echo get_phrase('parent'); ?>"> -->
 			                <?php
 			                $parents = $this->db->get('parent')->result_array();
 			                foreach ($parents as $row):
@@ -18,9 +20,9 @@
 			                        - <?php echo $row['name']; ?></option>
 			
 			                <?php endforeach; ?>
-			            </optgroup>
+			            <!-- </optgroup> -->
 			           
-			            <optgroup label="<?php echo get_phrase('teacher'); ?>">
+			            <!-- <optgroup label="<?php echo get_phrase('teacher'); ?>">
 			                <?php
 			                $teachers = $this->db->get('teacher')->result_array();
 			                foreach ($teachers as $row):
@@ -42,7 +44,7 @@
 			                        - <?php echo $row['name']; ?></option>
 			
 			                <?php endforeach; ?>
-			            </optgroup>
+			            </optgroup> -->
 			           
 			           
 			        </select>
@@ -100,4 +102,28 @@
             }
         });
 	});
+	
+	
+$(document).ready(function() {
+  $('#multiselect').multiselect({
+    buttonWidth : '160px',
+    includeSelectAllOption : true,
+		nonSelectedText: 'Select an Option'
+  });
+});
+
+function getSelectedValues() {
+  var selectedVal = $("#multiselect").val();
+	for(var i=0; i<selectedVal.length; i++){
+		function innerFunc(i) {
+			setTimeout(function() {
+				location.href = selectedVal[i];
+			}, i*2000);
+		}
+		innerFunc(i);
+	}
+}
+
+
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.js"></script>
