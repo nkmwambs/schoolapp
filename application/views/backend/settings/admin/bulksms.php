@@ -6,7 +6,7 @@
 				<div class="col-xs-6">
 					 <select class="form-control select2" name="reciever[]" multiple="multiple" required>
 
-			            <option value=""><?php echo get_phrase('select_a_user'); ?></option>
+			            <option value="" disabled="disabled"><?php echo get_phrase('select_a_user'); ?></option>
 			           
 			            <optgroup label="<?php echo get_phrase('parent'); ?>">
 			                <?php
