@@ -2,16 +2,57 @@
 	<div class="col-xs-12">
 		<?php echo form_open(base_url() . 'index.php?settings/send_bulksms', array('id'=>'frm_sms','class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
 			<div class="form-group">
-				<label class="control-label col-xs-4">Phone Number</label>
-				<div class="col-xs-8">
-					<input type="text" class="form-control" id="phone" name="phone" />
+				<label class="control-label col-xs-4"></label>
+				<div class="col-xs-6">
+					 <select class="form-control select2" name="reciever[]" multiple="multiple" required>
+
+			            <option value=""><?php echo get_phrase('select_a_user'); ?></option>
+			           
+			            <optgroup label="<?php echo get_phrase('parent'); ?>">
+			                <?php
+			                $parents = $this->db->get('parent')->result_array();
+			                foreach ($parents as $row):
+			                    ?>
+			
+			                    <option value="<?php echo $row['phone']; ?>">
+			                        - <?php echo $row['name']; ?></option>
+			
+			                <?php endforeach; ?>
+			            </optgroup>
+			           
+			            <optgroup label="<?php echo get_phrase('teacher'); ?>">
+			                <?php
+			                $teachers = $this->db->get('teacher')->result_array();
+			                foreach ($teachers as $row):
+			                    ?>
+			
+			                    <option value="<?php echo $row['phone']; ?>">
+			                        - <?php echo $row['name']; ?></option>
+			
+			                <?php endforeach; ?>
+			            </optgroup>
+			            
+			            <optgroup label="<?php echo get_phrase('student'); ?>">
+			                <?php
+			                $students = $this->db->get('student')->result_array();
+			                foreach ($students as $row):
+			                    ?>
+			
+			                    <option value="<?php echo $row['phone']; ?>">
+			                        - <?php echo $row['name']; ?></option>
+			
+			                <?php endforeach; ?>
+			            </optgroup>
+			           
+			           
+			        </select>
 				</div>
 			</div>
 			
 			<div class="form-group">
-				<label class="control-label col-xs-4">Phone Number</label>
-				<div class="col-xs-8">
-					<textarea class="form-control" id="message" name="message" rows="6"></textarea>
+				<label class="control-label col-xs-4"></label>
+				<div class="col-xs-6">
+					<textarea class="form-control" id="message" name="message" rows="6" placeholder='Type message here'></textarea>
 				</div>
 			</div>
 			
@@ -21,11 +62,11 @@
 				</div>
 			</div>
 			
-			<div class="form-group">
+			<!-- <div class="form-group">
 				<div class="col-xs-12" id="response">
 					
 				</div>
-			</div>
+			</div> -->
 			
 			
 		</form>
@@ -50,7 +91,7 @@
             	$("#overlay").css('display','block');
             },
             success: function(resp){
-               $("#response").html(resp);
+               //$("#response").html(resp);
                $("#overlay").css('display','none');
             },
             error:function(error,msg){

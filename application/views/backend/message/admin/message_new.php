@@ -13,31 +13,10 @@
     <div class="form-group">
         <label for="subject"><?php echo get_phrase('recipient'); ?>:</label>
         <br><br>
-        <select class="form-control select2" name="reciever" required>
+        <select class="form-control select2" name="reciever" multiple="multiple" required>
 
             <option value=""><?php echo get_phrase('select_a_user'); ?></option>
-            <optgroup label="<?php echo get_phrase('student'); ?>">
-                <?php
-                $students = $this->db->get('student')->result_array();
-                foreach ($students as $row):
-                    ?>
-
-                    <option value="student-<?php echo $row['student_id']; ?>">
-                        - <?php echo $row['name']; ?></option>
-
-                <?php endforeach; ?>
-            </optgroup>
-            <optgroup label="<?php echo get_phrase('teacher'); ?>">
-                <?php
-                $teachers = $this->db->get('teacher')->result_array();
-                foreach ($teachers as $row):
-                    ?>
-
-                    <option value="teacher-<?php echo $row['teacher_id']; ?>">
-                        - <?php echo $row['name']; ?></option>
-
-                <?php endforeach; ?>
-            </optgroup>
+           
             <optgroup label="<?php echo get_phrase('parent'); ?>">
                 <?php
                 $parents = $this->db->get('parent')->result_array();
@@ -49,6 +28,32 @@
 
                 <?php endforeach; ?>
             </optgroup>
+           
+            <optgroup label="<?php echo get_phrase('teacher'); ?>">
+                <?php
+                $teachers = $this->db->get('teacher')->result_array();
+                foreach ($teachers as $row):
+                    ?>
+
+                    <option value="teacher-<?php echo $row['teacher_id']; ?>">
+                        - <?php echo $row['name']; ?></option>
+
+                <?php endforeach; ?>
+            </optgroup>
+            
+            <optgroup label="<?php echo get_phrase('student'); ?>">
+                <?php
+                $students = $this->db->get('student')->result_array();
+                foreach ($students as $row):
+                    ?>
+
+                    <option value="student-<?php echo $row['student_id']; ?>">
+                        - <?php echo $row['name']; ?></option>
+
+                <?php endforeach; ?>
+            </optgroup>
+           
+           
         </select>
     </div>
 
