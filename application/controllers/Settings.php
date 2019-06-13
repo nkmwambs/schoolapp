@@ -556,11 +556,11 @@ class Settings extends CI_Controller
 	
 	function send_bulksms(){
 		
-	    // $recipients = $this->input->post('phone');
-		// $message = $this->input->post('message');
-	    // $response = $this->sms_model->send_sms($message,$recipients);//$this->africastalking->sendMessage($recipients, $message);
+	    $recipients = $this->input->post('phone');
+		$message = $this->input->post('message');
+	    $response = $this->sms_model->send_sms($message,$recipients);//$this->africastalking->sendMessage($recipients, $message);
 		// echo json_encode($response);
-		echo "Hello";
+		
 	}
 	
 }	
