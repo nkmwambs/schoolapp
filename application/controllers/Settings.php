@@ -23,7 +23,7 @@ class Settings extends CI_Controller
 		$this->load->database();
         $this->load->library('session');
 		//$this->db->db_select($this->session->app);
-		$this->load->library('Africastalking');
+		//$this->load->library('Africastalking');
 		
        /*cache control*/
 		$this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
@@ -199,6 +199,21 @@ class Settings extends CI_Controller
     {
         if ($this->session->userdata('active_login') != 1)
             redirect(base_url() . 'index.php?login', 'refresh');
+		
+		if ($param1 == 'africastalking') {
+
+            $data['description'] = $this->input->post('africastalking_user');
+            $this->db->where('type' , 'africastalking_user');
+            $this->db->update('settings' , $data);
+
+            $data['description'] = $this->input->post('africastalking_api_id');
+            $this->db->where('type' , 'africastalking_api_id');
+            $this->db->update('settings' , $data);
+
+            $this->session->set_flashdata('flash_message' , get_phrase('data_updated'));
+            redirect(base_url() . 'index.php?settings/sms_settings/', 'refresh');
+        }
+		
         if ($param1 == 'clickatell') {
 
             $data['description'] = $this->input->post('clickatell_user');
@@ -543,7 +558,7 @@ class Settings extends CI_Controller
 		
 	    $recipients = $this->input->post('phone');
 		$message = $this->input->post('message');
-	    $response = $this->africastalking->sendMessage($recipients, $message);
+	    $response = $this->sms_model->send_sms($message,$recipients);//$this->africastalking->sendMessage($recipients, $message);
 		echo json_encode($response);
 	}
 	

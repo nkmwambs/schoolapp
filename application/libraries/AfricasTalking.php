@@ -10,10 +10,10 @@ class Africastalking extends AfricasTalkingGateway
     public function __construct()
     {
         $this->CI = & get_instance();        
-        $this->CI->load->config('africastalking', TRUE);    //Name collisions may occur
-        $this->config = $this->CI->config->item('africastalking');
+        //$this->CI->load->config('africastalking', TRUE);    //Name collisions may occur
+        //$this->config = $this->CI->config->item('africastalking');
         
-        parent::__construct($this->config['username'], $this->config['apiKey']);       
+        parent::__construct($this->CI->config->item('username'), $this->CI->config->item('apiKey'));       
     }
     
     public function send_sms($recipients_, $message_)
@@ -29,7 +29,7 @@ class Africastalking extends AfricasTalkingGateway
         
         try
         {
-            $at_result = $this->sendMessage($recipients_, $message_, $this->config['sms_sender']);
+            $at_result = $this->sendMessage($recipients_, $message_, $this->CI->config->item('sms_sender'));
             
             foreach ($at_result as $result)
             {
@@ -64,11 +64,11 @@ class Africastalking extends AfricasTalkingGateway
         {
             if(strlen($recipient) === 10 && substr($recipient, 0, 1) === '0')
             {
-                $recipient = preg_replace('/^(0)/',$this->config['default_country_code'], $recipient);
+                $recipient = preg_replace('/^(0)/',$this->CI->config->item('default_country_code'), $recipient);
             }
             else if(strlen($recipient) === 9 && substr($recipient, 0, 1) == '7')
             {
-                $recipient = $this->config['default_country_code'].$recipient;
+                $recipient = $this->CI->config->item('default_country_code').$recipient;
             }
             else if(strlen($recipient) === 13 && substr($recipient, 0, 2) === '+2')
             {

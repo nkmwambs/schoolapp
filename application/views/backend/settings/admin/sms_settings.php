@@ -12,6 +12,15 @@
 			<ul class="nav tabs-vertical">
 			<li class="active"><a href="#b-profile" data-toggle="tab">Select A SMS Service</a></li>
 				<li>
+					<a href="#v-talk" data-toggle="tab">
+						Africastalking Settings
+						<?php if ($active_sms_service == 'africastalking'):?>  
+							<span class="badge badge-success"><?php echo get_phrase('active');?></span>
+						<?php endif;?>
+					</a>
+				</li>
+				
+				<li>
 					<a href="#v-home" data-toggle="tab">
 						Clickatell Settings
 						<?php if ($active_sms_service == 'clickatell'):?>  
@@ -43,6 +52,10 @@
                               <option value=""<?php if ($active_sms_service == '') echo 'selected';?>>
                               		<?php echo get_phrase('not_selected');?>
                               	</option>
+                              	<option value="africastalking"
+                        			<?php if ($active_sms_service == 'africastalking') echo 'selected';?>>
+                        				Africastalking
+                        		</option>
                         		<option value="clickatell"
                         			<?php if ($active_sms_service == 'clickatell') echo 'selected';?>>
                         				Clickatell
@@ -63,6 +76,32 @@
 	                    </div>
 	                </div>
 	            <?php echo form_close();?>
+				</div>
+				
+				<div class="tab-pane" id="v-talk">
+					<?php echo form_open(base_url() . 'index.php?settings/sms_settings/africastalking' , 
+						array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
+						<div class="form-group">
+	                      <label  class="col-sm-3 control-label"><?php echo get_phrase('africastalking_username');?></label>
+	                      	<div class="col-sm-5">
+	                          	<input type="text" class="form-control" name="africastalking_user" 
+	                            	value="<?php echo $this->db->get_where('settings' , array('type' =>'africastalking_user'))->row()->description;?>">
+	                      	</div>
+	                  	</div>
+	                  	
+	                    <div class="form-group">
+	                      <label  class="col-sm-3 control-label"><?php echo get_phrase('africastalking_api_id');?></label>
+	                        <div class="col-sm-5">
+	                            <input type="text" class="form-control" name="africastalking_api_id" 
+	                                value="<?php echo $this->db->get_where('settings' , array('type' =>'africastalking_api_id'))->row()->description;?>">
+	                        </div>
+	                    </div>
+	                    <div class="form-group">
+		                    <div class="col-sm-offset-3 col-sm-5">
+		                        <button type="submit" class="btn btn-info"><?php echo get_phrase('save');?></button>
+		                    </div>
+		                </div>
+	                <?php echo form_close();?>
 				</div>
 
 				<div class="tab-pane" id="v-home">
