@@ -40,7 +40,7 @@ class Sms_model extends CI_Model {
         // LOAD AT LIBRARY
         $this->load->library('Africastalking');
 
-		return $this->africastalking->sendMessage($reciever_phone, $message);
+		return $this->Africastalking->sendMessage($reciever_phone, $message);
 
     } 
    
