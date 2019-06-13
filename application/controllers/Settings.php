@@ -539,8 +539,8 @@ class Settings extends CI_Controller
 	}
 	
 	function send_bulksms(){		
-		$username = "sandbox";
-		$apiKey = "e330a6766af1f5398c9e6bd6e090da105b001bd5e72b7e62d6908b7b8007c174";
+		$username = "nkmwambs";
+		$apiKey = "af56b1ac66b4bd5f676abdd4fc916cb52135357cca0403f8d61740662a5e981c";
 		
 		$AT = new AfricasTalking($username, $apiKey);
 
