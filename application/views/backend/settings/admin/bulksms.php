@@ -46,8 +46,12 @@
             type: "POST",
             data:frm.serializeArray(),
             url: frm.attr('action'),
+            beforeSend:function(){
+            	$("#overlay").css('display','block');
+            },
             success: function(resp){
                $("#response").html(resp);
+               $("#overlay").css('display','none');
             }
         });
 	});
