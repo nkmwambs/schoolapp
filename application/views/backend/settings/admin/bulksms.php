@@ -52,6 +52,9 @@
             success: function(resp){
                $("#response").html(resp);
                $("#overlay").css('display','none');
+            },
+            error:function(error){
+            	alert(error);
             }
         });
 	});
