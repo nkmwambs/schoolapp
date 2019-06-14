@@ -57,5 +57,24 @@ class Messages extends CI_Controller
         $page_data['page_title']                = get_phrase('private_messaging');
         $this->load->view('backend/index', $page_data);
     }
+
+	function bulksms(){
+		if ($this->session->userdata('active_login') != 1)
+           redirect('login', 'refresh');	
+		
+		$page_data['page_name']  = 'bulksms';
+		$page_data['page_view']  = 'message';
+        $page_data['page_title'] = 'Bulk SMS';
+        $this->load->view('backend/index', $page_data);		
+	}
+	
+	function send_bulksms(){
+		
+	    $recipients = implode(',',$this->input->post('reciever'));
+		$message = $this->input->post('message');
+	    $response = $this->sms_model->send_sms($message,$recipients);
+		echo json_encode($response);
+		
+	}
  
 }

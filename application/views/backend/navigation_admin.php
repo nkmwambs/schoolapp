@@ -331,7 +331,11 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 							</a>
 						</li>
 						
-						
+						<li>
+							<a href="<?php echo base_url(); ?>index.php?Messages/bulksms">
+								<span class="title">Bulk SMS</span>
+							</a>
+						</li>
 					</ul>
 				</li>
 				
@@ -369,12 +373,6 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?settings/user_profiles">
 								<span class="title"><?=get_phrase('user_profiles');?></span>
-							</a>
-						</li>
-						
-						<li>
-							<a href="<?php echo base_url(); ?>index.php?settings/bulksms">
-								<span class="title">Bulk SMS</span>
 							</a>
 						</li>
 						

@@ -2,7 +2,7 @@
 
 <div class="row">
 	<div class="col-xs-12">
-		<?php echo form_open(base_url() . 'index.php?settings/send_bulksms', array('id'=>'frm_sms','class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
+		<?php echo form_open(base_url() . 'index.php?messages/send_bulksms', array('id'=>'frm_sms','class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
 			<div class="form-group">
 				<label class="control-label col-xs-4"></label>
 				<div class="col-xs-6">
