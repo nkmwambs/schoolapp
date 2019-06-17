@@ -441,8 +441,6 @@ class Finance extends CI_Controller
 					$this->session->set_flashdata('flash_message' , get_phrase('invoice_created_successfully'));
 			}
 			
-			
-            
             redirect(base_url() . 'index.php?finance/create_invoice', 'refresh');
         }
 
@@ -450,6 +448,7 @@ class Finance extends CI_Controller
         if ($param1 == 'create_mass_invoice') {
         	
 			//Count students with Invoices
+			$this->db->trans_start();
 					
 			$cnt = 0;
 					
@@ -499,20 +498,34 @@ class Finance extends CI_Controller
 					}
                 }
 				
-				$this->session->set_flashdata('flash_message' , get_phrase('invoices_created_successfully'));
+				//$this->session->set_flashdata('flash_message' , get_phrase('invoices_created_successfully'));
             
-           }else{
-           		$this->session->set_flashdata('flash_message' , get_phrase('failed:_some_invoices_exists'));
+           }
+           else{
+           		//$this->session->set_flashdata('flash_message' , get_phrase('failed:_some_invoices_exists'));
            }
 		   
+		   if ($this->db->trans_status() === FALSE)
+			{
+			        $this->db->trans_rollback();
+					$this->session->set_flashdata('flash_message' , get_phrase('invoice_creation_failed'));
+			}
+			else
+			{
+			        $this->db->trans_commit();
+					$this->session->set_flashdata('flash_message' , get_phrase('invoices_created_successfully'));
+			}
 		   redirect(base_url() . 'index.php?finance/create_invoice', 'refresh');
             
         }
 
 		if($param1=="edit_invoice"){
+				
+			$this->db->trans_start();
+				
 			$data['amount_due'] = $this->input->post('amount_due');
-			$data['amount_paid'] = $this->input->post('amount_paid');
-			$data['balance'] = $this->input->post('balance');
+			//$data['amount_paid'] = $this->input->post('amount_paid');
+			//$data['balance'] = $this->input->post('balance');
 			if($this->input->post('balance') === 0){
 				$data['status'] = "paid";
 			}elseif($this->input->post('balance') < 0){
@@ -522,16 +535,31 @@ class Finance extends CI_Controller
 			$this->db->where(array("invoice_id"=>$param2));
 			$this->db->update("invoice",$data);
 			
-			foreach($this->input->post('detail_amount_due') as $invoice_details_id=>$amount_due){
+			//Remove the existing details for the invoice and add new once
+			$this->db->where(array("invoice_id"=>$param2));
+			$this->db->delete('invoice_details');
+			
+			foreach($this->input->post('detail_amount_due') as $details_id=>$amount_due){
 					
-					$this->db->where(array("invoice_details_id"=>$invoice_details_id));
-					$data8['amount_due'] = $amount_due;
-
-					$this->db->update("invoice_details",$data8);
+				//Insert the new details
+				$data8['invoice_id'] = $param2;
+				$data8['detail_id'] = $details_id;
+				$data8['amount_due'] = $amount_due;
+				
+				$this->db->insert('invoice_details',$data8);		
 				
 			}
-			//exit;
-			$this->session->set_flashdata('flash_message' , get_phrase('edit_successful'));
+			if ($this->db->trans_status() === FALSE)
+			{
+			        $this->db->trans_rollback();
+					$this->session->set_flashdata('flash_message' , get_phrase('process_failed'));
+			}
+			else
+			{
+			        $this->db->trans_commit();
+					$this->session->set_flashdata('flash_message' , get_phrase('edit_successful'));
+			}
+			//$this->session->set_flashdata('flash_message' , get_phrase('edit_successful'));
 			redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
 		}
 
@@ -1990,7 +2018,9 @@ class Finance extends CI_Controller
         $this->load->view('backend/index', $page_data);			
 	}
 	
-	function add_invoice_item_row($term,$year,$class){
+	function add_invoice_item_row($term,$year,$class,$invoice_id){
+		
+		
 		$this->db->select(array('fees_structure_details.name','fees_structure_details.detail_id',
 		'fees_structure_details.income_category_id','fees_structure_details.amount'));
 		$this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');

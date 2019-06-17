@@ -1,7 +1,7 @@
 <?php
 if (!defined('BASEPATH')) exit('No direct script access allowed');
-
-	$invoice = $this->db->get_where("invoice",array("invoice_id"=>$param2))->row();
+	
+	$invoice = $this->db->get_where("invoice",array("invoice_id"=>$param2))->row();	
 	
 	$this->db->select(array('fees_structure_details.detail_id','fees_structure_details.name',
     'fees_structure_details.amount','invoice_details_id','invoice_details.amount_due'));
@@ -10,6 +10,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
     $this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
     $details = $this->db->get_where("invoice_details",array('invoice_details.invoice_id'=>$param2))->result_object();
     
+	$count_detail_rows = count($details);
 
 	echo form_open(base_url() . 'index.php?finance/invoice/edit_invoice/'.$param2 , array('id'=>'frm_single_invoice_edit','class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));
 ?>
@@ -74,7 +75,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 										<td class="paid" id="paid_<?=$detail->detail_id;?>">
 											<?=number_format($this->crud_model->fees_paid_by_invoice_detail($detail->invoice_details_id),2);?></td>			
                                 		<td>
-                                			<input type="text" class="form-control detail_amount_due" value="<?=$detail->amount_due;?>" id="due_<?=$detail->invoice_details_id;?>" name="detail_amount_due[<?=$detail->invoice_details_id;?>]" />
+                                			<input type="text" class="form-control detail_amount_due" value="<?=$detail->amount_due;?>" id="due_<?=$detail->invoice_details_id;?>" name="detail_amount_due[<?=$detail->detail_id;?>]" />
                                 		</td>
                                 	</tr>	
                                 	<?php
@@ -95,6 +96,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 							$sum_paid = $this->crud_model->fees_paid_by_invoice($param2);//array_sum(array_column($details, 'amount_paid'));
 							$sum_due = array_sum(array_column($details, 'amount_due'));
 							$sum_balance = $sum_due - $sum_paid;
+							
                         ?>
                         	<input type="text" class="form-control" id="amount_paid" name="amount_paid" value="<?=$sum_paid;?>" readonly="readonly"/>
                         </div>
@@ -122,15 +124,18 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 <?php echo form_close();?> 
 				
 <script>
+	$("#frm_single_invoice_edit").on('submit',function(ev){
+
+	})
 
 	$("#add_item").on('click',function(){
-		
+		//alert('Hello');
 		//Remove the button to allow only adding one row
-		$(this).remove();
+		//$(this).remove();
 		
 		var row = "";
 		
-		var url = "<?=base_url();?>index.php?finance/add_invoice_item_row/<?=$invoice->term;?>/<?=$invoice->yr;?>/<?=$invoice->class_id;?>";
+		var url = "<?=base_url();?>index.php?finance/add_invoice_item_row/<?=$invoice->term;?>/<?=$invoice->yr;?>/<?=$invoice->class_id;?>/<?=$param2;?>";
 		
 		var used_categories = JSON.parse('<?=json_encode(array_column($details, 'name'));?>');
 		//alert(used_categories[0]);
@@ -138,7 +143,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 		$.ajax({
 			url:url,
 			success:function(resp){
-				
+				//alert(resp);
 				var obj = JSON.parse(resp);
 				
 				var select_options = "<option><?=get_phrase('select');?></option>";
@@ -154,11 +159,11 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 				
 				row = '<tr>'+
 					'<td><input type="checkbox" disabled id=""/></td>'+
-					'<td><select onchange="get_fees_structure_detail_amount(this)" class="form-control">'+select_options+'</select></td>'+
-					'<td id="td_detail_amount"></td>'+
-					'<td id="invoice_amount"></td>'+
-					'<td id="paid_amount"></td>'+
-					'<td id="adjusted_amount"></td>'+
+					'<td><select onchange="get_fees_structure_detail_amount(this)" class="form-control change_item">'+select_options+'</select></td>'+
+					'<td id="td_detail_amount">0</td>'+
+					'<td id="invoice_amount">0</td>'+
+					'<td id="paid_amount">0</td>'+
+					'<td id="adjusted_amount">0</td>'+
 				'</tr>';
 				
 				$("#fee_items").append(row);
@@ -171,17 +176,26 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 	
 	function get_fees_structure_detail_amount(elem){
 		var detail_id = $(elem).val();
-		//alert('get_fees_structure_detail_amount');
+		var paid = <?=$this->crud_model->fees_paid_by_invoice($param2);?>;
+		var balance  = 0;
 		$.ajax({
 			url:"<?=base_url();?>index.php?finance/get_fees_structure_detail_amount/"+detail_id,
 			success:function(resp){
-				$('#td_detail_amount').html(resp);
-				$("#invoice_amount").html(resp);
-				$("#paid_amount").html("0");
-				$("#adjusted_amount").html('<input id="due_'+detail_id+'" type="text" onchange="calculate_balance(this);" class="form-control detail_amount_due" name="detail_amount_due['+detail_id+']" value="'+resp+'" />');
+				$(elem).closest('tr').find('#td_detail_amount').html(resp);
+				$(elem).closest('tr').find("#invoice_amount").html(resp);
+				$(elem).closest('tr').find("#paid_amount").html("0");
+				$(elem).closest('tr').find("#adjusted_amount").html('<input id="due_'+detail_id+'" type="text" onchange="calculate_balance(this);" class="form-control detail_amount_due" name="detail_amount_due['+detail_id+']" value="'+resp+'" />');
 				
-				$("#balance").val(sum_balance("#due_"+detail_id));
-				$("#amount_due").val(sum_amount_due("#due_"+detail_id));
+				var amount_due = 0;
+		
+				$.each($(".detail_amount_due"),function(i,el){
+					amount_due += parseInt($(el).val());
+				});
+				
+				balance = parseInt(amount_due) - parseInt(paid);
+				//alert(balance);
+				$("#balance").val(balance);
+				$("#amount_due").val(amount_due);
 				
 			},
 			error:function(){
@@ -189,6 +203,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 			}
 		});
 	}
+
 	/**Only used when adding a new item in the invoice**/
 	function sum_amount_due(elem){
 		var sum  = (parseFloat('<?=$sum_due;?>') + parseFloat($(elem).val()));
@@ -204,39 +219,40 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 		return sum;
 	}
 	
-	// function sum_adjusted_amount(){
-		// var sum  = 0;
-		// $.each($(".detail_amount_due"),function(i,elem){
-			// sum= parseFloat(sum) + parseFloat($(elem).val());
-		// });
-// 		
-		// return sum;
-	// }
 	
 	function calculate_balance(elem){
 		$("#balance").val(sum_balance(elem));
 		$("#amount_due").val(sum_amount_due(elem));
 	}
 	
+	// $('.change_item').change(function(){
+		// var balance = $("#balance").val();
+// 		
+		// var amount_due = 0;
+// 		
+		// $.each($(".detail_amount_due"),function(i,el){
+			// amount_due += amount_due + parseInt($(el).val());
+		// });
+// 		
+		// $("#balance").val(amount_due);
+	// });
+	
 	$(".detail_amount_due").change(function(){
+		
 		var detail_paid = $(this).parent().prev().html();
 		var detail_amount_due = $(this).parent().prev().prev().html();
 		var changed_detail_due = $(this).val();
 		var el_id = $(this).attr("id");
 		var detail_id = el_id.split("_")[1];
-		//alert(detail_id);
 		var amount_due = 0;
+		
 		$.each($(".detail_amount_due"),function(i,el){
 			amount_due += +parseInt($(el).val());
 		});
 		
+
 		var paid  = <?=$sum_paid;?>;
-		// $.each($(".paid"),function(i,el){
-			// paid += parseInt($(el).html());
-		// });
-		
-		//alert(parseInt(changed_detail_due)-parseInt(detail_paid));
-		
+				
 		if((parseInt(changed_detail_due)-parseInt(detail_paid)) < 0 && $("#overpay_"+detail_id).is(":checked")==false){
 			alert("<?=get_phrase("amount_lesser_than_paid");?>");
 			$(this).val(detail_amount_due);
@@ -247,5 +263,6 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 		
 		$("#amount_due").val(amount_due);
 		$("#balance").val(balance);
+		
 	});
 </script>			

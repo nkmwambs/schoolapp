@@ -1104,9 +1104,20 @@ class Crud_model extends CI_Model {
 	
 	function fees_paid_by_invoice($invoice_id){
 		
+		$total_paid = 0;
+		
 		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
-		$total_paid = $this->db->select_sum('cost')->get_where('transaction_detail',
-		array('invoice_id'=>$invoice_id))->row()->cost;
+		$obj = $this->db->select_sum('cost')->get_where('transaction_detail',
+		array('invoice_id'=>$invoice_id));
+		
+		$count_of_details = $this->db->get_where('invoice_details',array('invoice_id'=>$invoice_id))->num_rows();
+		
+		if($count_of_details != 0 && $obj->row()->cost > 0){
+			$total_paid = $obj->row()->cost;
+		}
+		// $this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+		// $total_paid = $this->db->select_sum('cost')->get_where('transaction_detail',
+		// array('invoice_id'=>$invoice_id))->row()->cost;
 		
 		return $total_paid;
 	}

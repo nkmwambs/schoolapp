@@ -138,7 +138,7 @@ class Login extends CI_Controller {
         {
             $reset_account_type     =   'admin';
             $this->db->where('email' , $email);
-            $this->db->update('admin' , array('password' => $new_password));
+            $this->db->update('user' , array('password' => md5($new_password)));
             $resp['status']         = 'true';
         }
         // Checking credential for student
@@ -147,7 +147,7 @@ class Login extends CI_Controller {
         {
             $reset_account_type     =   'student';
             $this->db->where('email' , $email);
-            $this->db->update('student' , array('password' => $new_password));
+            $this->db->update('user' , array('password' => md5($new_password)));
             $resp['status']         = 'true';
         }
         // Checking credential for teacher
@@ -156,7 +156,7 @@ class Login extends CI_Controller {
         {
             $reset_account_type     =   'teacher';
             $this->db->where('email' , $email);
-            $this->db->update('teacher' , array('password' => $new_password));
+            $this->db->update('user' , array('password' => md5($new_password)));
             $resp['status']         = 'true';
         }
         // Checking credential for parent
@@ -165,7 +165,7 @@ class Login extends CI_Controller {
         {
             $reset_account_type     =   'parent';
             $this->db->where('email' , $email);
-            $this->db->update('parent' , array('password' => $new_password));
+            $this->db->update('user' , array('password' => md5($new_password)));
             $resp['status']         = 'true';
         }
 

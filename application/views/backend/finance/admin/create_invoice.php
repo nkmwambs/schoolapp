@@ -33,7 +33,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 	                                <div class="form-group">
 	                                    <label class="col-sm-3 control-label"><?php echo get_phrase('class');?></label>
 	                                    <div class="col-sm-9">
-	                                        <select name="class_id" class="form-control get_ajax_details"  id="fees_structure_class" >
+	                                        <select required="required" name="class_id" class="form-control get_ajax_details"  id="fees_structure_class" >
 	                                        	<option value=""><?php echo get_phrase('select_class');?></option>
 	                                        	<?php 
 	                                        		$classes = $this->db->order_by('name_numeric')->get('class')->result_array();
@@ -49,14 +49,14 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 	                                <div class="form-group">
 	                                    <label class="col-sm-3 control-label"><?php echo get_phrase('year');?></label>
 	                                    <div class="col-sm-9">
-	                                        <input type="text" class="form-control get_ajax_details" min="2010" max="2050" name="yr" id='fees_structure_year'/>
+	                                        <input  required="required" type="text" class="form-control get_ajax_details" min="2010" max="2050" name="yr" id='fees_structure_year'/>
 	                                    </div>
 	                                </div>
 	                                <div class="form-group">
 	                                    <label class="col-sm-3 control-label"><?php echo get_phrase('term');?></label>
 	                                    <div class="col-sm-9">
 	                                        <!--<input type="text" class="form-control" min="1" max="3" id="fees_structure_term" onblur='return get_total_fees()' name="description"/>-->
-	                                        <select name="term" class="form-control get_ajax_details" id="fees_structure_term"  >
+	                                        <select required="required" name="term" class="form-control get_ajax_details" id="fees_structure_term"  >
 	                                        	<option value=""><?php echo get_phrase('select');?></option>
 	                                        	<?php
 	                                        		$terms = $this->db->get('terms')->result_object();
@@ -74,7 +74,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 	                                <div class="form-group">
 		                                <label class="col-sm-3 control-label"><?php echo get_phrase('student');?></label>
 		                                <div class="col-sm-9">
-		                                    <select name="student_id" class="form-control student_info" style="width:100%;" id="student_selection_holder" >
+		                                    <select  required="required" name="student_id" class="form-control student_info" style="width:100%;" id="student_selection_holder" >
 		                                        <option value=""><?php echo get_phrase('select_class_first');?></option>
 		                                    	
 		                                    </select>
@@ -85,7 +85,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 	                                <div class="form-group">
 	                                    <label class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
 	                                    <div class="col-sm-9">
-	                                        <input type="text" class="datepicker form-control" name="date"/>
+	                                        <input  required="required" readonly="readonly" type="text" class="datepicker form-control" name="date"/>
 	                                    </div>
 	                                </div>
 	                                
@@ -142,7 +142,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"><?php echo get_phrase('due_payment');?></label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" id="amount_due" name="amount_due" value="0" readonly="readonly" placeholder="<?php echo get_phrase('enter_payable_amount');?>"/>
+                                        <input type="text" class="form-control" id="amount_due" name="amount_due" value="0" required="required" readonly="readonly" placeholder="<?php echo get_phrase('enter_payable_amount');?>"/>
                                     </div>
                                 </div>
 
@@ -166,7 +166,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 				<div class="tab-pane" id="mass_invoice">
 
 				<!-- creation of mass invoice -->
-				<?php echo form_open(base_url() . 'index.php?finance/invoice/create_mass_invoice' , array('class' => 'form-horizontal form-groups-bordered validate', 'id'=> 'mass' ,'target'=>'_top'));?>
+				<?php echo form_open(base_url() . 'index.php?finance/invoice/create_mass_invoice' , array('id'=>'frm_mass_invoice', 'class' => 'form-horizontal form-groups-bordered validate', 'id'=> 'mass' ,'target'=>'_top'));?>
 				<br>
 				<div class="row">
 				<div class="col-md-1"></div>
@@ -175,7 +175,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 					<div class="form-group">
                         <label class="col-sm-3 control-label"><?php echo get_phrase('class');?></label>
                         <div class="col-sm-9">
-                            <select name="class_id" class="form-control" onchange="get_class_students_mass()" id='fees_mass_structure_class'>
+                            <select required="required" name="class_id" class="form-control" onchange="get_class_students_mass()" id='fees_mass_structure_class'>
                             	<option value=""><?php echo get_phrase('select_class');?></option>
                             	<?php 
                             		$classes = $this->db->order_by('name_numeric')->get('class')->result_array();
@@ -193,7 +193,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                     <div class="form-group">
                         <label class="col-sm-3 control-label"><?php echo get_phrase('year');?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" min="2010" max="2050" name="yr" onchange="get_class_students_mass()" id='fees_mass_structure_year'/>
+                            <input required="required" type="text" class="form-control" min="2010" max="2050" name="yr" onchange="get_class_students_mass()" id='fees_mass_structure_year'/>
                         </div>
                     </div>
 
@@ -201,7 +201,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                         <label class="col-sm-3 control-label"><?php echo get_phrase('term');?></label>
                         <div class="col-sm-9">
                             <!--<input type="text" class="form-control" min="1" max="3" name="term" id='fees_mass_structure_term'  onblur='return get_mass_total_fees()'/>-->
-                            <select name="term" class="form-control" id="fees_mass_structure_term" onblur="get_class_students_mass()" onchange='return get_mass_total_fees()'>
+                            <select required="required" name="term" class="form-control" id="fees_mass_structure_term" onblur="get_class_students_mass()" onchange='return get_mass_total_fees()'>
 	                                        	<option value=""><?php echo get_phrase('select');?></option>
 	                                        	<?php
 	                                        		$terms = $this->db->get('terms')->result_object();
@@ -218,7 +218,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                     <div class="form-group">
                         <label class="col-sm-3 control-label"><?php echo get_phrase('total_payable');?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" name="amount" readonly="readonly" placeholder="<?php echo get_phrase('enter_total_amount');?>"  id='total_mass_fees_amount'/>
+                            <input required="required" type="text" class="form-control" name="amount" readonly="readonly" placeholder="<?php echo get_phrase('enter_total_amount');?>"  id='total_mass_fees_amount'/>
                         </div>
                     </div>
                     
@@ -244,7 +244,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                     <div class="form-group">
                         <label class="col-sm-3 control-label"><?php echo get_phrase('due_payment');?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="mass_amount_due" name="amount_due" readonly="readonly" placeholder="<?php echo get_phrase('enter_payment_amount');?>" value="0"/>
+                            <input  required="required" type="text" class="form-control" id="mass_amount_due" name="amount_due" readonly="readonly" placeholder="<?php echo get_phrase('enter_payment_amount');?>" value="0"/>
                         </div>
                     </div>
 
@@ -252,13 +252,13 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                     <div class="form-group">
                         <label class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="datepicker form-control" name="date"/>
+                            <input required="required" type="text" readonly="readonly" class="datepicker form-control" name="date"/>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="col-sm-5 col-sm-offset-3">
-                            <button type="submit" class="btn btn-info"><?php echo get_phrase('create_invoice');?></button>
+                            <button type="submit" id="btn_mass_submit" class="btn btn-info"><?php echo get_phrase('create_invoice');?></button>
                         </div>
                     </div>
                     
@@ -287,6 +287,36 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
  //    		$("input:checkbox").prop('checked', $(this).prop("checked"));
 	// 	});
 	// }
+	
+	$("#frm_single_invoice").on('submit',function(ev){
+		if($("#frm_single_invoice #amount_due").val() == "0"){
+			//alert($("#frm_single_invoice #amount_due").val());
+			alert('You can\'t create an invoice with zero due amount');
+			ev.preventDefault();
+		}
+	});
+	
+
+	$("#btn_mass_submit").on('click',function(ev){
+		
+		var checked_students = $('.check:checked').length;
+		var msg = "";
+		//alert(checked_students);
+		if(checked_students == 0){
+			msg = 'Kindly select atleast one student\n';
+			if($("#mass_amount_due").val() == 0){
+				msg +='You can\'t create an invoice with zero due amount or without selected students';
+			}
+			
+			ev.preventDefault();
+			
+			alert(msg);
+		}
+		
+		//ev.preventDefault();
+		
+	});
+	
 
 	function select() {
 		var chk = $('.check');
@@ -302,10 +332,6 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 				chk[i].checked = false ;
 			}
 	}
-</script>
-
-<script type="text/javascript">
-
 
 
 $(".get_ajax_details").change(function(){
