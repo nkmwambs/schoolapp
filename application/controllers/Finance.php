@@ -536,19 +536,29 @@ class Finance extends CI_Controller
 			$this->db->update("invoice",$data);
 			
 			//Remove the existing details for the invoice and add new once
-			$this->db->where(array("invoice_id"=>$param2));
-			$this->db->delete('invoice_details');
+			//$this->db->where(array("invoice_id"=>$param2));
+			//$this->db->delete('invoice_details');
 			
-			foreach($this->input->post('detail_amount_due') as $details_id=>$amount_due){
-					
-				//Insert the new details
-				$data8['invoice_id'] = $param2;
-				$data8['detail_id'] = $details_id;
-				$data8['amount_due'] = $amount_due;
-				
-				$this->db->insert('invoice_details',$data8);		
-				
+			if(count($this->input->post('existing_detail_amount_due')) > 0){
+				foreach($this->input->post('existing_detail_amount_due') as $invoice_details_id=>$amount_due){
+					$this->db->where(array('invoice_details_id'=>$invoice_details_id));			
+					$data8['amount_due'] = $amount_due;
+					$this->db->update('invoice_details',$data8);
+				}
 			}
+			
+			if(count($this->input->post('detail_amount_due')) > 0){
+				foreach($this->input->post('detail_amount_due') as $details_id=>$amount_due){
+					//Insert the new details
+					$data8['invoice_id'] = $param2;
+					$data8['detail_id'] = $details_id;
+					$data8['amount_due'] = $amount_due;
+					
+					$this->db->insert('invoice_details',$data8);
+				}	
+			}
+			
+			
 			if ($this->db->trans_status() === FALSE)
 			{
 			        $this->db->trans_rollback();

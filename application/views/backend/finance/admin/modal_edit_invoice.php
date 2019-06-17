@@ -75,7 +75,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 										<td class="paid" id="paid_<?=$detail->detail_id;?>">
 											<?=number_format($this->crud_model->fees_paid_by_invoice_detail($detail->invoice_details_id),2);?></td>			
                                 		<td>
-                                			<input type="text" class="form-control detail_amount_due" value="<?=$detail->amount_due;?>" id="due_<?=$detail->invoice_details_id;?>" name="detail_amount_due[<?=$detail->detail_id;?>]" />
+                                			<input type="text" class="form-control detail_amount_due" value="<?=$detail->amount_due;?>" id="due_<?=$detail->invoice_details_id;?>" name="existing_detail_amount_due[<?=$detail->invoice_details_id;?>]" />
                                 		</td>
                                 	</tr>	
                                 	<?php
