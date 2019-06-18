@@ -43,7 +43,7 @@ $grouped_expenses_accounts = group_array_by_key($exp_categories,'income_category
 								
 		<div class="panel-body" style="overflow: auto;">
 						
-			<div class="tab-content create_budget_item">
+				<div class="tab-content create_budget_item">
 						
 				<div class="tab-pane" id="new-budget-item">
 					<div class="row">
@@ -123,21 +123,21 @@ $grouped_expenses_accounts = group_array_by_key($exp_categories,'income_category
 								<div class="form-group">
 									<label class="control-label col-sm-4"><?=get_phrase('quantity_');?></label>
 									<div class="col-sm-7">
-										<input type="text" id="qty" name="qty" class="form-control header" required="required"/>
+										<input type="number" id="qty" name="qty" class="form-control header" required="required"/>
 									</div>
 								</div>
 								
 								<div class="form-group">
 									<label class="control-label col-sm-4"><?=get_phrase('unit_cost');?></label>
 									<div class="col-sm-7">
-										<input type="text" id="unitcost" name="unitcost" class="form-control header" required="required"/>
+										<input type="number" id="unitcost" name="unitcost" class="form-control header" required="required"/>
 									</div>
 								</div>
 								
 								<div class="form-group">
 									<label class="control-label col-sm-4"><?=get_phrase('how_often');?></label>
 									<div class="col-sm-7">
-										<input type="text" id="often" name="often" class="form-control header" required="required"/>
+										<input type="number" max="4" min="1" id="often" name="often" class="form-control header" required="required"/>
 									</div>
 								</div>
 								
@@ -193,6 +193,7 @@ $grouped_expenses_accounts = group_array_by_key($exp_categories,'income_category
 							<div id="clear_spread" class="btn btn-danger btn-icon"><i class="fa fa-refresh"></i><?php echo get_phrase('clear_spread');?></div>
 						</form>
 				</div>
+			
 						
 				<div class="tab-pane active" id="budget-summary">
 					<div class="row">
@@ -225,72 +226,6 @@ $grouped_expenses_accounts = group_array_by_key($exp_categories,'income_category
 								
 							
 						</div>
-					
-					<!-- <hr />
-					<caption><?=get_phrase('summary_by_expense_categories');?></caption>
-					<table class="table table-bordered table-striped">
-						<thead>
-							<tr>
-								<th><?=get_phrase('expense_category');?></th>
-								<th><?=get_phrase('total');?></th>
-								
-								<?php
-								foreach($months_in_term_short as $short_month){
-								?>
-									<th><?php echo get_phrase($short_month);?></th>
-								<?php	
-								}
-								?>
-							</tr>
-						</thead>	
-						<tbody align="right">
-							<?php
-								$expense_category = $this->db->get('expense_category')->result_object();
-								
-								foreach($expense_category as $exp_cat):
-								
-								$exp_spread = $this->crud_model->budget_expense_summary_by_expense_category($exp_cat->expense_category_id,$year,$current_term);
-								
-							?>
-								<tr>
-									<td  align="left"><?=$exp_cat->name;?></td>
-									<td><?=number_format(array_sum($exp_spread),2);?></td>
-									
-									<?php
-										foreach($exp_spread as $month):
-									?>
-										
-										<td><?=number_format($month,2);?></td>
-									
-									<?php
-										endforeach;
-									?>
-									
-								</tr>
-							<?php
-								endforeach;
-							?>
-						</tbody>
-						<tfoot align="right">
-							<?php
-								$budget_summary = $this->crud_model->budget_summary_by_expense_category($year,$current_term);
-							?>
-							<tr>
-								<td align="left"><?=get_phrase('total');?></td>
-								<td><?=number_format(array_sum($budget_summary),2);?></td>
-								
-								<?php
-									foreach($budget_summary as $total):
-								?>
-									<td><?=number_format($total,2);?></td>
-								
-								<?php
-									endforeach;
-								?>
-								
-							</tr>
-						</tfoot>
-					</table> -->
 					
 					<hr/>
 					
@@ -394,12 +329,12 @@ $grouped_expenses_accounts = group_array_by_key($exp_categories,'income_category
 					</div>
 					<hr />
 				<?php
-					$expense_category = $this->db->get('expense_category')->result_object();
+					//$income_categories = $this->db->get('income_categories')->result_object();
 					
-					foreach($expense_category as $exp):
+					foreach($grouped_expenses_accounts as $income_category_name=>$expense_categories){
 				?>
 					<table class="table table-bordered table-striped">
-						<caption><?php echo $exp->name;?></caption>
+						<caption style="text-align: center;font-weight:bold;"><?=$income_category_name;?></caption>
 						<thead>
 							<tr>
 								<th><?php echo get_phrase('action_');?></th>
@@ -421,12 +356,21 @@ $grouped_expenses_accounts = group_array_by_key($exp_categories,'income_category
 							
 						</thead>
 						<tbody>
+				<?php		
+					$spread_amount = array();
+					foreach($expense_categories as $exp){
+						$exp = (object)$exp;
+				?>
+					
+						
+						
 						<?php
-							$spread = $this->db->get_where('budget',array('expense_category_id'=>$exp->expense_category_id,'fy'=>$year,'terms_id'=>$current_term))->result_object();
+							$spread_obj = $this->db->get_where('budget',array('expense_category_id'=>$exp->expense_category_id,'fy'=>$year,'terms_id'=>$current_term));
 							//print_r($spread);
-							$total = 0;
+							//$total = 0;
 							
-							foreach($spread as $rows):
+							if($spread_obj->num_rows() > 0){
+							foreach($spread_obj->result_object() as $rows){
 						?>
 							<tr>
 								<td>
@@ -465,8 +409,10 @@ $grouped_expenses_accounts = group_array_by_key($exp_categories,'income_category
 								<td><?php echo number_format($rows->total,2);?></td>
 								<?php
 									$month_spread = $this->db->get_where('budget_schedule',array('budget_id'=>$rows->budget_id))->result_object();
-									
+									$sum = 0;
 									foreach($month_spread as $m_spread):
+										$spread_amount[$rows->budget_id][] = $m_spread->amount;
+										$spread_amount[$rows->budget_id]['total'] = $sum+=$m_spread->amount;
 								?>
 									<td><?php echo number_format($m_spread->amount,2);?></td>
 								<?php
@@ -475,23 +421,26 @@ $grouped_expenses_accounts = group_array_by_key($exp_categories,'income_category
 							</tr>
 						
 						<?php
-							$total += $rows->total;
-							endforeach;
-						?>	
-						<tr>
-							<td colspan="5"><?php echo get_phrase('total_');?></td>
-							<td><?php echo number_format($total,2);?></td>
+							//$total += $rows->total;
+								}
+						
+							}
 							
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-							
-						</tr>
+					}
+						//print_r($spread_amount);
+				?>
+							<tr>
+								<td colspan="5">Total</td>
+								<td><?=number_format(array_sum(array_column($spread_amount,'total')),2);?></td>
+								<td><?=number_format(array_sum(array_column($spread_amount,0)),2);?></td>
+								<td><?=number_format(array_sum(array_column($spread_amount,1)),2);?></td>
+								<td><?=number_format(array_sum(array_column($spread_amount,2)),2);?></td>
+								<td><?=number_format(array_sum(array_column($spread_amount,3)),2);?></td>
+							</tr>
 						</tbody>
 					</table>
 				<?php
-					endforeach;
+				}
 				?>									
 				</div>
 						
@@ -519,10 +468,16 @@ $grouped_expenses_accounts = group_array_by_key($exp_categories,'income_category
 		
 
 	$('.months').keyup(function(){
-
-			var total = parseFloat($('#total').val())+parseFloat($(this).val());
-			
-			$('#total').val(total);
+			// var spread_amount = $(this).val();
+// 			
+			if(!$.isNumeric($(this).val())){
+				spread_amount = 0;
+				$(this).val(0);
+			}	
+// 			
+			// var total = parseFloat($('#total').val())+parseFloat(spread_amount);
+// 			
+			// $('#total').val(total);
 
 	});	
 		
@@ -720,4 +675,25 @@ $('#frm_schedule').submit(function(ev){
 		
 	})
 	
+	$("#create").on('click',function(ev){
+		
+		var sum_spread = 0;
+		var total = $("#total").val();
+		
+		$('.months').each(function(i,el){
+			sum_spread += parseInt($(el).val());
+		});
+		
+		if(parseInt(total) !== sum_spread){
+			alert('Spread error occurred');
+			$("#total").css('border','1px solid red');
+			$(".months").css('border','1px solid red');
+			ev.preventDefault();
+		}else{
+			$("#total").css('border','1px solid gray');
+			$(".months").css('border','1px solid gray');
+		}
+		
+		
+	});
 </script>
