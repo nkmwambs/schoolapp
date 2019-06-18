@@ -88,26 +88,35 @@ class Exam extends CI_Controller
             ))->result_array();
             // get the marks of the student for selected exam
             foreach ($students as $row) {
-                if ($receiver == 'student')
-                    $receiver_phone = $row['phone'];
-                if ($receiver == 'parent' && $row['parent_id'] != '')
-                    $receiver_phone = $this->db->get_where('parent' , array('parent_id' => $row['parent_id']))->row()->phone;
-
-
+                
                 $this->db->where('exam_id' , $exam_id);
                 $this->db->where('student_id' , $row['student_id']);
                 $marks = $this->db->get('mark')->result_array();
-                $message = '';
-                foreach ($marks as $row2) {
+               
+			    $message = 'Exam results for '.$row['name'].":";
+				$total_marks = 0;
+               
+			    foreach ($marks as $row2) {
                     $subject       = $this->db->get_where('subject' , array('subject_id' => $row2['subject_id']))->row()->name;
                     $mark_obtained = $row2['mark_obtained'];
-                    $message      .= $row2['student_id'] . $subject . ' : ' . $mark_obtained . ' , ';
+					$total_marks += $mark_obtained;
+                    $message      .= $subject . ' : ' . $mark_obtained . ' , ';
 
                 }
+				
+				$message .= "Total Marks: ".$total_marks;
+				
                 // send sms
-                $this->sms_model->send_sms( $message , $receiver_phone );
+                    
+                if ($receiver == 'parent' && $row['parent_id'] != 0){
+                	$receiver_phone = $this->db->get_where('parent' , array('parent_id' => $row['parent_id']))->row()->phone;
+					
+               		$this->sms_model->send_sms($message , $receiver_phone );
+					
+                }
+                    
             }
-            $this->session->set_flashdata('flash_message' , get_phrase('message_sent'));
+            $this->session->set_flashdata('flash_message' , 'SMS sent');
             redirect(base_url() . 'index.php?exam/exam_marks_sms' , 'refresh');
         }
         $page_data['page_view']  = 'exam';

@@ -45,7 +45,7 @@
                     <div class="col-md-3">
                         <select name="receiver" class="form-control" required>
                         	<option value=""><?php echo get_phrase('select_receiver');?></option>
-                        	<option value="student"><?php echo get_phrase('students');?></option>
+                        	<!-- <option value="student"><?php echo get_phrase('students');?></option> -->
                         	<option value="parent"><?php echo get_phrase('parents');?></option>
                         </select>
                     </div>
