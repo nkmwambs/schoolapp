@@ -991,6 +991,35 @@ class Finance extends CI_Controller
         $this->load->view('backend/index', $page_data); 	   		
 	}
 	
+	function sms_fee_balances(){
+		$this->db->where('status' , 'unpaid');
+	    $unpaid_invoices = $this->db->get('invoice')->result_array();
+		
+		$receiver_phone = "";
+		$message = "";
+		foreach($unpaid_invoices as $row){
+			$student = $this->db->get_where('student',array('student_id'=>$row['student_id']))->row();
+			
+			if($student->parent_id != 0){
+				$receiver_phone = $this->db->get_where('parent',
+				array('parent_id'=>$student->parent_id))->row()->phone;
+				
+				$message .= "Fee balance status for ".$student->name.":";
+				
+				$paid = $this->crud_model->fees_paid_by_invoice($row['invoice_id']);
+				$bal = $this->crud_model->fees_balance_by_invoice($row['invoice_id']); 
+				
+				$message .= "Amount Paid:".$paid.", Balance:".$bal;
+				
+				$this->sms_model->send_sms($message , $receiver_phone );
+					
+			}
+		}
+		
+		 $this->session->set_flashdata('flash_message' , 'SMS sent');
+         redirect(base_url() . 'index.php?finance/student_payments' , 'refresh');
+	}
+	
 	function student_payments($param1 = '' , $param2 = '')
     {
        if ($this->session->userdata('active_login') != 1)

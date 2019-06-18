@@ -33,7 +33,7 @@
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('phone');?></label>
 
 						<div class="col-sm-5">
-							<input type="text" class="form-control" name="phone" value="">
+							<input type="number" class="form-control" name="phone" value="" required="required">
 						</div>
 					</div>
 
@@ -65,13 +65,33 @@
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('care_type');?></label>
 
 						<div class="col-sm-5">
-							<select class="form-control select2" name="care_type" >
+							<select class="form-control select2" onclick="toggleStudentList(this);" name="care_type" >
 								<option><?=get_phrase("select");?></option>
 								<option value="primary"><?=get_phrase("primary");?></option>
 								<option value="secondary"><?=get_phrase("secondary");?></option>
 							</select>
 						</div>
 					</div>
+					
+					<div class="form-group hidden" id="link_student_form_group">
+						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('link_to_student');?></label>
+
+						<div class="col-sm-5">
+							<?php
+								$students  = $this->db->get_where('student',array('active'=>1,'parent_id'=>0))->result_object();
+							?>
+							<select class="form-control select2" name="link_to_student" >
+								<option><?=get_phrase("select");?></option>
+								<?php
+									foreach($students as $student){
+								?>
+									<option value="<?=$student->student_id;?>"><?=$student->name;?></option>
+								<?php
+									}
+								?>
+							</select>
+						</div>
+					</div>					
 
 					<div class="form-group">
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('profession');?></label>
@@ -91,3 +111,14 @@
         </div>
     </div>
 </div>
+
+<script>
+	function toggleStudentList(elem){
+		if($(elem).val() == 'primary'){
+			$("#link_student_form_group").removeClass('hidden');
+		}else{
+			$("#link_student_form_group").addClass('hidden');
+		}
+		
+	}
+</script>

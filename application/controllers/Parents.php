@@ -50,7 +50,19 @@ class Parents extends CI_Controller
             $data['relationship_id']     	= $this->input->post('relationship');
             $data['care_type']     	= $this->input->post('care_type');
             $data['profession']  			= $this->input->post('profession');
+            
             $this->db->insert('parent', $data);
+			
+			$parent_id = $this->db->insert_id();
+			
+			//Update student parent id
+			
+			if($this->input->post('care_type') == 'primary' && $this->input->post('link_to_student')!="" ){
+				$this->db->where(array('student_id'=> $this->input->post('link_to_student') ));		
+				$data2['parent_id'] = $parent_id;
+				$this->db->update('student',$data2);
+			}
+			
             $this->email_model->account_opening_email('parent', $data['email']); //SEND EMAIL ACCOUNT OPENING EMAIL
 
             $this->session->set_flashdata('flash_message' , get_phrase('data_added_successfully'));

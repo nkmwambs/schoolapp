@@ -42,8 +42,8 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 		<?php
 			$count_to_notify = $this->db->get_where('invoice',array('status'=>'unpaid'))->num_rows();
 		?>
-		<div class="btn btn-default"><i class="fa fa-mobile"></i> SMS balances <span class="badge badge-primary"><?=$count_to_notify;?></span></div>
-		<div class="btn btn-default"><i class="fa fa-envelope"></i> Email balances <span class="badge badge-primary"><?=$count_to_notify;?></span></div>
+		<a href="<?=base_url();?>index.php?finance/sms_fee_balances" class="btn btn-default"><i class="fa fa-mobile"></i> SMS balances <span class="badge badge-primary"><?=$count_to_notify;?></span></a>
+		<!-- <div class="btn btn-default"><i class="fa fa-envelope"></i> Email balances <span class="badge badge-primary"><?=$count_to_notify;?></span></div> -->
 		<a href="<?php echo base_url(); ?>index.php?finance/create_invoice" class="btn btn-primary"><i class="fa fa-money"></i> Create Invoice</a>
 	</div>
 </div>
