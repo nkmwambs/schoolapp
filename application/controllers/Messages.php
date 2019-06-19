@@ -83,7 +83,7 @@ class Messages extends CI_Controller
 		$data['phoneNumber'] 	= $_POST['phoneNumber'];
 		$data['networkCode'] 	= $_POST['networkCode'];
 		$data['failureReason'] 	= $_POST['failureReason'];
-		$data['retryCount'] 	= $_POST['retryCount'];//Int
+		$data['retryCount'] 	= 0;//$_POST['retryCount'];//Int
 		
 		$this->db->insert('sms_delivery',$data);		
 		
