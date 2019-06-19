@@ -1,12 +1,12 @@
 <?php
 if (!defined('BASEPATH')) exit('No direct script access allowed');
-
+//print_r($user_data);
 ?>
 <div class="row">
 	<div class="col-xs-12 <?= get_access_class('dashboard', 'admin'); ?>">
 
 		<div class="row  <?= get_access_class('create_transaction', 'admin', 'accounting'); ?>">
-			<div class="col-xs-12">
+			<div class="col-xs-10">
 				<div class="col-xs-3 <?= get_access_class('create_transaction', 'admin', 'dashboard'); ?>">
 					<!-- <a href="<?=base_url();?>index.php?finance/create_transaction" class="btn btn-success btn-icon float-left">
 						<i class="fa fa-tasks"></i><?=get_phrase('create_a_transaction');?>
@@ -42,6 +42,9 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 						</ul>
 					</div> 
 				</div>
+			</div>
+			<div class="col-xs-2">
+				<div class="label label-primary">SMS Gateway Balance: <?=$user_data->balance;?></div>
 			</div>
 		</div>
 		

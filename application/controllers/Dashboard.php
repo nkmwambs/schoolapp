@@ -33,7 +33,19 @@ class Dashboard extends CI_Controller
     {
         if ($this->session->userdata('active_login') != 1)
             redirect(base_url(), 'refresh');
-
+		
+		//Africa is Taling User Data
+		
+		$username = $this->db->get_where('settings',array('type'=>'africastalking_user'))->row()->description;
+		$apiKey = $this->db->get_where('settings',array('type'=>'africastalking_api_id'))->row()->description;
+		
+		$this->config->set_item('username', $username);
+		$this->config->set_item('apiKey', $apiKey);
+		
+		$this->load->library('AfricasTalking');
+		
+		$page_data['user_data'] = $this->africastalking->getUserData();
+		
         $page_data['page_name']  = 'dashboard';
         $page_data['page_view'] = "dashboard";
         $page_data['page_title'] = get_phrase('dashboard');
