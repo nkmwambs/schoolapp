@@ -8,9 +8,6 @@
 				<div class="col-xs-6">
 					 <select class="form-control" id="multiselect" name="reciever[]" multiple="multiple" required>
 
-			            <!-- <option value=""><?php echo get_phrase('select_a_user'); ?></option>
-			            -->
-			            <!-- <optgroup label="<?php echo get_phrase('parent'); ?>"> -->
 			                <?php
 			                $parents = $this->db->order_by('name')->get('parent')->result_array();
 			                foreach ($parents as $row):
@@ -20,31 +17,7 @@
 			                        - <?php echo $row['name']; ?></option>
 			
 			                <?php endforeach; ?>
-			            <!-- </optgroup> -->
-			           
-			            <!-- <optgroup label="<?php echo get_phrase('teacher'); ?>">
-			                <?php
-			                $teachers = $this->db->get('teacher')->result_array();
-			                foreach ($teachers as $row):
-			                    ?>
-			
-			                    <option value="<?php echo $row['phone']; ?>">
-			                        - <?php echo $row['name']; ?></option>
-			
-			                <?php endforeach; ?>
-			            </optgroup>
-			            
-			            <optgroup label="<?php echo get_phrase('student'); ?>">
-			                <?php
-			                $students = $this->db->get('student')->result_array();
-			                foreach ($students as $row):
-			                    ?>
-			
-			                    <option value="<?php echo $row['phone']; ?>">
-			                        - <?php echo $row['name']; ?></option>
-			
-			                <?php endforeach; ?>
-			            </optgroup> -->
+
 			           
 			           
 			        </select>
@@ -54,7 +27,12 @@
 			<div class="form-group">
 				<label class="control-label col-xs-4"></label>
 				<div class="col-xs-6">
-					<textarea class="form-control" id="message" name="message" rows="6" placeholder='Type message here'></textarea>
+					<div class="col-xs-12">
+						<div id="counter">160</div>
+					</div>	
+					<div class="col-xs-12">	
+						<textarea class="form-control" id="message" name="message" rows="6" placeholder='Type message here'></textarea>
+					</div>
 				</div>
 			</div>
 			
@@ -76,6 +54,16 @@
 </div>
 
 <script>
+
+	
+	$('textarea').keypress(function(){
+
+	    if($(this).val().length > 160){
+	        return false;
+	    }
+	    $("#counter").html("Remaining characters : " +(160 - $(this).val().length));
+	});
+	
 	$('#send').on('click',function(){
 		
 		var frm = $('#frm_sms');
