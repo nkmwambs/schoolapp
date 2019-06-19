@@ -13,8 +13,7 @@
 			                foreach ($parents as $row):
 			                    ?>
 			
-			                    <option value="<?php echo $row['phone']; ?>">
-			                        - <?php echo $row['name']; ?></option>
+			                    <option value="<?php echo $row['phone']; ?>"><?php echo $row['name']; ?></option>
 			
 			                <?php endforeach; ?>
 
@@ -31,7 +30,7 @@
 						<div id="counter">160</div>
 					</div>	
 					<div class="col-xs-12">	
-						<textarea class="form-control" id="message" name="message" rows="6" placeholder='Type message here'></textarea>
+						<textarea required='required' class="form-control" id="message" name="message" rows="6" placeholder='Type message here'></textarea>
 					</div>
 				</div>
 			</div>
@@ -54,7 +53,19 @@
 </div>
 
 <script>
-
+	$(document).ready(function() {
+	    $('#multiselect').multiselect({
+	      	enableFiltering: true,
+	      	numberDisplayed: 5,
+	      	includeSelectAllOption: true,
+	      	selectAllText: 'Select All SMS Receivers',
+	      	enableCaseInsensitiveFiltering: true,
+	      	filterPlaceholder: 'Search SMS Receiver',
+	      	buttonWidth: '580px',
+	    	
+	    });
+	  });
+  
 	
 	$('textarea').keypress(function(){
 
