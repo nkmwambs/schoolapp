@@ -44,8 +44,12 @@ class Dashboard extends CI_Controller
 		
 		$this->load->library('AfricasTalking');
 		
-		$page_data['user_data'] = $this->africastalking->getUserData();
-		
+		try{
+			$page_data['user_data'] = $this->africastalking->getUserData();
+		}catch(AfricasTalkingGatewayException $e){
+			$page_data['user_data'] = (object)array('balance'=>0.00);
+		}
+		        
         $page_data['page_name']  = 'dashboard';
         $page_data['page_view'] = "dashboard";
         $page_data['page_title'] = get_phrase('dashboard');
