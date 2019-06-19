@@ -62,6 +62,7 @@
 	      	enableCaseInsensitiveFiltering: true,
 	      	filterPlaceholder: 'Search SMS Receiver',
 	      	buttonWidth: '580px',
+	      	nonSelectedText:"Select SMS Receivers"
 	    	
 	    });
 	  });
