@@ -76,5 +76,17 @@ class Messages extends CI_Controller
 		echo json_encode($response);
 		
 	}
+	
+	function sms_delivery(){
+		$data['message_id'] 	= $_POST['id'];
+		$data['status'] 		= $_POST['status'];
+		$data['phoneNumber'] 	= $_POST['phoneNumber'];
+		$data['networkCode'] 	= $_POST['networkCode'];
+		$data['failureReason'] 	= $_POST['failureReason'];
+		$data['retryCount'] 	= $_POST['retryCount'];//Int
+		
+		$this->db->insert('sms_delivery',$data);		
+		
+	}
  
 }
