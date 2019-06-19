@@ -12,7 +12,7 @@
 			            -->
 			            <!-- <optgroup label="<?php echo get_phrase('parent'); ?>"> -->
 			                <?php
-			                $parents = $this->db->get('parent')->result_array();
+			                $parents = $this->db->order_by('name')->get('parent')->result_array();
 			                foreach ($parents as $row):
 			                    ?>
 			
