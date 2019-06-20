@@ -62,6 +62,22 @@ class Messages extends CI_Controller
 		if ($this->session->userdata('active_login') != 1)
            redirect('login', 'refresh');	
 		
+		//Africa is Talking Fetch Messages
+		
+		$username = $this->db->get_where('settings',array('type'=>'africastalking_user'))->row()->description;
+		$apiKey = $this->db->get_where('settings',array('type'=>'africastalking_api_id'))->row()->description;
+		
+		$this->config->set_item('username', $username);
+		$this->config->set_item('apiKey', $apiKey);
+		
+		$this->load->library('AfricasTalking');
+		
+		try{
+			$page_data['outbox'] = $this->africastalking->fetchMessages(0);
+		}catch(AfricasTalkingGatewayException $e){
+			$page_data['outbox'] = (object)array();
+		}
+		
 		$page_data['page_name']  = 'bulksms';
 		$page_data['page_view']  = 'message';
         $page_data['page_title'] = 'Bulk SMS';

@@ -34,7 +34,7 @@ class Dashboard extends CI_Controller
         if ($this->session->userdata('active_login') != 1)
             redirect(base_url(), 'refresh');
 		
-		//Africa is Taling User Data
+		//Africa is Talking User Data
 		
 		$username = $this->db->get_where('settings',array('type'=>'africastalking_user'))->row()->description;
 		$apiKey = $this->db->get_where('settings',array('type'=>'africastalking_api_id'))->row()->description;

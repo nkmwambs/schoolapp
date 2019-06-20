@@ -52,6 +52,14 @@
 	</div>
 </div>
 
+<div class="row">
+	<div class="col-xs-12">
+		<?php 
+			//print_r($outbox);
+		?>
+	</div>
+</div>
+
 <script>
 	$(document).ready(function() {
 	    $('#multiselect').multiselect({
