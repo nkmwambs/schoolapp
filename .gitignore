@@ -11,4 +11,5 @@ readme.rst
 /application/**/config/database.php
 /application/**/config/localrepositoryvars.php
 /uploads/logo.png
+/vendor
 index.php

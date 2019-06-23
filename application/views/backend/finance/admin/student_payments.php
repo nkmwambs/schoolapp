@@ -34,17 +34,15 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 	
 ?>
 
-<hr/>
-
 <div class="row">
 	<div class="col-xs-12">
-		<a href="<?=base_url();?>index.php?finance/student_collection_tally/<?=date('Y');?>" class="btn btn-default"> <i class="fa fa-list"></i> Payment tally sheet</a>
+		<a href="<?=base_url();?>index.php?finance/student_collection_tally/<?=date('Y');?>" class="btn btn-default"> <i class="fa fa-list"></i> <?=get_phrase('payment_tally_sheet');?></a>
 		<?php
 			$count_to_notify = $this->db->get_where('invoice',array('status'=>'unpaid'))->num_rows();
 		?>
-		<a href="<?=base_url();?>index.php?finance/sms_fee_balances" class="btn btn-default"><i class="fa fa-mobile"></i> SMS balances <span class="badge badge-primary"><?=$count_to_notify;?></span></a>
-		<!-- <div class="btn btn-default"><i class="fa fa-envelope"></i> Email balances <span class="badge badge-primary"><?=$count_to_notify;?></span></div> -->
-		<a href="<?php echo base_url(); ?>index.php?finance/create_invoice" class="btn btn-primary"><i class="fa fa-money"></i> Create Invoice</a>
+		<a href="#" onclick="confirm_action('<?=base_url();?>index.php?finance/sms_fee_balances');" class="btn btn-default"><i class="fa fa-mobile"></i><?=get_phrase('SMS_balances');?><span class="badge badge-primary"><?=$count_to_notify;?></span></a>
+		<a href="<?php echo base_url(); ?>index.php?finance/create_invoice" class="btn btn-primary"><i class="fa fa-money"></i><?=get_phrase('create_invoice');?></a>
+		<a href="<?php echo base_url(); ?>index.php?finance/missing_invoices" class="btn btn-danger"><i class="fa fa-times"></i><?=get_phrase('missing_invoices');?></a>
 	</div>
 </div>
 

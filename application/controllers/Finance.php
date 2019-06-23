@@ -977,6 +977,29 @@ class Finance extends CI_Controller
 		echo $this->load->view("backend/finance/scroll_paid_invoices",$data,true);
 	}
 	
+	function missing_invoices($year = ""){
+       if ($this->session->userdata('active_login') != 1)
+            redirect('login', 'refresh');
+	   
+	   
+	   if($year == "") $year = date('Y');
+	   
+	   $page_data['year'] = $year;
+	   
+	   $sql = "student_id NOT IN (SELECT student_id FROM invoice WHERE yr = ".$year.")";
+	   
+	   $this->db->select(array('student.student_id','roll','student.name','student.class_id','class.name as class'));
+	   $this->db->where($sql);
+	   $this->db->join('class','class.class_id=student.class_id');
+	   $missing_invoices = $this->db->get_where('student')->result_array();
+	   
+        $page_data['page_name']  = 'missing_invoices';
+        $page_data['page_view'] = "finance";
+        $page_data['page_title'] = get_phrase('missing_invoices');
+        $page_data['missing_invoices'] = $missing_invoices;
+        $this->load->view('backend/index', $page_data);		
+	}
+	
 	function scroll_student_payments($year = ""){
        if ($this->session->userdata('active_login') != 1)
             redirect('login', 'refresh');
