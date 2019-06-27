@@ -49,11 +49,55 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 <hr />
 
 <div class="row">
-	<div class="col-xs-12" style="text-align: center;font-weight: bold;font-size: 18pt;">
+	<!-- <div class="col-xs-6" style="text-align: right;font-weight: bold;font-size: 18pt;">
 		<?=get_phrase('year');?> <?=$year;?>
+	</div> -->
+	<div class="col-xs-12">
+		<?php echo form_open(base_url() . 'index.php?finance/scroll_student_payments' , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
+			
+			<div class="form-group">
+				<?php
+					$year_range = range($year - 3, $year + 3)
+				?>
+				<div class="col-xs-offset-2 col-xs-4" style="text-align: right;">
+					<select name="year" class="form-control">
+						<option><?=get_phrase('select_year');?></option>
+						<?php
+							foreach($year_range as $row){
+						?>
+							<option value="<?=$row;?>" <?php if($year == $row) echo "selected";?>><?=$row;?></option>
+						<?php
+							}
+						?>
+					</select>
+				</div>
+				
+				<div class="col-xs-4" style="text-align: left;">
+					<select name="term" class="form-control">
+						<option><?=get_phrase('select_term');?></option>
+						<?php
+							
+							$terms = $this->db->get('terms')->result_object();
+							foreach($terms as $term_row){
+						?>
+							<option value="<?=$term_row->terms_id;?>" <?php if($term == $term_row->terms_id) echo "selected";?>><?=$term_row->name;?></option>
+						<?php
+							}
+						?>
+					</select>
+				</div>
+				
+				<div class="col-xs-2">
+					<button type="submit" class="btn btn-primary"><?=get_phrase('go');?></button>
+				</div>
+						
+			</div>
+		
+		</form>
 	</div>
 </div>
-<p></p>
+
+<hr />
 
 <div class="row">
 	<div class="col-xs-1">

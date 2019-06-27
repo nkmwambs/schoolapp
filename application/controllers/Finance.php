@@ -1004,13 +1004,21 @@ class Finance extends CI_Controller
        if ($this->session->userdata('active_login') != 1)
             redirect('login', 'refresh');
 	   
+	   	$term = 1;
+		
+	   	if(isset($_POST['year'])){
+	   		$year = $this->input->post('year');
+			$term = $this->input->post('term');
+	   	}
 	   
 	   	$page_data['year'] = $year;
+	   	$page_data['term'] = $term;
+	   	
         $page_data['page_name']  = 'student_payments';
         $page_data['page_view'] = "finance";
         $page_data['page_title'] = get_phrase('student_payments');
         $this->db->order_by('creation_timestamp', 'desc');
-        $page_data['invoices'] = $this->db->get_where('invoice',array('yr'=>$year))->result_array();
+        $page_data['invoices'] = $this->db->get_where('invoice',array('yr'=>$year,'term'=>$term))->result_array();
         $this->load->view('backend/index', $page_data); 	   		
 	}
 	
@@ -1078,6 +1086,7 @@ class Finance extends CI_Controller
         $page_data['page_view'] = "finance";
         $page_data['page_title'] = get_phrase('student_payments');
 		$page_data['year'] = date('Y');
+		$page_data['term'] = 1;
         $this->db->order_by('creation_timestamp', 'desc');
         $page_data['invoices'] = $this->db->get_where('invoice',array('yr'=>date('Y')))->result_array();
         $this->load->view('backend/index', $page_data); 

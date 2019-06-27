@@ -78,10 +78,10 @@
 	
 	$('textarea').keypress(function(){
 
-	    if($(this).val().length > 160){
+	    if($(this).val().length > 155){
 	        return false;
 	    }
-	    $("#counter").html("Remaining characters : " +(160 - $(this).val().length));
+	    $("#counter").html("Remaining characters : " +(155 - $(this).val().length));
 	});
 	
 	$('#send').on('click',function(){
