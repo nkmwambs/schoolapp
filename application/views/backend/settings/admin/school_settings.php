@@ -1,10 +1,20 @@
-<hr />
+<?php
+//echo $approved_reports_exists;
+$display_style = '';
+if($approved_reports_exists == true){
+$readonly_style = '';
+	$display_style = "style='display:none;'";
+	$readonly = "disabled='disabled'";
+}
+
+?>
+
 <div class="row">
-		
+
 			<div class="col-md-10">
-			
+
 				<div class="tabs-vertical-env">
-				
+
 					<ul class="nav tabs-vertical"><!-- available classes "right-aligned" -->
 						<li class="active"><a href="#v-terms" data-toggle="tab"><?=get_phrase('school_terms');?></a></li>
 						<li><a href="#v-cash" data-toggle="tab"><?=get_phrase('start_cash_balance');?></a></li>
@@ -12,12 +22,12 @@
 						<li><a href="#v-expense" data-toggle="tab"><?php echo get_phrase('expense_categories');?></a></li>
 						<li><a href="#v-care" data-toggle="tab"><?php echo get_phrase('care_relationship');?></a></li>
 					</ul>
-					
+
 					<div class="tab-content">
 						<div class="tab-pane active" id="v-terms">
 							<p>
 								<div class="btn btn-primary btn-icon pull-right" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_new_term');"><i class="entypo-plus-squared"></i><?php echo get_phrase('add');?></div>
-				
+
 								<table class="table table-striped">
 									<thead>
 										<tr>
@@ -26,7 +36,7 @@
 											<th><?php echo get_phrase('terms');?></th>
 											<th><?php echo get_phrase('start_month');?></th>
 											<th><?php echo get_phrase('end_month');?></th>
-											
+
 										</tr>
 									</thead>
 									<tbody>
@@ -47,9 +57,9 @@
 				                                                    <?php echo get_phrase('edit');?>
 				                                                </a>
 				                                        </li>
-				                                        
+
 				                                        <li class="divider"></li>
-				                                        
+
 				                                        <!-- DELETE -->
 				                                        <li>
 				                                            <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?settings/school_settings/delete_term/<?php echo $rows->terms_id;?>');">
@@ -64,25 +74,26 @@
 											<td><?php echo $rows->name;?></td>
 											<td><?php echo $rows->start_month;?></td>
 											<td><?php echo $rows->end_month;?></td>
-											
+
 										</tr>
 										<?php
 											endforeach;
 										?>
 									</tbody>
 								</table>
-							</p>				
+							</p>
 						</div>
 						<div class="tab-pane" id="v-cash">
 							<p>
-								<div class="btn btn-primary btn-icon pull-right" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_add_edit_account/');"><i class="fa fa-plus-square"></i><?=get_phrase('add/_Edit');?></div>
+								<div <?=$display_style;?> class="btn btn-primary btn-icon pull-right" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_add_edit_account/');"><i class="fa fa-plus-square"></i><?=get_phrase('add/_Edit');?></div>
+
 								<table class="table table-bordered">
 									<thead>
 										<tr>
 											<th><?=get_phrase('date');?></th>
 											<th><?=get_phrase('account');?></th>
 											<th><?=get_phrase('amount');?></th>
-											
+
 										</tr>
 									</thead>
 									<?php
@@ -105,11 +116,11 @@
 						</div>
 						<div class="tab-pane" id="v-income">
 							<p>
-								<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/income_category_add/');" 
+								<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/income_category_add/');"
 								class="btn btn-primary pull-right">
 								<i class="entypo-plus-circled"></i>
 								<?php echo get_phrase('add_new_income_category');?>
-								</a> 
+								</a>
 								<br><br>
 								<table class="table table-bordered datatable" id="table_export_1">
 								    <thead>
@@ -122,7 +133,7 @@
 								        </tr>
 								    </thead>
 								    <tbody>
-								        <?php 
+								        <?php
 								        	$count = 1;
 								        	$incomes = $this->db->get('income_categories')->result_array();
 											//print_r($incomes);
@@ -131,16 +142,16 @@
 								        <tr>
 								            <td><?php echo $count++;?></td>
 								            <td><?php echo $row['name'];?></td>
-								            <td><input type="text" id="openingbalance_<?=$row['income_category_id']?>" class="form-control opening_balance" value="<?php echo $row['opening_balance'];?>" /></td>
-								            <td><input type="radio" id="default_<?=$row['income_category_id']?>" name="defaut_category" class="default_category" value="1" <?=$row['default_category']== '1'?'checked':'';?> /></td>
+								            <td><input <?=$readonly;?> type="text" id="openingbalance_<?=$row['income_category_id']?>" class="form-control opening_balance" value="<?php echo $row['opening_balance'];?>" /></td>
+								            <td><input <?=$readonly;?> type="radio" id="default_<?=$row['income_category_id']?>" name="defaut_category" class="default_category" value="1" <?=$row['default_category']== '1'?'checked':'';?> /></td>
 								            <td>
-								                
+
 								                <div class="btn-group">
 								                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
 								                        Action <span class="caret"></span>
 								                    </button>
 								                    <ul class="dropdown-menu dropdown-default pull-right" role="menu">
-								                        
+
 								                        <!--  EDITING LINK -->
 								                        <li>
 								                        	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/income_category_edit/<?php echo $row['income_category_id'];?>');">
@@ -149,7 +160,7 @@
 								                               	</a>
 								                        				</li>
 								                        <li class="divider"></li>
-								                        
+
 								                        <!--  DELETION LINK -->
 								                        <li>
 								                        	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?settings/income_category/delete/<?php echo $row['income_category_id'];?>');">
@@ -159,7 +170,7 @@
 								                        				</li>
 								                    </ul>
 								                </div>
-								                
+
 								            </td>
 								        </tr>
 								        <?php endforeach;?>
@@ -169,11 +180,11 @@
 						</div>
 						<div class="tab-pane" id="v-expense">
 							<p>
-								<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/expense_category_add/');" 
+								<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/expense_category_add/');"
 								class="btn btn-primary pull-right">
 								<i class="entypo-plus-circled"></i>
 								<?php echo get_phrase('add_new_expense_category');?>
-								</a> 
+								</a>
 								<br><br>
 								<table class="table table-bordered datatable" id="table_export_2">
 								    <thead>
@@ -185,7 +196,7 @@
 								        </tr>
 								    </thead>
 								    <tbody>
-								        <?php 
+								        <?php
 								        	$count = 1;
 								        	$expenses = $this->db->get('expense_category')->result_array();
 								        	foreach ($expenses as $row):
@@ -195,13 +206,13 @@
 								            <td><?php echo $row['name'];?></td>
 								            <td><?php echo $this->crud_model->get_income_category_name($row['income_category_id']);?></td>
 								            <td>
-								                
+
 								                <div class="btn-group">
 								                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
 								                        Action <span class="caret"></span>
 								                    </button>
 								                    <ul class="dropdown-menu dropdown-default pull-right" role="menu">
-								                        
+
 								                        <!-- teacher EDITING LINK -->
 								                        <li>
 								                        	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/expense_category_edit/<?php echo $row['expense_category_id'];?>');">
@@ -210,7 +221,7 @@
 								                               	</a>
 								                        				</li>
 								                        <li class="divider"></li>
-								                        
+
 								                        <!-- teacher DELETION LINK -->
 								                        <li>
 								                        	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?settings/expense_category/delete/<?php echo $row['expense_category_id'];?>');">
@@ -220,7 +231,7 @@
 								                        				</li>
 								                    </ul>
 								                </div>
-								                
+
 								            </td>
 								        </tr>
 								        <?php endforeach;?>
@@ -230,13 +241,13 @@
 						</div>
 						<div class="tab-pane" id="v-care">
 							<p>
-								<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_relationship_add/');" 
+								<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_relationship_add/');"
 						class="btn btn-primary pull-right">
 						<i class="entypo-plus-circled"></i>
 						<?php echo get_phrase('add_relationship');?>
-					</a> 
+					</a>
 						<br><br>
-              		
+
 					<table class="table table-bordered datatable" id="table_export_3">
 						<thead>
 							<tr>
@@ -246,7 +257,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<?php 
+							<?php
 								$cnt = 1;
 								$relationship = $this->db->get('relationship')->result_object();
 								foreach($relationship as $row):
@@ -260,7 +271,7 @@
 						                        Action <span class="caret"></span>
 						                    </button>
 						                    <ul class="dropdown-menu dropdown-default pull-right" role="menu">
-						                        
+
 						                        <!-- RELATIONSHIP EDITING LINK -->
 						                        <li>
 						                        	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_relationship_edit/<?php echo $row->relationship_id;?>');">
@@ -269,7 +280,7 @@
 						                               	</a>
 						                        				</li>
 						                        <li class="divider"></li>
-						                        
+
 						                        <!-- RELATIONSHIP DELETION LINK -->
 						                        <li>
 						                        	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?settings/school_settings/delete_relationship/<?php echo $row->relationship_id;?>');">
@@ -287,58 +298,58 @@
 							</p>
 						</div>
 					</div>
-					
-				</div>	
-			
+
+				</div>
+
 			</div>
-	</div>		
+	</div>
 
 
 
 
-<!-----  DATA TABLE EXPORT CONFIGURATIONS ---->                      
+<!-----  DATA TABLE EXPORT CONFIGURATIONS ---->
 <script type="text/javascript">
 
 	jQuery(document).ready(function($)
 	{
-		
+
 
 		var datatable = $("#table_export_1,#table_export_2").dataTable({
 			"sPaginationType": "bootstrap",
-			
+
 		});
-		
+
 		$(".dataTables_wrapper select").select2({
 			minimumResultsForSearch: -1
 		});
 	});
-	
+
 	$(".opening_balance").on('change',function(){
 		var income_category_id = $(this).attr('id').split("_")[1];
-		
+
 		var url = "<?=base_url();?>index.php?settings/update_income_category_opening_balance/"+income_category_id;
-		
+
 		var data = {'opening_balance':$(this).val()};
-		
+
 		$.ajax({
 			url:url,
 			type:"POST",
 			data:data
 		});
 	});
-	
+
 	$(".default_category").on('click',function(){
 		var income_category_id = $(this).attr('id').split("_")[1];
-		
+
 		var url = "<?=base_url();?>index.php?settings/update_default_category/"+income_category_id;
-		
+
 		var data = {'default_category':$(this).val()};
-		
+
 		$.ajax({
 			url:url,
 			type:"POST",
 			data:data
 		});
 	});
-		
+
 </script>
