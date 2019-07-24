@@ -127,6 +127,7 @@ $readonly_style = '';
 								        <tr>
 								            <th><div>#</div></th>
 								            <th><div><?php echo get_phrase('name');?></div></th>
+														<th><div><?php echo get_phrase('account_status');?></div></th>
 								            <th><div><?php echo get_phrase('opening_balance');?></div></th>
 								            <th><?=get_phrase('fees_carry_forward_category');?></th>
 								            <th><div><?php echo get_phrase('options');?></div></th>
@@ -142,6 +143,7 @@ $readonly_style = '';
 								        <tr>
 								            <td><?php echo $count++;?></td>
 								            <td><?php echo $row['name'];?></td>
+														<td><?=$row['status'] == 1?get_phrase('active'):get_phrase('suspended');?></td>
 								            <td><input <?=$readonly;?> type="text" id="openingbalance_<?=$row['income_category_id']?>" class="form-control opening_balance" value="<?php echo $row['opening_balance'];?>" /></td>
 								            <td><input <?=$readonly;?> type="radio" id="default_<?=$row['income_category_id']?>" name="defaut_category" class="default_category" value="1" <?=$row['default_category']== '1'?'checked':'';?> /></td>
 								            <td>
@@ -161,13 +163,34 @@ $readonly_style = '';
 								                        				</li>
 								                        <li class="divider"></li>
 
+																				<li>
+
+																				<?php if($row['status'] == 1){?>
+
+								                        	<a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?settings/change_category_status/income/<?=$row['status'];?>/<?php echo $row['income_category_id'];?>');">
+								                            	<i class="entypo-thumbs-down"></i>
+																									<?php echo get_phrase('deactive');?>
+								                         	</a>
+
+																				<?php }else{?>
+
+																					<a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?settings/change_category_status/income/<?=$row['status'];?>/<?php echo $row['income_category_id'];?>');">
+																							<i class="entypo-thumbs-up"></i>
+																									<?php echo get_phrase('activate');?>
+																					</a>
+
+																				<?php }?>
+
+								                        </li>
+
+																				<li class="divider"></li>
 								                        <!--  DELETION LINK -->
-								                        <li>
+								                        <li <?=$display_style;?>>
 								                        	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?settings/income_category/delete/<?php echo $row['income_category_id'];?>');">
 								                            	<i class="entypo-trash"></i>
-																	<?php echo get_phrase('delete');?>
+																									<?php echo get_phrase('delete');?>
 								                               	</a>
-								                        				</li>
+								                        	</li>
 								                    </ul>
 								                </div>
 
@@ -191,6 +214,7 @@ $readonly_style = '';
 								        <tr>
 								            <th><div>#</div></th>
 								            <th><div><?php echo get_phrase('name');?></div></th>
+														<th><div><?php echo get_phrase('status');?></div></th>
 								            <th><div><?php echo get_phrase('income_category');?></div></th>
 								            <th><div><?php echo get_phrase('options');?></div></th>
 								        </tr>
@@ -204,6 +228,7 @@ $readonly_style = '';
 								        <tr>
 								            <td><?php echo $count++;?></td>
 								            <td><?php echo $row['name'];?></td>
+														<td><?=$row['status'] == 1?get_phrase('active'):get_phrase('suspended');?></td>
 								            <td><?php echo $this->crud_model->get_income_category_name($row['income_category_id']);?></td>
 								            <td>
 
@@ -222,8 +247,30 @@ $readonly_style = '';
 								                        				</li>
 								                        <li class="divider"></li>
 
+																				<li>
+
+																				<?php if($row['status'] == 1){?>
+
+								                        	<a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?settings/change_category_status/expense/<?=$row['status'];?>/<?php echo $row['expense_category_id'];?>');">
+								                            	<i class="entypo-thumbs-down"></i>
+																									<?php echo get_phrase('deactive');?>
+								                         	</a>
+
+																				<?php }else{?>
+
+																					<a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?settings/change_category_status/expense/<?=$row['status'];?>/<?php echo $row['expense_category_id'];?>');">
+																							<i class="entypo-thumbs-up"></i>
+																									<?php echo get_phrase('activate');?>
+																					</a>
+
+																				<?php }?>
+
+								                        </li>
+
+																				<li class="divider"></li>
+
 								                        <!-- teacher DELETION LINK -->
-								                        <li>
+								                        <li <?=$display_style?>>
 								                        	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?settings/expense_category/delete/<?php echo $row['expense_category_id'];?>');">
 								                            	<i class="entypo-trash"></i>
 																	<?php echo get_phrase('delete');?>
