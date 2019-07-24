@@ -405,7 +405,7 @@ class Student extends CI_Controller {
 			$option = '<option value="">' . get_phrase("select_a_student") . '</option>';
 			foreach ($students as $row) {
 
-				$sql = "SELECT * FROM invoice WHERE student_id = '" . $row['student_id'] . "' AND class_id=" . $class_id . " AND yr = " . $yr . " AND term = " . $term . " ";
+				$sql = "SELECT * FROM invoice WHERE invoice.status = 'unpaid' AND  student_id = '" . $row['student_id'] . "' AND class_id=" . $class_id . " AND yr = " . $yr . " AND term = " . $term . " ";
 
 				$query = $this -> db -> query($sql) -> num_rows();
 
