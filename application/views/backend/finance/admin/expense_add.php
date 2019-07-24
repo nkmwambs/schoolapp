@@ -11,39 +11,39 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
             	</div>
             </div>
 			<div class="panel-body">
-				
+
                 <?php echo form_open(base_url() . 'index.php?finance/expense/create/' , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
-	
+
 					<div class="form-group">
 						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('payee');?></label>
-                        
+
 						<div class="col-sm-6">
 							<input type="text" class="form-control" name="payee" data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>" value="" autofocus>
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
-                        
+
 						<div class="col-sm-6">
 							<input type="text" class="form-control datepicker" data-start-date="<?php echo $this->crud_model->next_transaction_date()->start_date;?>" data-end-date="<?php echo $this->crud_model->next_transaction_date()->end_date;?>" data-format="yyyy-mm-dd" readonly="readonly" name="t_date" data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>" autofocus>
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('serial_number');?></label>
-                        
+
 						<div class="col-sm-6">
 							<input type="text" class="form-control" readonly="readonly" value="<?=$this->crud_model->next_batch_number();?>" required="required">
-						</div> 
+						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('description');?></label>
-                        
+
 						<div class="col-sm-6">
 							<input type="text" class="form-control" name="description" required="required">
-						</div> 
+						</div>
 					</div>
 
 					<div class="form-group">
@@ -57,16 +57,16 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="form-group" id="chq_group" style="display: none;">
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('cheque_number');?></label>
-                        
+
 						<div class="col-sm-6">
 							<input type="text" class="form-control" name="cheque_no" id="cheque_no" onchange="validate_cheque_number(this.value);" value="0" required="required">
-						</div> 
+						</div>
 					</div>
-                    
-					
+
+
 					<table class="table table-bordered" id="tbl_details">
 						<thead>
 							<tr>
@@ -79,13 +79,13 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 						</tr>
 						</thead>
 						<tbody>
-							
+
 						</tbody>
 						<tfoot>
 							<tr><td colspan="4"><?=get_phrase('total');?></td><td colspan="2"><input readonly="readonly" type="text" class="form-control" id="amount" name="amount" value="0"/></td></tr>
 						</tfoot>
 					</table>
-                    
+
                     <div class="form-group">
 						<div class="col-sm-offset-3 col-sm-5">
 							<div id="add_row" class="btn btn-orange"><?=get_phrase('add_row');?></div>
@@ -131,9 +131,9 @@ function validate_cheque_number(cheque_number){
 }
 
 	$('#add_row').click(function(){
-		
+
 		var row = $('#tbl_details tbody tr').length;
-		
+
 		$('#tbl_details tbody').append(
 										'<tr>'+
 										'<td><button class="btn btn-warning" onclick="return remove_row(this);"><?=get_phrase('delete');?></button>'+
@@ -144,8 +144,8 @@ function validate_cheque_number(cheque_number){
 										'<td><select  class="form-control"  required="required" id="category_'+row+'"  name="category[]">'+
 										'<option value="" selected="selected" disabled="disabled"><?=get_phrase('select');?></option>'+
 										<?php
-											$exp_cat = $this->db->get('expense_category')->result_object();
-											
+											$exp_cat = $this->db->get_where('expense_category',array('status'=>1))->result_object();
+
 											foreach($exp_cat as $cat):
 										?>
 											'<option value="<?=$cat->expense_category_id;?>"><?=addslashes($cat->name);?></option>'+
@@ -155,35 +155,35 @@ function validate_cheque_number(cheque_number){
 										'</select></td>'+
 										'</tr>');
 	});
-	
+
 	function calculate_cost(row){
-		
+
 		var cost = parseFloat($('#qty_'+row).val())*parseFloat($('#unitcost_'+row).val());
-		
+
 		if(!isNaN(cost)){
 			$('#cost_'+row).val(cost);
 		}else{
 			$('#cost_'+row).val('0');
 		}
-		
+
 		totals();
-		
+
 	}
-	
+
 	function remove_row(elem){
 		$(elem).closest('tr').remove();
-		
+
 		totals();
 	}
-	
+
 	function totals(){
 		var total = 0;
-		
+
 		$('.cost').each(function(i){
 			total +=+parseFloat($(this).val());
 		});
-		
+
 		$('#amount').val(total);
 	}
-	
+
 </script>
