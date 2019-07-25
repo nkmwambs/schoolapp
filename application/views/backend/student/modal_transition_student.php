@@ -17,11 +17,11 @@
 						<div class="form-group">
 							<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('transition_type');?></label>
 			                    <div class="col-sm-9">
-			                        <select name="transition_id" class="form-control" id="transition_id">
+			                        <select required="required" name="transition_id" class="form-control" id="transition_id">
 			                            <option value=""><?php echo get_phrase('select_transition');?></option>
 										<?php
 											$transitions = $this->db->get('transition')->result_object();
-											
+
 											foreach($transitions as $transition){
 										?>
 											<option value="<?=$transition->transition_id;?>"><?=ucfirst($transition->name);?></option>
@@ -37,17 +37,17 @@
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('transition_date');?></label>
 
 						<div class="col-sm-9">
-							<input type="text" id="transition_date" class="form-control datepicker" readonly="readonly" name="transition_date" data-format='yyyy-mm-dd' data-start-view="1" />
+							<input required="required" type="text" id="transition_date" class="form-control datepicker" readonly="readonly" name="transition_date" data-format='yyyy-mm-dd' data-start-view="1" />
 						</div>
 					</div>
 
-					
+
 
 					<div class="form-group">
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('reason');?></label>
 
 						<div class="col-sm-9">
-							<textarea class="form-control" name="reason" id="reason"></textarea>
+							<textarea required="required" class="form-control" name="reason" id="reason"></textarea>
 						</div>
 					</div>
 
@@ -61,7 +61,3 @@
         </div>
     </div>
 </div>
-
-
-
-
