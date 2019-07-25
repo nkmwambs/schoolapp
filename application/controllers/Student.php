@@ -241,13 +241,30 @@ class Student extends CI_Controller {
 			$this -> db -> update('transition_detail', $data2);
 
 			//Reactivate the last cancelled invoice
-			$check_cancelled_invoice_on_transition = $this -> db -> get_where('invoice', array('student_id' => $param3, 'status' => 'cancelled', 'transitioned' => 1));
+			$check_cancelled_invoice_on_transition = $this -> db -> get_where('invoice',
+			array('student_id' => $param3, 'status' => 'cancelled', 'transitioned' => 1));
 
 			if ($check_cancelled_invoice_on_transition -> num_rows() > 0) {
 				$this -> db -> where(array('invoice_id' => $check_cancelled_invoice_on_transition -> row() -> invoice_id));
 				$update['status'] = 'unpaid';
 				$update['transitioned'] = 0;
 				$this -> db -> update('invoice', $update);
+			}
+
+			//Reactivate the caregiver is deactivated
+
+			$parent_id = $this->db->get_where('student',array('student_id'=>$param3))->row()->parent_id;
+
+			if($parent_id != 0){
+				//Get the parent object
+				$parent = $this->db->get_where('parent',array('parent_id'=>$parent_id));
+
+				//Only update the parent if present in the database table and is inactive
+				if($parent->num_rows() > 0 && $parent->row()->status == 0){
+					$this->db->where(array('parent_id'=>$parent_id));
+					$data_parent_status['status'] = 1;
+					$this->db->update('parent',$data_parent_status);
+				}
 			}
 
 			$this -> session -> set_flashdata('flash_message', get_phrase('student_reinstated'));
@@ -272,11 +289,11 @@ class Student extends CI_Controller {
 		$data['transition_id'] = $this -> input -> post('transition_id');
 		$data['transition_date'] = $this -> input -> post('transition_date');
 		$data['student_id'] = $student_id;
-		//$this->input->post('student_id');
 		$data['reason'] = $this -> input -> post('reason');
 
 		//Check if a transition exists
-		$transition_exists = $this -> db -> get_where('transition_detail', array('student_id' => $student_id, 'status' => 1));
+		$transition_exists = $this -> db -> get_where('transition_detail',
+		array('student_id' => $student_id, 'status' => 1));
 
 		$msg = get_phrase('action_failed');
 
@@ -288,7 +305,8 @@ class Student extends CI_Controller {
 				$this -> db -> where(array('student_id' => $student_id));
 				$this -> db -> update('student', $data2);
 
-				//Check if student has active invoice
+				//Check if student has active invoice.
+				//Unpaid invoices are given a transitioned flag of 1 when a student transitions
 				$count_unpaid_invoice = $this -> db -> get_where('invoice', array('student_id' => $student_id, 'status' => 'unpaid')) -> num_rows();
 
 				if ($count_unpaid_invoice > 0) {
@@ -298,18 +316,28 @@ class Student extends CI_Controller {
 					$this -> db -> update('invoice', $data4);
 				}
 
-				//Check if a student has a parent (Both Primary and Secondary)
-				// $this->db->select(array('parent_id'));
-				// $this->db->join('student','student.parent_id=parent.parent_id');
-				// $active_parent = $this->db->get_where('parent',
-				// array('status'=>1,'student_id'=>$student_id));
-				//
-				// if($active_parent->num_rows() > 0){
-				// $parent_id = $active_parent->row()->parent_id;
-				// $this->db->where(array('parent_id'=>$parent_id));
-				// $data['status'] = 0;
-				// $this->db->update('parent',$data);
-				// }
+				//Check if a student has a parent (Both Primary and Secondary) + The parent has only this
+				//Student as their only active student
+
+				$this -> db -> select(array('parent.parent_id'));
+				$this -> db -> join('student', 'student.parent_id=parent.parent_id');
+				$active_parent = $this -> db -> get_where('parent',
+				array('parent.status' => 1, 'student.student_id' => $student_id));
+
+				if ($active_parent -> num_rows() > 0) {
+
+					$parent_id = $active_parent -> row() -> parent_id;
+
+					$active_student_with_same_parent = $this -> db -> get_where('student',
+					array('parent_id' => $parent_id, 'active' => 1)) -> num_rows();
+
+					if ($active_student_with_same_parent == 0) {
+						$this -> db -> where(array('parent_id' => $parent_id));
+						$data5['status'] = 0;
+						$this -> db -> update('parent', $data5);
+					}
+
+				}
 
 				$msg = get_phrase('action_successful');
 			}
@@ -395,7 +423,7 @@ class Student extends CI_Controller {
 		//$yr = "2018";
 		//$term = "1";
 
-		$students_object = $this -> db -> get_where('student', array('class_id' => $class_id,'active'=>1));
+		$students_object = $this -> db -> get_where('student', array('class_id' => $class_id, 'active' => 1));
 
 		$option = '<option value="">' . get_phrase("no_student_found") . '</option>';
 
@@ -434,17 +462,33 @@ class Student extends CI_Controller {
 			}
 		}
 
-		echo '<div class="form-group">
-                <label class="col-sm-3 control-label">' . get_phrase('students') . '</label>
-                <div class="col-sm-9">';
+		echo '
+<div class="form-group">
+	<label class="col-sm-3 control-label">' . get_phrase('students') . '</label>
+	<div class="col-sm-9">
+		';
 		foreach ($students as $row) {
-			echo '<div class="checkbox">
-                    <label><input type="checkbox" class="check" name="student_id[]" value="' . $row['student_id'] . '">' . $row['name'] . '</label>
-                </div>';
+			echo '
+		<div class="checkbox">
+			<label>
+				<input type="checkbox" class="check" name="student_id[]" value="' . $row['student_id'] . '">
+				' . $row['name'] . '</label>
+		</div>';
 		}
-		echo '<br><button type="button" class="btn btn-default" onClick="select()">' . get_phrase('select_all') . '</button>';
-		echo '<button style="margin-left: 5px;" type="button" class="btn btn-default" onClick="unselect()"> ' . get_phrase('select_none') . ' </button>';
-		echo '</div></div>';
+		echo '
+		<br>
+		<button type="button" class="btn btn-default" onClick="select()">
+			' . get_phrase('select_all') . '
+		</button>
+		';
+		echo '
+		<button style="margin-left: 5px;" type="button" class="btn btn-default" onClick="unselect()">
+			' . get_phrase('select_none') . '
+		</button>
+		';
+		echo '
+	</div>
+</div>';
 	}
 
 }

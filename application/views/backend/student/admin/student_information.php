@@ -9,19 +9,19 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
         <?php echo get_phrase('add_new_student');?>
 </a>
 
-<?php 
-	$new_numeric = $class->row()->name_numeric + 1; 
+<?php
+	$new_numeric = $class->row()->name_numeric + 1;
     $new_class = $this->db->get_where("class",array("name_numeric"=>$new_numeric));
-	
+
 	if($new_class->num_rows() > 0 && $this->db->get_where('student',array('class_id'=>$class_id))->num_rows() > 0){
 ?>
 <a href="javascript:;" onclick="confirm_action('<?php echo base_url();?>index.php?student/student_promote/mass_promotion/<?php echo $class_id;?>');"
     class="btn btn-primary pull-left promote_student <?=get_access_class("promote_student",$this->session->login_type,"accounts");?>">
         <i class="entypo-forward"></i>
         <?php echo get_phrase('promote_students');?> : <?php echo $new_class->row()->name;?>
-<?php 
+<?php
 	}
-?>        
+?>
 </a>
 
 <br>
@@ -68,8 +68,8 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                             <th width="80"><div><?php echo get_phrase('roll');?></div></th>
                             <th width="80"><div><?php echo get_phrase('photo');?></div></th>
                             <th><div><?php echo get_phrase('name');?></div></th>
-                            <th class="span3"><div><?php echo get_phrase('address');?></div></th>
-                            <th><div><?php echo get_phrase('email');?></div></th>
+                            <th class="span3"><div><?php echo get_phrase('caregiver');?></div></th>
+                            <th><div><?php echo get_phrase('phone');?></div></th>
                             <th><div><?php echo get_phrase('options');?></div></th>
                         </tr>
                     </thead>
@@ -81,8 +81,8 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                             <td><?php echo $row['roll'];?></td>
                             <td><img src="<?php echo $this->crud_model->get_image_url('student',$row['student_id']);?>" class="img-circle" width="30" /></td>
                             <td><?php echo $row['name'];?></td>
-                            <td><?php echo $row['address'];?></td>
-                            <td><?php echo $row['email'];?></td>
+                            <td><?php echo $row['parent_id']!=0?$this->crud_model->get_type_name_by_id('parent',$row['parent_id']):get_phrase('not_set');?></td>
+                            <td><?php echo $row['phone'];?></td>
                             <td>
 
                                 <div class="btn-group">
@@ -108,7 +108,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                                     <?php echo get_phrase('profile');?>
                                                 </a>
                                         </li>
-                                        
+
                                         <li class="divider"></li>
 
 
@@ -119,12 +119,12 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                                     <?php echo get_phrase('edit');?>
                                                 </a>
                                         </li>
-                                        
+
                                        <li class="divider <?=get_access_class("edit_student",$this->session->login_type,"accounts");?>"></li>
 
                                         <!-- STUDENT PROMOTE LINK -->
                                         <?php
-										
+
                                         	if($this->school_model->highest_class_numeric() !== $class_id){
                                         ?>
                                         <li class="<?=get_access_class("promote_student",$this->session->login_type,"accounts");?>">
@@ -133,12 +133,12 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                                     <?php echo get_phrase('promote');?>
                                                 </a>
                                         </li>
-                                        
+
                                        <li class="divider <?=get_access_class("promote_student",$this->session->login_type,"accounts");?>"></li>
-										
+
 										 <?php
 											}
-											
+
                                         	if($this->school_model->lowest_class_numeric() !== $class_id){
                                         ?>
                                         <!-- STUDENT DEMOTE LINK -->
@@ -148,12 +148,12 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                                     <?php echo get_phrase('demote');?>
                                                 </a>
                                         </li>
-                                        
-                                       
+
+
                                         <li class="divider <?=get_access_class("demote_student",$this->session->login_type,"accounts");?>"></li>
 										<?php
 											}
-										?>	
+										?>
                                         <!-- STUDENT SUSPEND LINK -->
                                         <li class=" <?=get_access_class("suspend_student",$this->session->login_type,"accounts");?>">
                                             <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_transition_student/<?php echo $row['student_id'];?>');">
@@ -188,7 +188,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                         </tr>
                     </thead>
                     <tbody>
-                        <?php	
+                        <?php
                         		$this->db->select(array('transition.name as transition_type','roll','student.student_id',
                         		'student.name','transition_date','reason','transition_detail.status'));
 
@@ -231,7 +231,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                                     <?php echo get_phrase('reinstate');?>
                                                 </a>
                                         </li>
-                                        
+
                                         <?php
 										}
                                         ?>
