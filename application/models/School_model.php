@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class School_model extends CI_Model {
-    
+
     public function __construct() {
         parent::__construct();
     }
@@ -10,43 +10,71 @@ class School_model extends CI_Model {
     function lowest_class_numeric()
     {
         $numeric = $this->db->select_min('name_numeric')->get('class')->row()->name_numeric;
-		
+
 		return $this->db->get_where('class',array('name_numeric'=>$numeric))->row()->class_id;
     }
-	
+
 	function highest_class_numeric()
     {
     	 $numeric = $this->db->select_max('name_numeric')->get('class')->row()->name_numeric;
-		
+
 		return $this->db->get_where('class',array('name_numeric'=>$numeric))->row()->class_id;
     }
-	
+
 	function income_categories(){
 		return $this->db->get('income_categories')->result_object();
 	}
-	
+
 	function system_title(){
 		return $this->db->get_where('settings' , array('type'=>'system_title'))->row()->description;
 	}
-	
+
 	function funds_transfer_by_batch_number($batch_number){
-		
+
 		$this->db->select(array('cashbook.batch_number','cashbook.t_date','cashbook.amount',
 		'income_categories.name as account_to','expense_category.name as account_from'));
-		
-		
-		
+
+
+
 		$this->db->join('payment','payment.batch_number=cashbook.batch_number');
 		$this->db->join('other_payment_details','other_payment_details.payment_id=payment.payment_id');
 		$this->db->join('income_categories','income_categories.income_category_id=other_payment_details.income_category_id');
-		
+
 		$this->db->join('expense','expense.batch_number=cashbook.batch_number');
 		$this->db->join('expense_details','expense_details.expense_id=expense.expense_id');
 		$this->db->join('expense_category','expense_category.expense_category_id=expense_details.expense_category_id');
-		
+
 		$transfer = $this->db->get_where('cashbook',array('cashbook.batch_number'=>$batch_number))->row();
-		
+
 		return $transfer;
 	}
-   
+
+  function get_approval_record_status($record_type,$primary_key_value,$primary_key_field_name = ''){
+      $primary_key_field = $record_type."_id";
+
+      $status = array();
+      $status['request_type'] = "";
+      $status['request_status'] = "";
+
+      if($primary_key_field_name!==""){
+          $primary_key_field = $primary_key_field_name;
+      }
+
+      $record = $this->db->get_where($record_type,array($primary_key_field=>$primary_key_value))->row();
+
+      $last_approval_request_id = $record->last_approval_request_id;
+
+      if($last_approval_request_id > 0){
+        $this->db->select(array('request_type.name as request_type','approval_request.status'));
+        $this->db->join('request_type','request_type.request_type_id=approval_request.request_type_id');
+        $approval_request = $this->db->get_where('approval_request',
+        array('approval_request.approval_request_id'=>$last_approval_request_id))->row();
+
+        $status['request_type'] = $approval_request->request_type;
+        $status['request_status'] = $approval_request->status;
+      }
+
+      return $status;
+  }
+
 }

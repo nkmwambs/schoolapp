@@ -597,6 +597,59 @@ class Finance extends CI_Controller
             redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
         }
 
+        if($param1 == 'request_cancel'){
+          $this -> db -> trans_start();
+          //Create a new approval request record
+          $request_data['record_type_id'] = $this->db->get_where('record_type',
+          array('name'=>'invoice'))->row()->record_type_id;
+
+          $request_data['request_type_id'] = $this->db->get_where('request_type',
+          array('name'=>'cancel'))->row()->request_type_id;
+
+          $request_data['record_type_primary_id'] = $param2;
+
+          $request_data['status'] = 0;
+
+          $request_data['created_date'] = date('Y-m-d');
+
+          $request_data['created_by'] = $this->session->login_user_id;
+
+          $request_data['last_modified_by'] = $this->session->login_user_id;
+
+          $request_data['approved_by'] = 0;
+
+          $this->db->insert('approval_request',$request_data);
+
+          $last_approval_request_id = $this->db->insert_id();
+
+          //Update the last_approval_request_id field for this invoice
+          $this->db->where(array('invoice_id'=>$param2));
+          $this->db->update('invoice',array('last_approval_request_id'=>$last_approval_request_id));
+
+          //Update a request message if any
+
+          if($this->input->post('request_message') && $this->input->post('request_message') !=="" ){
+            $message_data['approval_request_id'] = $last_approval_request_id;
+            $message_data['sender_id'] = $this->session->login_user_id;
+            $message_data['recipient_id'] = 0;
+            $message_data['message'] = $this->input->post('request_message');
+            $message_data['created_date'] = date('Y-m-d');
+
+            $this->db->insert('approval_request_messaging',$message_data);
+          }
+
+          if ($this -> db -> trans_status() === false) {
+              $this -> db -> trans_rollback();
+              $this -> session -> set_flashdata('flash_message', get_phrase('process_failed'));
+          } else {
+              $this -> db -> trans_commit();
+              $this -> session -> set_flashdata('flash_message', get_phrase('request_sent_successfully'));
+          }
+
+        //  $this -> session -> set_flashdata('flash_message', get_phrase('request_sent_successful'));
+          redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
+        }
+
         if ($param1 == 'reclaim') {
 
             //$invoice_to_reclaim = $this -> db -> get_where("invoice", array("invoice_id" => $param2, "amount_due" => 0));
