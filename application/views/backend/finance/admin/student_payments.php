@@ -626,6 +626,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                                     <!-- Re-Claim LINK -->
                                     <?php
                                     if ($row['carry_forward'] == 0) {
+                                    	if ($approval_info['request_type'] == 'reinstate') { 
                                         ?>
                                     <li class="reclaim_cancelled_invoice">
                                         <a href="#" onclick="confirm_action('<?php echo base_url(); ?>index.php?finance/invoice/reclaim/<?php echo $row['invoice_id']; ?>');">
@@ -633,7 +634,21 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                                                 <?php echo get_phrase('reclaim_invoice'); ?>
                                             </a>
                                      </li>
-                                     <?php } ?>
+                                     <?php 
+										} else{
+										?>
+										
+										<li class="reclaim_cancelled_invoice">
+                                        <a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_request_comment_add/request_reinstate/<?php echo $row['invoice_id']; ?>');">
+                                            <i class="entypo-reply"></i>
+                                                <?php echo get_phrase('request_reclaim_invoice'); ?>
+                                            </a>
+										</li>
+									<?php			
+										}
+									
+										} 
+									?>
                                 </ul>
                             </div>
         					</td>
