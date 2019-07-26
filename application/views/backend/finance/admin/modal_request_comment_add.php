@@ -13,7 +13,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
             </div>
 			<div class="panel-body">
 
-                <?php echo form_open(base_url().'index.php?finance/invoice/request_cancel/'.$param3 , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
+                <?php echo form_open(base_url().'index.php?finance/invoice/'.$param2.'/'.$param3 , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
 
                   <div class="form-group">
                     <div class="col-xs-12">

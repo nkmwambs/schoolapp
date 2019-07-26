@@ -34,7 +34,7 @@ class Approval extends CI_Controller
 
         $list_approvals = $this->db->get_where('approval_request',array('status'=>$status))->result_object();
 
-        $page_data['status'] = array('new','approved','declined','reinstated');
+        $page_data['status'] = array('new','approved','declined','reinstated','implemented');
         $page_data['set_state'] = $status;
         $page_data['records'] = $list_approvals;
         $page_data['page_name']  =	'list_approvals';
@@ -47,7 +47,7 @@ class Approval extends CI_Controller
       $list_approvals = $this->db->get_where('approval_request',array('status'=>$status))->result_object();
 
       $page_data['records'] = $list_approvals;
-      $page_data['status'] = array('new','approved','declined','reinstated');
+      $page_data['status'] = array('new','approved','declined','reinstated','implemented');
 
       echo $this->load->view('backend/approval/ajax_list_approvals',$page_data,TRUE);
     }

@@ -1,35 +1,37 @@
 <?php
-if (!defined('BASEPATH')) exit('No direct script access allowed');
+if (!defined('BASEPATH')) {
+    exit('No direct script access allowed');
+}
 
-	$this->db->where('status' , 'unpaid');
-	$this->db->where('yr' , $year);
-    $this->db->order_by('creation_timestamp' , 'desc');
+    $this->db->where('status', 'unpaid');
+    $this->db->where('yr', $year);
+    $this->db->order_by('creation_timestamp', 'desc');
     $unpaid_invoices = $this->db->get('invoice')->result_array();
 
 
-	$this->db->where('status' , 'paid');
-	$this->db->where('yr' , $year);
-    $this->db->order_by('creation_timestamp' , 'desc');
+    $this->db->where('status', 'paid');
+    $this->db->where('yr', $year);
+    $this->db->order_by('creation_timestamp', 'desc');
     $paid_invoices = $this->db->get('invoice')->result_array();
 
-	$this->db->where('status' , 'excess');
-	$this->db->where('yr' , $year);
-    $this->db->order_by('creation_timestamp' , 'desc');
+    $this->db->where('status', 'excess');
+    $this->db->where('yr', $year);
+    $this->db->order_by('creation_timestamp', 'desc');
     $overpaid_invoices = $this->db->get('invoice')->result_array();
 
-	$this->db->where('status' , 'active');
-	//$this->db->where('yr' , $year);
-    $this->db->order_by('creation_timestamp' , 'desc');
+    $this->db->where('status', 'active');
+    //$this->db->where('yr' , $year);
+    $this->db->order_by('creation_timestamp', 'desc');
     $overpay_notes = $this->db->get('overpay')->result_array();
 
-	$this->db->where('status' , 'cleared');
-	//$this->db->where('yr' , $year);
-    $this->db->order_by('creation_timestamp' , 'desc');
+    $this->db->where('status', 'cleared');
+    //$this->db->where('yr' , $year);
+    $this->db->order_by('creation_timestamp', 'desc');
     $cleared_overpay_notes = $this->db->get('overpay')->result_array();
 
-	$this->db->where('status' , 'cancelled');
-	$this->db->where('yr' , $year);
-    $this->db->order_by('creation_timestamp' , 'desc');
+    $this->db->where('status', 'cancelled');
+    $this->db->where('yr', $year);
+    $this->db->order_by('creation_timestamp', 'desc');
     $cancelled_invoices = $this->db->get('invoice')->result_array();
 
 ?>
@@ -38,8 +40,8 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 	<div class="col-xs-12">
 		<a href="<?=base_url();?>index.php?finance/student_collection_tally/<?=date('Y');?>" class="btn btn-default"> <i class="fa fa-list"></i> <?=get_phrase('payment_tally_sheet');?></a>
 		<?php
-			$count_to_notify = $this->db->get_where('invoice',array('status'=>'unpaid'))->num_rows();
-		?>
+            $count_to_notify = $this->db->get_where('invoice', array('status'=>'unpaid'))->num_rows();
+        ?>
 		<a href="#" onclick="confirm_action('<?=base_url();?>index.php?finance/sms_fee_balances');" class="btn btn-default"><i class="fa fa-mobile"></i><?=get_phrase('SMS_balances');?><span class="badge badge-primary"><?=$count_to_notify;?></span></a>
 		<a href="<?php echo base_url(); ?>index.php?finance/create_invoice" class="btn btn-primary"><i class="fa fa-money"></i><?=get_phrase('create_invoice');?></a>
 		<a href="<?php echo base_url(); ?>index.php?finance/missing_invoices" class="btn btn-danger"><i class="fa fa-times"></i><?=get_phrase('missing_invoices');?></a>
@@ -53,22 +55,24 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 		<?=get_phrase('year');?> <?=$year;?>
 	</div> -->
 	<div class="col-xs-12">
-		<?php echo form_open(base_url() . 'index.php?finance/scroll_student_payments' , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
+		<?php echo form_open(base_url() . 'index.php?finance/scroll_student_payments', array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
 
 			<div class="form-group">
 				<?php
-					$year_range = range($year - 3, $year + 3)
-				?>
+                    $year_range = range($year - 3, $year + 3)
+                ?>
 				<div class="col-xs-offset-2 col-xs-4" style="text-align: right;">
 					<select name="year" class="form-control">
 						<option><?=get_phrase('select_year');?></option>
 						<?php
-							foreach($year_range as $row){
-						?>
-							<option value="<?=$row;?>" <?php if($year == $row) echo "selected";?>><?=$row;?></option>
+                            foreach ($year_range as $row) {
+                                ?>
+							<option value="<?=$row; ?>" <?php if ($year == $row) {
+                                    echo "selected";
+                                } ?>><?=$row; ?></option>
 						<?php
-							}
-						?>
+                            }
+                        ?>
 					</select>
 				</div>
 
@@ -77,13 +81,15 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 						<option><?=get_phrase('select_term');?></option>
 						<?php
 
-							$terms = $this->db->get('terms')->result_object();
-							foreach($terms as $term_row){
-						?>
-							<option value="<?=$term_row->terms_id;?>" <?php if($term == $term_row->terms_id) echo "selected";?>><?=$term_row->name;?></option>
+                            $terms = $this->db->get('terms')->result_object();
+                            foreach ($terms as $term_row) {
+                                ?>
+							<option value="<?=$term_row->terms_id; ?>" <?php if ($term == $term_row->terms_id) {
+                                    echo "selected";
+                                } ?>><?=$term_row->name; ?></option>
 						<?php
-							}
-						?>
+                            }
+                        ?>
 					</select>
 				</div>
 
@@ -180,37 +186,37 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 					</thead>
                     <tbody>
                     	<?php
-                    		$count = 1;
+                            $count = 1;
 
-                    		foreach($unpaid_invoices as $row):
-													/**
-													* Check if this invoice has any approval request:
-													*	If yes get the request_type and status
-													*
-													**/
-													$approval_info = $this->school_model->get_approval_record_status('invoice',$row['invoice_id']);
-													//print_r($approval_info);
-											?>
+                            foreach ($unpaid_invoices as $row):
+                                                    /**
+                                                    * Check if this invoice has any approval request:
+                                                    *	If yes get the request_type and status
+                                                    *
+                                                    **/
+                                                    $approval_info = $this->school_model->get_approval_record_status('invoice', $row['invoice_id']);
+                                                    //print_r($approval_info);
+                                            ?>
                         <tr>
                         	<td><?php echo $row['invoice_id'];?></td>
-							<td><?php echo $this->crud_model->get_type_name_by_id('student',$row['student_id']);?></td>
+							<td><?php echo $this->crud_model->get_type_name_by_id('student', $row['student_id']);?></td>
 							<td><?php echo $row['yr'];?></td>
 							<td><?php echo $row['term'];?></td>
-							<td><?php echo $this->crud_model->get_type_name_by_id('class',$row['class_id']);?></td>
-							<td><?php echo number_format($row['amount'],2);?></td>
-                            <td><?php echo number_format($row['amount_due'],2);?></td>
+							<td><?php echo $this->crud_model->get_type_name_by_id('class', $row['class_id']);?></td>
+							<td><?php echo number_format($row['amount'], 2);?></td>
+                            <td><?php echo number_format($row['amount_due'], 2);?></td>
 
                             <?php $paid = $this->crud_model->fees_paid_by_invoice($row['invoice_id']);?>
 
-                            <td><?php echo number_format($paid,2);?></td>
+                            <td><?php echo number_format($paid, 2);?></td>
                            <?php
-                            	$bal = $this->crud_model->fees_balance_by_invoice($row['invoice_id']);
+                                $bal = $this->crud_model->fees_balance_by_invoice($row['invoice_id']);
                             ?>
 
-                            <td><?php echo number_format($bal,2);?></td>
+                            <td><?php echo number_format($bal, 2);?></td>
 							<td><?php echo date('d M,Y', $row['creation_timestamp']);?></td>
 							<td><?=ucfirst($approval_info['request_type']);?></td>
-							<?php $states = array('new','approved','declined','reinstated');?>
+
 							<td><?=isset($states[$approval_info['request_status']])?ucfirst($states[$approval_info['request_status']]):'';?></td>
 							<td>
                             <div class="btn-group">
@@ -222,13 +228,13 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
                                     <?php if ($bal != 0):?>
 
-                                    <li class="<?=get_access_class('take_student_payment','admin','accounting');?>">
+                                    <li class="<?=get_access_class('take_student_payment', 'admin', 'accounting');?>">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_take_payment/<?php echo $row['invoice_id'];?>');">
                                             <i class="entypo-bookmarks"></i>
                                                 <?php echo get_phrase('take_payment');?>
                                         </a>
                                     </li>
-                                    <li class="divider <?=get_access_class('take_student_payment','admin','accounting');?>"></li>
+                                    <li class="divider <?=get_access_class('take_student_payment', 'admin', 'accounting');?>"></li>
                                     <?php endif;?>
 
                                     <!-- VIEWING INVOICE LINK -->
@@ -241,24 +247,23 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                                     <li class="divider"></li>
 
 																		<?php
-																		//Show these links when a request has been raiased and approved
-																		if($approval_info['request_status'] == 1){
-
-																		if($approval_info['request_type'] == 'update'){ ?>
+                                                                        //Show these links when a request has been raiased and approved
+                                                                        if ($approval_info['request_status'] == 1) {
+                                                                            if ($approval_info['request_type'] == 'update') { ?>
                                     <!-- EDIT INVOICE LINK -->
-                                    <li class="<?=get_access_class('edit_invoice','admin','accounting');?>">
+                                    <li class="<?=get_access_class('edit_invoice', 'admin', 'accounting');?>">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_invoice/<?php echo $row['invoice_id'];?>');">
                                             <i class="entypo-pencil"></i>
                                                 <?php echo get_phrase('edit_invoice');?>
                                             </a>
                                                     </li>
-                                    <li class="divider <?=get_access_class('edit_invoice','admin','accounting');?>"></li>
+                                    <li class="divider <?=get_access_class('edit_invoice', 'admin', 'accounting');?>"></li>
 
 																		<?php } ?>
 
                                     <!-- DELETION LINK -->
-																		<?php if($approval_info['request_type'] == 'cancel'){ ?>
-                                    <li class="<?=get_access_class('delete_or_cancel_invoice','admin','accounting');?>">
+																		<?php if ($approval_info['request_type'] == 'cancel') { ?>
+                                    <li class="<?=get_access_class('delete_or_cancel_invoice', 'admin', 'accounting');?>">
 
                                     		<a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?finance/invoice/cancel/<?php echo $row['invoice_id'];?>');">
 	                                            <i class="entypo-cancel"></i>
@@ -268,39 +273,39 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
                                      </li>
 																		<?php
-																				}
-																	 		}
-																		 ?>
+                                                                                }
+                                                                        }
+                                                                         ?>
 
 																		 <?php
- 																		//Show these links when a request has not been raised or has been implemented by the requestor
- 																		if($approval_info['request_status'] == "" || $approval_info['request_status'] == 5 ){
-																		 ?>
+                                                                        //Show these links when a request has not been raised or has been implemented by the requestor
+                                                                        if ($approval_info['request_status'] == "" || $approval_info['request_status'] == 4 || $approval_info['request_status'] == 2 ) {
+                                                                            ?>
                                      <!-- Send edit invoice request link  -->
-                                     <li class="<?=get_access_class('request_edit_invoice','admin','accounting');?>">
-                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_invoice/<?php echo $row['invoice_id'];?>');">
+                                     <li class="<?=get_access_class('request_edit_invoice', 'admin', 'accounting'); ?>">
+                                         <!-- <a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_edit_invoice/<?php echo $row['invoice_id']; ?>');"> -->
+																				 	<a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_request_comment_add/request_edit/<?php echo $row['invoice_id']; ?>');">
                                              <i class="entypo-pencil"></i>
-                                                 <?php echo get_phrase('request_edit_invoice');?>
+                                                 <?php echo get_phrase('request_edit_invoice'); ?>
                                              </a>
                                     </li>
 
-																		<li class="divider <?=get_access_class('request_edit_invoice','admin','accounting');?>"></li>
+																		<li class="divider <?=get_access_class('request_edit_invoice', 'admin', 'accounting'); ?>"></li>
 
 
                                      <!-- Send cancel request link -->
 
-                                     <li class="<?=get_access_class('request_delete_or_cancel_invoice','admin','accounting');?>">
-                                     		<!-- <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?finance/invoice/request_cancel/<?php echo $row['invoice_id'];?>');"> -->
-																					<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_request_comment_add/request_cancel/<?php echo $row['invoice_id'];?>');">
+                                     <li class="<?=get_access_class('request_delete_or_cancel_invoice', 'admin', 'accounting'); ?>">
+                                     		<!-- <a href="#" onclick="confirm_action('<?php echo base_url(); ?>index.php?finance/invoice/request_cancel/<?php echo $row['invoice_id']; ?>');"> -->
+																					<a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_request_comment_add/request_cancel/<?php echo $row['invoice_id']; ?>');">
  	                                            <i class="entypo-cancel"></i>
- 	                                                <?php echo get_phrase('request_cancel_invoice');?>
+ 	                                                <?php echo get_phrase('request_cancel_invoice'); ?>
  	                                        </a>
 
                                       </li>
  																		<?php
-
- 																	 		}
- 																		 ?>
+                                                                        }
+                                                                         ?>
 
                                 </ul>
                             </div>
@@ -316,7 +321,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 					<div class="row" id="paid_invoices_placeholder">
 
 						<!-- <div class="col-sm-1">
-							<a id="prev_year" title="<?=date('Y',strtotime("-1 Year"))?>" href="#cleared"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>
+							<a id="prev_year" title="<?=date('Y', strtotime("-1 Year"))?>" href="#cleared"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>
 						</div> -->
 
 						<div class="col-sm-12">
@@ -338,27 +343,29 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 								</thead>
 			                    <tbody>
 			                    	<?php
-			                    		$count = 1;
-			                    		foreach($paid_invoices as $row3):
-			                    	?>
+                                        $count = 1;
+                                        foreach ($paid_invoices as $row3):
+                                    ?>
 			                        <tr>
 			                        	<td><?php echo $count++;?></td>
-										<td><?php echo $this->crud_model->get_type_name_by_id('student',$row3['student_id']);?></td>
+										<td><?php echo $this->crud_model->get_type_name_by_id('student', $row3['student_id']);?></td>
 										<td><?php echo $row3['yr'];?></td>
 										<td><?php echo $row3['term'];?></td>
-										<td><?php echo $this->crud_model->get_type_name_by_id('class',$row['class_id']);?></td>
-										<td><?php echo number_format($row3['amount'],2);?></td>
-			                            <td><?php echo number_format($row3['amount_due'],2);?></td>
+										<td><?php echo $this->crud_model->get_type_name_by_id('class', $row['class_id']);?></td>
+										<td><?php echo number_format($row3['amount'], 2);?></td>
+			                            <td><?php echo number_format($row3['amount_due'], 2);?></td>
 
-			                             <?php $paid = $this->db->select_sum('amount')->get_where('transaction',
-				                            array('invoice_id'=>$row3['invoice_id']))->row()->amount;?>
+			                             <?php $paid = $this->db->select_sum('amount')->get_where(
+                                        'transaction',
+                                        array('invoice_id'=>$row3['invoice_id'])
+                                    )->row()->amount;?>
 
-				                            <td><?php echo number_format($paid,2);?></td>
+				                            <td><?php echo number_format($paid, 2);?></td>
 				                           <?php
-				                            	$balance = $row3['amount_due'] - $paid;
-				                            ?>
+                                                $balance = $row3['amount_due'] - $paid;
+                                            ?>
 
-				                        <td><?php echo number_format($balance,2);?></td>
+				                        <td><?php echo number_format($balance, 2);?></td>
 
 										<td><?php echo date('d M,Y', $row3['creation_timestamp']);?></td>
 										<td>
@@ -407,29 +414,31 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 					</thead>
                     <tbody>
                     	<?php
-                    		$count = 1;
-                    		//$this->db->where('status' , 'paid');
-                    		//$this->db->order_by('creation_timestamp' , 'desc');
-                    		//$invoices = $this->db->get('invoice')->result_array();
-                    		foreach($overpaid_invoices as $row3):
-                    	?>
+                            $count = 1;
+                            //$this->db->where('status' , 'paid');
+                            //$this->db->order_by('creation_timestamp' , 'desc');
+                            //$invoices = $this->db->get('invoice')->result_array();
+                            foreach ($overpaid_invoices as $row3):
+                        ?>
                         <tr>
                         	<td><?php echo $count++;?></td>
-							<td><?php echo $this->crud_model->get_type_name_by_id('student',$row3['student_id']);?></td>
+							<td><?php echo $this->crud_model->get_type_name_by_id('student', $row3['student_id']);?></td>
 							<td><?php echo $row3['yr'];?></td>
 							<td><?php echo $row3['term'];?></td>
-							<td><?php echo number_format($row3['amount'],2);?></td>
-                            <td><?php echo number_format($row3['amount_due'],2);?></td>
-                            <?php $paid = $this->db->select_sum('amount')->get_where('transaction',
-				                   array('invoice_id'=>$row3['invoice_id']))->row()->amount;
-				             ?>
+							<td><?php echo number_format($row3['amount'], 2);?></td>
+                            <td><?php echo number_format($row3['amount_due'], 2);?></td>
+                            <?php $paid = $this->db->select_sum('amount')->get_where(
+                            'transaction',
+                            array('invoice_id'=>$row3['invoice_id'])
+                        )->row()->amount;
+                             ?>
 
-				             <td><?php echo number_format($paid,2);?></td>
+				             <td><?php echo number_format($paid, 2);?></td>
 				             <?php
-				                   $balance = $row3['amount_due'] - $paid;
-				             ?>
+                                   $balance = $row3['amount_due'] - $paid;
+                             ?>
 
-				            <td><?php echo number_format($balance,2);?></td>
+				            <td><?php echo number_format($balance, 2);?></td>
 							<td><?php echo date('d M,Y', $row3['creation_timestamp']);?></td>
 							<td>
 								<div class="btn-group">
@@ -477,26 +486,26 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 							    </thead>
 							    <tbody>
 							    	<?php
-							    		$notes_object = $this->db->get_where("overpay",array("status"=>"active"));
+                                        $notes_object = $this->db->get_where("overpay", array("status"=>"active"));
 
-										if($notes_object->num_rows() > 0){
-											$cnt = 1;
-											foreach($notes_object->result_object() as $row){
-							    	?>
+                                        if ($notes_object->num_rows() > 0) {
+                                            $cnt = 1;
+                                            foreach ($notes_object->result_object() as $row) {
+                                                ?>
 							    			<tr>
-							    				<td><?=$cnt;?></td>
-							    				<td><?=$this->crud_model->get_type_name_by_id("student",$row->student_id);?></td>
-							    				<td><?=$row->amount;?></td>
-							    				<td><?=$row->amount_due;?></td>
-							    				<td><?=$row->description;?></td>
-							    				<td><?=$row->status;?></td>
-							    				<td><?=$row->creation_timestamp;?></td>
+							    				<td><?=$cnt; ?></td>
+							    				<td><?=$this->crud_model->get_type_name_by_id("student", $row->student_id); ?></td>
+							    				<td><?=$row->amount; ?></td>
+							    				<td><?=$row->amount_due; ?></td>
+							    				<td><?=$row->description; ?></td>
+							    				<td><?=$row->status; ?></td>
+							    				<td><?=$row->creation_timestamp; ?></td>
 							    			</tr>
 							    	<?php
-							    				$cnt++;
-											}
-										}
-							    	?>
+                                                $cnt++;
+                                            }
+                                        }
+                                    ?>
 
 								</tbody>
 							</table>
@@ -537,26 +546,26 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 							    </thead>
 							    <tbody>
 							    	<?php
-							    		$notes_object = $this->db->get_where("overpay",array("status"=>"cleared"));
+                                        $notes_object = $this->db->get_where("overpay", array("status"=>"cleared"));
 
-										if($notes_object->num_rows() > 0){
-											$cnt = 1;
-											foreach($notes_object->result_object() as $row){
-							    	?>
+                                        if ($notes_object->num_rows() > 0) {
+                                            $cnt = 1;
+                                            foreach ($notes_object->result_object() as $row) {
+                                                ?>
 							    			<tr>
-							    				<td><?=$cnt;?></td>
-							    				<td><?=$this->crud_model->get_type_name_by_id("student",$row->student_id);?></td>
-							    				<td><?=$row->amount;?></td>
-							    				<td><?=$row->amount_due;?></td>
-							    				<td><?=$row->description;?></td>
-							    				<td><?=$row->status;?></td>
-							    				<td><?=$row->creation_timestamp;?></td>
+							    				<td><?=$cnt; ?></td>
+							    				<td><?=$this->crud_model->get_type_name_by_id("student", $row->student_id); ?></td>
+							    				<td><?=$row->amount; ?></td>
+							    				<td><?=$row->amount_due; ?></td>
+							    				<td><?=$row->description; ?></td>
+							    				<td><?=$row->status; ?></td>
+							    				<td><?=$row->creation_timestamp; ?></td>
 							    			</tr>
 							    	<?php
-							    				$cnt++;
-											}
-										}
-							    	?>
+                                                $cnt++;
+                                            }
+                                        }
+                                    ?>
 
 								</tbody>
 							</table>
@@ -587,39 +596,39 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 					    </thead>
 					    <tbody>
 					    	<?php
-                    		$count = 1;
+                            $count = 1;
 
-                    		foreach($cancelled_invoices as $row):
+                            foreach ($cancelled_invoices as $row):
 
 
-										/**
-										* Check if this invoice has any approval request:
-										*	If yes get the request_type and status
-										*
-										**/
-										$approval_info = $this->school_model->get_approval_record_status('invoice',$row['invoice_id']);
-										//print_r($approval_info);
-								?>
+                                        /**
+                                        * Check if this invoice has any approval request:
+                                        *	If yes get the request_type and status
+                                        *
+                                        **/
+                                        $approval_info = $this->school_model->get_approval_record_status('invoice', $row['invoice_id']);
+                                        //print_r($approval_info);
+                                ?>
 									<tr>
 										<td><?php echo $row['invoice_id'];?></td>
-				<td><?php echo $this->crud_model->get_type_name_by_id('student',$row['student_id']);?></td>
+				<td><?php echo $this->crud_model->get_type_name_by_id('student', $row['student_id']);?></td>
 				<td><?php echo $row['yr'];?></td>
 				<td><?php echo $row['term'];?></td>
-				<td><?php echo $this->crud_model->get_type_name_by_id('class',$row['class_id']);?></td>
-				<td><?php echo number_format($row['amount'],2);?></td>
-											<td><?php echo number_format($row['amount_due'],2);?></td>
+				<td><?php echo $this->crud_model->get_type_name_by_id('class', $row['class_id']);?></td>
+				<td><?php echo number_format($row['amount'], 2);?></td>
+											<td><?php echo number_format($row['amount_due'], 2);?></td>
 
 											<?php $paid = $this->crud_model->fees_paid_by_invoice($row['invoice_id']);?>
 
-											<td><?php echo number_format($paid,2);?></td>
+											<td><?php echo number_format($paid, 2);?></td>
 										 <?php
-												$bal = $this->crud_model->fees_balance_by_invoice($row['invoice_id']);
-											?>
+                                                $bal = $this->crud_model->fees_balance_by_invoice($row['invoice_id']);
+                                            ?>
 
-											<td><?php echo number_format($bal,2);?></td>
+											<td><?php echo number_format($bal, 2);?></td>
 				<td><?php echo date('d M,Y', $row['creation_timestamp']);?></td>
 				<td><?=ucfirst($approval_info['request_type']);?></td>
-				<?php $states = array('new','approved','declined','reinstated');?>
+
 				<td><?=isset($states[$approval_info['request_status']])?ucfirst($states[$approval_info['request_status']]):'';?></td>
 							<td>
                             <div class="btn-group">
@@ -640,16 +649,16 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
                                     <!-- Re-Claim LINK -->
                                     <?php
-                                    if($row['carry_forward'] == 0){
-                                    ?>
+                                    if ($row['carry_forward'] == 0) {
+                                        ?>
                                     <li class="reclaim_cancelled_invoice">
-                                        <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?finance/invoice/reclaim/<?php echo $row['invoice_id'];?>');">
+                                        <a href="#" onclick="confirm_action('<?php echo base_url(); ?>index.php?finance/invoice/reclaim/<?php echo $row['invoice_id']; ?>');">
                                             <i class="entypo-reply"></i>
-                                                <?php echo get_phrase('reclaim_invoice');?>
+                                                <?php echo get_phrase('reclaim_invoice'); ?>
                                             </a>
                                      </li>
                                      <?php
-									}
+                                    }
                                     ?>
                                 </ul>
                             </div>
