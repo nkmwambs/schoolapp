@@ -43,7 +43,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 
 			<div class="col-xs-5 <?= get_access_class('pending_approvals', 'admin', 'dashboard'); ?>">
-					<a href="<?=base_url();?>index.php?approval/list_approvals" class="btn btn-danger btn-icon"><?=get_phrase('pending_approvals');?> <i class="fa fa-thumbs-up"></i></a>
+					<a href="<?=base_url();?>index.php?admin/list_approvals" class="btn btn-danger btn-icon"><?=get_phrase('pending_approvals');?> <i class="fa fa-thumbs-up"></i></a>
 			</div>
 
 			<div class="col-xs-2 <?= get_access_class('sms_gateway_balance', 'admin', 'dashboard'); ?>">

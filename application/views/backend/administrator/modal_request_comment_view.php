@@ -17,7 +17,7 @@ $request = $this->db->get_where('approval_request',array('approval_request_id'=>
             </div>
 			<div class="panel-body">
 
-                <?php echo form_open(base_url().'index.php?approval/add_request_comment/'.$param2 , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
+                <?php echo form_open(base_url().'index.php?admin/proccess_request_approval/'.$param2 , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
 
                   <div class="form-group">
                     <div class="col-xs-2"><?=get_phrase('sender');?></div>
@@ -52,12 +52,12 @@ $request = $this->db->get_where('approval_request',array('approval_request_id'=>
 
                   <div class="form-group">
                     <div class="col-xs-12">
-                      <button type="submit" name="post_comment" class="btn btn-default"><?=get_phrase('post_comment');?></button>
+                      <button type="submit" name="approval_action" value="post_comment" class="btn btn-default"><?=get_phrase('post_comment');?></button>
 											<?php if($request->status !== '1'){ ?>
-											<button type="submit" name="approve" class="btn btn-success"><?=get_phrase('approve');?></button>
+											<button type="submit" name="approval_action" value="approve" class="btn btn-success"><?=get_phrase('approve');?></button>
 											<?php  }?>
 											<?php  if($request->status !== '2'){?>
-											<button type="submit" name="decline" class="btn btn-danger"><?=get_phrase('decline');?></button>
+											<button type="submit" name="approval_action" value="decline" class="btn btn-danger"><?=get_phrase('decline');?></button>
 										<?php  }?>
 										</div>
                   </div>

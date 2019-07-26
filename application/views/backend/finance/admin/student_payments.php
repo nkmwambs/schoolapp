@@ -1,50 +1,46 @@
 <?php
 if (!defined('BASEPATH')) {
-    exit('No direct script access allowed');
+	exit('No direct script access allowed');
 }
 
-    $this->db->where('status', 'unpaid');
-    $this->db->where('yr', $year);
-    $this->db->order_by('creation_timestamp', 'desc');
-    $unpaid_invoices = $this->db->get('invoice')->result_array();
+$this -> db -> where('status', 'unpaid');
+$this -> db -> where('yr', $year);
+$this -> db -> order_by('creation_timestamp', 'desc');
+$unpaid_invoices = $this -> db -> get('invoice') -> result_array();
 
+$this -> db -> where('status', 'paid');
+$this -> db -> where('yr', $year);
+$this -> db -> order_by('creation_timestamp', 'desc');
+$paid_invoices = $this -> db -> get('invoice') -> result_array();
 
-    $this->db->where('status', 'paid');
-    $this->db->where('yr', $year);
-    $this->db->order_by('creation_timestamp', 'desc');
-    $paid_invoices = $this->db->get('invoice')->result_array();
+$this -> db -> where('status', 'excess');
+$this -> db -> where('yr', $year);
+$this -> db -> order_by('creation_timestamp', 'desc');
+$overpaid_invoices = $this -> db -> get('invoice') -> result_array();
 
-    $this->db->where('status', 'excess');
-    $this->db->where('yr', $year);
-    $this->db->order_by('creation_timestamp', 'desc');
-    $overpaid_invoices = $this->db->get('invoice')->result_array();
+$this -> db -> where('status', 'active');
+//$this->db->where('yr' , $year);
+$this -> db -> order_by('creation_timestamp', 'desc');
+$overpay_notes = $this -> db -> get('overpay') -> result_array();
 
-    $this->db->where('status', 'active');
-    //$this->db->where('yr' , $year);
-    $this->db->order_by('creation_timestamp', 'desc');
-    $overpay_notes = $this->db->get('overpay')->result_array();
+$this -> db -> where('status', 'cleared');
+//$this->db->where('yr' , $year);
+$this -> db -> order_by('creation_timestamp', 'desc');
+$cleared_overpay_notes = $this -> db -> get('overpay') -> result_array();
 
-    $this->db->where('status', 'cleared');
-    //$this->db->where('yr' , $year);
-    $this->db->order_by('creation_timestamp', 'desc');
-    $cleared_overpay_notes = $this->db->get('overpay')->result_array();
-
-    $this->db->where('status', 'cancelled');
-    $this->db->where('yr', $year);
-    $this->db->order_by('creation_timestamp', 'desc');
-    $cancelled_invoices = $this->db->get('invoice')->result_array();
-
+$this -> db -> where('status', 'cancelled');
+$this -> db -> where('yr', $year);
+$this -> db -> order_by('creation_timestamp', 'desc');
+$cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 ?>
 
 <div class="row">
 	<div class="col-xs-12">
-		<a href="<?=base_url();?>index.php?finance/student_collection_tally/<?=date('Y');?>" class="btn btn-default"> <i class="fa fa-list"></i> <?=get_phrase('payment_tally_sheet');?></a>
-		<?php
-            $count_to_notify = $this->db->get_where('invoice', array('status'=>'unpaid'))->num_rows();
-        ?>
-		<a href="#" onclick="confirm_action('<?=base_url();?>index.php?finance/sms_fee_balances');" class="btn btn-default"><i class="fa fa-mobile"></i><?=get_phrase('SMS_balances');?><span class="badge badge-primary"><?=$count_to_notify;?></span></a>
-		<a href="<?php echo base_url(); ?>index.php?finance/create_invoice" class="btn btn-primary"><i class="fa fa-money"></i><?=get_phrase('create_invoice');?></a>
-		<a href="<?php echo base_url(); ?>index.php?finance/missing_invoices" class="btn btn-danger"><i class="fa fa-times"></i><?=get_phrase('missing_invoices');?></a>
+		<a href="<?= base_url(); ?>index.php?finance/student_collection_tally/<?= date('Y'); ?>" class="btn btn-default"> <i class="fa fa-list"></i> <?= get_phrase('payment_tally_sheet'); ?></a>
+		<?php $count_to_notify = $this -> db -> get_where('invoice', array('status' => 'unpaid')) -> num_rows(); ?>
+		<a href="#" onclick="confirm_action('<?= base_url(); ?>index.php?finance/sms_fee_balances');" class="btn btn-default"><i class="fa fa-mobile"></i><?= get_phrase('SMS_balances'); ?><span class="badge badge-primary"><?= $count_to_notify; ?></span></a>
+		<a href="<?php echo base_url(); ?>index.php?finance/create_invoice" class="btn btn-primary"><i class="fa fa-money"></i><?= get_phrase('create_invoice'); ?></a>
+		<a href="<?php echo base_url(); ?>index.php?finance/missing_invoices" class="btn btn-danger"><i class="fa fa-times"></i><?= get_phrase('missing_invoices'); ?></a>
 	</div>
 </div>
 
@@ -55,7 +51,7 @@ if (!defined('BASEPATH')) {
 		<?=get_phrase('year');?> <?=$year;?>
 	</div> -->
 	<div class="col-xs-12">
-		<?php echo form_open(base_url() . 'index.php?finance/scroll_student_payments', array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
+		<?php echo form_open(base_url() . 'index.php?finance/scroll_student_payments', array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data')); ?>
 
 			<div class="form-group">
 				<?php
@@ -63,38 +59,38 @@ if (!defined('BASEPATH')) {
                 ?>
 				<div class="col-xs-offset-2 col-xs-4" style="text-align: right;">
 					<select name="year" class="form-control">
-						<option><?=get_phrase('select_year');?></option>
+						<option><?= get_phrase('select_year'); ?></option>
 						<?php
                             foreach ($year_range as $row) {
                                 ?>
-							<option value="<?=$row; ?>" <?php if ($year == $row) {
-                                    echo "selected";
-                                } ?>><?=$row; ?></option>
-						<?php
-                            }
-                        ?>
+							<option value="<?=$row; ?>" <?php
+									if ($year == $row) {
+										echo "selected";
+									}
+ ?>><?=$row; ?></option>
+						<?php } ?>
 					</select>
 				</div>
 
 				<div class="col-xs-4" style="text-align: left;">
 					<select name="term" class="form-control">
-						<option><?=get_phrase('select_term');?></option>
+						<option><?= get_phrase('select_term'); ?></option>
 						<?php
 
                             $terms = $this->db->get('terms')->result_object();
                             foreach ($terms as $term_row) {
                                 ?>
-							<option value="<?=$term_row->terms_id; ?>" <?php if ($term == $term_row->terms_id) {
-                                    echo "selected";
-                                } ?>><?=$term_row->name; ?></option>
-						<?php
-                            }
-                        ?>
+							<option value="<?= $term_row -> terms_id; ?>" <?php
+									if ($term == $term_row -> terms_id) {
+										echo "selected";
+									}
+ ?>><?= $term_row -> name; ?></option>
+						<?php } ?>
 					</select>
 				</div>
 
 				<div class="col-xs-2">
-					<button type="submit" class="btn btn-primary"><?=get_phrase('go');?></button>
+					<button type="submit" class="btn btn-primary"><?= get_phrase('go'); ?></button>
 				</div>
 
 			</div>
@@ -107,43 +103,43 @@ if (!defined('BASEPATH')) {
 
 <div class="row">
 	<div class="col-xs-1">
-		<a href="<?=base_url();?>index.php?finance/scroll_student_payments/<?=$year - 1;?>"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>
+		<a href="<?= base_url(); ?>index.php?finance/scroll_student_payments/<?= $year - 1; ?>"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>
 	</div>
 	<div class="col-md-10">
 
 			<ul class="nav nav-tabs bordered">
 				<li class="active">
 					<a href="#unpaid" data-toggle="tab">
-						<span class="hidden-xs"><?php echo get_phrase('unpaid_invoices');?></span>
-						<span class="badge badge-danger"><?php echo count($unpaid_invoices);?></span>
+						<span class="hidden-xs"><?php echo get_phrase('unpaid_invoices'); ?></span>
+						<span class="badge badge-danger"><?php echo count($unpaid_invoices); ?></span>
 					</a>
 				</li>
 
 				<li class="">
 					<a href="#cleared" data-toggle="tab">
-						<span class="hidden-xs"><?php echo get_phrase('cleared_invoices');?></span>
-						<span class="badge badge-success"><?php echo count($paid_invoices);?></span>
+						<span class="hidden-xs"><?php echo get_phrase('cleared_invoices'); ?></span>
+						<span class="badge badge-success"><?php echo count($paid_invoices); ?></span>
 					</a>
 				</li>
 
 				<li class="">
 					<a href="#overpaid" data-toggle="tab">
-						<span class="hidden-xs"><?php echo get_phrase('overpaid_invoices');?></span>
-						<span class="badge badge-default"><?php echo count($overpaid_invoices);?></span>
+						<span class="hidden-xs"><?php echo get_phrase('overpaid_invoices'); ?></span>
+						<span class="badge badge-default"><?php echo count($overpaid_invoices); ?></span>
 					</a>
 				</li>
 
 				<li class="">
 					<a href="#overpay_notes" data-toggle="tab">
-						<span class="hidden-xs"><?php echo get_phrase('overpay_notes');?></span>
-						<span class="badge badge-default"><?php echo count($overpay_notes);?></span>
+						<span class="hidden-xs"><?php echo get_phrase('overpay_notes'); ?></span>
+						<span class="badge badge-default"><?php echo count($overpay_notes); ?></span>
 					</a>
 				</li>
 
 				<li class="">
 					<a href="#cleared_overpay_notes" data-toggle="tab">
-						<span class="hidden-xs"><?php echo get_phrase('cleared_overpay_notes');?></span>
-						<span class="badge badge-default"><?php echo count($cleared_overpay_notes);?></span>
+						<span class="hidden-xs"><?php echo get_phrase('cleared_overpay_notes'); ?></span>
+						<span class="badge badge-default"><?php echo count($cleared_overpay_notes); ?></span>
 					</a>
 				</li>
 
@@ -155,8 +151,8 @@ if (!defined('BASEPATH')) {
 
 				<li>
 					<a href="#cancelled" data-toggle="tab">
-						<span class="hidden-xs"><?php echo get_phrase('cancelled_invoices');?></span>
-						<span class="badge badge-info"><?php echo count($cancelled_invoices);?></span>
+						<span class="hidden-xs"><?php echo get_phrase('cancelled_invoices'); ?></span>
+						<span class="badge badge-info"><?php echo count($cancelled_invoices); ?></span>
 					</a>
 				</li>
 
@@ -170,18 +166,18 @@ if (!defined('BASEPATH')) {
                 	<thead>
                 		<tr>
                 			<th>#</th>
-                    		<th><div><?php echo get_phrase('student');?></div></th>
-                    		<th><div><?php echo get_phrase('year');?></div></th>
-                    		<th><div><?php echo get_phrase('term');?></div></th>
-                    		<th><div><?php echo get_phrase('class');?></div></th>
-                            <th><div><?php echo get_phrase('fee_structure_total');?></div></th>
-                            <th><div><?php echo get_phrase('payable_amount');?></div></th>
-                            <th><div><?php echo get_phrase('actual_paid');?></div></th>
-                            <th><div><?php echo get_phrase('balance');?></div></th>
-                    		<th><div><?php echo get_phrase('date');?></div></th>
-												<th><div><?php echo get_phrase('approval_request_type');?></div></th>
-												<th><div><?php echo get_phrase('approval_status');?></div></th>
-                    		<th><div><?php echo get_phrase('options');?></div></th>
+                    		<th><div><?php echo get_phrase('student'); ?></div></th>
+                    		<th><div><?php echo get_phrase('year'); ?></div></th>
+                    		<th><div><?php echo get_phrase('term'); ?></div></th>
+                    		<th><div><?php echo get_phrase('class'); ?></div></th>
+                            <th><div><?php echo get_phrase('fee_structure_total'); ?></div></th>
+                            <th><div><?php echo get_phrase('payable_amount'); ?></div></th>
+                            <th><div><?php echo get_phrase('actual_paid'); ?></div></th>
+                            <th><div><?php echo get_phrase('balance'); ?></div></th>
+                    		<th><div><?php echo get_phrase('date'); ?></div></th>
+												<th><div><?php echo get_phrase('approval_request_type'); ?></div></th>
+												<th><div><?php echo get_phrase('approval_status'); ?></div></th>
+                    		<th><div><?php echo get_phrase('options'); ?></div></th>
 						</tr>
 					</thead>
                     <tbody>
@@ -198,50 +194,48 @@ if (!defined('BASEPATH')) {
                                                     //print_r($approval_info);
                                             ?>
                         <tr>
-                        	<td><?php echo $row['invoice_id'];?></td>
-							<td><?php echo $this->crud_model->get_type_name_by_id('student', $row['student_id']);?></td>
-							<td><?php echo $row['yr'];?></td>
-							<td><?php echo $row['term'];?></td>
-							<td><?php echo $this->crud_model->get_type_name_by_id('class', $row['class_id']);?></td>
-							<td><?php echo number_format($row['amount'], 2);?></td>
-                            <td><?php echo number_format($row['amount_due'], 2);?></td>
+                        	<td><?php echo $row['invoice_id']; ?></td>
+							<td><?php echo $this -> crud_model -> get_type_name_by_id('student', $row['student_id']); ?></td>
+							<td><?php echo $row['yr']; ?></td>
+							<td><?php echo $row['term']; ?></td>
+							<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row['class_id']); ?></td>
+							<td><?php echo number_format($row['amount'], 2); ?></td>
+                            <td><?php echo number_format($row['amount_due'], 2); ?></td>
 
-                            <?php $paid = $this->crud_model->fees_paid_by_invoice($row['invoice_id']);?>
+                            <?php $paid = $this -> crud_model -> fees_paid_by_invoice($row['invoice_id']); ?>
 
-                            <td><?php echo number_format($paid, 2);?></td>
-                           <?php
-                                $bal = $this->crud_model->fees_balance_by_invoice($row['invoice_id']);
-                            ?>
+                            <td><?php echo number_format($paid, 2); ?></td>
+                           <?php $bal = $this -> crud_model -> fees_balance_by_invoice($row['invoice_id']); ?>
 
-                            <td><?php echo number_format($bal, 2);?></td>
-							<td><?php echo date('d M,Y', $row['creation_timestamp']);?></td>
-							<td><?=ucfirst($approval_info['request_type']);?></td>
+                            <td><?php echo number_format($bal, 2); ?></td>
+							<td><?php echo date('d M,Y', $row['creation_timestamp']); ?></td>
+							<td><?= ucfirst($approval_info['request_type']); ?></td>
 
-							<td><?=isset($states[$approval_info['request_status']])?ucfirst($states[$approval_info['request_status']]):'';?></td>
+							<td><?= isset($states[$approval_info['request_status']]) ? ucfirst($states[$approval_info['request_status']]) : ''; ?></td>
 							<td>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                                    <?=get_phrase('action');?> <span class="caret"></span>
+                                    <?= get_phrase('action'); ?> <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 
 
                                     <?php if ($bal != 0):?>
 
-                                    <li class="<?=get_access_class('take_student_payment', 'admin', 'accounting');?>">
-                                        <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_take_payment/<?php echo $row['invoice_id'];?>');">
+                                    <li class="<?= get_access_class('take_student_payment', 'admin', 'accounting'); ?>">
+                                        <a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_take_payment/<?php echo $row['invoice_id']; ?>');">
                                             <i class="entypo-bookmarks"></i>
-                                                <?php echo get_phrase('take_payment');?>
+                                                <?php echo get_phrase('take_payment'); ?>
                                         </a>
                                     </li>
-                                    <li class="divider <?=get_access_class('take_student_payment', 'admin', 'accounting');?>"></li>
-                                    <?php endif;?>
+                                    <li class="divider <?= get_access_class('take_student_payment', 'admin', 'accounting'); ?>"></li>
+                                    <?php endif; ?>
 
                                     <!-- VIEWING INVOICE LINK -->
                                     <li>
-                                        <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_invoice/<?php echo $row['invoice_id'];?>');">
+                                        <a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_view_invoice/<?php echo $row['invoice_id']; ?>');">
                                             <i class="entypo-credit-card"></i>
-                                                <?php echo get_phrase('view_invoice');?>
+                                                <?php echo get_phrase('view_invoice'); ?>
                                             </a>
                                                     </li>
                                     <li class="divider"></li>
@@ -251,30 +245,29 @@ if (!defined('BASEPATH')) {
                                                                         if ($approval_info['request_status'] == 1) {
                                                                             if ($approval_info['request_type'] == 'update') { ?>
                                     <!-- EDIT INVOICE LINK -->
-                                    <li class="<?=get_access_class('edit_invoice', 'admin', 'accounting');?>">
-                                        <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_invoice/<?php echo $row['invoice_id'];?>');">
+                                    <li class="<?= get_access_class('edit_invoice', 'admin', 'accounting'); ?>">
+                                        <a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_edit_invoice/<?php echo $row['invoice_id']; ?>');">
                                             <i class="entypo-pencil"></i>
-                                                <?php echo get_phrase('edit_invoice');?>
+                                                <?php echo get_phrase('edit_invoice'); ?>
                                             </a>
                                                     </li>
-                                    <li class="divider <?=get_access_class('edit_invoice', 'admin', 'accounting');?>"></li>
+                                    <li class="divider <?= get_access_class('edit_invoice', 'admin', 'accounting'); ?>"></li>
 
 																		<?php } ?>
 
                                     <!-- DELETION LINK -->
 																		<?php if ($approval_info['request_type'] == 'cancel') { ?>
-                                    <li class="<?=get_access_class('delete_or_cancel_invoice', 'admin', 'accounting');?>">
+                                    <li class="<?= get_access_class('delete_or_cancel_invoice', 'admin', 'accounting'); ?>">
 
-                                    		<a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?finance/invoice/cancel/<?php echo $row['invoice_id'];?>');">
+                                    		<a href="#" onclick="confirm_action('<?php echo base_url(); ?>index.php?finance/invoice/cancel/<?php echo $row['invoice_id']; ?>');">
 	                                            <i class="entypo-cancel"></i>
-	                                                <?php echo get_phrase('cancel_invoice');?>
+	                                                <?php echo get_phrase('cancel_invoice'); ?>
 	                                        </a>
 
 
                                      </li>
-																		<?php
-                                                                                }
-                                                                        }
+																		<?php }
+																		}
                                                                          ?>
 
 																		 <?php
@@ -303,15 +296,13 @@ if (!defined('BASEPATH')) {
  	                                        </a>
 
                                       </li>
- 																		<?php
-                                                                        }
-                                                                         ?>
+ 																		<?php } ?>
 
                                 </ul>
                             </div>
         					</td>
                         </tr>
-                        <?php endforeach;?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
 
@@ -329,16 +320,16 @@ if (!defined('BASEPATH')) {
 			                	<thead>
 			                		<tr>
 			                			<th>#</th>
-			                    		<th><div><?php echo get_phrase('student');?></div></th>
-			                    		<th><div><?php echo get_phrase('year');?></div></th>
-			                    		<th><div><?php echo get_phrase('term');?></div></th>
-			                    		<th><div><?php echo get_phrase('class');?></div></th>
-			                            <th><div><?php echo get_phrase('fee_structure_total');?></div></th>
-			                            <th><div><?php echo get_phrase('payable_amount');?></div></th>
-			                            <th><div><?php echo get_phrase('actual_paid');?></div></th>
-			                            <th><div><?php echo get_phrase('balance');?></div></th>
-			                    		<th><div><?php echo get_phrase('date');?></div></th>
-										<th><div><?php echo get_phrase('action');?></div></th>
+			                    		<th><div><?php echo get_phrase('student'); ?></div></th>
+			                    		<th><div><?php echo get_phrase('year'); ?></div></th>
+			                    		<th><div><?php echo get_phrase('term'); ?></div></th>
+			                    		<th><div><?php echo get_phrase('class'); ?></div></th>
+			                            <th><div><?php echo get_phrase('fee_structure_total'); ?></div></th>
+			                            <th><div><?php echo get_phrase('payable_amount'); ?></div></th>
+			                            <th><div><?php echo get_phrase('actual_paid'); ?></div></th>
+			                            <th><div><?php echo get_phrase('balance'); ?></div></th>
+			                    		<th><div><?php echo get_phrase('date'); ?></div></th>
+										<th><div><?php echo get_phrase('action'); ?></div></th>
 									</tr>
 								</thead>
 			                    <tbody>
@@ -347,27 +338,22 @@ if (!defined('BASEPATH')) {
                                         foreach ($paid_invoices as $row3):
                                     ?>
 			                        <tr>
-			                        	<td><?php echo $count++;?></td>
-										<td><?php echo $this->crud_model->get_type_name_by_id('student', $row3['student_id']);?></td>
-										<td><?php echo $row3['yr'];?></td>
-										<td><?php echo $row3['term'];?></td>
-										<td><?php echo $this->crud_model->get_type_name_by_id('class', $row['class_id']);?></td>
-										<td><?php echo number_format($row3['amount'], 2);?></td>
-			                            <td><?php echo number_format($row3['amount_due'], 2);?></td>
+			                        	<td><?php echo $count++; ?></td>
+										<td><?php echo $this -> crud_model -> get_type_name_by_id('student', $row3['student_id']); ?></td>
+										<td><?php echo $row3['yr']; ?></td>
+										<td><?php echo $row3['term']; ?></td>
+										<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row['class_id']); ?></td>
+										<td><?php echo number_format($row3['amount'], 2); ?></td>
+			                            <td><?php echo number_format($row3['amount_due'], 2); ?></td>
 
-			                             <?php $paid = $this->db->select_sum('amount')->get_where(
-                                        'transaction',
-                                        array('invoice_id'=>$row3['invoice_id'])
-                                    )->row()->amount;?>
+			                             <?php $paid = $this -> db -> select_sum('amount') -> get_where('transaction', array('invoice_id' => $row3['invoice_id'])) -> row() -> amount; ?>
 
-				                            <td><?php echo number_format($paid, 2);?></td>
-				                           <?php
-                                                $balance = $row3['amount_due'] - $paid;
-                                            ?>
+				                            <td><?php echo number_format($paid, 2); ?></td>
+				                           <?php $balance = $row3['amount_due'] - $paid; ?>
 
-				                        <td><?php echo number_format($balance, 2);?></td>
+				                        <td><?php echo number_format($balance, 2); ?></td>
 
-										<td><?php echo date('d M,Y', $row3['creation_timestamp']);?></td>
+										<td><?php echo date('d M,Y', $row3['creation_timestamp']); ?></td>
 										<td>
 											<div class="btn-group">
 			                                <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -377,9 +363,9 @@ if (!defined('BASEPATH')) {
 
 
 			                                    <li>
-			                                        <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_invoice/<?php echo $row3['invoice_id'];?>');">
+			                                        <a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_view_invoice/<?php echo $row3['invoice_id']; ?>');">
 			                                            <i class="entypo-bookmarks"></i>
-			                                                <?php echo get_phrase('view_history');?>
+			                                                <?php echo get_phrase('view_history'); ?>
 			                                        </a>
 			                                    </li>
 
@@ -387,7 +373,7 @@ if (!defined('BASEPATH')) {
 			                            </div>
 										</td>
 			                        </tr>
-			                        <?php endforeach;?>
+			                        <?php endforeach; ?>
 			                    </tbody>
 			                </table>
 						</div>
@@ -401,15 +387,15 @@ if (!defined('BASEPATH')) {
                 	<thead>
                 		<tr>
                 			<th>#</th>
-                    		<th><div><?php echo get_phrase('student');?></div></th>
-                    		<th><div><?php echo get_phrase('year');?></div></th>
-                    		<th><div><?php echo get_phrase('term');?></div></th>
-                            <th><div><?php echo get_phrase('fee_structure_total');?></div></th>
-                            <th><div><?php echo get_phrase('payable_amount');?></div></th>
-                            <th><div><?php echo get_phrase('actual_amount');?></div></th>
-                            <th><div><?php echo get_phrase('balance');?></div></th>
-                    		<th><div><?php echo get_phrase('date');?></div></th>
-							<th><div><?php echo get_phrase('action');?></div></th>
+                    		<th><div><?php echo get_phrase('student'); ?></div></th>
+                    		<th><div><?php echo get_phrase('year'); ?></div></th>
+                    		<th><div><?php echo get_phrase('term'); ?></div></th>
+                            <th><div><?php echo get_phrase('fee_structure_total'); ?></div></th>
+                            <th><div><?php echo get_phrase('payable_amount'); ?></div></th>
+                            <th><div><?php echo get_phrase('actual_amount'); ?></div></th>
+                            <th><div><?php echo get_phrase('balance'); ?></div></th>
+                    		<th><div><?php echo get_phrase('date'); ?></div></th>
+							<th><div><?php echo get_phrase('action'); ?></div></th>
 						</tr>
 					</thead>
                     <tbody>
@@ -421,25 +407,19 @@ if (!defined('BASEPATH')) {
                             foreach ($overpaid_invoices as $row3):
                         ?>
                         <tr>
-                        	<td><?php echo $count++;?></td>
-							<td><?php echo $this->crud_model->get_type_name_by_id('student', $row3['student_id']);?></td>
-							<td><?php echo $row3['yr'];?></td>
-							<td><?php echo $row3['term'];?></td>
-							<td><?php echo number_format($row3['amount'], 2);?></td>
-                            <td><?php echo number_format($row3['amount_due'], 2);?></td>
-                            <?php $paid = $this->db->select_sum('amount')->get_where(
-                            'transaction',
-                            array('invoice_id'=>$row3['invoice_id'])
-                        )->row()->amount;
-                             ?>
+                        	<td><?php echo $count++; ?></td>
+							<td><?php echo $this -> crud_model -> get_type_name_by_id('student', $row3['student_id']); ?></td>
+							<td><?php echo $row3['yr']; ?></td>
+							<td><?php echo $row3['term']; ?></td>
+							<td><?php echo number_format($row3['amount'], 2); ?></td>
+                            <td><?php echo number_format($row3['amount_due'], 2); ?></td>
+                            <?php $paid = $this -> db -> select_sum('amount') -> get_where('transaction', array('invoice_id' => $row3['invoice_id'])) -> row() -> amount; ?>
 
-				             <td><?php echo number_format($paid, 2);?></td>
-				             <?php
-                                   $balance = $row3['amount_due'] - $paid;
-                             ?>
+				             <td><?php echo number_format($paid, 2); ?></td>
+				             <?php $balance = $row3['amount_due'] - $paid; ?>
 
-				            <td><?php echo number_format($balance, 2);?></td>
-							<td><?php echo date('d M,Y', $row3['creation_timestamp']);?></td>
+				            <td><?php echo number_format($balance, 2); ?></td>
+							<td><?php echo date('d M,Y', $row3['creation_timestamp']); ?></td>
 							<td>
 								<div class="btn-group">
                                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -449,9 +429,9 @@ if (!defined('BASEPATH')) {
 
 
                                     <li>
-                                        <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_invoice/<?php echo $row3['invoice_id'];?>');">
+                                        <a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_view_invoice/<?php echo $row3['invoice_id']; ?>');">
                                             <i class="entypo-bookmarks"></i>
-                                                <?php echo get_phrase('view_history');?>
+                                                <?php echo get_phrase('view_history'); ?>
                                         </a>
                                     </li>
 
@@ -459,7 +439,7 @@ if (!defined('BASEPATH')) {
                             </div>
 							</td>
                         </tr>
-                        <?php endforeach;?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
 
@@ -475,12 +455,12 @@ if (!defined('BASEPATH')) {
 							    <thead>
 							        <tr>
 							            <th><div>#</div></th>
-							            <th><div><?php echo get_phrase('student');?></div></th>
-							            <th><div><?php echo get_phrase('amount');?></div></th>
-							            <th><div><?php echo get_phrase('balance');?></div></th>
-							            <th><div><?php echo get_phrase('description');?></div></th>
-							            <th><div><?php echo get_phrase('status');?></div></th>
-							            <th><div><?php echo get_phrase('date');?></div></th>
+							            <th><div><?php echo get_phrase('student'); ?></div></th>
+							            <th><div><?php echo get_phrase('amount'); ?></div></th>
+							            <th><div><?php echo get_phrase('balance'); ?></div></th>
+							            <th><div><?php echo get_phrase('description'); ?></div></th>
+							            <th><div><?php echo get_phrase('status'); ?></div></th>
+							            <th><div><?php echo get_phrase('date'); ?></div></th>
 
 							        </tr>
 							    </thead>
@@ -494,17 +474,16 @@ if (!defined('BASEPATH')) {
                                                 ?>
 							    			<tr>
 							    				<td><?=$cnt; ?></td>
-							    				<td><?=$this->crud_model->get_type_name_by_id("student", $row->student_id); ?></td>
-							    				<td><?=$row->amount; ?></td>
-							    				<td><?=$row->amount_due; ?></td>
-							    				<td><?=$row->description; ?></td>
-							    				<td><?=$row->status; ?></td>
-							    				<td><?=$row->creation_timestamp; ?></td>
+							    				<td><?= $this -> crud_model -> get_type_name_by_id("student", $row -> student_id); ?></td>
+							    				<td><?= $row -> amount; ?></td>
+							    				<td><?= $row -> amount_due; ?></td>
+							    				<td><?= $row -> description; ?></td>
+							    				<td><?= $row -> status; ?></td>
+							    				<td><?= $row -> creation_timestamp; ?></td>
 							    			</tr>
-							    	<?php
-                                                $cnt++;
-                                            }
-                                        }
+							    	<?php $cnt++;
+									}
+									}
                                     ?>
 
 								</tbody>
@@ -518,10 +497,10 @@ if (!defined('BASEPATH')) {
 					<div class="row">
 
 						<div class="col-sm-12">
-							<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_overpay_add/');"
+							<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_overpay_add/');"
 							class="btn btn-primary pull-right">
 							<i class="entypo-plus-circled"></i>
-							<?php echo get_phrase('add_note');?>
+							<?php echo get_phrase('add_note'); ?>
 							</a>
 
 						</div>
@@ -535,12 +514,12 @@ if (!defined('BASEPATH')) {
 							    <thead>
 							        <tr>
 							            <th><div>#</div></th>
-							            <th><div><?php echo get_phrase('student');?></div></th>
-							            <th><div><?php echo get_phrase('amount');?></div></th>
-							            <th><div><?php echo get_phrase('balance');?></div></th>
-							            <th><div><?php echo get_phrase('description');?></div></th>
-							            <th><div><?php echo get_phrase('status');?></div></th>
-							            <th><div><?php echo get_phrase('date');?></div></th>
+							            <th><div><?php echo get_phrase('student'); ?></div></th>
+							            <th><div><?php echo get_phrase('amount'); ?></div></th>
+							            <th><div><?php echo get_phrase('balance'); ?></div></th>
+							            <th><div><?php echo get_phrase('description'); ?></div></th>
+							            <th><div><?php echo get_phrase('status'); ?></div></th>
+							            <th><div><?php echo get_phrase('date'); ?></div></th>
 
 							        </tr>
 							    </thead>
@@ -554,17 +533,16 @@ if (!defined('BASEPATH')) {
                                                 ?>
 							    			<tr>
 							    				<td><?=$cnt; ?></td>
-							    				<td><?=$this->crud_model->get_type_name_by_id("student", $row->student_id); ?></td>
-							    				<td><?=$row->amount; ?></td>
-							    				<td><?=$row->amount_due; ?></td>
-							    				<td><?=$row->description; ?></td>
-							    				<td><?=$row->status; ?></td>
-							    				<td><?=$row->creation_timestamp; ?></td>
+							    				<td><?= $this -> crud_model -> get_type_name_by_id("student", $row -> student_id); ?></td>
+							    				<td><?= $row -> amount; ?></td>
+							    				<td><?= $row -> amount_due; ?></td>
+							    				<td><?= $row -> description; ?></td>
+							    				<td><?= $row -> status; ?></td>
+							    				<td><?= $row -> creation_timestamp; ?></td>
 							    			</tr>
-							    	<?php
-                                                $cnt++;
-                                            }
-                                        }
+							    	<?php $cnt++;
+									}
+									}
                                     ?>
 
 								</tbody>
@@ -580,18 +558,18 @@ if (!defined('BASEPATH')) {
 					    <thead>
 					        <tr>
 										<th>#</th>
-											<th><div><?php echo get_phrase('student');?></div></th>
-											<th><div><?php echo get_phrase('year');?></div></th>
-											<th><div><?php echo get_phrase('term');?></div></th>
-											<th><div><?php echo get_phrase('class');?></div></th>
-													<th><div><?php echo get_phrase('fee_structure_total');?></div></th>
-													<th><div><?php echo get_phrase('payable_amount');?></div></th>
-													<th><div><?php echo get_phrase('actual_paid');?></div></th>
-													<th><div><?php echo get_phrase('balance');?></div></th>
-											<th><div><?php echo get_phrase('date');?></div></th>
-											<th><div><?php echo get_phrase('approval_request_type');?></div></th>
-											<th><div><?php echo get_phrase('approval_status');?></div></th>
-											<th><div><?php echo get_phrase('options');?></div></th>
+											<th><div><?php echo get_phrase('student'); ?></div></th>
+											<th><div><?php echo get_phrase('year'); ?></div></th>
+											<th><div><?php echo get_phrase('term'); ?></div></th>
+											<th><div><?php echo get_phrase('class'); ?></div></th>
+													<th><div><?php echo get_phrase('fee_structure_total'); ?></div></th>
+													<th><div><?php echo get_phrase('payable_amount'); ?></div></th>
+													<th><div><?php echo get_phrase('actual_paid'); ?></div></th>
+													<th><div><?php echo get_phrase('balance'); ?></div></th>
+											<th><div><?php echo get_phrase('date'); ?></div></th>
+											<th><div><?php echo get_phrase('approval_request_type'); ?></div></th>
+											<th><div><?php echo get_phrase('approval_status'); ?></div></th>
+											<th><div><?php echo get_phrase('options'); ?></div></th>
 					        </tr>
 					    </thead>
 					    <tbody>
@@ -610,26 +588,24 @@ if (!defined('BASEPATH')) {
                                         //print_r($approval_info);
                                 ?>
 									<tr>
-										<td><?php echo $row['invoice_id'];?></td>
-				<td><?php echo $this->crud_model->get_type_name_by_id('student', $row['student_id']);?></td>
-				<td><?php echo $row['yr'];?></td>
-				<td><?php echo $row['term'];?></td>
-				<td><?php echo $this->crud_model->get_type_name_by_id('class', $row['class_id']);?></td>
-				<td><?php echo number_format($row['amount'], 2);?></td>
-											<td><?php echo number_format($row['amount_due'], 2);?></td>
+										<td><?php echo $row['invoice_id']; ?></td>
+				<td><?php echo $this -> crud_model -> get_type_name_by_id('student', $row['student_id']); ?></td>
+				<td><?php echo $row['yr']; ?></td>
+				<td><?php echo $row['term']; ?></td>
+				<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row['class_id']); ?></td>
+				<td><?php echo number_format($row['amount'], 2); ?></td>
+											<td><?php echo number_format($row['amount_due'], 2); ?></td>
 
-											<?php $paid = $this->crud_model->fees_paid_by_invoice($row['invoice_id']);?>
+											<?php $paid = $this -> crud_model -> fees_paid_by_invoice($row['invoice_id']); ?>
 
-											<td><?php echo number_format($paid, 2);?></td>
-										 <?php
-                                                $bal = $this->crud_model->fees_balance_by_invoice($row['invoice_id']);
-                                            ?>
+											<td><?php echo number_format($paid, 2); ?></td>
+										 <?php $bal = $this -> crud_model -> fees_balance_by_invoice($row['invoice_id']); ?>
 
-											<td><?php echo number_format($bal, 2);?></td>
-				<td><?php echo date('d M,Y', $row['creation_timestamp']);?></td>
-				<td><?=ucfirst($approval_info['request_type']);?></td>
+											<td><?php echo number_format($bal, 2); ?></td>
+				<td><?php echo date('d M,Y', $row['creation_timestamp']); ?></td>
+				<td><?= ucfirst($approval_info['request_type']); ?></td>
 
-				<td><?=isset($states[$approval_info['request_status']])?ucfirst($states[$approval_info['request_status']]):'';?></td>
+				<td><?= isset($states[$approval_info['request_status']]) ? ucfirst($states[$approval_info['request_status']]) : ''; ?></td>
 							<td>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -640,9 +616,9 @@ if (!defined('BASEPATH')) {
 
                                     <!-- VIEWING INVOICE LINK -->
                                     <li>
-                                        <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_invoice/<?php echo $row['invoice_id'];?>');">
+                                        <a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_view_invoice/<?php echo $row['invoice_id']; ?>');">
                                             <i class="entypo-credit-card"></i>
-                                                <?php echo get_phrase('view_invoice');?>
+                                                <?php echo get_phrase('view_invoice'); ?>
                                             </a>
                                                     </li>
                                     <li class="divider"></li>
@@ -657,14 +633,12 @@ if (!defined('BASEPATH')) {
                                                 <?php echo get_phrase('reclaim_invoice'); ?>
                                             </a>
                                      </li>
-                                     <?php
-                                    }
-                                    ?>
+                                     <?php } ?>
                                 </ul>
                             </div>
         					</td>
                         </tr>
-                        <?php endforeach;?>
+                        <?php endforeach; ?>
 					    </tbody>
 					  </table>
 				</div>
@@ -674,12 +648,12 @@ if (!defined('BASEPATH')) {
 
 	</div>
 	<div class="col-xs-1">
-		<a href="<?=base_url();?>index.php?finance/scroll_student_payments/<?=$year + 1;?>"><i style="font-size: 145pt;" class="fa fa-angle-right"></i></a>
+		<a href="<?= base_url(); ?>index.php?finance/scroll_student_payments/<?= $year + 1; ?>"><i style="font-size: 145pt;" class="fa fa-angle-right"></i></a>
 	</div>
 </div>
 
 <script type="text/javascript">
-	jQuery(document).ready(function($)
+		jQuery(document).ready(function($)
 	{
 
 
@@ -710,74 +684,74 @@ if (!defined('BASEPATH')) {
 
 $("#prev_year, #next_year").click(function(){
 
-	var url = "<?=base_url();?>index.php?finance/paid_invoice_scroll/<?=strtotime('-1 year');?>";
+	var url = "<?= base_url(); ?>index.php?finance/paid_invoice_scroll/<?= strtotime('-1 year'); ?>
+	";
 	if($(this).attr('id')=='next_year'){
-		url = "<?=base_url();?>index.php?finance/paid_invoice_scroll/<?=strtotime('+1 year');?>";
-	}
+	url = "
+<?= base_url(); ?>index.php?finance/paid_invoice_scroll/<?= strtotime('+1 year'); ?>
+		";
+		}
 
-	$.ajax({
+		$.ajax({
 		url:url,
 		beforeSend:function(){
 
 		},
 		success:function(resp){
-			$("#paid_invoices_placeholder").html(resp);
+		$("#paid_invoices_placeholder").html(resp);
 		},
 		error:function(){
 
 		}
-	});
+		});
 
-});
+		});
 
-
-jQuery(document).ready(function($)
-	{
-
+		jQuery(document).ready(function($)
+		{
 
 		var datatable = $(".datatable").dataTable({
-			"sPaginationType": "bootstrap",
-			"sDom": "<'row'<'col-xs-3 col-left'l><'col-xs-9 col-right'<'export-data'T>f>r>t<'row'<'col-xs-3 col-left'i><'col-xs-9 col-right'p>>",
-			"oTableTools": {
-				"aButtons": [
+		"sPaginationType": "bootstrap",
+		"sDom": "<'row'<'col-xs-3 col-left'l><'col-xs-9 col-right'<'export-data'T>f>r>t<'row'<'col-xs-3 col-left'i><'col-xs-9 col-right'p>>",
+		"oTableTools": {
+		"aButtons": [
 
-					{
-						"sExtends": "xls",
-						"mColumns": [0, 1, 2, 3, 4, 5]
-					},
-					{
-						"sExtends": "pdf",
-						"mColumns": [0,1, 2, 3, 4, 5]
-					},
-					{
-						"sExtends": "print",
-						"fnSetText"	   : "Press 'esc' to return",
-						"fnClick": function (nButton, oConfig) {
-							datatable.fnSetColumnVis(1, false);
-							datatable.fnSetColumnVis(5, false);
+		{
+		"sExtends": "xls",
+		"mColumns": [0, 1, 2, 3, 4, 5]
+		},
+		{
+		"sExtends": "pdf",
+		"mColumns": [0,1, 2, 3, 4, 5]
+		},
+		{
+		"sExtends": "print",
+		"fnSetText"	   : "Press 'esc' to return",
+		"fnClick": function (nButton, oConfig) {
+		datatable.fnSetColumnVis(1, false);
+		datatable.fnSetColumnVis(5, false);
 
-							this.fnPrint( true, oConfig );
+		this.fnPrint( true, oConfig );
 
-							window.print();
+		window.print();
 
-							$(window).keyup(function(e) {
-								  if (e.which == 27) {
-									  datatable.fnSetColumnVis(1, true);
-									  datatable.fnSetColumnVis(5, true);
-								  }
-							});
-						},
+		$(window).keyup(function(e) {
+		if (e.which == 27) {
+		datatable.fnSetColumnVis(1, true);
+		datatable.fnSetColumnVis(5, true);
+		}
+		});
+		},
 
-					},
-				]
-			},
+		},
+		]
+		},
 
 		});
 
 		$(".dataTables_wrapper select").select2({
-			minimumResultsForSearch: -1
+		minimumResultsForSearch: -1
 		});
-	});
-
+		});
 
 </script>

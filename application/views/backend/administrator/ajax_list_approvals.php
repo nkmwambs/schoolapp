@@ -53,7 +53,7 @@
                       <!-- Approve request  -->
                       <?php if($approval->status !=="1"){ ?>
                         <li class="<?=get_access_class('approve_request','admin','approval')?>">
-                          <a href="#" onclick="confirm_ajax_action('<?php echo base_url();?>index.php?approval/take_action/approve/<?php echo $approval->approval_request_id;?>','table_data');">
+                          <a href="#" onclick="confirm_ajax_action('<?php echo base_url();?>index.php?admin/take_action/approve/<?php echo $approval->approval_request_id;?>','table_data');">
                               <i class="fa fa-thumbs-up"></i>
                               <?php echo get_phrase('approve');?>
                           </a>
@@ -65,7 +65,7 @@
                         <li class="divider <?=get_access_class('decline_request','admin','approval')?>"></li>
                         <!-- Decline request  -->
                         <li class="<?=get_access_class('decline_request','admin','approval')?>">
-                          <a href="#" onclick="confirm_ajax_action('<?php echo base_url();?>index.php?approval/take_action/decline/<?php echo $approval->approval_request_id;?>','table_data');">
+                          <a href="#" onclick="confirm_ajax_action('<?php echo base_url();?>index.php?admin/take_action/decline/<?php echo $approval->approval_request_id;?>','table_data');">
                               <i class="fa fa-thumbs-down"></i>
                               <?php echo get_phrase('decline');?>
                           </a>

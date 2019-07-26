@@ -19,6 +19,8 @@ class Admin extends CI_Controller
 		parent::__construct();
 		$this->load->database();
         $this->load->library('session');
+		$this->load->library('approval');
+		
 		//$this->db->db_select($this->session->app);
        /*cache control*/
 		$this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
@@ -92,5 +94,50 @@ class Admin extends CI_Controller
         $this->load->view('backend/index', $page_data);
     }
 
-   
+
+	 public function list_approvals($status = 0)
+    {
+        if ($this->session->userdata('active_login')!=1) {
+            redirect(base_url(), 'refresh');
+        }
+
+
+        $list_approvals = $this->db->get_where('approval_request',array('status'=>$status))->result_object();
+
+        $page_data['status'] = array('new','approved','declined','reinstated','implemented');
+        $page_data['set_state'] = $status;
+        $page_data['records'] = $list_approvals;
+        $page_data['page_name']  =	'list_approvals';
+        $page_data['page_view'] = 'administrator';
+        $page_data['page_title'] =	get_phrase('list_approval_requests');
+        $this->load->view('backend/index', $page_data);
+    }
+
+    function ajax_load_approval_list($status = 0){
+      $list_approvals = $this->db->get_where('approval_request',array('status'=>$status))->result_object();
+
+      $page_data['records'] = $list_approvals;
+      $page_data['status'] = array('new','approved','declined','reinstated','implemented');
+
+      echo $this->load->view('backend/administrator/ajax_list_approvals',$page_data,TRUE);
+    }
+
+	function proccess_request_approval($approval_request_id){
+		
+		$requestor_message 	= $this->input->post('request_message');
+		$approval_action 	= $_POST['approval_action'];
+		
+		$success_message = $this->approval->log_request_message_on_action($approval_request_id,$requestor_message,$approval_action);
+		
+		$this -> session -> set_flashdata('flash_message', $success_message);
+
+      	redirect(base_url() . 'index.php?admin/list_approvals', 'refresh');
+	}
+
+   function take_action($action,$approval_request_id){
+
+      $this->approval->change_approval_request_status($action,$approval_request_id);
+
+      $this->ajax_load_approval_list(0);
+    }
 }
