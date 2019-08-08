@@ -33,11 +33,12 @@ class Modal extends CI_Controller {
 	/*
 	*	$page_name		=	The name of page
 	*/
-	function popup($page_name = '' , $param2 = '' , $param3 = '')
+	function popup($page_name = '' , $param2 = '' , $param3 = '', $param4 = '')
 	{
 		$account_type		=	$this->session->userdata('page_type');
 		$page_data['param2']		=	$param2;
 		$page_data['param3']		=	$param3;
+		$page_data['param4']		=	$param4;
 		
 		if(file_exists(APPPATH.'/views/backend/'.$account_type.'/'.$this->session->login_type.'/'.$page_name.'.php' )){
 			$this->load->view('backend/'.$account_type.'/'.$this->session->login_type.'/'.$page_name.'.php' ,$page_data);			

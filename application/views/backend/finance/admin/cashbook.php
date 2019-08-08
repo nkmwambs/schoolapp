@@ -121,7 +121,8 @@ if(isset($current)){
 					
 					<tr>
 						<td><?=$rows->t_date;?></td>
-						<td><div class="btn <?=$btn_color;?>" title="<?=$btn_title;?>" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_transaction/<?=$rows->batch_number?>');"><?=$rows->batch_number?></div></td>
+						<td><i class="fa fa-undo" style="font-size: 12pt;cursor: pointer;" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_request_comment_add/request_cancel/<?php echo $rows->transaction_id; ?>/transaction');" ></i> 
+							<div class="btn <?=$btn_color;?>" title="<?=$btn_title;?>" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_transaction/<?=$rows->batch_number?>');"><?=$rows->batch_number?></div></td>
 						<td><?=$rows->payee;?></td>
 						<td><?=$rows->description;?></td>
 						<td><?=ucwords($rows->transaction_type);?></td>

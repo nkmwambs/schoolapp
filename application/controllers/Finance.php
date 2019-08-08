@@ -2315,6 +2315,25 @@ class Finance extends CI_Controller
     {
     }
 
+	function transaction($param1="",$param2=""){
+		
+		if($param1 == 'request_cancel'){
+			$this -> db -> trans_start();
+          
+	          $this->approval->raise_approval_request('transaction',$param2,'cancel',$this->input->post('request_message'));
+	          
+	          if ($this -> db -> trans_status() === false) {
+	              $this -> db -> trans_rollback();
+	              $this -> session -> set_flashdata('flash_message', get_phrase('process_failed'));
+	          } else {
+	              $this -> db -> trans_commit();
+	              $this -> session -> set_flashdata('flash_message', get_phrase('request_sent_successfully'));
+	          }
+	
+	          redirect(base_url() . 'index.php?finance/cashbook', 'refresh');
+		}
+	}
+	
     public function cashbook($param1 = "", $param2 = "")
     {
         if ($this -> session -> userdata('active_login') != 1) {
