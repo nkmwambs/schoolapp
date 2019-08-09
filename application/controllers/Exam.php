@@ -283,6 +283,14 @@ class Exam extends CI_Controller
 			$sorted_scores[$student]['total_marks'] = $score;
 			$sorted_scores[$student]['grade_point'] = $tabulation_sheet[$student]['avg_grade'];
 			
+			$comment = "";
+			
+			if($this->db->get_where('grade',array('grade_point'=>$tabulation_sheet[$student]['avg_grade']))->num_rows()>0){
+				$comment = $this->db->get_where('grade',array('grade_point'=>$tabulation_sheet[$student]['avg_grade']))->row()->comment;
+			}
+			
+			$sorted_scores[$student]['grade_comment'] = $comment;
+			
 			if($previous_mark == $score){
 				$sorted_scores[$student]['position'] = $position - 1;
 				//$sorted_scores[$student]['previous_mark'] = $previous_mark;

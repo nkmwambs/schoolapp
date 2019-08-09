@@ -37,6 +37,7 @@
 				<?php endforeach;?>
 				<td style="text-align: center;"><?php echo get_phrase('total');?></td>
 				<td style="text-align: center;"><?php echo get_phrase('average_grade_point');?></td>
+				<td style="text-align: center;"><?php echo get_phrase('grade_comment');?></td>
 				</tr>
 			</thead>
 			<tbody>
@@ -64,6 +65,7 @@
 					
 					<td><?=$result['total_marks']?></td>
 					<td><?=$result['grade_point']?></td>
+					<td><?=$result['grade_comment'];?></td>
 				</tr>
 
 			<?php
