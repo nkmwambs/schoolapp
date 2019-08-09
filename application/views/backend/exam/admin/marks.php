@@ -117,7 +117,7 @@
                         <tr>
                             <td><?php echo get_phrase('student');?></td>
                             <td><?php echo get_phrase('mark_obtained');?>(out of 100)</td>
-                            <td><?php echo get_phrase('comment');?></td>
+                            <td><?php echo get_phrase('teachers_comment');?></td>
                         </tr>
                     </thead>
                     <tbody>

@@ -49,7 +49,7 @@
 <?php if ($class_id != '' && $exam_id != ''):?>
 <br>
 <?php
-//print_r($positions);
+print_r($positions);
 ?>
 <div class="row">
 	<div class="col-md-4"></div>
@@ -75,12 +75,11 @@
 		<table class="table table-bordered">
 			<thead>
 				<tr>
-				<th><?=get_phrase('class_position');?></th>	
 				<td style="text-align: center;">
 					<?php echo get_phrase('students');?> <i class="entypo-down-thin"></i> | <?php echo get_phrase('subjects');?> <i class="entypo-right-thin"></i>
 				</td>
 				<?php
-					//$subjects = $this->db->get_where('subject' , array('class_id' => $class_id))->result_array();
+					$subjects = $this->db->get_where('subject' , array('class_id' => $class_id))->result_array();
 					foreach($subjects as $row):
 				?>
 					<td style="text-align: center;"><?php echo $row['name'];?></td>
@@ -91,35 +90,53 @@
 			</thead>
 			<tbody>
 			<?php
-			foreach($positions as $student=>$result){
+
+				$students = $this->db->get_where('student' , array('class_id' => $class_id))->result_array();
+				foreach($students as $row):
 			?>
 				<tr>
-					<td><?=$result['position']?></td>
-					<td><?=$student;?></td>
-					
-					<?php
-							
-						foreach($subjects as $subject){
-							$mark = 0;
-							foreach($result['subject']  as $row){
-								if($row['subject_name'] == $subject['name']){
-									$mark = $row['mark'];
+					<td style="text-align: center;"><?php echo $row['name'];?></td>
+				<?php
+					$total_marks = 0;
+					$total_grade_point = 0;
+					foreach($subjects as $row2):
+				?>
+					<td style="text-align: center;">
+						<?php
+							$obtained_mark_query = 	$this->db->get_where('mark' , array(
+													'class_id' => $class_id ,
+														'exam_id' => $exam_id ,
+															'subject_id' => $row2['subject_id'] ,
+																'student_id' => $row['student_id']
+												));
+							if ( $obtained_mark_query->num_rows() > 0) {
+								$obtained_marks = $obtained_mark_query->row()->mark_obtained;
+								echo $obtained_marks;
+								if ($obtained_marks >= 0 && $obtained_marks != '') {
+									$grade = $this->crud_model->get_grade($obtained_marks);
+									//print_r($grade);
+									$total_grade_point += $grade['grade_point'];
 								}
+								$total_marks += $obtained_marks;
 							}
+
+
+						?>
+					</td>
+				<?php endforeach;?>
+				<td style="text-align: center;"><?php echo $total_marks;?></td>
+				<td style="text-align: center;">
+					<?php
+						$this->db->where('class_id' , $class_id);
+						$this->db->from('subject');
+						$number_of_subjects = $this->db->count_all_results();
+						echo number_format(($total_grade_point / $number_of_subjects),2);
 					?>
-							<td><?=$mark?></td>
-					<?php		
-						}
-					?>
-					
-					<td><?=$result['total_marks']?></td>
-					<td><?=$result['grade_point']?></td>
+				</td>
 				</tr>
 
-			<?php
-			}
-			?>
-			
+			<?php endforeach;?>
+
 			</tbody>
 		</table>
 		<center>

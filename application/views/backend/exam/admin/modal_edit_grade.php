@@ -24,19 +24,19 @@ foreach ( $edit_data as $row):
                 <div class="form-group">
                     <label class="col-sm-3 control-label"><?php echo get_phrase('grade_point');?></label>
                     <div class="col-sm-5 controls">
-                        <input type="text" class="form-control" name="grade_point" value="<?php echo $row['grade_point'];?>"/>
+                        <input type="number" class="form-control" name="grade_point" value="<?php echo $row['grade_point'];?>"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label"><?php echo get_phrase('mark_from');?></label>
                     <div class="col-sm-5 controls">
-                        <input type="text" class="form-control" name="mark_from" value="<?php echo $row['mark_from'];?>"/>
+                        <input type="number" class="form-control" name="mark_from" value="<?php echo $row['mark_from'];?>"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label"><?php echo get_phrase('mark_upto');?></label>
                     <div class="col-sm-5 controls">
-                        <input type="text" class="form-control" name="mark_upto" value="<?php echo $row['mark_upto'];?>"/>
+                        <input type="number" class="form-control" name="mark_upto" value="<?php echo $row['mark_upto'];?>"/>
                     </div>
                 </div>
                 <div class="form-group">

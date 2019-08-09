@@ -187,12 +187,27 @@ class Exam extends CI_Controller
             $page_data['class_id']   = $this->input->post('class_id');
 
             if ($page_data['exam_id'] > 0 && $page_data['class_id'] > 0) {
+        	
                 redirect(base_url() . 'index.php?exam/tabulation_sheet/' . $page_data['class_id'] . '/' . $page_data['exam_id'] , 'refresh');
             } else {
                 $this->session->set_flashdata('mark_message', 'Choose class and exam');
                 redirect(base_url() . 'index.php?exam/tabulation_sheet/', 'refresh');
             }
         }
+		
+		if($exam_id !=="" && $class_id !== ""){
+			$exam_name  = $this->db->get_where('exam' , array('exam_id' => $exam_id))->row()->name;
+        	$class_name = $this->db->get_where('class' , array('class_id' => $class_id ))->row()->name;
+ 			
+			//$scores = $this->compute_total_marks_obtained($class_id,$exam_id);
+			$positions = $this->compute_student_position($class_id,$exam_id);
+			
+			$page_data['positions'] = $positions;
+			$page_data['subjects'] =  $this->db->get_where('subject' , array('class_id' => $class_id))->result_array();	
+			$page_data['exam_name'] = $exam_name;
+			$page_data['class_name'] = $class_name;	
+		}
+		
         $page_data['exam_id']    = $exam_id;
         $page_data['class_id']   = $class_id;
 
@@ -204,9 +219,109 @@ class Exam extends CI_Controller
 
     }
 
+	function compute_total_marks_obtained($class_id,$exam_id){
+		
+		$this->db->select(array('roll','student.name as student_name','mark.student_id','subject.name as subject_name','subject.subject_id','mark_obtained','comment'));
+		$this->db->join('subject','subject.subject_id=mark.subject_id');
+		$this->db->join('student','student.student_id=mark.student_id');
+		$scores = $this->db->get_where('mark' , array('mark.class_id' => $class_id,'mark.exam_id' => $exam_id))->result_array();
+		
+		$grouped_scores = array();
+		
+		$i = 0;
+		
+		foreach($scores as $score){
+			$grade = $this->crud_model->get_grade($score['mark_obtained']);
+			$grouped_scores[$score['roll'].' - '.$score['student_name']]['subject'][$i]['subject_name'] = $score['subject_name'];
+			$grouped_scores[$score['roll'].' - '.$score['student_name']]['subject'][$i]['mark'] = $score['mark_obtained'];
+			$grouped_scores[$score['roll'].' - '.$score['student_name']]['subject'][$i]['grade'] = $grade['grade_point'];
+			$grouped_scores[$score['roll'].' - '.$score['student_name']]['avg_grade'] = 0;
+			$grouped_scores[$score['roll'].' - '.$score['student_name']]['total_mark'] = 0;
+			
+			$i++;
+		}
+		
+		$count_of_subjects  = $this->db->get_where('subject' , array('class_id' => $class_id))->num_rows();
+		foreach($grouped_scores as $student=>$subject_scores){
+			$total_marks = 0;
+			$sum_grades = 0;
+			
+			foreach($subject_scores['subject'] as $subject_score){
+				$total_marks += $subject_score['mark'];
+				$sum_grades += $subject_score['grade'];
+			}
+			$grouped_scores[$student]['avg_grade'] = round($sum_grades/$count_of_subjects,0);
+			$grouped_scores[$student]['total_mark'] = $total_marks;
+		
+		}
+		
+		return $grouped_scores;	    
+	}
+
+	function compute_student_position($class_id,$exam_id){
+		$tabulation_sheet = $this->compute_total_marks_obtained($class_id,$exam_id);
+		
+		$score_array = array();
+		
+		foreach($tabulation_sheet as $student=>$score){
+			$score_array[$student] = $score['total_mark'];
+		}
+		
+		arsort($score_array);
+		
+		$sorted_scores = array();
+		
+		$position = 1;
+		
+		$previous_mark = 0;
+		
+		$skip_numbers = 0;
+		
+		foreach($score_array as $student=>$score){
+			
+			$sorted_scores[$student]['subject'] = $tabulation_sheet[$student]['subject'];
+			$sorted_scores[$student]['total_marks'] = $score;
+			$sorted_scores[$student]['grade_point'] = $tabulation_sheet[$student]['avg_grade'];
+			
+			if($previous_mark == $score){
+				$sorted_scores[$student]['position'] = $position - 1;
+				//$sorted_scores[$student]['previous_mark'] = $previous_mark;
+				$skip_numbers++;
+			}else{
+				$sorted_scores[$student]['position'] = $position + $skip_numbers;
+				//$sorted_scores[$student]['position'] = $position + $skip_numbers;
+				//$sorted_scores[$student]['previous_mark'] = $previous_mark;
+				
+				$position = $position + $skip_numbers;
+				$position++;
+				
+				$skip_numbers = 0;
+			}
+			
+			
+			$previous_mark = $score;
+			
+		}
+		
+		return $sorted_scores;
+	}
+	
     function tabulation_sheet_print_view($class_id , $exam_id) {
         if ($this->session->userdata('active_login') != 1)
             redirect(base_url(), 'refresh');
+		
+		if($exam_id !=="" && $class_id !== ""){
+			$exam_name  = $this->db->get_where('exam' , array('exam_id' => $exam_id))->row()->name;
+        	$class_name = $this->db->get_where('class' , array('class_id' => $class_id ))->row()->name;
+ 			
+			//$scores = $this->compute_total_marks_obtained($class_id,$exam_id);
+			$positions = $this->compute_student_position($class_id,$exam_id);
+			
+			$page_data['positions'] = $positions;
+			$page_data['subjects'] =  $this->db->get_where('subject' , array('class_id' => $class_id))->result_array();	
+			$page_data['exam_name'] = $exam_name;
+			$page_data['class_name'] = $class_name;	
+		}
 			
         $page_data['class_id'] = $class_id;
         $page_data['exam_id']  = $exam_id;
