@@ -25,7 +25,7 @@
                     		<th><div><?php echo get_phrase('grade_point');?></div></th>
                     		<th><div><?php echo get_phrase('mark_from');?></div></th>
                     		<th><div><?php echo get_phrase('mark_upto');?></div></th>
-                    		<th><div><?php echo get_phrase('comment');?></div></th>
+                    		<th><div><?php echo get_phrase('grade_comment');?></div></th>
                     		<th><div><?php echo get_phrase('options');?></div></th>
 						</tr>
 					</thead>

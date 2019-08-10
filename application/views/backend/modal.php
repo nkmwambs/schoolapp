@@ -51,6 +51,32 @@
 		document.getElementById('delete_link').setAttribute('href' , delete_url);
 	}
 
+  function confirm_ajax_action(action_url,replace_data_element_id){
+
+    var cfrm = confirm('Are you sure you want to perform this action?');
+
+    if(!cfrm){
+      alert('Action aborted');
+      return false;
+    }
+
+    $.ajax({
+      url:action_url,
+      beforeSend:function(){
+        $("#overlay").css('display','block');
+      },
+      success:function(resp){
+        $("#"+replace_data_element_id).html(resp);
+        $("#overlay").css('display','none');
+      },
+      error:function(err,xh,msg){
+        alert(msg);
+        $("#overlay").css('display','none');
+      }
+    });
+
+  }
+
 	function confirm_action(url)
 	{
 		jQuery('#modal-5').modal('show', {backdrop: 'static'});
@@ -95,7 +121,7 @@
             </div>
         </div>
     </div>
-    
+
    <script>
    $(document).ready(function(){
    			if (location.hash) {
@@ -104,13 +130,13 @@
 			    $(document.body).on("click", "a[data-toggle]", function(event) {
 			        location.hash = this.getAttribute("href");
 			    });
-		
+
 			$(window).on("popstate", function() {
 			    var anchor = location.hash || $("a[data-toggle='tab']").first().attr("href");
 			    $("a[href='" + anchor + "']").tab("show");
-		
+
 		});
-	});	
+	});
 
 
 	function PrintElem(elem)
@@ -133,18 +159,18 @@
     		string += '</div>';
     		string += '</div>';
     		string += '<hr />';
-    			
-        $(elem).printThis({ 
-		    debug: false,              
-		    importCSS: true,             
-		    importStyle: true,         
-		    printContainer: false,       
-		    loadCSS: "<?=base_url();?>assets/css/bootstrap.css", 
-		    pageTitle: "Print Report",             
-		    removeInline: false,        
-		    printDelay: 333,            
-		    header: string,             
-		    formValues: true          
+
+        $(elem).printThis({
+		    debug: false,
+		    importCSS: true,
+		    importStyle: true,
+		    printContainer: false,
+		    loadCSS: "<?=base_url();?>assets/css/bootstrap.css",
+		    pageTitle: "Print Report",
+		    removeInline: false,
+		    printDelay: 333,
+		    header: string,
+		    formValues: true
 		});
     }
 
@@ -152,13 +178,13 @@
 		function go_back(){
 			window.history.back();
 		}
-		
+
 		function go_forward() {
 		  window.history.forward();
 		}
-	
-	
-		
+
+
+
 </script>
 
 <style>
@@ -167,7 +193,7 @@
     display: none; /* Hidden by default */
     width: 100%; /* Full width (cover the whole page) */
     height: 100%; /* Full height (cover the whole page) */
-    top: 0; 
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
@@ -181,7 +207,7 @@
 	margin-top:25%;
 	margin-left: auto;
     margin-right: auto;
-} 
+}
 </style>
 
 <div id="overlay"><img src='<?php echo base_url()."uploads/preloader4.gif";?>'/></div>

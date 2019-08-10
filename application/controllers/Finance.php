@@ -18,6 +18,7 @@ class Finance extends CI_Controller
         parent::__construct();
         $this -> load -> database();
         $this -> load -> library('session');
+		$this->load->library('approval');
         //$this->db->db_select($this->session->app);
 
         /*cache control*/
@@ -324,6 +325,8 @@ class Finance extends CI_Controller
         }
     }
 
+    
+
     public function invoice($param1 = '', $param2 = '', $param3 = '')
     {
         if ($this -> session -> userdata('active_login') != 1) {
@@ -502,49 +505,55 @@ class Finance extends CI_Controller
         if ($param1 == "edit_invoice") {
             $this -> db -> trans_start();
 
-            $data['amount_due'] = $this -> input -> post('amount_due');
-            //$data['amount_paid'] = $this->input->post('amount_paid');
-            //$data['balance'] = $this->input->post('balance');
-            if ($this -> input -> post('balance') === 0) {
-                $data['status'] = "paid";
-            } elseif ($this -> input -> post('balance') < 0) {
-                $data['status'] = "excess";
+            $approved = $this->action_approval_status_before_implementation('invoice',$param2);
+            if($approved){
+              $data['amount_due'] = $this -> input -> post('amount_due');
+              //$data['amount_paid'] = $this->input->post('amount_paid');
+              //$data['balance'] = $this->input->post('balance');
+              if ($this -> input -> post('balance') === 0) {
+                  $data['status'] = "paid";
+              } elseif ($this -> input -> post('balance') < 0) {
+                  $data['status'] = "excess";
+              }
+
+              $this -> db -> where(array("invoice_id" => $param2));
+              $this -> db -> update("invoice", $data);
+
+              //Remove the existing details for the invoice and add new once
+              //$this->db->where(array("invoice_id"=>$param2));
+              //$this->db->delete('invoice_details');
+
+              if (count($this -> input -> post('existing_detail_amount_due')) > 0) {
+                  foreach ($this->input->post('existing_detail_amount_due') as $invoice_details_id => $amount_due) {
+                      $this -> db -> where(array('invoice_details_id' => $invoice_details_id));
+                      $data8['amount_due'] = $amount_due;
+                      $this -> db -> update('invoice_details', $data8);
+                  }
+              }
+
+              if (count($this -> input -> post('detail_amount_due')) > 0) {
+                  foreach ($this->input->post('detail_amount_due') as $details_id => $amount_due) {
+                      //Insert the new details
+                      $data8['invoice_id'] = $param2;
+                      $data8['detail_id'] = $details_id;
+                      $data8['amount_due'] = $amount_due;
+
+                      $this -> db -> insert('invoice_details', $data8);
+                  }
+              }
+
+              if ($this -> db -> trans_status() === false) {
+                  $this -> db -> trans_rollback();
+                  $this -> session -> set_flashdata('flash_message', get_phrase('process_failed'));
+              } else {
+                  $this -> db -> trans_commit();
+                  $this -> session -> set_flashdata('flash_message', get_phrase('edit_successful'));
+              }
+            }else{
+              $this->session->set_flashdata('flash_message' , get_phrase('approval_required'));
             }
 
-            $this -> db -> where(array("invoice_id" => $param2));
-            $this -> db -> update("invoice", $data);
 
-            //Remove the existing details for the invoice and add new once
-            //$this->db->where(array("invoice_id"=>$param2));
-            //$this->db->delete('invoice_details');
-
-            if (count($this -> input -> post('existing_detail_amount_due')) > 0) {
-                foreach ($this->input->post('existing_detail_amount_due') as $invoice_details_id => $amount_due) {
-                    $this -> db -> where(array('invoice_details_id' => $invoice_details_id));
-                    $data8['amount_due'] = $amount_due;
-                    $this -> db -> update('invoice_details', $data8);
-                }
-            }
-
-            if (count($this -> input -> post('detail_amount_due')) > 0) {
-                foreach ($this->input->post('detail_amount_due') as $details_id => $amount_due) {
-                    //Insert the new details
-                    $data8['invoice_id'] = $param2;
-                    $data8['detail_id'] = $details_id;
-                    $data8['amount_due'] = $amount_due;
-
-                    $this -> db -> insert('invoice_details', $data8);
-                }
-            }
-
-            if ($this -> db -> trans_status() === false) {
-                $this -> db -> trans_rollback();
-                $this -> session -> set_flashdata('flash_message', get_phrase('process_failed'));
-            } else {
-                $this -> db -> trans_commit();
-                $this -> session -> set_flashdata('flash_message', get_phrase('edit_successful'));
-            }
-            //$this->session->set_flashdata('flash_message' , get_phrase('edit_successful'));
             redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
         }
 
@@ -589,12 +598,69 @@ class Finance extends CI_Controller
         }
 
         if ($param1 == 'cancel') {
+
+          //Check if the invoice being cancalled has been approved
+          $approved = $this->action_approval_status_before_implementation('invoice',$param2);
+
+          if($approved){
+
             $this -> db -> where('invoice_id', $param2);
             $data3['status'] = 'cancelled';
             $this -> db -> update('invoice', $data3);
-
             $this -> session -> set_flashdata('flash_message', get_phrase('invoice_cancelled'));
+
+          }else{
+            $this -> session -> set_flashdata('flash_message', get_phrase('invoice_cancellation_failed'));
+          }
+
             redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
+        }
+
+        if($param1 == 'request_edit'){
+          $this -> db -> trans_start();
+          
+          $this->approval->raise_approval_request('invoice',$param2,'update',$this->input->post('request_message'));
+          
+          if ($this -> db -> trans_status() === false) {
+              $this -> db -> trans_rollback();
+              $this -> session -> set_flashdata('flash_message', get_phrase('process_failed'));
+          } else {
+              $this -> db -> trans_commit();
+              $this -> session -> set_flashdata('flash_message', get_phrase('request_sent_successfully'));
+          }
+
+          redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
+        }
+		if($param1 == 'request_reinstate'){
+			$this -> db -> trans_start();
+          
+          $this->approval->raise_approval_request('invoice',$param2,'reinstate',$this->input->post('request_message'));
+          
+          if ($this -> db -> trans_status() === false) {
+              $this -> db -> trans_rollback();
+              $this -> session -> set_flashdata('flash_message', get_phrase('process_failed'));
+          } else {
+              $this -> db -> trans_commit();
+              $this -> session -> set_flashdata('flash_message', get_phrase('request_sent_successfully'));
+          }
+
+          redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
+		}
+
+        if($param1 == 'request_cancel'){
+          $this -> db -> trans_start();
+         
+          $this->approval->raise_approval_request('invoice',$param2,'cancel',$this->input->post('request_message'));
+         
+		  if ($this -> db -> trans_status() === false) {
+              $this -> db -> trans_rollback();
+              $this -> session -> set_flashdata('flash_message', get_phrase('process_failed'));
+          } else {
+              $this -> db -> trans_commit();
+              $this -> session -> set_flashdata('flash_message', get_phrase('request_sent_successfully'));
+          }
+
+          redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
         }
 
         if ($param1 == 'reclaim') {
@@ -629,6 +695,28 @@ class Finance extends CI_Controller
         $this -> db -> order_by('creation_timestamp', 'desc');
         $page_data['invoices'] = $this -> db -> get('invoice') -> result_array();
         $this -> load -> view('backend/index', $page_data);
+    }
+
+    function action_approval_status_before_implementation($type_name,$record_type_primary_id){
+
+      $record_type_id = $this->db->get_where('record_type',
+      array('name'=>$type_name))->row()->record_type_id;
+
+      $action_approved = $this->db->get_where('approval_request',
+      array('record_type_id'=>$record_type_id,'record_type_primary_id'=>$record_type_primary_id,'status'=>1));
+
+      $approved = false;
+
+      if($action_approved->num_rows()>0){
+          $approved = true;
+
+          //Change the request status to implemented
+          $approval_request_data['status'] = 4;
+          $this->db->where(array('approval_request_id'=>$action_approved->row()->approval_request_id));
+          $this->db->update('approval_request',$approval_request_data);
+      }
+
+      return $approved;
     }
 
     /** Miscellaneous Methods **/
@@ -1060,6 +1148,8 @@ class Finance extends CI_Controller
             $this -> session -> set_flashdata('flash_message', $message);
             redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
         }
+
+        $page_data['states'] = array('new','approved','declined','reinstated','implemented');
 
         $page_data['page_name'] = 'student_payments';
         $page_data['page_view'] = "finance";
@@ -2225,6 +2315,25 @@ class Finance extends CI_Controller
     {
     }
 
+	function transaction($param1="",$param2=""){
+		
+		if($param1 == 'request_cancel'){
+			$this -> db -> trans_start();
+          
+	          $this->approval->raise_approval_request('transaction',$param2,'cancel',$this->input->post('request_message'));
+	          
+	          if ($this -> db -> trans_status() === false) {
+	              $this -> db -> trans_rollback();
+	              $this -> session -> set_flashdata('flash_message', get_phrase('process_failed'));
+	          } else {
+	              $this -> db -> trans_commit();
+	              $this -> session -> set_flashdata('flash_message', get_phrase('request_sent_successfully'));
+	          }
+	
+	          redirect(base_url() . 'index.php?finance/cashbook', 'refresh');
+		}
+	}
+	
     public function cashbook($param1 = "", $param2 = "")
     {
         if ($this -> session -> userdata('active_login') != 1) {

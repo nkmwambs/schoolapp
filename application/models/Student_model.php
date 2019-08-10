@@ -2,7 +2,7 @@
 
 class Student_model extends CI_Model {
 	var $table = 'student';
-	var $column_order = array("","roll", 'name','address','email'); //set column field database for datatable orderable
+	var $column_order = array(null,"roll", 'name','address','email'); //set column field database for datatable orderable
 	var $column_search = array("roll", 'name','address','email');
 	var $order = array('student_id' => 'asc'); // default order 
 
@@ -10,11 +10,12 @@ class Student_model extends CI_Model {
 	{
 		parent::__construct();
 		$this->load->database();
-		$this->db->db_select($this->session->app); 
+		//$this->db->db_select($this->session->app); 
 	}
 
-	private function _get_datatables_query()
-	{	 
+		private function _get_datatables_query()
+	{	
+		//$this->db->join('country','country.country_id=user.country_id');	 
 		$this->db->from($this->table);
 
 		$i = 0;
