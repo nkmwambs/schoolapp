@@ -91,26 +91,45 @@
 				</tr>
 			</thead>
 			<tbody>
-			<?php
+			<?php	
+			
+			$subject_total = array();		
+			
+			foreach($subjects as $subject){
+				$subject_total[$subject['name']] = 0;
+			}	
+			
+			$subject_total['aggregate_total'] = 0;
+			
+			$subject_total['aggregate_grade_points'] = 0;
+			
+			$sizeofclass = 0;
+			
 			foreach($positions as $student=>$result){
+				if($result['total_marks'] > 0){
+					$sizeofclass++;
 			?>
 				<tr>
 					<td><?=$result['position']?></td>
 					<td><?=$student;?></td>
 					
 					<?php
-							
+						
 						foreach($subjects as $subject){
+							
 							$mark = 0;
 							foreach($result['subject']  as $row){
 								if($row['subject_name'] == $subject['name']){
 									$mark = $row['mark'];
+									$subject_total[$subject['name']] +=$mark;
 								}
 							}
 					?>
 							<td><?=$mark?></td>
 					<?php		
 						}
+						$subject_total['aggregate_total']  += $result['total_marks'];
+						$subject_total['aggregate_grade_points']  += $result['grade_point'];
 					?>
 					
 					<td><?=$result['total_marks'];?></td>
@@ -119,9 +138,27 @@
 				</tr>
 
 			<?php
+				}
 			}
+			//print_r($subject_total);
 			?>
-			
+			<tfoot>
+				<tr>
+					<td colspan="2"><?=get_phrase('class_average');?></td>
+					
+					<?php
+					foreach($subjects as $subject){
+					?>
+						<td><?=number_format(($subject_total[$subject['name']]/$sizeofclass),1);?></td>
+					
+					<?php
+					}
+					?>
+					
+					<td><?=number_format(($subject_total['aggregate_total']/$sizeofclass),1);?></td>
+					<td colspan="2"><?=number_format(($subject_total['aggregate_grade_points']/$sizeofclass),1);?></td>
+				</tr>
+			</tfoot>	
 			</tbody>
 		</table>
 		<center>
