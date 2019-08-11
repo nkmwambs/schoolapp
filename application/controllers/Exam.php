@@ -224,7 +224,7 @@ class Exam extends CI_Controller
 		$this->db->select(array('roll','student.name as student_name','mark.student_id','subject.name as subject_name','subject.subject_id','mark_obtained','comment'));
 		$this->db->join('subject','subject.subject_id=mark.subject_id');
 		$this->db->join('student','student.student_id=mark.student_id');
-		$scores = $this->db->get_where('mark' , array('mark.class_id' => $class_id,'mark.exam_id' => $exam_id))->result_array();
+		$scores = $this->db->get_where('mark' , array('active'=>1,'mark.class_id' => $class_id,'mark.exam_id' => $exam_id))->result_array();
 		
 		$grouped_scores = array();
 		
