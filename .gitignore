@@ -13,3 +13,5 @@ readme.rst
 /uploads/logo.png
 /vendor
 index.php
+/uploads/student_import.xlsx
+/uploads/blank_excel_file.xlsx
