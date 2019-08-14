@@ -11,11 +11,11 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 <p></p>
 <div class="row">
 	<div class="col-sm-1">
-		
+
 		<a href="<?=base_url();?>index.php?finance/fund_balance_report/<?=strtotime('-1 month',strtotime($t_date));?>"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>
 	</div>
 	<div class="col-xs-10">
-		
+
 		<table class="table table-striped datatable">
 			<thead>
 				<tr>
@@ -31,7 +31,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 					$cnt = 0;
 					//print_r($fund_balances);
 					foreach($fund_balances['categories'] as $category_id=>$category_name){
-						
+
 						$opening  = $fund_balances['opening_balances'][$category_id];
 						$income = $fund_balances['month_income'][$category_id];
 						$expense = $fund_balances['month_expense'][$category_id];
@@ -47,7 +47,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 				<?php
 					$cnt++;
 					}
-					
+
 					$sum_opening = array_sum($fund_balances['opening_balances']);
 					$sum_income = array_sum($fund_balances['month_income']);
 					$sum_expense = array_sum($fund_balances['month_expense']);
@@ -70,49 +70,9 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 	</div>
 </div>
 
-<script>	
+<script>
 jQuery(document).ready(function($)
 	{
-
-
-		var datatable = $(".datatable").dataTable({
-			"sPaginationType": "bootstrap",
-			"sDom": "<'row'<'col-xs-3 col-left'l><'col-xs-9 col-right'<'export-data'T>f>r>t<'row'<'col-xs-3 col-left'i><'col-xs-9 col-right'p>>",
-			"oTableTools": {
-				"aButtons": [
-
-					{
-						"sExtends": "xls",
-						"mColumns": [0,1, 2, 3, 4]
-					},
-					{
-						"sExtends": "pdf",
-						"mColumns": [0,1, 2, 3, 4]
-					},
-					{
-						"sExtends": "print",
-						"fnSetText"	   : "Press 'esc' to return",
-						"fnClick": function (nButton, oConfig) {
-							datatable.fnSetColumnVis(1, false);
-							datatable.fnSetColumnVis(5, false);
-
-							this.fnPrint( true, oConfig );
-
-							window.print();
-
-							$(window).keyup(function(e) {
-								  if (e.which == 27) {
-									  datatable.fnSetColumnVis(1, true);
-									  datatable.fnSetColumnVis(5, true);
-								  }
-							});
-						},
-
-					},
-				]
-			},
-
-		});
 
 		$(".dataTables_wrapper select").select2({
 			minimumResultsForSearch: -1
