@@ -275,13 +275,13 @@ class Student extends CI_Controller {
 	function all_students() {
 		if ($this -> session -> userdata('active_login') != 1)
 			redirect('login', 'refresh');
-		
+
 		$this->db->select(array('student_id','student.name as student_name','class.name as class_name',
 		'student.address','roll','sex','student.class_id as class_id','student.parent_id as parent_id'));
-		
+
 		$this->db->join('class','class.class_id=student.class_id');
 		$this->db->join('parent','parent.parent_id=student.parent_id');
-		
+
 		$page_data['students'] = $this->db->get_where('student',array('student.active'=>1))->result_array();
 		$page_data['page_name'] = 'all_students';
 		$page_data['page_view'] = "student";

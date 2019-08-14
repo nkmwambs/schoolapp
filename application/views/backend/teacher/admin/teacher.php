@@ -6,7 +6,7 @@
             	<?php echo get_phrase('add_new_teacher');?>
                 </a>
                 <br><br>
-               <table class="table table-bordered datatable" id="table_export">
+               <table class="table table-striped datatable" id="table_export">
                     <thead>
                         <tr>
                             <th width="80"><div><?php echo get_phrase('photo');?></div></th>
@@ -31,13 +31,13 @@
 	                            	$user = $this->db->get_where("user",array("email"=>$row["email"]));
 	                            	if($user->num_rows()>0){
 	                            		$promoted = get_phrase("yes");
-										
+
 										if($user->row()->profile_id > 0){
-											$profile = $this->db->get_where("profile",array("profile_id"=>$user->row()->profile_id))->row()->name;	
+											$profile = $this->db->get_where("profile",array("profile_id"=>$user->row()->profile_id))->row()->name;
 										}
-										
+
 	                            	}
-						
+
 							?>
                             <td><?php echo $promoted;?></td>
                             <td><?=$profile;?></td>
@@ -48,7 +48,7 @@
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu dropdown-default pull-right" role="menu">
-										
+
 										<!-- Promote a Teacher to A user -->
                                         <li class="<?=get_access_class("promote_teacher_to_user",$this->session->login_type,"accounts");?>">
                                         	<a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?settings/promote_to_user/teacher/<?php echo $row['teacher_id'];?>');">
@@ -57,11 +57,11 @@
                                                	</a>
                                         </li>
                                         <li class="divider <?=get_access_class("promote_teacher_to_user",$this->session->login_type,"accounts");?>"></li>
-                                        
+
                                         <?php
                                         	if($user->num_rows()>0){
                                         ?>
-                                        
+
                                         <!-- Reset Password -->
                                         <li class="<?=get_access_class("reset_teacher_password",$this->session->login_type,"accounts");?>">
                                         	<a href="#" onclick="showAjaxModal('<?=base_url();?>index.php?modal/popup/modal_change_password/teacher/<?php echo $row['teacher_id'];?>');">
@@ -70,7 +70,7 @@
                                                	</a>
                                         </li>
                                         <li class="divider <?=get_access_class("reset_teacher_password",$this->session->login_type,"accounts");?>"></li>
-                                        
+
                                          <!-- Assign Profile -->
                                         <li class="<?=get_access_class("assign_profile",$this->session->login_type,"accounts");?>">
                                         	<a href="#" onclick="showAjaxModal('<?=base_url();?>index.php?modal/popup/modal_assign_profile/teacher/<?php echo $row['teacher_id'];?>');">
@@ -79,11 +79,11 @@
                                                	</a>
                                         </li>
                                         <li class="divider <?=get_access_class("assign_profile",$this->session->login_type,"accounts");?>"></li>
-                                        
-                                        <?php		
+
+                                        <?php
                                         	}
                                         ?>
-										
+
                                         <!-- teacher EDITING LINK -->
                                         <li class="<?=get_access_class("edit_teacher",$this->session->login_type,"accounts");?>">
                                         	<a href="<?php echo base_url();?>index.php?teacher/teacher_edit/<?php echo $row['teacher_id'];?>">
@@ -92,7 +92,7 @@
                                                	</a>
                                         </li>
                                         <li class="divider <?=get_access_class("edit_teacher",$this->session->login_type,"accounts");?>"></li>
-                                        
+
                                         <!-- teacher DELETION LINK -->
                                         <li class="<?=get_access_class("delete_teacher",$this->session->login_type,"accounts");?>">
                                         	<a href="#" onclick="confirm_modal('<?php echo base_url();?>index.php?teacher/teacher/delete/<?php echo $row['teacher_id'];?>');">
@@ -111,55 +111,12 @@
 
 	</div>
 </div>
-           
-            
-
 
 <!-----  DATA TABLE EXPORT CONFIGURATIONS ---->
 <script type="text/javascript">
 
 	jQuery(document).ready(function($)
 	{
-
-
-		var datatable = $("#table_export").dataTable({
-			"sPaginationType": "bootstrap",
-			"sDom": "<'row'<'col-xs-3 col-left'l><'col-xs-9 col-right'<'export-data'T>f>r>t<'row'<'col-xs-3 col-left'i><'col-xs-9 col-right'p>>",
-			"oTableTools": {
-				"aButtons": [
-
-					{
-						"sExtends": "xls",
-						"mColumns": [1,2]
-					},
-					{
-						"sExtends": "pdf",
-						"mColumns": [1,2]
-					},
-					{
-						"sExtends": "print",
-						"fnSetText"	   : "Press 'esc' to return",
-						"fnClick": function (nButton, oConfig) {
-							datatable.fnSetColumnVis(0, false);
-							datatable.fnSetColumnVis(3, false);
-
-							this.fnPrint( true, oConfig );
-
-							window.print();
-
-							$(window).keyup(function(e) {
-								  if (e.which == 27) {
-									  datatable.fnSetColumnVis(0, true);
-									  datatable.fnSetColumnVis(3, true);
-								  }
-							});
-						},
-
-					},
-				]
-			},
-
-		});
 
 		$(".dataTables_wrapper select").select2({
 			minimumResultsForSearch: -1

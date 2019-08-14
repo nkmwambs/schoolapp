@@ -4,7 +4,7 @@ foreach ( $edit_data as $row):
 ?>
 <div class="row">
 	<div class="col-md-12">
-		<div class="panel panel-primary" data-collapsed="0">
+		<div class="panel panel-default" data-collapsed="0">
         	<div class="panel-heading">
             	<div class="panel-title" >
             		<i class="entypo-plus-circled"></i>

@@ -9,16 +9,16 @@
             	</div>
             </div>
 			<div class="panel-body">
-				
-				
-	            <a href="<?php echo base_url(); ?>index.php?parents/parent_add/" 
+
+
+	            <a href="<?php echo base_url(); ?>index.php?parents/parent_add/"
 	                class="btn btn-primary pull-right <?=get_access_class("add_parent",$this->session->login_type,"accounts")?>">
 	                <i class="entypo-plus-circled"></i>
 	                <?php echo get_phrase('add_new_parent'); ?>
-	            </a> 
-            
+	            </a>
+
                 <br><br>
-               <table class="table table-bordered datatable" id="table_export">
+               <table class="table table-striped datatable" id="table_export">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -34,7 +34,7 @@
                     </thead>
                     <tbody>
                         <?php
-                            $count = 1; 
+                            $count = 1;
                             $parents   =   $this->db->get('parent' )->result_array();
                             foreach($parents as $row):?>
                         <tr>
@@ -44,7 +44,7 @@
                             <td><?php echo $row['phone']; ?></td>
                             <td><?php echo $row['profession']; ?></td>
                             <td>
-                            	
+
                             	<?php
 								if ($row['care_type'] === "primary") {
 									echo $this -> db -> get_where('student', array('parent_id' => $row['parent_id'], 'active' => 1)) -> num_rows();
@@ -52,9 +52,9 @@
 									echo $this -> db -> get_where('caregiver', array('parent_id' => $row['parent_id'])) -> num_rows();
 								}
                             	?>
-                            	
+
                             </td>
-                            
+
                             <td><?php
 							if ($this -> db -> get_where('relationship', array('relationship_id' => $row['relationship_id'])) -> num_rows() > 0)
 								echo $this -> db -> get_where('relationship', array('relationship_id' => $row['relationship_id'])) -> row() -> name;
@@ -63,13 +63,13 @@
 							?></td>
                             <td><?php echo ucfirst($row['care_type']); ?></td>
                             <td>
-                                
+
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
                                         Action <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu dropdown-default pull-right" role="menu">
-                                        
+
                                         <!-- teacher EDITING LINK -->
                                         <li class="<?=get_access_class("edit_parent",$this->session->login_type,"accounts")?>">
                                             <a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_parent_edit/<?php echo $row['parent_id']; ?>');">
@@ -78,7 +78,7 @@
                                                 </a>
                                         </li>
                                         <li class="divider <?=get_access_class("edit_parent",$this->session->login_type,"accounts")?>"></li>
-                                        
+
                                         <li>
                                             <a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_beneficiaries/<?php echo $row['parent_id']; ?>/<?php echo $row['care_type']; ?>');">
                                                 <i class="fa fa-umbrella"></i>
@@ -86,9 +86,9 @@
                                                 </a>
                                         </li>
                                         <li class="divider"></li>
-                                        
+
                                         <?php if($row['care_type'] === "secondary"){?>
-                                        
+
                                         <li class="<?=get_access_class("assign_beneficiary",$this->session->login_type,"accounts")?>">
                                             <a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_assign_beneficiaries/<?php echo $row['parent_id']; ?>/<?php echo $row['care_type']; ?>');">
                                                 <i class="fa fa-link"></i>
@@ -96,9 +96,9 @@
                                                 </a>
                                         </li>
                                         <li class="divider <?=get_access_class("assign_beneficiary", $this -> session -> login_type, "accounts") ?>"></li>
-                                        
+
                                         <?php } ?>
-                                        
+
                                         <!-- teacher DELETION LINK -->
                                         <li class="<?=get_access_class("delete_parent", $this -> session -> login_type, "accounts") ?>">
                                             <a href="#" onclick="confirm_modal('<?php echo base_url(); ?>index.php?parents/parent/delete/<?php echo $row['parent_id']; ?>');">
@@ -108,7 +108,7 @@
                                         </li>
                                     </ul>
                                 </div>
-                                
+
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -119,57 +119,15 @@
 </div>
 </div>
 
-
-
-
-<!-----  DATA TABLE EXPORT CONFIGURATIONS ---->                      
+<!-----  DATA TABLE EXPORT CONFIGURATIONS ---->
 <script type="text/javascript">
 
     jQuery(document).ready(function($)
     {
-        
 
-        var datatable = $("#table_export").dataTable({
-            "sPaginationType": "bootstrap",
-            "sDom": "<'row'<'col-xs-3 col-left'l><'col-xs-9 col-right'<'export-data'T>f>r>t<'row'<'col-xs-3 col-left'i><'col-xs-9 col-right'p>>",
-            "oTableTools": {
-                "aButtons": [
-                    
-                    {
-                        "sExtends": "xls",
-                        "mColumns": [1,2,3,4,5]
-                    },
-                    {
-                        "sExtends": "pdf",
-                        "mColumns": [1,2,3,4,5]
-                    },
-                    {
-                        "sExtends": "print",
-                        "fnSetText"    : "Press 'esc' to return",
-                        "fnClick": function (nButton, oConfig) {
-                            datatable.fnSetColumnVis(5, false);
-                            
-                            this.fnPrint( true, oConfig );
-                            
-                            window.print();
-                            
-                            $(window).keyup(function(e) {
-                                  if (e.which == 27) {
-                                      datatable.fnSetColumnVis(5, true);
-                                  }
-                            });
-                        },
-                        
-                    },
-                ]
-            },
-            
-        });
-        
         $(".dataTables_wrapper select").select2({
             minimumResultsForSearch: -1
         });
     });
-        
-</script>
 
+</script>

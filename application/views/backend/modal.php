@@ -211,3 +211,18 @@
 </style>
 
 <div id="overlay"><img src='<?php echo base_url()."uploads/preloader4.gif";?>'/></div>
+
+
+<script>
+
+jQuery(document).ready(function($)
+{
+  $('.datatable').DataTable({
+      dom: 'lBfrtip',
+      buttons: [
+           'copy', 'csv', 'excel', 'pdf', 'print'
+      ]
+  });
+});
+
+</script>

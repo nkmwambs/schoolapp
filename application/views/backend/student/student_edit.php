@@ -4,7 +4,7 @@ foreach ( $edit_data as $row):
 ?>
 <div class="row">
 	<div class="col-md-12">
-		<div class="panel panel-primary" data-collapsed="0">
+		<div class="panel panel-default" data-collapsed="0">
         	<div class="panel-heading">
             	<div class="panel-title" >
             		<i class="entypo-plus-circled"></i>
@@ -128,7 +128,7 @@ foreach ( $edit_data as $row):
 							<input type="text" class="form-control unique" data-tablename="student" name="roll" value="<?php echo $row['roll'];?>" >
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('UPI_number');?></label>
 

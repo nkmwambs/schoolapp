@@ -14,13 +14,13 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 		<a href="<?=base_url();?>index.php?finance/scroll_fees_structure/<?=$year - 1;?>"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>
 	</div>
 	<div class="col-xs-10">
-		<a href="<?php echo base_url();?>index.php?finance/fees_structure_add/" 
+		<a href="<?php echo base_url();?>index.php?finance/fees_structure_add/"
 			class="btn btn-primary pull-right add_fees_structure">
 			<i class="entypo-plus-circled"></i>
 			<?php echo get_phrase('add_new_fees_structure');?>
-			</a> 
+			</a>
 			<br><br>
-			<table class="table table-bordered datatable" id="table_export">
+			<table class="table table-striped datatable" id="table_export">
 			    <thead>
 			        <tr>
 			            <th><div><?php echo get_phrase('name');?></div></th>
@@ -33,11 +33,11 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 			        </tr>
 			    </thead>
 			    <tbody>
-			        <?php 
+			        <?php
 			        	$count = 1;
 			        	//$fees = $this->db->get('fees_structure')->result_array();
 			        	foreach ($fees as $row):
-			        	
+
 						$term = $this->db->get_where('terms',array('term_number'=>$row['term']))->row();
 			        ?>
 			        <tr>
@@ -49,13 +49,13 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 			            <td><?php echo $term->name;?></td>
 			            <td><?=number_format($this->db->select_sum('amount')->get_where('fees_structure_details',array('fees_id'=>$row['fees_id']))->row()->amount,2);?></td>
 			            <td>
-			                
+
 			                <div class="btn-group">
 			                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
 			                        Action <span class="caret"></span>
 			                    </button>
 			                    <ul class="dropdown-menu dropdown-default pull-right" role="menu">
-			                        
+
 			                        <!-- Fee Structure Edit Link -->
 			                        <li class="edit_fee_structure">
 			                        	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_fees_structure_edit/<?php echo $row['fees_id'];?>');">
@@ -64,7 +64,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 			                               	</a>
 			                        				</li>
 			                        <li class="divider edit_fee_structure"></li>
-			                        
+
 			                        <!-- Add Fees Structure Details -->
 			                         <!-- <li class="add_fee_structure_item">
 			                        	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_fees_structure_details_add/<?php echo $row['fees_id'];?>');">
@@ -73,25 +73,25 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 			                               	</a>
 			                        </li> -->
 			                        <!-- <li class="divider add_fee_structure_item"></li> -->
-			
+
 									<li class="add_fee_structure_item">
 			                        	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_fees_structure_multi_details_add/<?php echo $row['fees_id'];?>');">
 			                            	<i class="entypo-book-open"></i>
 												<?php echo get_phrase('add_items');?>
 			                               	</a>
 			                        </li>
-			                        <li class="divider add_fee_structure_item"></li>                        
-			                        
+			                        <li class="divider add_fee_structure_item"></li>
+
 			                        <!-- VIEW FEES STRUCTURE DETAILS -->
-			 
+
 			                          <li>
 			                        	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_fees_structure/<?php echo $row['fees_id'];?>');">
 			                            	<i class="entypo-eye"></i>
 												<?php echo get_phrase('view_fees_structure');?>
 			                               	</a>
 			                        				</li>
-			                        <li class="divider"></li>                            
-			                        
+			                        <li class="divider"></li>
+
 			                        <!-- Clone Structure Details -->
 			                        <li class="add_fees_structure">
 			                        	<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_structure_clone/<?php echo $row['fees_id'];?>');">
@@ -99,8 +99,8 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 												<?php echo get_phrase('clone_fees_structure');?>
 			                               	</a>
 			                        </li>
-			                        
-			                        <li class="divider add_fees_structure"></li>                     
+
+			                        <li class="divider add_fees_structure"></li>
 			                        <?php if($count == 0) {?>
 			                        <!-- DELETION LINK -->
 			                        <li class="delete_fee_structure">
@@ -114,14 +114,14 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 			                        ?>
 			                    </ul>
 			                </div>
-			                
+
 			            </td>
 			        </tr>
 			        <?php endforeach;?>
 			    </tbody>
-			</table>		
+			</table>
 	</div>
-	
+
 	<div class="col-xs-1">
 		<a href="<?=base_url();?>index.php?finance/scroll_fees_structure/<?=$year + 1;?>"><i style="font-size: 145pt;" class="fa fa-angle-right"></i></a>
 	</div>
@@ -130,54 +130,12 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 
 
-<!-----  DATA TABLE EXPORT CONFIGURATIONS ---->                      
+<!-----  DATA TABLE EXPORT CONFIGURATIONS ---->
 <script type="text/javascript">
 
 	jQuery(document).ready(function($)
 	{
-		
 
-		var datatable = $("#table_export").dataTable({
-			"sPaginationType": "bootstrap",
-			"sDom": "<'row'<'col-xs-3 col-left'l><'col-xs-9 col-right'<'export-data'T>f>r>t<'row'<'col-xs-3 col-left'i><'col-xs-9 col-right'p>>",
-			"oTableTools": {
-				"aButtons": [
-					
-					{
-						"sExtends": "xls",
-						"mColumns": [1,2,3,4,5]
-					},
-					{
-						"sExtends": "pdf",
-						"mColumns": [1,2,3,4,5]
-					},
-					{
-						"sExtends": "print",
-						"fnSetText"	   : "Press 'esc' to return",
-						"fnClick": function (nButton, oConfig) {
-							datatable.fnSetColumnVis(2, false);
-							
-							this.fnPrint( true, oConfig );
-							
-							window.print();
-							
-							$(window).keyup(function(e) {
-								  if (e.which == 27) {
-									  datatable.fnSetColumnVis(2, true);
-								  }
-							});
-						},
-						
-					},
-				]
-			},
-			
-		});
-		
-		$(".dataTables_wrapper select").select2({
-			minimumResultsForSearch: -1
-		});
 	});
-		
-</script>
 
+</script>

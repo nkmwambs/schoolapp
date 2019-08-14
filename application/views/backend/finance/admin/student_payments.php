@@ -36,66 +36,11 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 
 <div class="row">
 	<div class="col-xs-12">
-		<a href="<?= base_url(); ?>index.php?finance/student_collection_tally/<?= date('Y'); ?>" class="btn btn-default"> <i class="fa fa-list"></i> <?= get_phrase('payment_tally_sheet'); ?></a>
+		<a href="<?= base_url(); ?>index.php?finance/student_collection_tally/<?= date('Y'); ?>" class="btn btn-info btn-icon"> <i class="fa fa-list"></i> <?= get_phrase('payment_tally_sheet'); ?></a>
 		<?php $count_to_notify = $this -> db -> get_where('invoice', array('status' => 'unpaid')) -> num_rows(); ?>
-		<a href="#" onclick="confirm_action('<?= base_url(); ?>index.php?finance/sms_fee_balances');" class="btn btn-default"><i class="fa fa-mobile"></i><?= get_phrase('SMS_balances'); ?><span class="badge badge-primary"><?= $count_to_notify; ?></span></a>
-		<a href="<?php echo base_url(); ?>index.php?finance/create_invoice" class="btn btn-primary"><i class="fa fa-money"></i><?= get_phrase('create_invoice'); ?></a>
-		<a href="<?php echo base_url(); ?>index.php?finance/missing_invoices" class="btn btn-danger"><i class="fa fa-times"></i><?= get_phrase('missing_invoices'); ?></a>
-	</div>
-</div>
-
-<hr />
-
-<div class="row">
-	<!-- <div class="col-xs-6" style="text-align: right;font-weight: bold;font-size: 18pt;">
-		<?=get_phrase('year');?> <?=$year;?>
-	</div> -->
-	<div class="col-xs-12">
-		<?php echo form_open(base_url() . 'index.php?finance/scroll_student_payments', array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data')); ?>
-
-			<div class="form-group">
-				<?php
-                    $year_range = range($year - 3, $year + 3)
-                ?>
-				<div class="col-xs-offset-2 col-xs-4" style="text-align: right;">
-					<select name="year" class="form-control">
-						<option><?= get_phrase('select_year'); ?></option>
-						<?php
-                            foreach ($year_range as $row) {
-                                ?>
-							<option value="<?=$row; ?>" <?php
-									if ($year == $row) {
-										echo "selected";
-									}
- ?>><?=$row; ?></option>
-						<?php } ?>
-					</select>
-				</div>
-
-				<div class="col-xs-4" style="text-align: left;">
-					<select name="term" class="form-control">
-						<option><?= get_phrase('select_term'); ?></option>
-						<?php
-
-                            $terms = $this->db->get('terms')->result_object();
-                            foreach ($terms as $term_row) {
-                                ?>
-							<option value="<?= $term_row -> terms_id; ?>" <?php
-									if ($term == $term_row -> terms_id) {
-										echo "selected";
-									}
- ?>><?= $term_row -> name; ?></option>
-						<?php } ?>
-					</select>
-				</div>
-
-				<div class="col-xs-2">
-					<button type="submit" class="btn btn-primary"><?= get_phrase('go'); ?></button>
-				</div>
-
-			</div>
-
-		</form>
+		<a href="#" onclick="confirm_action('<?= base_url(); ?>index.php?finance/sms_fee_balances');" class="btn btn-info btn-icon"><i class="fa fa-mobile"></i><?= get_phrase('SMS_balances'); ?><span class="badge badge-primary"><?= $count_to_notify; ?></span></a>
+		<a href="<?php echo base_url(); ?>index.php?finance/create_invoice" class="btn btn-info btn-icon"><i class="fa fa-money"></i><?= get_phrase('create_invoice'); ?></a>
+		<a href="<?php echo base_url(); ?>index.php?finance/missing_invoices" class="btn btn-info  btn-icon"><i class="fa fa-times"></i><?= get_phrase('missing_invoices'); ?></a>
 	</div>
 </div>
 
@@ -159,10 +104,12 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 			</ul>
 
 			<div class="tab-content">
+				<p></p>
 				<div class="tab-pane active" id="unpaid">
 
 
-						<table  class="table table-bordered datatable example">
+
+						<table  class="table table-striped datatable example">
                 	<thead>
                 		<tr>
                 			<th>#</th>
@@ -626,7 +573,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                                     <!-- Re-Claim LINK -->
                                     <?php
                                     if ($row['carry_forward'] == 0) {
-                                    	if ($approval_info['request_type'] == 'reinstate') { 
+                                    	if ($approval_info['request_type'] == 'reinstate') {
                                         ?>
                                     <li class="reclaim_cancelled_invoice">
                                         <a href="#" onclick="confirm_action('<?php echo base_url(); ?>index.php?finance/invoice/reclaim/<?php echo $row['invoice_id']; ?>');">
@@ -634,20 +581,20 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                                                 <?php echo get_phrase('reclaim_invoice'); ?>
                                             </a>
                                      </li>
-                                     <?php 
+                                     <?php
 										} else{
 										?>
-										
+
 										<li class="reclaim_cancelled_invoice">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_request_comment_add/request_reinstate/<?php echo $row['invoice_id']; ?>');">
                                             <i class="entypo-reply"></i>
                                                 <?php echo get_phrase('request_reclaim_invoice'); ?>
                                             </a>
 										</li>
-									<?php			
+									<?php
 										}
-									
-										} 
+
+										}
 									?>
                                 </ul>
                             </div>

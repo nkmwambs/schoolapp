@@ -72,10 +72,10 @@
 
 <div class="row">
 	<div class="col-md-12">
-		<table class="table table-bordered">
+		<table class="table table-bordered datatable">
 			<thead>
 				<tr>
-				<th><?=get_phrase('class_position');?></th>	
+				<th><?=get_phrase('class_position');?></th>
 				<td style="text-align: center;">
 					<?php echo get_phrase('students');?> <i class="entypo-down-thin"></i> | <?php echo get_phrase('subjects');?> <i class="entypo-right-thin"></i>
 				</td>
@@ -91,20 +91,20 @@
 				</tr>
 			</thead>
 			<tbody>
-			<?php	
-			
-			$subject_total = array();		
-			
+			<?php
+
+			$subject_total = array();
+
 			foreach($subjects as $subject){
 				$subject_total[$subject['name']] = 0;
-			}	
-			
+			}
+
 			$subject_total['aggregate_total'] = 0;
-			
+
 			$subject_total['aggregate_grade_points'] = 0;
-			
+
 			$sizeofclass = 0;
-			
+
 			foreach($positions as $student=>$result){
 				if($result['total_marks'] > 0){
 					$sizeofclass++;
@@ -112,11 +112,11 @@
 				<tr>
 					<td><?=$result['position']?></td>
 					<td><?=$student;?></td>
-					
+
 					<?php
-						
+
 						foreach($subjects as $subject){
-							
+
 							$mark = 0;
 							foreach($result['subject']  as $row){
 								if($row['subject_name'] == $subject['name']){
@@ -126,12 +126,12 @@
 							}
 					?>
 							<td><?=$mark?></td>
-					<?php		
+					<?php
 						}
 						$subject_total['aggregate_total']  += $result['total_marks'];
 						$subject_total['aggregate_grade_points']  += $result['grade_point'];
 					?>
-					
+
 					<td><?=$result['total_marks'];?></td>
 					<td><?=$result['grade_point'];?></td>
 					<td><?=$result['grade_comment'];?></td>
@@ -145,20 +145,20 @@
 			<tfoot>
 				<tr>
 					<td colspan="2"><?=get_phrase('class_average');?></td>
-					
+
 					<?php
 					foreach($subjects as $subject){
 					?>
 						<td><?=number_format(($subject_total[$subject['name']]/$sizeofclass),1);?></td>
-					
+
 					<?php
 					}
 					?>
-					
+
 					<td><?=number_format(($subject_total['aggregate_total']/$sizeofclass),1);?></td>
 					<td colspan="2"><?=number_format(($subject_total['aggregate_grade_points']/$sizeofclass),1);?></td>
 				</tr>
-			</tfoot>	
+			</tfoot>
 			</tbody>
 		</table>
 		<center>

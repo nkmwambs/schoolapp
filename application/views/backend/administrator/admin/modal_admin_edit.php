@@ -4,7 +4,7 @@ $admin = $this->db->get_where('admin',array('admin_id'=>$param2))->row();
 ?>
 <div class="row">
 	<div class="col-md-12">
-		<div class="panel panel-primary" data-collapsed="0">
+		<div class="panel panel-default" data-collapsed="0">
         	<div class="panel-heading">
             	<div class="panel-title" >
             		<i class="entypo-plus-circled"></i>
@@ -19,7 +19,7 @@ $admin = $this->db->get_where('admin',array('admin_id'=>$param2))->row();
 						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('name');?></label>
 
 						<div class="col-sm-5">
-							<input type="text" class="form-control" name="name" data-validate="required" 
+							<input type="text" class="form-control" name="name" data-validate="required"
 								data-message-required="<?php echo get_phrase('value_required');?>" value="<?=$admin->name;?>" autofocus>
 						</div>
 					</div>
@@ -28,7 +28,7 @@ $admin = $this->db->get_where('admin',array('admin_id'=>$param2))->row();
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('birthday');?></label>
 
 						<div class="col-sm-5">
-							<input type="text" class="form-control datepicker" name="birthday" 
+							<input type="text" class="form-control datepicker" name="birthday"
 							value="<?=$admin->birthday;?>" data-start-view="2" data-date-format='mm/dd/yyyy'>
 						</div>
 					</div>
@@ -44,7 +44,7 @@ $admin = $this->db->get_where('admin',array('admin_id'=>$param2))->row();
                           </select>
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('level');?></label>
 
@@ -80,7 +80,7 @@ $admin = $this->db->get_where('admin',array('admin_id'=>$param2))->row();
 						</div>
 					</div>
 
-	
+
 					<div class="form-group">
 						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('photo');?></label>
 

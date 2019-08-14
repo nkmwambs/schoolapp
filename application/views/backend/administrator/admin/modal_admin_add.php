@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-md-12">
-		<div class="panel panel-primary" data-collapsed="0">
+		<div class="panel panel-default" data-collapsed="0">
         	<div class="panel-heading">
             	<div class="panel-title" >
             		<i class="entypo-plus-circled"></i>
@@ -38,7 +38,7 @@
                           </select>
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('level');?></label>
 
@@ -74,7 +74,7 @@
 						</div>
 					</div>
 
-	
+
 					<div class="form-group">
 						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('photo');?></label>
 

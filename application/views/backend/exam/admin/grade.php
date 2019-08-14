@@ -15,9 +15,10 @@
     	<!------CONTROL TABS END------>
 		<div class="tab-content">
             <!----TABLE LISTING STARTS-->
+						<p></p>
             <div class="tab-pane box active" id="list">
 
-                <table class="table table-bordered datatable" id="table_export">
+                <table class="table table-striped datatable" id="table_export">
                 	<thead>
                 		<tr>
                     		<th><div>#</div></th>
@@ -127,8 +128,6 @@
 	jQuery(document).ready(function($)
 	{
 
-
-		var datatable = $("#table_export").dataTable();
 
 		$(".dataTables_wrapper select").select2({
 			minimumResultsForSearch: -1

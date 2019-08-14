@@ -16,7 +16,7 @@ $reconcile_obj = $this->db->get("reconcile");
 					<td>Action</td>
 				</tr>
 			</thead>
-			
+
 			<tbody>
 				<?php
 					if($reconcile_obj->num_rows() > 0){
@@ -41,7 +41,7 @@ $reconcile_obj = $this->db->get("reconcile");
                                                 </a>
                                         </li>
                                       </ul>
-                                   </div>     
+                                   </div>
 							</td>
 						</tr>
 				<?php
@@ -55,6 +55,6 @@ $reconcile_obj = $this->db->get("reconcile");
 
 <script>
 	$(document).ready(function(){
-		var datatable = $(".datatable").DataTable();
+	
 	});
 </script>

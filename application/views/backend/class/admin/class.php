@@ -8,7 +8,7 @@
 					<?php echo get_phrase('class_list');?>
                 </a>
             </li>
-			
+
 			<li>
             	<span class="<?=get_access_class('add_class','admin','classes');?>">
             		<a href="#add" data-toggle="tab"><i class="entypo-plus-circled"></i>
@@ -21,9 +21,10 @@
 
 		<div class="tab-content">
             <!----TABLE LISTING STARTS-->
+						<p></p>
             <div class="tab-pane box active" id="list">
 
-                <table class="table table-bordered datatable" id="table_export">
+                <table class="table table-striped datatable" id="table_export">
                 	<thead>
                 		<tr>
                     		<th><div>#</div></th>
@@ -98,10 +99,10 @@
                                     	<option value=""><?php echo get_phrase('select');?></option>
                                     	<?php
 										$teachers = $this->db->get('teacher')->result_array();
-										
+
 										foreach($teachers as $row):
 										?>
-                                            
+
                                     		<option value="<?php echo $row['teacher_id'];?>"><?php echo $row['name'];?></option>
                                         <?php
 										endforeach;
@@ -130,9 +131,6 @@
 
 	jQuery(document).ready(function($)
 	{
-
-
-		var datatable = $("#table_export").dataTable();
 
 		$(".dataTables_wrapper select").select2({
 			minimumResultsForSearch: -1
