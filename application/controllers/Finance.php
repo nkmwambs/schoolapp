@@ -325,7 +325,7 @@ class Finance extends CI_Controller
         }
     }
 
-    
+
 
     public function invoice($param1 = '', $param2 = '', $param3 = '')
     {
@@ -618,9 +618,9 @@ class Finance extends CI_Controller
 
         if($param1 == 'request_edit'){
           $this -> db -> trans_start();
-          
+
           $this->approval->raise_approval_request('invoice',$param2,'update',$this->input->post('request_message'));
-          
+
           if ($this -> db -> trans_status() === false) {
               $this -> db -> trans_rollback();
               $this -> session -> set_flashdata('flash_message', get_phrase('process_failed'));
@@ -633,9 +633,9 @@ class Finance extends CI_Controller
         }
 		if($param1 == 'request_reinstate'){
 			$this -> db -> trans_start();
-          
+
           $this->approval->raise_approval_request('invoice',$param2,'reinstate',$this->input->post('request_message'));
-          
+
           if ($this -> db -> trans_status() === false) {
               $this -> db -> trans_rollback();
               $this -> session -> set_flashdata('flash_message', get_phrase('process_failed'));
@@ -649,9 +649,9 @@ class Finance extends CI_Controller
 
         if($param1 == 'request_cancel'){
           $this -> db -> trans_start();
-         
+
           $this->approval->raise_approval_request('invoice',$param2,'cancel',$this->input->post('request_message'));
-         
+
 		  if ($this -> db -> trans_status() === false) {
               $this -> db -> trans_rollback();
               $this -> session -> set_flashdata('flash_message', get_phrase('process_failed'));
@@ -1804,6 +1804,25 @@ class Finance extends CI_Controller
         return $fund_balances;
     }
 
+    public function bank_statement_upload(){
+      echo "hello";
+      $ds = DIRECTORY_SEPARATOR;  //1
+
+      $storeFolder = 'uploads'.$ds.'document'.$ds.'bank_statements';   //2
+
+      if (!empty($_FILES)) {
+
+          $tempFile = $_FILES['file']['tmp_name'];          //3
+
+          $targetPath = dirname( __FILE__ ) . $ds. $storeFolder . $ds;  //4
+
+          $targetFile =  $targetPath. $_FILES['file']['name'];  //5
+
+          move_uploaded_file($tempFile,$targetFile); //6
+
+      }
+    }
+
     public function fund_balance_report($start_month_date = "")
     {
         if ($this -> session -> userdata('active_login') != 1) {
@@ -2316,12 +2335,12 @@ class Finance extends CI_Controller
     }
 
 	function transaction($param1="",$param2=""){
-		
+
 		if($param1 == 'request_cancel'){
 			$this -> db -> trans_start();
-          
+
 	          $this->approval->raise_approval_request('transaction',$param2,'cancel',$this->input->post('request_message'));
-	          
+
 	          if ($this -> db -> trans_status() === false) {
 	              $this -> db -> trans_rollback();
 	              $this -> session -> set_flashdata('flash_message', get_phrase('process_failed'));
@@ -2329,11 +2348,11 @@ class Finance extends CI_Controller
 	              $this -> db -> trans_commit();
 	              $this -> session -> set_flashdata('flash_message', get_phrase('request_sent_successfully'));
 	          }
-	
+
 	          redirect(base_url() . 'index.php?finance/cashbook', 'refresh');
 		}
 	}
-	
+
     public function cashbook($param1 = "", $param2 = "")
     {
         if ($this -> session -> userdata('active_login') != 1) {
