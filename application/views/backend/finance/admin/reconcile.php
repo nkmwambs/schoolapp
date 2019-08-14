@@ -112,6 +112,13 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 					</a>
 				</li>
 
+				<li class="">
+					<a href="#bank_statement" data-toggle="tab">
+						<span class="hidden-xs"><?php echo get_phrase('bank_statement');?></span>
+
+					</a>
+				</li>
+
 
 			</ul>
 
@@ -371,6 +378,13 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 				</table>
 			</div>
 
+			<div class="tab-pane" id="bank_statement">
+				<form action="<?php echo base_url();?>index.php?finance/bank_statement_upload"
+					class="dropzone"
+					id="myAwesomeDropzone">
+				</form>
+			</div>
+
 
 		</div>
 
@@ -378,7 +392,14 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 </div>
 
 <script>
+
 	$(document).ready(function(){
+
+		Dropzone.options.myAwesomeDropzone = {
+		  init: function() {
+		    this.on("addedfile", function(file) { alert("Added file."); });
+		  }
+		};
 
 		/** Remove a row from deposit in transit and outstanding cheques table **/
 
