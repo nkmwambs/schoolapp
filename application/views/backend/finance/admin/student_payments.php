@@ -147,14 +147,14 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 							<td><?php echo $row['term']; ?></td>
 							<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row['class_id']); ?></td>
 							<td><?php echo number_format($row['amount'], 2); ?></td>
-                            <td><?php echo number_format($row['amount_due'], 2); ?></td>
+              <td><?php echo number_format($row['amount_due'], 2); ?></td>
 
-                            <?php $paid = $this -> crud_model -> fees_paid_by_invoice($row['invoice_id']); ?>
+              <?php $paid = $this -> crud_model -> fees_paid_by_invoice($row['invoice_id']); ?>
+              <td><?php echo number_format($paid, 2); ?></td>
 
-                            <td><?php echo number_format($paid, 2); ?></td>
-                           <?php $bal = $this -> crud_model -> fees_balance_by_invoice($row['invoice_id']); ?>
+							<?php $bal = $this -> crud_model -> fees_balance_by_invoice($row['invoice_id']); ?>
 
-                            <td><?php echo number_format($bal, 2); ?></td>
+              <td><?php echo number_format($bal, 2); ?></td>
 							<td><?php echo date('d M,Y', $row['creation_timestamp']); ?></td>
 							<td><?= ucfirst($approval_info['request_type']); ?></td>
 
