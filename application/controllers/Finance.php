@@ -1804,24 +1804,47 @@ class Finance extends CI_Controller
         return $fund_balances;
     }
 
-    public function bank_statement_upload(){
-      echo "hello";
-      $ds = DIRECTORY_SEPARATOR;  //1
+    public function bank_statements_upload($param1){
+  			 if (!empty($_FILES)) {
 
-      $storeFolder = 'uploads'.$ds.'document'.$ds.'bank_statements';   //2
+  				 foreach($_FILES['file']['name'] as $index=>$name){
 
-      if (!empty($_FILES)) {
+          				$file = explode('.',$name);
+          				$filename = $file[0];
+          				$file_ext=$file[1];
 
-          $tempFile = $_FILES['file']['tmp_name'];          //3
 
-          $targetPath = dirname( __FILE__ ) . $ds. $storeFolder . $ds;  //4
+          	      if(!file_exists('uploads/bank_statements/'.date('Y-m',$param1)))
+          						mkdir('uploads/bank_statements/'.date('Y-m',$param1));//.$name
 
-          $targetFile =  $targetPath. $_FILES['file']['name'];  //5
+          				if(!file_exists('uploads/bank_statements/'.date('Y-m',$param1).'/'.sha1($filename).'.'.$file_ext)){
+          	          move_uploaded_file($_FILES["file"]["tmp_name"][$index],'uploads/bank_statements/'.date('Y-m',$param1).'/'.sha1($filename).'.'.$file_ext);
+          	          echo $name.' uploaded successful';
+          				 }
 
-          move_uploaded_file($tempFile,$targetFile); //6
+  	        }
+  	     }
 
+
+  		}
+
+      public function bank_statement_download($param1,$param2){
+    		force_download('uploads/bank_statements/'.date('Y-m',$param2).'/'.$param1,NULL);
+    	}
+
+      public function delete_bank_statement($param1){
+        //$t= $_POST['name'];
+        $storeFolder = 'uploads/bank_statements/'.date('Y-m',$param1).'/';
+        //unlink($storeFolder);
+        foreach (glob($storeFolder."/*.*") as $filename) {
+          if (is_file($filename)) {
+                 unlink($filename);
+          }
+        }
+
+        $this->session->set_flashdata('flash_message',get_phrase('files_deleted'));
+        redirect(base_url().'index.php?finance/reconcile/'.$param1,'refresh');
       }
-    }
 
     public function fund_balance_report($start_month_date = "")
     {
