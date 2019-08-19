@@ -1813,6 +1813,8 @@ class Finance extends CI_Controller
           				$filename = $file[0];
           				$file_ext=$file[1];
 
+                  if(!file_exists('uploads/bank_statements'))
+          						mkdir('uploads/bank_statements');//.$name
 
           	      if(!file_exists('uploads/bank_statements/'.date('Y-m',$param1)))
           						mkdir('uploads/bank_statements/'.date('Y-m',$param1));//.$name
