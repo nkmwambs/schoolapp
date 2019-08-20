@@ -28,7 +28,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                     <tbody>
                     	<?php
                     		$count = 1;
-                    		
+
                     		foreach($unpaid_invoices as $row):
                     	?>
                         <tr>
@@ -39,16 +39,16 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 							<td><?php echo $this->crud_model->get_type_name_by_id('class',$row['class_id']);?></td>
 							<td><?php echo number_format($row['amount'],2);?></td>
                             <td><?php echo number_format($row['amount_due'],2);?></td>
-                            
+
                             <?php $paid = $this->db->select_sum('amount')->get_where('transaction',
                             array('invoice_id'=>$row['invoice_id']))->row()->amount;?>
-                            
+
                             <td><?php echo $paid;?></td>
-                            
+
                             <?php
-                            	$bal = $row['amount_due'] - $paid; 
+                            	$bal = $row['amount_due'] - $paid;
                             ?>
-                            
+
                             <td><?php echo number_format($bal,2);?></td>
 							<td><?php echo date('d M,Y', $row['creation_timestamp']);?></td>
 							<td>
@@ -68,7 +68,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                                     </li>
                                     <li class="divider take_student_payment"></li>
                                     <?php endif;?>
-                                    
+
                                     <!-- VIEWING INVOICE LINK -->
                                     <li>
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_invoice/<?php echo $row['invoice_id'];?>');">
@@ -77,7 +77,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                                             </a>
                                                     </li>
                                     <li class="divider"></li>
-                                    
+
                                     <!-- EDIT INVOICE LINK -->
                                     <li class="edit_invoice">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_edit_invoice/<?php echo $row['invoice_id'];?>');">
@@ -89,13 +89,13 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
                                     <!-- DELETION LINK -->
                                     <li class="delete_or_cancel_invoice">
-                                    	
+
                                     		<a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?finance/invoice/cancel/<?php echo $row['invoice_id'];?>');">
 	                                            <i class="entypo-cancel"></i>
 	                                                <?php echo get_phrase('cancel_invoice');?>
 	                                        </a>
-                                    	
-                                    	
+
+
                                      </li>
                                 </ul>
                             </div>
@@ -110,47 +110,6 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 <script>
 	jQuery(document).ready(function($)
 	{
-
-
-		var datatable = $(".datatable").dataTable({
-			"sPaginationType": "bootstrap",
-			"sDom": "<'row'<'col-xs-3 col-left'l><'col-xs-9 col-right'<'export-data'T>f>r>t<'row'<'col-xs-3 col-left'i><'col-xs-9 col-right'p>>",
-			"oTableTools": {
-				"aButtons": [
-
-					{
-						"sExtends": "xls",
-						"mColumns": [0, 1, 2, 3, 4, 5]
-					},
-					{
-						"sExtends": "pdf",
-						"mColumns": [0,1, 2, 3, 4, 5]
-					},
-					{
-						"sExtends": "print",
-						"fnSetText"	   : "Press 'esc' to return",
-						"fnClick": function (nButton, oConfig) {
-							datatable.fnSetColumnVis(1, false);
-							datatable.fnSetColumnVis(5, false);
-
-							this.fnPrint( true, oConfig );
-
-							window.print();
-
-							$(window).keyup(function(e) {
-								  if (e.which == 27) {
-									  datatable.fnSetColumnVis(1, true);
-									  datatable.fnSetColumnVis(5, true);
-								  }
-							});
-						},
-
-					},
-				]
-			},
-
-		});
-
 		$(".dataTables_wrapper select").select2({
 			minimumResultsForSearch: -1
 		});
