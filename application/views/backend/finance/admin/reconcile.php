@@ -549,6 +549,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 
 		$("#adjusted_bank_amount").val(adjusted_bank);
 		$("#status").html(status);
+		$("#suspense_balance").val(status);
 
 		if(status == 0){
 			$("#status_holder").attr("class","label label-success")
