@@ -23,7 +23,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 					<th style="text-align: right;"><?=get_phrase('opening_balance');?></th>
 					<th style="text-align: right;"><?=get_phrase('month_income');?></th>
 					<th style="text-align: right;"><?=get_phrase('month_expense');?></th>
-					<th style="text-align: right;"><?=get_phrase('month_balaance')?></th>
+					<th style="text-align: right;"><?=get_phrase('month_balance')?></th>
 				</tr>
 			</thead>
 			<tbody>
