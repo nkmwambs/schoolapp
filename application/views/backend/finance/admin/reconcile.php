@@ -180,6 +180,19 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 					</div>
 
 					<div class="form-group">
+						<label class="control-label col-sm-3">Suspense Balance</label>
+						<div class="col-sm-2">
+							<input type="text" id="suspense_balance" readonly="readonly" name="suspense_balance" class="form-control" value="0" />
+						</div>
+
+						<label class="control-label col-sm-3">Post Suspense Amount</label>
+						<div class="col-sm-1">
+							<input type="checkbox" class="" id="allow_suspense_amount" />
+						</div>
+					</div>
+
+
+					<div class="form-group">
 						<div class="col-sm-offset-4 col-sm-6">
 							<div id="status_holder" class="label label-danger">Status: <span id="status"></span></div>
 						</div>
@@ -555,6 +568,8 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 			$("#adjusted_bank_amount").val(adjusted_bank);
 			$("#status").html(status);
 
+			$("#suspense_balance").val(status);
+
 			if(status == 0){
 				$("#status_holder").attr("class", "label label-success")
 			}else{
@@ -573,9 +588,9 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 			var bank = $("#cashbook_amount").val();
 			var status  = parseFloat(adjusted_bank) - parseFloat(bank);
 
-			//alert(status);
+			//alert($('#allow_suspense_amount').is(':checked'));
 
-			if(parseFloat(status) == 0){
+			if(parseFloat(status) == 0 || $('#allow_suspense_amount').is(':checked')){
 				var cfrm = confirm("Are you sure you want to submit report?");
 
 				if(!cfrm){

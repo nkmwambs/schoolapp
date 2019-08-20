@@ -1377,6 +1377,7 @@ class Finance extends CI_Controller
         if ($param1 == "create") {
             $data['statement_amount'] = $this -> input -> post("statement_amount");
             $data['month'] = date("Y-m-t", $param2);
+            $data['suspense_balance'] = $this -> input -> post("suspense_balance");
 
             $msg = get_phrase('month_closed_successfully');
             //Check if reconcile Present

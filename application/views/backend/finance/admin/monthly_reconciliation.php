@@ -12,6 +12,7 @@ $reconcile_obj = $this->db->get("reconcile");
 				<tr>
 					<td>Month</td>
 					<td>Amount</td>
+					<td>Suspense Balance</td>
 					<td>Time Stamp</td>
 					<td>Action</td>
 				</tr>
@@ -24,7 +25,8 @@ $reconcile_obj = $this->db->get("reconcile");
 				?>
 						<tr>
 							<td><?=$row->month;?></td>
-							<td><?=$row->statement_amount;?></td>
+							<td><?=number_format($row->statement_amount,2);?></td>
+							<td><?=number_format($row->suspense_balance,2);?></td>
 							<td><?=$row->timestamp;?></td>
 							<td>
 								 <div class="btn-group">
@@ -55,6 +57,6 @@ $reconcile_obj = $this->db->get("reconcile");
 
 <script>
 	$(document).ready(function(){
-	
+
 	});
 </script>
