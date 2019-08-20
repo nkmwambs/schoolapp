@@ -827,12 +827,13 @@ class Crud_model extends CI_Model {
 
       $voucher_count = $this->db->get('transaction')->num_rows();
 
+      $last_mfr_date = $this->db->select_max('month')->get('reconcile')->row()->month;
+
+      $max_voucher_id = $this->db->select_max('transaction_id')->get('transaction')->row()->transaction_id;
+
+      $voucher_date = $this->db->get_where('transaction',array("transaction_id"=>$max_voucher_id))->row()->t_date;
+
       if($voucher_count>0){
-        $last_mfr_date = $this->db->select_max('month')->get('reconcile')->row()->month;
-
-        $max_voucher_id = $this->db->select_max('transaction_id')->get('transaction')->row()->transaction_id;
-
-        $voucher_date = $this->db->get_where('transaction',array("transaction_id"=>$max_voucher_id))->row()->t_date;
 
         $current_voucher_date = $voucher_date;
 
@@ -850,9 +851,9 @@ class Crud_model extends CI_Model {
 
           $current_voucher_date = date('Y-m-01',strtotime('first day of next month',strtotime($last_mfr_date)));
 
-          $start_month_date = date("Y-m-d",strtotime('first day of next month',strtotime($voucher_date)));
+          $start_month_date = date("Y-m-d",strtotime('first day of next month',strtotime($last_mfr_date)));
 
-          $end_month_date = date("Y-m-t",strtotime('last day of next month',strtotime($voucher_date)));
+          $end_month_date = date("Y-m-t",strtotime('last day of next month',strtotime($last_mfr_date)));
 
           $vnum = $this->generate_voucher_number($start_month_date,1);
 
@@ -869,8 +870,6 @@ class Crud_model extends CI_Model {
 
         $vnum = $this->generate_voucher_number($system_start_date,1);
       }
-
-
 
       $voucher_details['vnum'] = $vnum;
       $voucher_details['current_voucher_date'] = $current_voucher_date;
