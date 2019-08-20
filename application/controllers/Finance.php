@@ -930,28 +930,7 @@ class Finance extends CI_Controller
 
             redirect(base_url() . 'index.php?finance/cashbook/scroll/' . strtotime($this -> input -> post('t_date')), 'refresh');
         }
-        /**
-         if ($param1 == 'edit') {
-         $data['title']               =   $this->input->post('title');
-         $data['expense_category_id'] =   $this->input->post('expense_category_id');
-         $data['description']         =   $this->input->post('description');
-         $data['payment_type']        =   'expense';
-         $data['method']              =   $this->input->post('method');
-         $data['amount']              =   $this->input->post('amount');
-         $data['timestamp']           =   strtotime($this->input->post('timestamp'));
-         $this->db->where('payment_id' , $param2);
-         $this->db->update('payment' , $data);
-         $this->session->set_flashdata('flash_message' , get_phrase('data_updated'));
-         redirect(base_url() . 'index.php?finance/expense', 'refresh');
-         }
 
-         if ($param1 == 'delete') {
-         $this->db->where('payment_id' , $param2);
-         $this->db->delete('payment');
-         $this->session->set_flashdata('flash_message' , get_phrase('data_deleted'));
-         redirect(base_url() . 'index.php?finance/expense', 'refresh');
-         }
-         **/
         if ($param1 === 'reverse') {
             $date = date('Y-m-d');
 
@@ -1244,28 +1223,7 @@ class Finance extends CI_Controller
 
             redirect(base_url() . 'index.php?finance/cashbook/scroll/' . strtotime($this -> input -> post('t_date')), 'refresh');
         }
-        /**
-         if ($param1 == 'edit') {
-         $data['title']               =   $this->input->post('title');
-         $data['expense_category_id'] =   $this->input->post('expense_category_id');
-         $data['description']         =   $this->input->post('description');
-         $data['payment_type']        =   'expense';
-         $data['method']              =   $this->input->post('method');
-         $data['amount']              =   $this->input->post('amount');
-         $data['timestamp']           =   strtotime($this->input->post('timestamp'));
-         $this->db->where('payment_id' , $param2);
-         $this->db->update('payment' , $data);
-         $this->session->set_flashdata('flash_message' , get_phrase('data_updated'));
-         redirect(base_url() . 'index.php?finance/expense', 'refresh');
-         }
 
-         if ($param1 == 'delete') {
-         $this->db->where('payment_id' , $param2);
-         $this->db->delete('payment');
-         $this->session->set_flashdata('flash_message' , get_phrase('data_deleted'));
-         redirect(base_url() . 'index.php?finance/expense', 'refresh');
-         }
-         **/
         if ($param1 === 'reverse') {
             $date = date('Y-m-d');
 
@@ -1542,7 +1500,8 @@ class Finance extends CI_Controller
 
     public function to_date_income_by_income_category($income_category_id, $month_start_date)
     {
-        $system_start_date = $this -> db -> get_where('settings', array('type' => 'system_start_date')) -> row() -> description;
+        $system_start_date = $this -> db -> get_where('settings',
+        array('type' => 'system_start_date')) -> row() -> description;
 
         //$last_reconciled_date = $this->db->select_max('month')->get('reconcile')->row()->month;
 
@@ -1550,9 +1509,16 @@ class Finance extends CI_Controller
         $this -> db -> where(array('t_date<=' => date('Y-m-t', strtotime($month_start_date))));
         $this -> db -> where(array('transaction_detail.income_category_id' => $income_category_id));
         $this -> db -> join('transaction', 'transaction.transaction_id=transaction_detail.transaction_id');
-        $total_income = $this -> db -> select_sum('transaction_detail.cost') -> group_by('transaction_detail.income_category_id') -> get('transaction_detail') -> row() -> cost;
+        $total_income = $this -> db -> select_sum('transaction_detail.cost')
+        -> group_by('transaction_detail.income_category_id') -> get('transaction_detail');
 
-        return $total_income;
+        $total_income_amount = 0;
+
+        if($total_income->num_rows()>0){
+           $total_income_amount = $total_income -> row() -> cost;
+        }
+
+        return $total_income_amount;
     }
 
     public function to_date_expense_by_income_category($income_category_id, $month_start_date)
@@ -1568,7 +1534,16 @@ class Finance extends CI_Controller
         $this -> db -> join('expense_category', 'expense_category.expense_category_id=transaction_detail.expense_category_id');
 
         $this -> db -> join('transaction', 'transaction.transaction_id=transaction_detail.transaction_id');
-        return $month_expense = $this -> db -> select_sum('transaction_detail.cost') -> group_by('expense_category.expense_category_id') -> get('transaction_detail') -> row() -> cost;
+        $month_expense = $this -> db -> select_sum('transaction_detail.cost')
+        -> group_by('expense_category.expense_category_id') -> get('transaction_detail');
+
+        $month_expense_amount = 0;
+
+        if($month_expense->num_rows()>0){
+            $month_expense_amount = $month_expense->row()->cost;
+        }
+
+        return $month_expense_amount;
     }
 
     public function system_start_date()
@@ -1742,9 +1717,16 @@ class Finance extends CI_Controller
         $this -> db -> where(array('t_date<=' => date('Y-m-t', strtotime($start_month))));
         $this -> db -> where(array('transaction_detail.income_category_id' => $category_id));
         $this -> db -> join('transaction', 'transaction.transaction_id=transaction_detail.transaction_id');
-        $total_income = $this -> db -> select_sum('transaction_detail.cost') -> group_by('transaction_detail.income_category_id') -> get('transaction_detail') -> row() -> cost;
+        $total_income = $this -> db -> select_sum('transaction_detail.cost')
+        -> group_by('transaction_detail.income_category_id') -> get('transaction_detail');
 
-        return $total_income;
+        $total_income_amount = 0;
+
+        if($total_income->num_rows()>0){
+            $total_income_amount = $total_income->row()->cost;
+        }
+
+        return $total_income_amount;
     }
 
     public function month_expense_by_income_category($income_category_id, $month_start_date)
@@ -1756,7 +1738,17 @@ class Finance extends CI_Controller
         $this -> db -> join('expense_category', 'expense_category.expense_category_id=transaction_detail.expense_category_id');
 
         $this -> db -> join('transaction', 'transaction.transaction_id=transaction_detail.transaction_id');
-        return $month_expense = $this -> db -> select_sum('transaction_detail.cost') -> group_by('expense_category.expense_category_id') -> get('transaction_detail') -> row() -> cost;
+        $month_expense = $this -> db -> select_sum('transaction_detail.cost')
+        -> group_by('expense_category.expense_category_id') -> get('transaction_detail');
+
+        $month_expense_amount = 0;
+
+        if($month_expense->num_rows()>0){
+          $month_expense_amount = $month_expense->row()->cost;
+        }
+
+        return $month_expense_amount;
+
     }
 
     public function fund_balances($month_start_date = "")
