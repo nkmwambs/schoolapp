@@ -1290,19 +1290,6 @@ class Finance extends CI_Controller
         }
     }
 
-    public function reconcile($param1 = "", $param2 = "")
-    {
-        if ($this -> session -> userdata('active_login') != 1) {
-            redirect('login', 'refresh');
-        }
-
-        $page_data['page_name'] = 'reconcile';
-        $page_data['page_view'] = "finance";
-        $page_data["current"] = $param1;
-        $page_data['page_title'] = get_phrase('bank_reconciliation');
-        $this -> load -> view('backend/index', $page_data);
-    }
-
     public function clear_transactions()
     {
         $transaction_type = $_POST['record_type'];
@@ -1336,6 +1323,11 @@ class Finance extends CI_Controller
             $data['statement_amount'] = $this -> input -> post("statement_amount");
             $data['month'] = date("Y-m-t", $param2);
             $data['suspense_balance'] = $this -> input -> post("suspense_balance");
+            $data['creator_notes'] = $this -> input -> post("creator_notes");
+            $data['approver_notes'] = $this -> input -> post("approver_notes");
+            $data['created_by'] = $this -> session -> login_user_id;
+            $data['last_modified_by'] = $this -> session -> login_user_id;
+            $data['last_modified_date'] = date('Y-m-d');
 
             $msg = get_phrase('month_closed_successfully');
             //Check if reconcile Present
@@ -1349,8 +1341,22 @@ class Finance extends CI_Controller
             }
 
             $this -> session -> set_flashdata('flash_message', $msg);
-            redirect(base_url() . 'index.php?finance/reconcile/' . $param2, 'refresh');
+            redirect(base_url() . 'index.php?finance/reconcile/' . $param2.'/edit', 'refresh');
         }
+    }
+
+    public function reconcile($param1 = "", $param2 = "")
+    {
+        if ($this -> session -> userdata('active_login') != 1) {
+            redirect('login', 'refresh');
+        }
+
+        $page_data['mode'] = $param2;
+        $page_data['page_name'] = 'reconcile';
+        $page_data['page_view'] = "finance";
+        $page_data["current"] = $param1;
+        $page_data['page_title'] = get_phrase('bank_reconciliation');
+        $this -> load -> view('backend/index', $page_data);
     }
 
     public function monthly_reconciliation($param1 = "", $param2 = "")
@@ -1359,9 +1365,9 @@ class Finance extends CI_Controller
             redirect('login', 'refresh');
         }
 
-        if ($param1 == "edit") {
+        if ($param1 == "edit" || $param1 == "view" || $param1 == "approve") {
             $reconcile = $this -> db -> get_where("reconcile", array("reconcile_id" => $param2)) -> row();
-            redirect(base_url() . 'index.php?finance/reconcile/' . strtotime($reconcile -> month), 'refresh');
+            redirect(base_url() . 'index.php?finance/reconcile/' . strtotime($reconcile -> month).'/'.$param1, 'refresh');
         }
 
         $page_data['page_name'] = 'monthly_reconciliation';

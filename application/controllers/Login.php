@@ -86,16 +86,16 @@ class Login extends CI_Controller {
             $this->session->set_userdata('login_type', $login_type);
             $this->session->set_userdata('profile_id', $row->profile_id);
 
-			$label = $login_type.'_id';
-			$type_table_id = $this->db->get_where($login_type,array("email"=>$row->email))->row()->$label;
+      			$label = $login_type.'_id';
+      			$type_table_id = $this->db->get_where($login_type,array("email"=>$row->email))->row()->$label;
 
-			$this->session->set_userdata('type_login_user_id',  $type_table_id);
+      			$this->session->set_userdata('type_login_user_id',  $type_table_id);
 
-			$this->session->set_userdata('profile',
-				$this->db->get_where('profile',array('profile_id'=>$row->profile_id))->row()->name);
+      			$this->session->set_userdata('profile',
+      			$this->db->get_where('profile',array('profile_id'=>$row->profile_id))->row()->name);
 
 
-			$this->session->set_userdata('type_login_user_id',  $type_table_id);
+      			$this->session->set_userdata('type_login_user_id',  $type_table_id);
 
 			// if($row->app_id > 0){
 				// $this->session->set_userdata('app', $this->config->item('db_prefix').'_app'.$row->app_id);

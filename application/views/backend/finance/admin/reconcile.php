@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 $transaction_type = array("1"=>"Student Fees","2"=>"Other Income");
@@ -119,14 +120,20 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 					</a>
 				</li>
 
+				<li class="">
+					<a href="#notes" data-toggle="tab">
+						<span class="hidden-xs"><?php echo get_phrase('notes');?></span>
+
+					</a>
+				</li>
 
 			</ul>
+	<?php echo form_open(base_url() . 'index.php?finance/close_month/create/'.$current , array("id"=>"activity_form",'class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
 
 		<div class="tab-content">
 			<p></p>
-			<div class="tab-pane active" id="reconciliation_statement">
 
-				<?php echo form_open(base_url() . 'index.php?finance/close_month/create/'.$current , array("id"=>"activity_form",'class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
+			<div class="tab-pane active" id="reconciliation_statement">
 
 					<div class="form-group">
 						<label class="control-label col-sm-3">Bank Statement Date</label>
@@ -147,7 +154,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 									$statement_amount = $report->row()->statement_amount	;
 								}
 							?>
-							<input type="text" id="statement_amount" name="statement_amount" class="form-control" value="<?=$statement_amount;?>" />
+							<input type="text" id="statement_amount" <?=($mode=='view' || $mode=='approve')?"readonly='readonly'":""?> name="statement_amount" class="form-control" value="<?=$statement_amount;?>" />
 						</div>
 					</div>
 
@@ -187,7 +194,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 
 						<label class="control-label col-sm-3">Post Suspense Amount</label>
 						<div class="col-sm-1">
-							<input type="checkbox" class="" id="allow_suspense_amount" />
+							<input <?=($mode=='view' || $mode=='approve')?"disabled='disabled'":""?> type="checkbox" class="" id="allow_suspense_amount" />
 						</div>
 					</div>
 
@@ -200,11 +207,19 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 
 					<div class="form-group">
 						<div class="col-sm-offset-4 col-sm-6">
-							<button type="submit" id="submit" class="btn btn-success">Close Financial Month</button>
+							<?php if($mode=='create'){?>
+									<button type="submit" id="submit" class="btn btn-success">Close Financial Month</button>
+							<?php }elseif($mode=='edit'){?>
+									<button type="submit" id="edit" class="btn btn-success">Edit Financial Report</button>
+							<?php }elseif($mode=='approve'){?>
+									<button type="submit" id="approve" class="btn btn-success">Approve Financial Report</button>
+									<button type="submit" id="decline" class="btn btn-warning">Decline Financial Report</button>
+							<?php }?>
 						</div>
 					</div>
 
-				</form>
+
+
 			</div>
 
 			<div class="tab-pane" id="deposit_in_transit_pane">
@@ -218,7 +233,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 							<th>Payment Type</th>
 							<th>Payment Method</th>
 							<th>Amount</th>
-							<th>Status</th>
+							<th <?=($mode=='view' || $mode=='approve')?"style='display:none;'":""?>>Status</th>
 							<th>Change Month</th>
 						</tr>
 					</thead>
@@ -243,7 +258,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 										$btn_label = "Unclear";
 									}
 								?>
-								<td><button class="btn btn-primary record_clear" id="<?php echo "income_".$row->transaction_id;?>"><?=$btn_label;?></button></td>
+								<td <?=$mode=='view'?"style='display:none;'":""?>><button class="btn btn-primary record_clear" id="<?php echo "income_".$row->transaction_id;?>"><?=$btn_label;?></button></td>
 								<td><?=$row->clearedMonth;?></td>
 							</tr>
 						<?php
@@ -264,7 +279,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 							<th>Payment Type</th>
 							<th>Payment Method</th>
 							<th>Amount</th>
-							<th>Status</th>
+							<th <?=($mode=='view' || $mode=='approve')?"style='display:none;'":""?>>Status</th>
 							<th>Change Month</th>
 						</tr>
 					</thead>
@@ -288,7 +303,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 										$btn_label = "Unclear";
 									}
 								?>
-								<td><button class="btn btn-primary record_unclear" id="<?php echo "income_".$row->transaction_id;?>"><?=$btn_label;?></button></td>
+								<td <?=($mode=='view' || $mode=='approve')?"style='display:none;'":""?>><button class="btn btn-primary record_unclear" id="<?php echo "income_".$row->transaction_id;?>"><?=$btn_label;?></button></td>
 								<td><?=$row->clearedMonth;?></td>
 							</tr>
 						<?php
@@ -311,7 +326,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 							<th>Payment Type</th>
 							<th>Payment Method</th>
 							<th>Amount</th>
-							<th>Status</th>
+							<th <?=($mode=='view' || $mode=='approve')?"style='display:none;'":""?>>Status</th>
 							<th>Change Month</th>
 						</tr>
 					</thead>
@@ -335,7 +350,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 										$btn_label = "Unclear";
 									}
 								?>
-								<td><button class="btn btn-primary record_clear" id="expense_<?=$row->transaction_id;?>"><?=$btn_label;?></button></td>
+								<td <?=($mode=='view' || $mode=='approve')?"style='display:none;'":""?>><button class="btn btn-primary record_clear" id="expense_<?=$row->transaction_id;?>"><?=$btn_label;?></button></td>
 								<td><?=$row->clearedMonth;?></td>
 							</tr>
 						<?php
@@ -357,7 +372,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 							<th>Payment Type</th>
 							<th>Payment Method</th>
 							<th>Amount</th>
-							<th>Status</th>
+							<th <?=($mode=='view' || $mode=='approve')?"style='display:none;'":""?>>Status</th>
 							<th>Change Month</th>
 						</tr>
 					</thead>
@@ -381,7 +396,7 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 										$btn_label = "Unclear";
 									}
 								?>
-								<td><button class="btn btn-primary record_unclear" id="<?php echo "income_".$row->transaction_id;?>"><?=$btn_label;?></button></td>
+								<td <?=($mode=='view' || $mode=='approve')?"style='display:none;'":""?>><button class="btn btn-primary record_unclear" id="<?php echo "income_".$row->transaction_id;?>"><?=$btn_label;?></button></td>
 								<td><?=$row->clearedMonth;?></td>
 							</tr>
 						<?php
@@ -392,12 +407,9 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 			</div>
 
 			<div class="tab-pane" id="bank_statement">
-				<!-- <form action="<?php echo base_url();?>index.php?finance/bank_statement_upload"
-					class="dropzone" id="myDropZone">
-					<div class="dz-message" data-dz-message><span style="font-size: 15pt;font-weight: bold;">Drag and Drop Bank Statements here!</span></div>
-				</form> -->
 
 				<div class="row">
+					<?php if($mode=='create' || $mode=='edit'){?>
 					<div class="col-sm-4">
 
 							<div class="panel panel-default" data-collapsed="0">
@@ -418,8 +430,13 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 
 					</div>
 
+				<?php }?>
 
+				<?php if($mode=='create' || $mode=='edit'){?>
 					<div class="col-sm-8">
+				<?php }else{?>
+					<div class="col-sm-12">
+				<?php }?>
 
 							<div class="panel panel-default" data-collapsed="0">
 				        	<div class="panel-heading">
@@ -429,9 +446,9 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 				            	</div>
 				            </div>
 							<div class="panel-body"  style="max-width:50; overflow: auto;">
-
-				          	<button onclick="confirm_action('<?php echo base_url();?>index.php?finance/delete_bank_statement/<?=$current;?>');" class="btn btn-icon btn-red" id="deleting"><i class="entypo-cancel-squared"></i><?= get_phrase('delete');?></button>
-
+										<?php if($mode!=='view' || $mode!=='approve'){?>
+				          		<button onclick="confirm_action('<?php echo base_url();?>index.php?finance/delete_bank_statement/<?=$current;?>');" class="btn btn-icon btn-red" id="deleting"><i class="entypo-cancel-squared"></i><?= get_phrase('delete');?></button>
+										<?php }?>
 				          	<hr>
 				                <?php
 
@@ -474,10 +491,33 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 
 			</div>
 
+			<div class="tab-pane" id="notes">
+					<div class="row">
+
+							<div class="col-sm-6">
+									<label class="col-sm-12 control-label">Creator Notes</label>
+									<div class="col-sm-12">
+											<textarea <?php if($mode=='approve' || $mode=='view'){echo "readonly='readonly'";}?> name="creator_notes" class="form-control" cols="" rows="">
+												<?php echo $report->row()->creator_notes;?>
+											</textarea>
+									</div>
+							</div>
+
+							<div class="col-sm-6">
+								<label class="col-sm-12 control-label">Approver Notes</label>
+								<div class="col-sm-12">
+										<textarea class="form-control" cols="" rows="" name="approver_notes" <?=$mode!=="approve"?"readonly='readonly'":'';?> >
+												<?php echo $report->row()->approver_notes;?>
+										</textarea>
+								</div>
+							</div>
+					</div>
+			</div>
 
 		</div>
 
 	</div>
+</form>
 </div>
 
 <script>
@@ -579,8 +619,13 @@ $bank_balance = $this->crud_model->closing_bank_balance(date("Y-m-t",$current));
 
 		});
 
+		$("#decline,#approve").click(function(ev){
+			alert("action under development");
+			ev.preventDefault();
 
-		$("#submit").click(function(ev){
+		});
+
+		$("#submit,#edit").click(function(ev){
 
 			var outstanding = $("#outstanding_cheque").val();
 			var in_transit = $("#deposit_in_transit").val();

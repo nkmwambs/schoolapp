@@ -35,13 +35,31 @@ $reconcile_obj = $this->db->get("reconcile");
                                     </button>
                                     <ul class="dropdown-menu dropdown-default pull-right" role="menu">
 
+																			<li class="<?= get_access_class('view_financial_report', 'admin', 'accounting'); ?>">
+																					<a href="<?php echo base_url();?>index.php?finance/monthly_reconciliation/view/<?php echo $row->reconcile_id;?>">
+																							<i class="fa fa-eye"></i>
+																									<?php echo get_phrase('view');?>
+																							</a>
+																			</li>
+
+																			<li class="divider <?= get_access_class('view_financial_report', 'admin', 'accounting'); ?>"></li>
                                         <!-- EDIT -->
-                                        <li class="edit_reconciliation">
+                                        <li class="<?= get_access_class('edit_reconciliation', 'admin', 'accounting'); ?>">
                                             <a href="<?php echo base_url();?>index.php?finance/monthly_reconciliation/edit/<?php echo $row->reconcile_id;?>">
                                                 <i class="fa fa-pencil"></i>
                                                     <?php echo get_phrase('edit');?>
                                                 </a>
                                         </li>
+
+																				<li class="divider <?= get_access_class('edit_reconciliation', 'admin', 'accounting'); ?>"></li>
+
+																				<li class="<?= get_access_class('approve_financial_report', 'admin', 'accounting'); ?>">
+                                            <a href="<?php echo base_url();?>index.php?finance/monthly_reconciliation/approve/<?php echo $row->reconcile_id;?>">
+                                                <i class="fa fa-thumbs-up"></i>
+                                                    <?php echo get_phrase('approve');?>
+                                                </a>
+                                        </li>
+
                                       </ul>
                                    </div>
 							</td>
