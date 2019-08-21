@@ -1505,8 +1505,8 @@ class Finance extends CI_Controller
 
         //$last_reconciled_date = $this->db->select_max('month')->get('reconcile')->row()->month;
 
-        $this -> db -> where(array('t_date>=' => date('Y-m-01', strtotime($system_start_date))));
-        $this -> db -> where(array('t_date<=' => date('Y-m-t', strtotime($month_start_date))));
+        //$this -> db -> where(array('t_date>=' => date('Y-m-01', strtotime($system_start_date))));
+        $this -> db -> where(array('t_date<' => date('Y-m-01', strtotime($month_start_date))));
         $this -> db -> where(array('transaction_detail.income_category_id' => $income_category_id));
         $this -> db -> join('transaction', 'transaction.transaction_id=transaction_detail.transaction_id');
         $total_income = $this -> db -> select_sum('transaction_detail.cost')
@@ -1527,8 +1527,8 @@ class Finance extends CI_Controller
 
         //$last_reconciled_date = $this->crud_model->last_reconciled_month();
 
-        $this -> db -> where(array('transaction.t_date>=' => date('Y-m-01', strtotime($system_start_date))));
-        $this -> db -> where(array('transaction.t_date<=' => date('Y-m-t', strtotime($month_start_date))));
+        //$this -> db -> where(array('transaction.t_date>=' => date('Y-m-01', strtotime($system_start_date))));
+        $this -> db -> where(array('transaction.t_date<' => date('Y-m-01', strtotime($month_start_date))));
 
         $this -> db -> where(array('expense_category.income_category_id' => $income_category_id));
         $this -> db -> join('expense_category', 'expense_category.expense_category_id=transaction_detail.expense_category_id');
@@ -1772,7 +1772,11 @@ class Finance extends CI_Controller
         $reconciliation_count = $this -> db -> get('reconcile') -> num_rows();
         $opening_balances = array_column($income_categories, 'opening_balance');
 
-        if ($reconciliation_count > 0 && (strtotime($month_start_date) > strtotime($this -> system_start_date()) && strtotime('last day of next month', strtotime($this -> crud_model -> last_reconciled_month())) == strtotime('last day of this month', strtotime($month_start_date)))) {
+        // if ($reconciliation_count > 0 && (strtotime($month_start_date) > strtotime($this -> system_start_date()) && strtotime('last day of next month', strtotime($this -> crud_model -> last_reconciled_month())) == strtotime('last day of this month', strtotime($month_start_date)))) {
+        if ($reconciliation_count > 0
+          && strtotime($month_start_date) > strtotime($this -> system_start_date())
+        ) {
+
             $opening_balances = $this -> to_date_opening_balance_by_income_category($month_start_date);
         } elseif (strtotime($month_start_date) == strtotime($this -> system_start_date())) {
             $opening_balances = array_combine($income_category_ids, $opening_balances);
