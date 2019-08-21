@@ -1329,7 +1329,7 @@ class Finance extends CI_Controller
             echo "Error Occurred";
         }
     }
-
+    /**Code block**/
     public function close_month($param1 = "", $param2 = "")
     {
         if ($param1 == "create") {
