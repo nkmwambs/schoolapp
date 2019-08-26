@@ -1205,8 +1205,21 @@ class Crud_model extends CI_Model {
 		$amount_due = $this->db->select_sum('amount_due')->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->amount_due;
 
 		$paid = $this->fees_paid_by_invoice($invoice_id);
+		
+		$balance = $amount_due - $paid;
+		
+		//$this->db->where(array('invoice_id'=>$invoice_id));
+		
+		if($balance == 0){
+			$this->db->where(array('invoice_id'=>$invoice_id));
+			$this->db->update('invoice',array('status'=>'paid'));
+		}
+		elseif($balance < 0){
+			$this->db->where(array('invoice_id'=>$invoice_id));
+			$this->db->update('invoice',array('status'=>'excess'));
+		}
 
-		return $amount_due - $paid;
+		return $balance;
 	}
 
 	function fees_paid_by_invoice_detail($invoice_details_id){

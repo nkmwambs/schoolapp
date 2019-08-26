@@ -524,14 +524,17 @@ class Finance extends CI_Controller
               //$this->db->delete('invoice_details');
 
               if (count($this -> input -> post('existing_detail_amount_due')) > 0) {
+              	//For updating the exisitng details
                   foreach ($this->input->post('existing_detail_amount_due') as $invoice_details_id => $amount_due) {
                       $this -> db -> where(array('invoice_details_id' => $invoice_details_id));
                       $data8['amount_due'] = $amount_due;
                       $this -> db -> update('invoice_details', $data8);
                   }
               }
-
-              if (count($this -> input -> post('detail_amount_due')) > 0) {
+				
+			if($this -> input -> post('detail_amount_due')){
+				//For adding new invoice details
+				 if (count($this -> input -> post('detail_amount_due')) > 0) {
                   foreach ($this->input->post('detail_amount_due') as $details_id => $amount_due) {
                       //Insert the new details
                       $data8['invoice_id'] = $param2;
@@ -541,6 +544,19 @@ class Finance extends CI_Controller
                       $this -> db -> insert('invoice_details', $data8);
                   }
               }
+			}	
+             
+			 
+			//Check if balance is zero and close the invoice, if -ve charge it overpaid
+			
+			if($this -> input -> post('balance') == 0){
+				$this->db->where(array('invoice_id'=>$param2));
+				$this->db->update('invoice',array('status'=>'paid'));
+			}elseif($this -> input -> post('balance') < 0){
+				$this->db->where(array('invoice_id'=>$param2));
+				$this->db->update('invoice',array('status'=>'excess'));
+			}
+			
 
               if ($this -> db -> trans_status() === false) {
                   $this -> db -> trans_rollback();
