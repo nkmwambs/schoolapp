@@ -105,7 +105,7 @@ $row = $transaction[0];
        			</tr>
        			<tr>
        				<td style="padding: 5px;">Others</td>
-       				<td style="padding: 5px;"><?php if($row['transaction_method'] !== 'Bank' && $row['transaction_method'] !== 'Cash'){?><i class="fa fa-check"></i><?php }else{?> <i class="fa fa-times"></i> <?php }?></td>
+       				<td style="padding: 5px;"><?php if($row['transaction_method'] !== 'Bank' || $row['transaction_method'] !== 'Cash'){?><i class="fa fa-check"></i><?php }else{?> <i class="fa fa-times"></i> <?php }?></td>
        			</tr>
        		</table>
        	</div>
