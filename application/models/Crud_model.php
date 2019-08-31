@@ -1278,7 +1278,7 @@ class Crud_model extends CI_Model {
 
 		$paid = $this->term_total_paid_fees($year, $term);
 
-		return $amount_due - $paid;
+		return $paid; //$amount_due - $paid;
 	}
 
 	function get_invoice_transaction_history($invoice_id){
