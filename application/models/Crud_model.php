@@ -1201,12 +1201,22 @@ class Crud_model extends CI_Model {
 	}
 
 	function fees_amount_due_by_invoice($invoice_id){
-		return $this->db->select_sum('amount_due')->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->amount_due;
-	}
+    $this->db->join('invoice_details','invoice_details.invoice_id=invoice.invoice_id');
+		$details_amount_due = $this->db->select_sum('invoice_details.amount_due')->get_where('invoice',array('invoice.invoice_id'=>$invoice_id))->row()->amount_due;
+
+    $invoice_amount_due = $this->db->select_sum('amount_due')->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->amount_due;
+
+    if($invoice_amount_due !== $details_amount_due){
+        $this->db->where(array('invoice_id'=>$invoice_id));
+        $this->db->update('invoice',array('amount_due'=>$details_amount_due));
+    }
+
+    return
+  }
 
 	function fees_balance_by_invoice($invoice_id){
 
-		$amount_due = $this->db->select_sum('amount_due')->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->amount_due;
+		$amount_due = $this->fees_amount_due_by_invoice($invoice_id);//$this->db->select_sum('amount_due')->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->amount_due;
 
 		$paid = $this->fees_paid_by_invoice($invoice_id);
 
@@ -1222,7 +1232,7 @@ class Crud_model extends CI_Model {
 			$this->db->where(array('invoice_id'=>$invoice_id));
 			$this->db->update('invoice',array('status'=>'excess'));
 		}elseif($balance > 0){
-      
+
 			$this->db->where(array('invoice_id'=>$invoice_id));
 			$this->db->update('invoice',array('status'=>'unpaid'));
 		}
