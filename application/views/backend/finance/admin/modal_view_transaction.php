@@ -55,7 +55,7 @@ $row = $transaction[0];
     }elseif($approval_status['request_status'] == 0){
     			//Pending Approval
     	?>
-    			<a onclick="javascript:alert('<?=get_phrase('pending_aproval')?>');"
+    			<a onclick="javascript:alert('<?=get_phrase('pending_approval')?>');"
 			    	class="btn btn-info btn-icon icon-left hidden-print pull-left">
 			    	<?=get_phrase('pending_reversal_approval');?>
 			        <i class="entypo-ccw"></i>
