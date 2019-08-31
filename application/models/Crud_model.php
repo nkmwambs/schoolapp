@@ -1203,17 +1203,17 @@ class Crud_model extends CI_Model {
 	function fees_amount_due_by_invoice($invoice_id){
 		return $this->db->select_sum('amount_due')->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->amount_due;
 	}
-	
+
 	function fees_balance_by_invoice($invoice_id){
 
 		$amount_due = $this->db->select_sum('amount_due')->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->amount_due;
 
 		$paid = $this->fees_paid_by_invoice($invoice_id);
-		
+
 		$balance = $amount_due - $paid;
-		
+
 		//$this->db->where(array('invoice_id'=>$invoice_id));
-		
+
 		if($balance == 0){
 			$this->db->where(array('invoice_id'=>$invoice_id));
 			$this->db->update('invoice',array('status'=>'paid'));
@@ -1273,7 +1273,8 @@ class Crud_model extends CI_Model {
 
 	function term_total_fees_balance($year, $term){
 		$this->db->join('invoice_details','invoice_details.invoice_id=invoice.invoice_id');
-		$amount_due = $this->db->select_sum('invoice_details.amount_due')->get_where('invoice',array('yr'=>$year,'term'=>$term))->row()->amount_due;
+		$amount_due = $this->db->select_sum('invoice_details.amount_due')->get_where('invoice',
+    array('yr'=>$year,'term'=>$term,'status'=>'unpaid'))->row()->amount_due;
 
 		$paid = $this->term_total_paid_fees($year, $term);
 
