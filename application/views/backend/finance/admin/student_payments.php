@@ -292,7 +292,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                                         foreach ($paid_invoices as $row3):
                                     ?>
 			                        <tr>
-			                        	<td><?php echo $count++; ?></td>
+			                        	<td><?php echo $row3['invoice_id']; ?></td>
 										<td><?php echo $this -> crud_model -> get_type_name_by_id('student', $row3['student_id']); ?></td>
 										<td><?php echo $row3['yr']; ?></td>
 										<td><?php echo $row3['term']; ?></td>
@@ -361,7 +361,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                             foreach ($overpaid_invoices as $row3):
                         ?>
                         <tr>
-                        	<td><?php echo $count++; ?></td>
+                        <td><?php echo $row3['invoice_id']; ?></td>
 							<td><?php echo $this -> crud_model -> get_type_name_by_id('student', $row3['student_id']); ?></td>
 							<td><?php echo $row3['yr']; ?></td>
 							<td><?php echo $row3['term']; ?></td>

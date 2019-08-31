@@ -2378,6 +2378,9 @@ class Finance extends CI_Controller
 			$this -> db -> trans_start();
 
 	          $this->approval->raise_approval_request('transaction',$param2,'cancel',$this->input->post('request_message'),$this->session->login_user_id);
+            $invoice_id = $this->db->get_where('transaction',array('transaction_id'=>$param2))->row()->invoice_id;
+
+            $this->crud_model->fees_balance_by_invoice($invoice_id);
 
 	          if ($this -> db -> trans_status() === false) {
 	              $this -> db -> trans_rollback();
