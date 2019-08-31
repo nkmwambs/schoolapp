@@ -34,8 +34,15 @@ $this -> db -> order_by('creation_timestamp', 'desc');
 $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 ?>
 
+<style>
+.hidden-xs{
+	font-size:8pt;
+}
+
+</style>
+
 <div class="row">
-	<div class="col-xs-12">
+	<div class="col-xs-12 text-center" style="align:center;padding:5px;margin-bottom: 25px;">
 		<a href="<?= base_url(); ?>index.php?finance/student_collection_tally/<?= date('Y'); ?>" class="btn btn-info btn-icon"> <i class="fa fa-list"></i> <?= get_phrase('payment_tally_sheet'); ?></a>
 		<?php $count_to_notify = $this -> db -> get_where('invoice', array('status' => 'unpaid')) -> num_rows(); ?>
 		<a href="#" onclick="confirm_action('<?= base_url(); ?>index.php?finance/sms_fee_balances');" class="btn btn-info btn-icon"><i class="fa fa-mobile"></i><?= get_phrase('SMS_balances'); ?><span class="badge badge-primary"><?= $count_to_notify; ?></span></a>
@@ -43,8 +50,6 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 		<a href="<?php echo base_url(); ?>index.php?finance/missing_invoices" class="btn btn-info  btn-icon"><i class="fa fa-times"></i><?= get_phrase('missing_invoices'); ?></a>
 	</div>
 </div>
-
-<hr />
 
 <div class="row">
 	<div class="col-xs-1">
