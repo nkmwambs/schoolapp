@@ -9,7 +9,6 @@ if(isset($current)){
 
 ?>
 
-<hr>
 <div class="row">
 	<div class="col-sm-3 <?=get_access_class('create_transaction','admin','accounting');?>">
 			<div class="btn-group">
@@ -60,6 +59,7 @@ if(isset($current)){
 	</div>
 	<div class="col-sm-10">
 		<div class="" style="font-weight: bolder;text-align: center;">Cash Book for the Month of <?=date('F-Y',strtotime($current));?></div>
+	<hr>
 		<table class="table table-hover table-bordered table-responsive datatable">
 			<thead>
 				<tr>
@@ -133,7 +133,9 @@ if(isset($current)){
 					<tr>
 						<td><?=$rows->t_date;?></td>
 						<td nowrap="nowrap">
-							<i class="fa fa-undo" style="font-size: 12pt;cursor: pointer;" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_request_comment_add/request_cancel/<?php echo $rows->transaction_id; ?>/transaction');" ></i>
+							<?php if($approval_status['request_status'] ==""){ ?>
+								<i class="fa fa-undo" style="font-size: 12pt;cursor: pointer;" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_request_comment_add/request_cancel/<?php echo $rows->transaction_id; ?>/transaction');" ></i>
+							<?php } ?>
 							<div class="btn <?=$btn_color;?>" title="<?=$btn_title;?>" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_transaction/<?=$rows->batch_number?>');"><?=$rows->batch_number?></div></td>
 
 						<td><?=$rows->payee;?></td>
