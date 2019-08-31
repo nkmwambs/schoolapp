@@ -118,6 +118,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                 	<thead>
                 		<tr>
                 			<th>#</th>
+												<th><?php echo get_phrase('admission_number'); ?></th>
                     		<th><div><?php echo get_phrase('student'); ?></div></th>
                     		<th><div><?php echo get_phrase('year'); ?></div></th>
                     		<th><div><?php echo get_phrase('term'); ?></div></th>
@@ -126,7 +127,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                             <th><div><?php echo get_phrase('payable_amount'); ?></div></th>
                             <th><div><?php echo get_phrase('actual_paid'); ?></div></th>
                             <th><div><?php echo get_phrase('balance'); ?></div></th>
-                    		<th><div><?php echo get_phrase('date'); ?></div></th>
+                    		<!-- <th><div><?php echo get_phrase('date'); ?></div></th> -->
 												<th><div><?php echo get_phrase('approval_request_type'); ?></div></th>
 												<th><div><?php echo get_phrase('approval_status'); ?></div></th>
                     		<th><div><?php echo get_phrase('options'); ?></div></th>
@@ -147,6 +148,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                                             ?>
                         <tr>
                         	<td><?php echo $row['invoice_id']; ?></td>
+													<td><?php echo $this -> crud_model -> get_type_name_by_id('student', $row['student_id'],'roll'); ?></td>
 							<td><?php echo $this -> crud_model -> get_type_name_by_id('student', $row['student_id']); ?></td>
 							<td><?php echo $row['yr']; ?></td>
 							<td><?php echo $row['term']; ?></td>
@@ -160,7 +162,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 							<?php $bal = $this -> crud_model -> fees_balance_by_invoice($row['invoice_id']); ?>
 
               <td><?php echo number_format($bal, 2); ?></td>
-							<td><?php echo date('d M,Y', $row['creation_timestamp']); ?></td>
+							<!-- <td><?php echo date('d M,Y', $row['creation_timestamp']); ?></td> -->
 							<td><?= ucfirst($approval_info['request_type']); ?></td>
 
 							<td><?= isset($states[$approval_info['request_status']]) ? ucfirst($states[$approval_info['request_status']]) : ''; ?></td>
