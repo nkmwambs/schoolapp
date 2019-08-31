@@ -536,7 +536,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                                         /**
                                         * Check if this invoice has any approval request:
                                         *	If yes get the request_type and status
-                                        *
+                                        * 0-new,1-approved,2-declined,3-reinstated, 4-implemented
                                         **/
                                         $approval_info = $this->school_model->get_approval_record_status('invoice', $row['invoice_id']);
                                         //print_r($approval_info);

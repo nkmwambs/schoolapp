@@ -531,7 +531,7 @@ class Finance extends CI_Controller
                       $this -> db -> update('invoice_details', $data8);
                   }
               }
-				
+
 			if($this -> input -> post('detail_amount_due')){
 				//For adding new invoice details
 				 if (count($this -> input -> post('detail_amount_due')) > 0) {
@@ -544,11 +544,11 @@ class Finance extends CI_Controller
                       $this -> db -> insert('invoice_details', $data8);
                   }
               }
-			}	
-             
-			 
+			}
+
+
 			//Check if balance is zero and close the invoice, if -ve charge it overpaid
-			
+
 			if($this -> input -> post('balance') == 0){
 				$this->db->where(array('invoice_id'=>$param2));
 				$this->db->update('invoice',array('status'=>'paid'));
@@ -556,7 +556,7 @@ class Finance extends CI_Controller
 				$this->db->where(array('invoice_id'=>$param2));
 				$this->db->update('invoice',array('status'=>'excess'));
 			}
-			
+
 
               if ($this -> db -> trans_status() === false) {
                   $this -> db -> trans_rollback();
@@ -2377,7 +2377,7 @@ class Finance extends CI_Controller
 		if($param1 == 'request_cancel'){
 			$this -> db -> trans_start();
 
-	          $this->approval->raise_approval_request('transaction',$param2,'cancel',$this->input->post('request_message'));
+	          $this->approval->raise_approval_request('transaction',$param2,'cancel',$this->input->post('request_message'),$this->session->login_user_id);
 
 	          if ($this -> db -> trans_status() === false) {
 	              $this -> db -> trans_rollback();

@@ -107,14 +107,25 @@ if(isset($current)){
 						$btn_title = get_phrase('reversing_batch_number').': '.$rows->reversing_batch_number;
 					}
 
-					$approval_status =  $this->crud_model->check_transaction_reverse_approval($rows->transaction_id);
+					//$approval_status =  $this->crud_model->check_transaction_reverse_approval($rows->transaction_id);
+					$approval_status = $this->school_model->get_approval_record_status('transaction', $rows->transaction_id);
+					//0-new,1-approved,2-declined,3-reinstated, 4-implemented
 
-					if($approval_status == 0){
-						$btn_color = "btn-info";
+					if($approval_status['request_status'] == 0 && $approval_status['request_status'] !==""){
+						$btn_color = "btn-primary";
 						$btn_title = get_phrase('pending_reversal_request');
-					}elseif($approval_status == 1){
-						$btn_color = "btn-success";
+					}elseif($approval_status['request_status'] == 1){
+						$btn_color = "btn-info";
 						$btn_title = get_phrase('reversal_request_approved');
+					}elseif($approval_status['request_status'] == 2){
+						$btn_color = "btn-warning";
+						$btn_title = get_phrase('reversal_request_declined');
+					}elseif($approval_status['request_status'] == 3){
+						$btn_color = "btn-warning";
+						$btn_title = get_phrase('reversal_request_reinstated');
+					}elseif($approval_status['request_status'] == 4){
+						$btn_color = "btn-success";
+						$btn_title = get_phrase('reversal_request_declined');
 					}
 
 				?>
@@ -124,12 +135,12 @@ if(isset($current)){
 						<td nowrap="nowrap">
 							<i class="fa fa-undo" style="font-size: 12pt;cursor: pointer;" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_request_comment_add/request_cancel/<?php echo $rows->transaction_id; ?>/transaction');" ></i>
 							<div class="btn <?=$btn_color;?>" title="<?=$btn_title;?>" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_transaction/<?=$rows->batch_number?>');"><?=$rows->batch_number?></div></td>
-							
+
 						<td><?=$rows->payee;?></td>
 						<td><?=$rows->description;?></td>
 						<td>
 							<?php if($rows->transaction_type == 'Income' && $rows->invoice_id > 0){?>
-								<i style="font-size: 12pt;cursor: pointer;" class="fa fa-print pull-right" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_receipt/<?=$rows->batch_number?>');"></i> 
+								<i style="font-size: 12pt;cursor: pointer;" class="fa fa-print pull-right" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_receipt/<?=$rows->batch_number?>');"></i>
 							<?php } ?>
 							<?=ucwords($rows->transaction_type);?>
 						</td>
