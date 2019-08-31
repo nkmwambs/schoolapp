@@ -2498,7 +2498,7 @@ class Finance extends CI_Controller
         $student = $this -> db -> get_where('invoice', array('invoice_id' => $invoice_id)) -> row() -> student_id;
 
         //Use this invoice_id from now henceforth
-        $last_invoice_id = $this -> db -> select_max('invoice_id') -> get_where('invoice', array('student_id' => $student)) -> row() -> invoice_id;
+        $last_invoice_id = $this -> db -> select_max('invoice_id') -> get_where('invoice', array('student_id' => $student,'status<>'=>'cancelled')) -> row() -> invoice_id;
 
         //Is invoice cancelled?
         $is_cancelled = $this -> db -> get_where('invoice', array('status' => 'cancelled', 'invoice_id' => $last_invoice_id)) -> num_rows();

@@ -133,7 +133,7 @@ if(isset($current)){
 					<tr>
 						<td><?=$rows->t_date;?></td>
 						<td nowrap="nowrap">
-							<?php if($approval_status['request_status'] ==""){ ?>
+							<?php if($approval_status['request_status'] =="" || $approval_status['request_status'] == 2){ ?>
 								<i class="fa fa-undo" style="font-size: 12pt;cursor: pointer;" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_request_comment_add/request_cancel/<?php echo $rows->transaction_id; ?>/transaction');" ></i>
 							<?php } ?>
 							<div class="btn <?=$btn_color;?>" title="<?=$btn_title;?>" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_transaction/<?=$rows->batch_number?>');"><?=$rows->batch_number?></div></td>

@@ -35,7 +35,7 @@ $row = $transaction[0];
     		//$approval_status =  $this->crud_model->check_transaction_reverse_approval($row['transaction_id']);
         $approval_status = $this->school_model->get_approval_record_status('transaction', $row['transaction_id']);
         //echo $approval_status;
-    		if($approval_status['request_status'] == ""){
+    		if($approval_status['request_status'] == "" || $approval_status['request_status'] == 2){
     			//Request for approval
     	?>
     			<!-- <a onclick="confirm_action('<?=base_url();?>index.php?finance/reverse_transaction_approval_request/<?=$row['transaction_id'];?>');"
