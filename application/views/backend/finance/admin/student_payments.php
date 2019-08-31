@@ -289,7 +289,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 										<td><?php echo $this -> crud_model -> get_type_name_by_id('student', $row3['student_id']); ?></td>
 										<td><?php echo $row3['yr']; ?></td>
 										<td><?php echo $row3['term']; ?></td>
-										<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row['class_id']); ?></td>
+										<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row3['class_id']); ?></td>
 										<td><?php echo number_format($row3['amount'], 2); ?></td>
 			                            <td><?php echo number_format($row3['amount_due'], 2); ?></td>
 
