@@ -1211,7 +1211,7 @@ class Crud_model extends CI_Model {
         $this->db->update('invoice',array('amount_due'=>$details_amount_due));
     }
 
-    return
+    return $details_amount_due;
   }
 
 	function fees_balance_by_invoice($invoice_id){
