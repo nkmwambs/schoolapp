@@ -1221,6 +1221,10 @@ class Crud_model extends CI_Model {
 		elseif($balance < 0){
 			$this->db->where(array('invoice_id'=>$invoice_id));
 			$this->db->update('invoice',array('status'=>'excess'));
+		}elseif($balance > 0){
+      
+			$this->db->where(array('invoice_id'=>$invoice_id));
+			$this->db->update('invoice',array('status'=>'unpaid'));
 		}
 
 		return $balance;
