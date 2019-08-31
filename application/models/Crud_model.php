@@ -1274,11 +1274,11 @@ class Crud_model extends CI_Model {
 	function term_total_fees_balance($year, $term){
 		$this->db->join('invoice_details','invoice_details.invoice_id=invoice.invoice_id');
 		$amount_due = $this->db->select_sum('invoice_details.amount_due')->get_where('invoice',
-    array('yr'=>$year,'term'=>$term,'invoice.status'=>'unpaid'))->row()->amount_due;
+    array('yr'=>$year,'term'=>$term,'invoice.status<>'=>'cancelled'))->row()->amount_due;
 
 		$paid = $this->term_total_paid_fees($year, $term);
 
-		return $amount_due;// - $paid;
+		return $amount_due - $paid;
 	}
 
 	function get_invoice_transaction_history($invoice_id){
