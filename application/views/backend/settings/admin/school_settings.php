@@ -1,6 +1,7 @@
 <?php
 //echo $approved_reports_exists;
 $display_style = '';
+$readonly = "";
 if($approved_reports_exists == true){
 $readonly_style = '';
 	$display_style = "style='display:none;'";
@@ -361,9 +362,9 @@ $readonly_style = '';
 	{
 
 
-	
 
-		
+
+
 	});
 
 	$(".opening_balance").on('change',function(){
