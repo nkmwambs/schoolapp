@@ -1214,6 +1214,7 @@ class Crud_model extends CI_Model {
     return $details_amount_due;
   }
 
+
 	function fees_balance_by_invoice($invoice_id){
 
 		$amount_due = $this->fees_amount_due_by_invoice($invoice_id);//$this->db->select_sum('amount_due')->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->amount_due;

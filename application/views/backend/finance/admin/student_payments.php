@@ -275,6 +275,8 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 			                		<tr>
 			                			<th>#</th>
 			                    		<th><div><?php echo get_phrase('student'); ?></div></th>
+															<th><div><?php echo get_phrase('class'); ?></div></th>
+
 			                    		<th><div><?php echo get_phrase('year'); ?></div></th>
 			                    		<th><div><?php echo get_phrase('term'); ?></div></th>
 			                    		<th><div><?php echo get_phrase('class'); ?></div></th>
@@ -294,6 +296,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 			                        <tr>
 			                        	<td><?php echo $row3['invoice_id']; ?></td>
 										<td><?php echo $this -> crud_model -> get_type_name_by_id('student', $row3['student_id']); ?></td>
+											<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row3['class_id']); ?></td>
 										<td><?php echo $row3['yr']; ?></td>
 										<td><?php echo $row3['term']; ?></td>
 										<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row3['class_id']); ?></td>
@@ -342,6 +345,8 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                 		<tr>
                 			<th>#</th>
                     		<th><div><?php echo get_phrase('student'); ?></div></th>
+												<th><div><?php echo get_phrase('class'); ?></div></th>
+
                     		<th><div><?php echo get_phrase('year'); ?></div></th>
                     		<th><div><?php echo get_phrase('term'); ?></div></th>
                             <th><div><?php echo get_phrase('fee_structure_total'); ?></div></th>
@@ -363,6 +368,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                         <tr>
                         <td><?php echo $row3['invoice_id']; ?></td>
 							<td><?php echo $this -> crud_model -> get_type_name_by_id('student', $row3['student_id']); ?></td>
+							<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row3['class_id']); ?></td>
 							<td><?php echo $row3['yr']; ?></td>
 							<td><?php echo $row3['term']; ?></td>
 							<td><?php echo number_format($row3['amount'], 2); ?></td>
@@ -444,7 +450,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 							    				<td><?=$cnt; ?></td>
 							    				<td><?= $this -> crud_model -> get_type_name_by_id("student", $row -> student_id); ?></td>
 							    				<td><?= $row -> amount; ?></td>
-							    				<td><?= $row -> amount_due; ?></td>
+							    				<td><?= $this->crud_model->overpay_balance($row -> overpay_id); ?></td>
 							    				<td><?= $row -> description; ?></td>
 							    				<td><?= $row -> status; ?></td>
 							    				<td><?= $row -> creation_timestamp; ?></td>
@@ -490,7 +496,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 							    				<td><?=$cnt; ?></td>
 							    				<td><?= $this -> crud_model -> get_type_name_by_id("student", $row -> student_id); ?></td>
 							    				<td><?= $row -> amount; ?></td>
-							    				<td><?= $row -> amount_due; ?></td>
+							    				<td><?= $this->crud_model->overpay_balance($row -> overpay_id); ?></td>
 							    				<td><?= $row -> description; ?></td>
 							    				<td><?= $row -> status; ?></td>
 							    				<td><?= $row -> creation_timestamp; ?></td>

@@ -380,15 +380,9 @@ class Finance extends CI_Controller
                 if ($active_note -> num_rows() > 0) {
                     $this -> db -> where(array("student_id" => $this -> input -> post('student_id'), "status" => "active"));
                     $amount = $active_note -> row() -> amount;
+
+
                     //Consider using overpay_charge_detail table to record this
-                    // $current_amount_due = $active_note->row()->amount_due;
-                    // $new_amount_due = $current_amount_due - $charge_overpay;
-                    //
-                    // $data8['amount_due'] = $new_amount_due;
-                    // if($new_amount_due === 0){
-                    // $data8['status'] = "cleared";
-                    // }
-                    // $this->db->update("overpay",$data8);
 
                     $overpay_charge_data['invoice_id'] = $invoice_id;
                     $overpay_charge_data['overpay_id'] = $active_note -> row() -> overpay_id;
@@ -1007,7 +1001,7 @@ class Finance extends CI_Controller
         $obj = $this -> db -> get_where("overpay", array("status" => "active", "student_id" => $param1));
 
         if ($obj -> num_rows() > 0) {
-            $overpay = $obj -> row() -> amount;
+            $overpay = $this -> crud_model -> overpay_balance($obj -> row() -> overpay_id);//$obj -> row() -> amount;
         }
 
         echo $overpay;
@@ -1168,7 +1162,20 @@ class Finance extends CI_Controller
             $data['status'] = 'active';//$this -> input -> post('status');
             $data['transaction_id'] = $last_transaction_id;
 
-            $this -> db -> insert("overpay", $data);
+            //Check if an active overpay note exists for the student. If yes update it or else insert
+
+            $active_note = $this->db->get_where('overpay',array('student_id'=>$student_id,'status'=>'active'));
+
+            if($active_note->num_rows()>0){
+              $new_amount = $this -> input -> post('amount') + $active_note->row()->amount;
+              $update_data['amount'] = $new_amount;
+              $this->db->where(array('overpay_id'=>$active_note->row()->overpay_id));
+              $this -> db -> update("overpay", $update_data);
+            }else{
+              $this -> db -> insert("overpay", $data);
+            }
+
+
 
             $this->crud_model->fees_balance_by_invoice($this -> input -> post('invoice_id'));
 
@@ -2323,7 +2330,19 @@ class Finance extends CI_Controller
                 //$overpay['amount_due'] = $this->input->post('overpayment');
                 $overpay['description'] = $this -> input -> post('overpayment_description');
 
-                $this -> db -> insert('overpay', $overpay);
+                //$this -> db -> insert('overpay', $overpay);
+                //Check if an active overpay note exists for the student. If yes update it or else insert
+
+                $active_note = $this->db->get_where('overpay',array('student_id'=>$student_id,'status'=>'active'));
+
+                if($active_note->num_rows()>0){
+                  $new_amount = $this -> input -> post('overpayment') + $active_note->row()->amount;
+                  $update_data['amount'] = $new_amount;
+                  $this->db->where(array('overpay_id'=>$active_note->row()->overpay_id));
+                  $this -> db -> update("overpay", $update_data);
+                }else{
+                  $this -> db -> insert("overpay", $overpay);
+                }
 
                 //Insert this to the reverse account by creating a transaction_detail
 
