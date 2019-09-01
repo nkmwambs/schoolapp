@@ -430,6 +430,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 							        <tr>
 							            <th><div>#</div></th>
 							            <th><div><?php echo get_phrase('student'); ?></div></th>
+													<th><div><?php echo get_phrase('class'); ?></div></th>
 							            <th><div><?php echo get_phrase('amount'); ?></div></th>
 							            <th><div><?php echo get_phrase('balance'); ?></div></th>
 							            <th><div><?php echo get_phrase('description'); ?></div></th>
@@ -440,7 +441,8 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 							    </thead>
 							    <tbody>
 							    	<?php
-                                        $notes_object = $this->db->get_where("overpay", array("status"=>"active"));
+																				$this->db->join('student','overpay.student_id=student.student_id');
+																				$notes_object = $this->db->get_where("overpay", array("overpay.status"=>"active"));
 
                                         if ($notes_object->num_rows() > 0) {
                                             $cnt = 1;
@@ -449,7 +451,8 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 							    			<tr>
 							    				<td><?=$cnt; ?></td>
 							    				<td><?= $this -> crud_model -> get_type_name_by_id("student", $row -> student_id); ?></td>
-							    				<td><?= $row -> amount; ?></td>
+													<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row -> class_id); ?></td>
+													<td><?= $row -> amount; ?></td>
 							    				<td><?= $this->crud_model->overpay_balance($row -> overpay_id); ?></td>
 							    				<td><?= $row -> description; ?></td>
 							    				<td><?= $row -> status; ?></td>
@@ -476,6 +479,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 							        <tr>
 							            <th><div>#</div></th>
 							            <th><div><?php echo get_phrase('student'); ?></div></th>
+														<th><div><?php echo get_phrase('class'); ?></div></th>
 							            <th><div><?php echo get_phrase('amount'); ?></div></th>
 							            <th><div><?php echo get_phrase('balance'); ?></div></th>
 							            <th><div><?php echo get_phrase('description'); ?></div></th>
@@ -486,7 +490,8 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 							    </thead>
 							    <tbody>
 							    	<?php
-                                        $notes_object = $this->db->get_where("overpay", array("status"=>"cleared"));
+																				$this->db->join('student','overpay.student_id=student.student_id');
+																			  $notes_object = $this->db->get_where("overpay", array("status"=>"cleared"));
 
                                         if ($notes_object->num_rows() > 0) {
                                             $cnt = 1;
@@ -495,7 +500,8 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 							    			<tr>
 							    				<td><?=$cnt; ?></td>
 							    				<td><?= $this -> crud_model -> get_type_name_by_id("student", $row -> student_id); ?></td>
-							    				<td><?= $row -> amount; ?></td>
+																										<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row -> class_id); ?></td>		
+													<td><?= $row -> amount; ?></td>
 							    				<td><?= $this->crud_model->overpay_balance($row -> overpay_id); ?></td>
 							    				<td><?= $row -> description; ?></td>
 							    				<td><?= $row -> status; ?></td>
