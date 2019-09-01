@@ -404,6 +404,20 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 				<div class="tab-pane" id="overpay_notes">
 
 					<div class="row">
+
+						<div class="col-sm-12 <?= get_access_class('add_overpay_note', 'admin', 'accounting'); ?>">
+							<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_overpay_add/');"
+							class="btn btn-primary pull-right">
+							<i class="entypo-plus-circled"></i>
+							<?php echo get_phrase('add_note'); ?>
+							</a>
+
+						</div>
+					</div>
+
+					<hr/>
+
+					<div class="row">
 						<div class="col-sm-12">
 								<table class="table table-bordered datatable example">
 							    <thead>
@@ -448,19 +462,6 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 				</div>
 
 				<div class="tab-pane" id="cleared_overpay_notes">
-					<div class="row">
-
-						<div class="col-sm-12">
-							<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_overpay_add/');"
-							class="btn btn-primary pull-right">
-							<i class="entypo-plus-circled"></i>
-							<?php echo get_phrase('add_note'); ?>
-							</a>
-
-						</div>
-					</div>
-
-					<hr/>
 
 					<div class="row">
 						<div class="col-sm-12">
