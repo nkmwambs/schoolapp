@@ -807,7 +807,7 @@ class Finance extends CI_Controller
             if ($details_object -> num_rows() > 0) {
                 $details = $details_object -> result_object();
 
-                $invoice = $this -> db -> get_where('invoice', array('student_id' => $student, 'yr' => $year, 'term' => $term));
+                $invoice = $this -> db -> get_where('invoice', array('student_id' => $student, 'yr' => $year, 'term' => $term,'status'=>'unpaid'));
 
                 $invoice_count = $invoice -> num_rows();
 
