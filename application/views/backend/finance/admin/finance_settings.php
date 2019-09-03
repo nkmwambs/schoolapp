@@ -20,6 +20,21 @@
                     </div>
                 </div>
 
+
+                <div class="form-group">
+                    <label class="col-xs-5 control-label"><?php echo get_phrase('allowable_variance_lower_limit');?> (%)</label>
+                    <div class="col-xs-7">
+                        <input type="number" class="form-control settings" value="<?=$settings['allowable_variance_lower_limit'];?>" name="allowable_variance_lower_limit" id="allowable_variance_lower_limit">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-5 control-label"><?php echo get_phrase('allowable_variance_upper_limit');?> (%)</label>
+                    <div class="col-xs-7">
+                        <input type="number"  class="form-control settings" value="<?=$settings['allowable_variance_upper_limit'];?>" name="allowable_variance_upper_limit" id="allowable_variance_upper_limit">
+                    </div>
+                </div>
+
               </div>
               <div class="col-xs-6">
 
@@ -31,7 +46,15 @@
 
   <script>
     $(".settings").change(function(){
-      var url = "<?=base_url();?>index.php?finance/settings/"+$(this).attr('id')+'/'+$(this).prop('checked');
+      var val = "";
+
+      if($(this).attr('type') == 'checkbox'){
+        val = $(this).prop('checked')
+      }else{
+        val  = $(this).val();
+      }
+
+      var url = "<?=base_url();?>index.php?finance/settings/"+$(this).attr('id')+'/'+val;
 
       $.get(url);
     });
