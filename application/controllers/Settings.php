@@ -107,7 +107,13 @@ class Settings extends CI_Controller
 
         //Check if there is a financial month close
 
-        $approved_reports_count = $this->db->get_where('reconcile', array('status'=>1))->num_rows();
+        $approved_reports_count_obj = $this->db->get_where('reconcile', array('status'=>1));
+
+        $approved_reports_count = 0;
+
+        if($approved_reports_count_obj->num_rows() > 0 ){
+          $approved_reports_count = $approved_reports_count_obj->num_rows();
+        }
 
         $page_data['approved_reports_exists'] = $approved_reports_count > 0?true:false;
         $page_data['terms'] = $this->db->get('terms')->result_object();
@@ -415,7 +421,7 @@ class Settings extends CI_Controller
 
             $this->db->where(array('income_category_id'=>$category_id));
             $this->db->update('expense_category',$data);
-            
+
         } else {
             $this->db->where(array('expense_category_id'=>$category_id));
             $this->db->update('expense_category', $data);
