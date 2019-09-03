@@ -70,7 +70,8 @@ if(isset($current)){
 
 				<tr>
 					<th><?=get_phrase('date');?></th>
-					<th><?=get_phrase('reference');?></th>
+					<th><?=get_phrase('batch_number');?></th>
+					<th><?=get_phrase('reference_number');?></th>
 					<th><?=get_phrase('payee');?></th>
 					<th><?=get_phrase('description');?></th>
 					<th><?=get_phrase('transaction_type');?></th>
@@ -137,7 +138,7 @@ if(isset($current)){
 								<i class="fa fa-undo" style="font-size: 12pt;cursor: pointer;" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_request_comment_add/request_cancel/<?php echo $rows->transaction_id; ?>/transaction');" ></i>
 							<?php } ?>
 							<div class="btn <?=$btn_color;?>" title="<?=$btn_title;?>" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_transaction/<?=$rows->batch_number?>');"><?=$rows->batch_number?></div></td>
-
+						<td><?=$rows->cheque_no;?></td>	
 						<td><?=$rows->payee;?></td>
 						<td><?=$rows->description;?></td>
 						<td>
