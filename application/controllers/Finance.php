@@ -2711,11 +2711,17 @@ class Finance extends CI_Controller
           redirect('login', 'refresh');
       }
 
-      // $type = $this->db->get_where('settings',array('type'=>$setting));
-      //
-      // if($type->num_rows() == 0){
-      //     $this->db->insert('settings',array('type'=>$setting,'description'=>""));
-      // }
+      $required_settings_array = array('manage_invoice_require_approval','allowable_variance_lower_limit','allowable_variance_upper_limit');
+
+      foreach ($required_settings_array as $required_setting) {
+        $type = $this->db->get_where('settings',array('type'=>$required_setting));
+
+        if($type->num_rows() == 0){
+            $this->db->insert('settings',array('type'=>$required_setting,'description'=>""));
+        }
+      }
+
+
 
       $this->db->update('settings',array('description'=>$value),array('type'=>$setting));
 
