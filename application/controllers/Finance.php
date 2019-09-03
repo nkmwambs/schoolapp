@@ -2711,7 +2711,7 @@ class Finance extends CI_Controller
           redirect('login', 'refresh');
       }
 
-      $this->school_model->auto_set_settings_values()l
+      $this->school_model->auto_set_settings_values();
 
       $this->db->update('settings',array('description'=>$value),array('type'=>$setting));
 
