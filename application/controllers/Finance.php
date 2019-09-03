@@ -2711,17 +2711,7 @@ class Finance extends CI_Controller
           redirect('login', 'refresh');
       }
 
-      $required_settings_array = array('manage_invoice_require_approval','allowable_variance_lower_limit','allowable_variance_upper_limit');
-
-      foreach ($required_settings_array as $required_setting) {
-        $type = $this->db->get_where('settings',array('type'=>$required_setting));
-
-        if($type->num_rows() == 0){
-            $this->db->insert('settings',array('type'=>$required_setting,'description'=>""));
-        }
-      }
-
-
+      $this->school_model->auto_set_settings_values()l
 
       $this->db->update('settings',array('description'=>$value),array('type'=>$setting));
 

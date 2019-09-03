@@ -86,4 +86,20 @@ class School_model extends CI_Model {
     return array_combine($type_keys,$desc_keys);
   }
 
+
+  function auto_set_settings_values(){
+    $required_settings_array = array(
+      'manage_invoice_require_approval'=>true,
+      'allowable_variance_lower_limit'=>-10,
+      'allowable_variance_upper_limit'=>10);
+
+    foreach ($required_settings_array as $required_setting_key=>$required_setting_value) {
+      $type = $this->db->get_where('settings',array('type'=>$required_setting_key));
+
+      if($type->num_rows() == 0){
+          $this->db->insert('settings',array('type'=>$required_setting_key,'description'=>$required_setting_value));
+      }
+    }
+  }
+
 }
