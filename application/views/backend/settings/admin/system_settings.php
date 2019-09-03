@@ -1,76 +1,76 @@
 <hr />
 
     <div class="row">
-    <?php echo form_open(base_url() . 'index.php?settings/system_settings/do_update' , 
+    <?php echo form_open(base_url() . 'index.php?settings/system_settings/do_update' ,
       array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
         <div class="col-md-6">
-            
+
             <div class="panel panel-primary" >
-            
+
                 <div class="panel-heading">
                     <div class="panel-title">
                         <?php echo get_phrase('system_settings');?>
                     </div>
                 </div>
-                
+
                 <div class="panel-body">
-                    
+
                   <div class="form-group">
                       <label  class="col-sm-3 control-label"><?php echo get_phrase('system_name');?></label>
                       <div class="col-sm-9">
-                          <input type="text" class="form-control" name="system_name" 
+                          <input type="text" class="form-control" name="system_name"
                               value="<?php echo $this->db->get_where('settings' , array('type' =>'system_name'))->row()->description;?>">
                       </div>
                   </div>
-                    
+
                   <div class="form-group">
                       <label  class="col-sm-3 control-label"><?php echo get_phrase('system_title');?></label>
                       <div class="col-sm-9">
-                          <input type="text" class="form-control" name="system_title" 
+                          <input type="text" class="form-control" name="system_title"
                               value="<?php echo $this->db->get_where('settings' , array('type' =>'system_title'))->row()->description;?>">
                       </div>
                   </div>
-                    
+
                   <div class="form-group">
                       <label  class="col-sm-3 control-label"><?php echo get_phrase('address');?></label>
                       <div class="col-sm-9">
-                          <input type="text" class="form-control" name="address" 
+                          <input type="text" class="form-control" name="address"
                               value="<?php echo $this->db->get_where('settings' , array('type' =>'address'))->row()->description;?>">
                       </div>
                   </div>
-                    
+
                   <div class="form-group">
                       <label  class="col-sm-3 control-label"><?php echo get_phrase('phone');?></label>
                       <div class="col-sm-9">
-                          <input type="text" class="form-control" name="phone" 
+                          <input type="text" class="form-control" name="phone"
                               value="<?php echo $this->db->get_where('settings' , array('type' =>'phone'))->row()->description;?>">
                       </div>
                   </div>
-                    
+
                   <div class="form-group">
                       <label  class="col-sm-3 control-label"><?php echo get_phrase('paypal_email');?></label>
                       <div class="col-sm-9">
-                          <input type="text" class="form-control" name="paypal_email" 
+                          <input type="text" class="form-control" name="paypal_email"
                               value="<?php echo $this->db->get_where('settings' , array('type' =>'paypal_email'))->row()->description;?>">
                       </div>
                   </div>
-                    
+
                   <div class="form-group">
                       <label  class="col-sm-3 control-label"><?php echo get_phrase('currency');?></label>
                       <div class="col-sm-9">
-                          <input type="text" class="form-control" name="currency" 
+                          <input type="text" class="form-control" name="currency"
                               value="<?php echo $this->db->get_where('settings' , array('type' =>'currency'))->row()->description;?>">
                       </div>
                   </div>
-                    
+
                   <div class="form-group">
                       <label  class="col-sm-3 control-label"><?php echo get_phrase('system_email');?></label>
                       <div class="col-sm-9">
-                          <input type="text" class="form-control" name="system_email" 
+                          <input type="text" class="form-control" name="system_email"
                               value="<?php echo $this->db->get_where('settings' , array('type' =>'system_email'))->row()->description;?>">
                       </div>
                   </div>
-                    
+
                   <div class="form-group">
                       <label  class="col-sm-3 control-label"><?php echo get_phrase('language');?></label>
                       <div class="col-sm-9">
@@ -80,7 +80,7 @@
 									foreach ($fields as $field)
 									{
 										if ($field == 'phrase_id' || $field == 'phrase')continue;
-										
+
 										$current_default_language	=	$this->db->get_where('settings' , array('type'=>'language'))->row()->description;
 										?>
                                 		<option value="<?php echo $field;?>"
@@ -91,7 +91,7 @@
                            </select>
                       </div>
                   </div>
-                    
+
                   <div class="form-group">
                       <label  class="col-sm-3 control-label"><?php echo get_phrase('text_align');?></label>
                       <div class="col-sm-9">
@@ -102,53 +102,53 @@
                           </select>
                       </div>
                   </div>
-                  
+
                   <div class="form-group">
                       <label  class="col-sm-3 control-label"><?php echo get_phrase('system_start_date');?></label>
                       <div class="col-sm-9">
-                          <input type="text" class="form-control datepicker" readonly="readonly" data-format='yyyy-mm-dd' name="system_start_date" 
+                          <input type="text" class="form-control datepicker" readonly="readonly" data-format='yyyy-mm-dd' name="system_start_date"
                               value="<?php echo $this->db->get_where('settings' , array('type' =>'system_start_date'))->row()->description;?>">
                       </div>
                   </div>
-                  
+
                    <div class="form-group">
                       <label  class="col-sm-3 control-label"><?php echo get_phrase('sidebar_collapsed');?></label>
                       <div class="col-sm-9">
                       	<?php
-                      		$option = $this->db->get_where('settings' , 
+                      		$option = $this->db->get_where('settings' ,
                       			array('type' =>'sidebar-collapsed'))->row()->description;
                       	?>
                       	<select class="form-control" name="sidebar-collapsed">
                       		<option value="yes" <?php if ($option == 'yes') echo "selected";?> ><?=get_phrase('yes');?></option>
                       		<option value="no" <?php if ($option == 'no') echo "selected";?> ><?=get_phrase('no');?></option>
                       	</select>
-                          
+
                       </div>
                   </div>
-                  
+
                   <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-9">
                         <button type="submit" class="btn btn-info"><?php echo get_phrase('save');?></button>
                     </div>
                   </div>
                     <?php echo form_close();?>
-                    
+
                 </div>
-            
+
             </div>
-			
-			<div class="panel panel-primary" data-collapsed="0">
-            
+
+			<!-- <div class="panel panel-primary" data-collapsed="0">
+
             <div class="panel-heading">
                 <div class="panel-title">
                     <?php echo get_phrase('update_product');?>
                 </div>
             </div>
 
-            
+
             <div class="panel-body form-horizontal form-groups-bordered">
                 <?php echo form_open(base_url().'index.php?updater/update' , array('class' => 'form-horizontal form-groups-bordered', 'enctype' => 'multipart/form-data'));?>
-                
+
                     <div class="form-group">
                         <label class="col-sm-3 control-label"><?php echo get_phrase('file'); ?></label>
 
@@ -164,30 +164,30 @@
                             <input type="submit" class="btn btn-info" value="<?php echo get_phrase('install_update'); ?>" />
                         </div>
                     </div>
-                        
+
                 <?php echo form_close(); ?>
             </div>
 
-        </div>
-        
+        </div> -->
+
         </div>
 
-      <?php 
+      <?php
         $skin = $this->db->get_where('settings' , array(
           'type' => 'skin_colour'
         ))->row()->description;
       ?>
-    
+
         <div class="col-md-6">
-            
+
             <div class="panel panel-primary" >
-            
+
                 <div class="panel-heading">
                     <div class="panel-title">
                         <?php echo get_phrase('theme_settings');?>
                     </div>
                 </div>
-                
+
                 <div class="panel-body">
 
                 <div class="gallery-env">
@@ -211,7 +211,7 @@
                         <article class="album">
                             <header>
                                 <a href="#" id="black">
-                                    <img src="assets/images/skins/black.png" 
+                                    <img src="assets/images/skins/black.png"
                                       <?php if ($skin == 'black') echo 'style="background-color: black; opacity: 0.3;"';?> />
                                 </a>
                                 <a href="#" class="album-options" id="black">
@@ -327,26 +327,26 @@
                   </div>
                 </center>
                 </div>
-            
+
             </div>
 
             <?php echo form_open(base_url() . 'index.php?settings/system_settings/upload_logo' , array(
             'class' => 'form-horizontal form-groups-bordered validate','target'=>'_top' , 'enctype' => 'multipart/form-data'));?>
 
               <div class="panel panel-primary" >
-              
+
                   <div class="panel-heading">
                       <div class="panel-title">
                           <?php echo get_phrase('upload_logo');?>
                       </div>
                   </div>
-                  
+
                   <div class="panel-body">
-                      
-                    
+
+
                       <div class="form-group">
                           <label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('photo');?></label>
-                          
+
                           <div class="col-sm-9">
                               <div class="fileinput fileinput-new" data-provides="fileinput">
                                   <div class="fileinput-new thumbnail" style="width: 100px; height: 100px;" data-trigger="fileinput">
@@ -364,21 +364,21 @@
                               </div>
                           </div>
                       </div>
-                    
-                    
+
+
                     <div class="form-group">
                       <div class="col-sm-offset-3 col-sm-9">
                           <button type="submit" class="btn btn-info"><?php echo get_phrase('upload');?></button>
                       </div>
                     </div>
-                      
+
                   </div>
-              
+
               </div>
 
             <?php echo form_close();?>
-            
-        
+
+
         </div>
 
     </div>

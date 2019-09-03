@@ -195,16 +195,42 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                                     <li class="divider"></li>
 
 																		<?php
-                                                                        //Show these links when a request has been raiased and approved
-                                                                        if ($approval_info['request_status'] == 1) {
-                                                                            if ($approval_info['request_type'] == 'update') { ?>
+																		$settings = $this->school_model->get_system_settings();
+
+																		if($settings['manage_invoice_require_approval'] == 'true'){
+																		?>
+																						<li class="<?= get_access_class('edit_invoice', 'admin', 'accounting'); ?>">
+																								<a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_edit_invoice/<?php echo $row['invoice_id']; ?>');">
+																										<i class="entypo-pencil"></i>
+																												<?php echo get_phrase('edit_invoice'); ?>
+																										</a>
+																						</li>
+																						<li class="divider <?= get_access_class('edit_invoice', 'admin', 'accounting'); ?>"></li>
+
+																						<li class="<?= get_access_class('delete_or_cancel_invoice', 'admin', 'accounting'); ?>">
+
+																								<a href="#" onclick="confirm_action('<?php echo base_url(); ?>index.php?finance/invoice/cancel/<?php echo $row['invoice_id']; ?>');">
+																											<i class="entypo-cancel"></i>
+																													<?php echo get_phrase('cancel_invoice'); ?>
+																									</a>
+
+
+																						 </li>
+																	<?php
+
+
+																		}else{
+
+                                    //Show these links when a request has been raiased and approved
+                                    if ($approval_info['request_status'] == 1) {
+                                              if ($approval_info['request_type'] == 'update') { ?>
                                     <!-- EDIT INVOICE LINK -->
                                     <li class="<?= get_access_class('edit_invoice', 'admin', 'accounting'); ?>">
                                         <a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_edit_invoice/<?php echo $row['invoice_id']; ?>');">
                                             <i class="entypo-pencil"></i>
                                                 <?php echo get_phrase('edit_invoice'); ?>
                                             </a>
-                                                    </li>
+                                  	</li>
                                     <li class="divider <?= get_access_class('edit_invoice', 'admin', 'accounting'); ?>"></li>
 
 																		<?php } ?>
@@ -225,8 +251,8 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                                                                          ?>
 
 																		 <?php
-                                                                        //Show these links when a request has not been raised or has been implemented by the requestor
-                                                                        if ($approval_info['request_status'] == "" || $approval_info['request_status'] == 4 || $approval_info['request_status'] == 2 ) {
+                                      //Show these links when a request has not been raised or has been implemented by the requestor
+                                      if ($approval_info['request_status'] == "" || $approval_info['request_status'] == 4 || $approval_info['request_status'] == 2 ) {
                                                                             ?>
                                      <!-- Send edit invoice request link  -->
                                      <li class="<?=get_access_class('request_edit_invoice', 'admin', 'accounting'); ?>">
@@ -250,7 +276,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
  	                                        </a>
 
                                       </li>
- 																		<?php } ?>
+ 																		<?php } } ?>
 
                                 </ul>
                             </div>
@@ -500,7 +526,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 							    			<tr>
 							    				<td><?=$cnt; ?></td>
 							    				<td><?= $this -> crud_model -> get_type_name_by_id("student", $row -> student_id); ?></td>
-																										<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row -> class_id); ?></td>		
+																										<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row -> class_id); ?></td>
 													<td><?= $row -> amount; ?></td>
 							    				<td><?= $this->crud_model->overpay_balance($row -> overpay_id); ?></td>
 							    				<td><?= $row -> description; ?></td>

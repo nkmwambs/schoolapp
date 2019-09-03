@@ -2705,4 +2705,24 @@ class Finance extends CI_Controller
         $this -> session -> set_flashdata('flash_message', get_phrase('approval_request_submitted'));
         redirect(base_url() . 'index.php?finance/cashbook');
     }
+
+    function settings($setting = "",$value = ""){
+      if ($this -> session -> userdata('active_login') != 1) {
+          redirect('login', 'refresh');
+      }
+
+      // $type = $this->db->get_where('settings',array('type'=>$setting));
+      //
+      // if($type->num_rows() == 0){
+      //     $this->db->insert('settings',array('type'=>$setting,'description'=>""));
+      // }
+
+      $this->db->update('settings',array('description'=>$value),array('type'=>$setting));
+
+      $page_data['settings'] = $this->school_model->get_system_settings();
+      $page_data['page_name'] = 'finance_settings';
+      $page_data['page_view'] = "finance";
+      $page_data['page_title'] = get_phrase('finance_settings');
+      $this -> load -> view('backend/index', $page_data);
+    }
 }

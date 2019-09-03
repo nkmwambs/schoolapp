@@ -77,4 +77,13 @@ class School_model extends CI_Model {
       return $status;
   }
 
+  function get_system_settings(){
+
+    $settings = $this->db->get('settings')->result_object();
+    $type_keys = array_column($settings,'type');
+    $desc_keys = array_column($settings,'description');
+
+    return array_combine($type_keys,$desc_keys);
+  }
+
 }

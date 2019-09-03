@@ -35,13 +35,13 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 	$(document).ready(function() {
 		$('.fixed-action-btn').floatingActionButton();
-	}); 
+	});
 </script> -->
 
 <!-- Footer -->
 <footer class="main">
 	&copy; 2018 <strong>techsysolutions.com School Manager</strong>.
 	Developed by
-	<a href="https://www.techsysolutions.com"
+	<a href="http://www.techsysnow.com"
 	target="_blank">Techsys Softwares</a>
 </footer>
