@@ -1,3 +1,11 @@
-.print {
-	border: 1px !important;
-}
+      @media screen {
+         #invoice_print {font-family:verdana, arial, sans-serif;font-size:6pt}
+      }
+
+      @media print {
+         #invoice_print {font-family:georgia, times, serif;font-size:6pt}
+         
+      }
+      @media screen, print {
+         #invoice_print {font-size:6pt}
+      }

@@ -143,18 +143,18 @@
     {
     	var string = '<div class="row">';
     		string += '<div class="col-xs-12" style="text-align:center;">';
-    		string += '<img src="<?=base_url();?>uploads/logo.png" width="80"/>';
+    		string += '<img src="<?=base_url();?>uploads/logo.png" width="40"/>';
     		string += '</div>';
-    		string += '<div class="col-xs-12" style="text-align:center;">';
+    		string += '<div class="col-xs-12" style="text-align:center;font-size:8pt">';
     		string += '<?=$this->db->get_where('settings' , array('type'=>'system_title'))->row()->description;?>';
     		string += '</div>';
-    		string += '<div class="col-xs-12" style="text-align:center;">';
+    		string += '<div class="col-xs-12" style="text-align:center;font-size:8pt">';
     		string += 'P.O. Box <?=$this->db->get_where('settings' , array('type'=>'address'))->row()->description;?>';
     		string += '</div>';
-    		string += '<div class="col-xs-12" style="text-align:center;">';
+    		string += '<div class="col-xs-12" style="text-align:center;font-size:8pt">';
     		string += 'Mobile Number: <?=$this->db->get_where('settings' , array('type'=>'phone'))->row()->description;?>';
     		string += '</div>';
-    		string += '<div class="col-xs-12" style="text-align:center;">';
+    		string += '<div class="col-xs-12" style="text-align:center;font-size:8pt">';
     		string += 'Email: <?=$this->db->get_where('settings' , array('type'=>'system_email'))->row()->description;?>';
     		string += '</div>';
     		string += '</div>';
@@ -164,9 +164,9 @@
 		    debug: false,
 		    importCSS: true,
 		    importStyle: true,
-		    printContainer: false,
-		    loadCSS: "<?=base_url();?>assets/css/bootstrap.css",
-		    pageTitle: "Print Report",
+		    printContainer: true,
+		    loadCSS: ["<?=base_url();?>assets/css/bootstrap.css"],
+		    pageTitle: "Print",
 		    removeInline: false,
 		    printDelay: 333,
 		    header: string,

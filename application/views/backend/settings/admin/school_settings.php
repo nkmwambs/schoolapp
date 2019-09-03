@@ -1,6 +1,7 @@
 <?php
 //echo $approved_reports_exists;
 $display_style = '';
+$readonly = "";
 if($approved_reports_exists == true){
 $readonly_style = '';
 	$display_style = "style='display:none;'";
@@ -361,14 +362,9 @@ $readonly_style = '';
 	{
 
 
-		var datatable = $("#table_export_1,#table_export_2").dataTable({
-			"sPaginationType": "bootstrap",
 
-		});
 
-		$(".dataTables_wrapper select").select2({
-			minimumResultsForSearch: -1
-		});
+
 	});
 
 	$(".opening_balance").on('change',function(){

@@ -380,15 +380,9 @@ class Finance extends CI_Controller
                 if ($active_note -> num_rows() > 0) {
                     $this -> db -> where(array("student_id" => $this -> input -> post('student_id'), "status" => "active"));
                     $amount = $active_note -> row() -> amount;
+
+
                     //Consider using overpay_charge_detail table to record this
-                    // $current_amount_due = $active_note->row()->amount_due;
-                    // $new_amount_due = $current_amount_due - $charge_overpay;
-                    //
-                    // $data8['amount_due'] = $new_amount_due;
-                    // if($new_amount_due === 0){
-                    // $data8['status'] = "cleared";
-                    // }
-                    // $this->db->update("overpay",$data8);
 
                     $overpay_charge_data['invoice_id'] = $invoice_id;
                     $overpay_charge_data['overpay_id'] = $active_note -> row() -> overpay_id;
@@ -524,6 +518,7 @@ class Finance extends CI_Controller
               //$this->db->delete('invoice_details');
 
               if (count($this -> input -> post('existing_detail_amount_due')) > 0) {
+              	//For updating the exisitng details
                   foreach ($this->input->post('existing_detail_amount_due') as $invoice_details_id => $amount_due) {
                       $this -> db -> where(array('invoice_details_id' => $invoice_details_id));
                       $data8['amount_due'] = $amount_due;
@@ -531,7 +526,9 @@ class Finance extends CI_Controller
                   }
               }
 
-              if (count($this -> input -> post('detail_amount_due')) > 0) {
+			if($this -> input -> post('detail_amount_due')){
+				//For adding new invoice details
+				 if (count($this -> input -> post('detail_amount_due')) > 0) {
                   foreach ($this->input->post('detail_amount_due') as $details_id => $amount_due) {
                       //Insert the new details
                       $data8['invoice_id'] = $param2;
@@ -541,6 +538,19 @@ class Finance extends CI_Controller
                       $this -> db -> insert('invoice_details', $data8);
                   }
               }
+			}
+
+
+			//Check if balance is zero and close the invoice, if -ve charge it overpaid
+
+			if($this -> input -> post('balance') == 0){
+				$this->db->where(array('invoice_id'=>$param2));
+				$this->db->update('invoice',array('status'=>'paid'));
+			}elseif($this -> input -> post('balance') < 0){
+				$this->db->where(array('invoice_id'=>$param2));
+				$this->db->update('invoice',array('status'=>'excess'));
+			}
+
 
               if ($this -> db -> trans_status() === false) {
                   $this -> db -> trans_rollback();
@@ -791,7 +801,7 @@ class Finance extends CI_Controller
             if ($details_object -> num_rows() > 0) {
                 $details = $details_object -> result_object();
 
-                $invoice = $this -> db -> get_where('invoice', array('student_id' => $student, 'yr' => $year, 'term' => $term));
+                $invoice = $this -> db -> get_where('invoice', array('student_id' => $student, 'yr' => $year, 'term' => $term,'status'=>'unpaid'));
 
                 $invoice_count = $invoice -> num_rows();
 
@@ -991,7 +1001,7 @@ class Finance extends CI_Controller
         $obj = $this -> db -> get_where("overpay", array("status" => "active", "student_id" => $param1));
 
         if ($obj -> num_rows() > 0) {
-            $overpay = $obj -> row() -> amount;
+            $overpay = $this -> crud_model -> overpay_balance($obj -> row() -> overpay_id);//$obj -> row() -> amount;
         }
 
         echo $overpay;
@@ -1104,25 +1114,82 @@ class Finance extends CI_Controller
         }
 
         if ($param1 == "create_overpay_note") {
-            $data['student_id'] = $this -> input -> post('student_id');
-            $data['income_id'] = $this -> input -> post('income_id');
+
+          //Check if student has an paid or excess invoice for the term
+
+          $message = get_phrase('failure');
+
+          $this -> db -> trans_start();
+
+          $student_id = $this->db->get_where('invoice',array('invoice_id'=> $this -> input -> post('invoice_id')))->row()->student_id;
+          //if($check_balance->num_rows() > 0){
+            //Create a transactions
+            $data_payment['batch_number'] = $this -> crud_model -> next_batch_number();
+            $data_payment['t_date'] = $this -> input -> post('timestamp');
+            $data_payment['invoice_id'] = $this -> input -> post('invoice_id'); //$this->db->select_max('invoice_id')->get_where('invoice',array('student_id'=>$this -> input -> post('student_id')))->row()->invoice_id;
+
+            $data_payment['transaction_method_id'] = $this -> input -> post('method');
+            $data_payment['description'] = $this -> input -> post('description');
+            $data_payment['payee'] = $this->crud_model->get_type_name_by_id('student',$student_id);
+            $data_payment['transaction_type_id'] = "1";
+            $data_payment['amount'] = $this -> input -> post('amount');
+            $data_payment['createddate'] = strtotime($this -> input -> post('timestamp'));
+            $data_payment['createdby'] = $this -> session -> login_user_id;
+            $data_payment['lastmodifiedby'] = $this -> session -> login_user_id;
+
+
+            $this -> db -> insert('transaction', $data_payment);
+
+            $last_transaction_id = $this -> db -> insert_id();
+
+            //Create transaction Details
+            $data_payment_details['transaction_id'] = $last_transaction_id;
+            $data_payment_details['income_category_id'] = $this -> db -> get_where('income_categories', array('default_category' => 1)) -> row() -> income_category_id;
+            $data_payment_details['qty'] = 1;
+            $data_payment_details['detail_description'] = $this -> input -> post('description');
+            $data_payment_details['unitcost'] = $this -> input -> post('amount');
+            $data_payment_details['cost'] = $this -> input -> post('amount');
+
+            $this -> db -> insert("transaction_detail", $data_payment_details);
+
+            //Create an overpay note
+
+            $data['student_id'] = $student_id;
+            //$data['income_id'] = $this -> db -> get_where('income_categories', array('default_category' => 1)) -> row() -> income_category_id;//$this -> input -> post('income_id');
             $data['amount'] = $this -> input -> post('amount');
-            $data['amount_due'] = $this -> input -> post('amount');
+            $data['amount_due'] = 0;//$this -> input -> post('amount');
             $data['description'] = $this -> input -> post('description');
-            $data['status'] = $this -> input -> post('status');
+            $data['status'] = 'active';//$this -> input -> post('status');
+            $data['transaction_id'] = $last_transaction_id;
 
-            //Check if note exist for the income id
-            $check_note = $this -> db -> get_where("overpay", array("income_id" => $this -> input -> post('income_id')));
+            //Check if an active overpay note exists for the student. If yes update it or else insert
 
-            //Check if student has an invoice with a balance
-            $check_balance = $this -> db -> get_where("invoice", array("student_id" => $this -> input -> post('student_id'), "status" => "unpaid"));
+            $active_note = $this->db->get_where('overpay',array('student_id'=>$student_id,'status'=>'active'));
 
-            $message = get_phrase('failure');
-
-            if ($check_note -> num_rows() === 0 && $check_balance -> num_rows() === 0) {
-                $this -> db -> insert("overpay", $data);
-                $message = get_phrase('note_created');
+            if($active_note->num_rows()>0){
+              $new_amount = $this -> input -> post('amount') + $active_note->row()->amount;
+              $update_data['amount'] = $new_amount;
+              $this->db->where(array('overpay_id'=>$active_note->row()->overpay_id));
+              $this -> db -> update("overpay", $update_data);
+            }else{
+              $this -> db -> insert("overpay", $data);
             }
+
+
+
+            $this->crud_model->fees_balance_by_invoice($this -> input -> post('invoice_id'));
+
+            $message = get_phrase('note_created');
+
+            if ($this -> db -> trans_status() === false) {
+                $this -> db -> trans_rollback();
+                $this -> session -> set_flashdata('flash_message', $message);
+            } else {
+                $this -> db -> trans_commit();
+                $this -> session -> set_flashdata('flash_message', $message);
+            }
+
+          //}
 
             $this -> session -> set_flashdata('flash_message', $message);
             redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
@@ -1316,7 +1383,7 @@ class Finance extends CI_Controller
             echo "Error Occurred";
         }
     }
-
+    /**Code block**/
     public function close_month($param1 = "", $param2 = "")
     {
         if ($param1 == "create") {
@@ -2269,7 +2336,19 @@ class Finance extends CI_Controller
                 //$overpay['amount_due'] = $this->input->post('overpayment');
                 $overpay['description'] = $this -> input -> post('overpayment_description');
 
-                $this -> db -> insert('overpay', $overpay);
+                //$this -> db -> insert('overpay', $overpay);
+                //Check if an active overpay note exists for the student. If yes update it or else insert
+
+                $active_note = $this->db->get_where('overpay',array('student_id'=>$student_id,'status'=>'active'));
+
+                if($active_note->num_rows()>0){
+                  $new_amount = $this -> input -> post('overpayment') + $active_note->row()->amount;
+                  $update_data['amount'] = $new_amount;
+                  $this->db->where(array('overpay_id'=>$active_note->row()->overpay_id));
+                  $this -> db -> update("overpay", $update_data);
+                }else{
+                  $this -> db -> insert("overpay", $overpay);
+                }
 
                 //Insert this to the reverse account by creating a transaction_detail
 
@@ -2367,7 +2446,10 @@ class Finance extends CI_Controller
 		if($param1 == 'request_cancel'){
 			$this -> db -> trans_start();
 
-	          $this->approval->raise_approval_request('transaction',$param2,'cancel',$this->input->post('request_message'));
+	          $this->approval->raise_approval_request('transaction',$param2,'cancel',$this->input->post('request_message'),$this->session->login_user_id);
+            $invoice_id = $this->db->get_where('transaction',array('transaction_id'=>$param2))->row()->invoice_id;
+
+            $this->crud_model->fees_balance_by_invoice($invoice_id);
 
 	          if ($this -> db -> trans_status() === false) {
 	              $this -> db -> trans_rollback();
@@ -2485,7 +2567,7 @@ class Finance extends CI_Controller
         $student = $this -> db -> get_where('invoice', array('invoice_id' => $invoice_id)) -> row() -> student_id;
 
         //Use this invoice_id from now henceforth
-        $last_invoice_id = $this -> db -> select_max('invoice_id') -> get_where('invoice', array('student_id' => $student)) -> row() -> invoice_id;
+        $last_invoice_id = $this -> db -> select_max('invoice_id') -> get_where('invoice', array('student_id' => $student,'status<>'=>'cancelled')) -> row() -> invoice_id;
 
         //Is invoice cancelled?
         $is_cancelled = $this -> db -> get_where('invoice', array('status' => 'cancelled', 'invoice_id' => $last_invoice_id)) -> num_rows();
@@ -2584,7 +2666,7 @@ class Finance extends CI_Controller
         $data['year'] = $year;
         echo $this -> load -> view('backend/finance/admin/load_invoice_info', $data, true);
     }
-
+    //This is a redundant method
     public function reverse_transaction_approval_request($transaction_id)
     {
         $this -> db -> select(array('t_date', 'transaction_type.name as transaction_type', 'transaction_method.name as transaction_method', 'batch_number', 'transaction.description', 'amount'));

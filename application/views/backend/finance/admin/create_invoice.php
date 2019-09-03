@@ -3,7 +3,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 ?>
 <div class="row">
 	<div class="col-md-12">
-			
+
 			<ul class="nav nav-tabs bordered">
 				<li class="active">
 					<a href="#single_invoice" data-toggle="tab">
@@ -16,7 +16,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 					</a>
 				</li>
 			</ul>
-			
+
 			<div class="tab-content">
 				<div class="tab-pane active" id="single_invoice">
 
@@ -29,19 +29,19 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 	                                <div class="panel-title"><?php echo get_phrase('invoice_informations');?></div>
 	                            </div>
 	                            <div class="panel-body">
-	                                
+
 	                                <div class="form-group">
 	                                    <label class="col-sm-3 control-label"><?php echo get_phrase('class');?></label>
 	                                    <div class="col-sm-9">
 	                                        <select required="required" name="class_id" class="form-control get_ajax_details"  id="fees_structure_class" >
 	                                        	<option value=""><?php echo get_phrase('select_class');?></option>
-	                                        	<?php 
+	                                        	<?php
 	                                        		$classes = $this->db->order_by('name_numeric')->get('class')->result_array();
 	                                        		foreach ($classes as $row):
 	                                        	?>
 	                                        	<option value="<?php echo $row['class_id'];?>"><?php echo $row['name'];?></option>
 	                                        	<?php endforeach;?>
-	                                            
+
 	                                        </select>
 	                                    </div>
 	                                </div>
@@ -76,11 +76,11 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 		                                <div class="col-sm-9">
 		                                    <select  required="required" name="student_id" class="form-control student_info" style="width:100%;" id="student_selection_holder" >
 		                                        <option value=""><?php echo get_phrase('select_class_first');?></option>
-		                                    	
+
 		                                    </select>
 		                                </div>
 		                            </div>
-		                            
+
 
 	                                <div class="form-group">
 	                                    <label class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
@@ -88,11 +88,11 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 	                                        <input  required="required" readonly="readonly" type="text" class="datepicker form-control" name="date"/>
 	                                    </div>
 	                                </div>
-	                                
+
 	                                <div class="well" id="transport_info" style="display: none;">
-	                                	
+
 	                                </div>
-	                                
+
 	                            </div>
 	                        </div>
 	                    </div>
@@ -103,22 +103,22 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                                 <div class="panel-title"><?php echo get_phrase('payment_informations');?></div>
                             </div>
                             <div class="panel-body">
-                                
+
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"><?php echo get_phrase('overpay');?></label>
                                     <div class="col-sm-9">
-                                        <input type="text" value="0" class="form-control" name="" readonly="readonly" placeholder="<?php echo get_phrase('overpay');?>" id='overpay'/>
+                                        <input type="text" value="0" class="form-control" name="overpay" readonly="readonly" placeholder="<?php echo get_phrase('overpay');?>" id='overpay'/>
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"><?php echo get_phrase('structure_payable');?></label>
                                     <div class="col-sm-9">
                                         <input type="text" value="0" class="form-control" name="amount" readonly="readonly" placeholder="<?php echo get_phrase('structure_total_amount');?>" id='total_fees_amount'/>
                                     </div>
                                 </div>
-                                
-                                                                
+
+
                                 <div class="form-group">
                                 	<label class="col-sm-3 control-label"><?php echo get_phrase('fee_items');?></label>
                                 	<div class="col-sm-9">
@@ -133,12 +133,12 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                                 				</tr>
                                 			</thead>
                                 			<tbody id="fee_items">
-                                				
+
                                 			</tbody>
                                 		</table>
-                                	</div>	
+                                	</div>
 								</div>
-							
+
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label"><?php echo get_phrase('due_payment');?></label>
                                     <div class="col-sm-9">
@@ -146,7 +146,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                                     </div>
                                 </div>
 
-                                
+
                             </div>
                         </div>
                         <div class="form-group">
@@ -161,7 +161,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 	              	<?php echo form_close();?>
 
 				<!-- creation of single invoice -->
-					
+
 				</div>
 				<div class="tab-pane" id="mass_invoice">
 
@@ -177,18 +177,18 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                         <div class="col-sm-9">
                             <select required="required" name="class_id" class="form-control" onchange="get_class_students_mass()" id='fees_mass_structure_class'>
                             	<option value=""><?php echo get_phrase('select_class');?></option>
-                            	<?php 
+                            	<?php
                             		$classes = $this->db->order_by('name_numeric')->get('class')->result_array();
                             		foreach ($classes as $row):
                             	?>
                             	<option value="<?php echo $row['class_id'];?>"><?php echo $row['name'];?></option>
                             	<?php endforeach;?>
-                                
+
                             </select>
                         </div>
                     </div>
 
-                    
+
 
                     <div class="form-group">
                         <label class="col-sm-3 control-label"><?php echo get_phrase('year');?></label>
@@ -221,7 +221,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                             <input required="required" type="text" class="form-control" name="amount" readonly="readonly" placeholder="<?php echo get_phrase('enter_total_amount');?>"  id='total_mass_fees_amount'/>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                                 	<label class="col-sm-3 control-label"><?php echo get_phrase('fee_items');?></label>
                                 	<div class="col-sm-9">
@@ -235,10 +235,10 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                                 				</tr>
                                 			</thead>
                                 			<tbody id="mass_fee_items">
-                                				
+
                                 			</tbody>
                                 		</table>
-                                	</div>	
+                                	</div>
 					</div>
 
                     <div class="form-group">
@@ -261,7 +261,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                             <button type="submit" id="btn_mass_submit" class="btn btn-info"><?php echo get_phrase('create_invoice');?></button>
                         </div>
                     </div>
-                    
+
 
 
 				</div>
@@ -274,10 +274,10 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 				<!-- creation of mass invoice -->
 
 				</div>
-				
+
 			</div>
-			
-			
+
+
 	</div>
 </div>
 
@@ -287,7 +287,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
  //    		$("input:checkbox").prop('checked', $(this).prop("checked"));
 	// 	});
 	// }
-	
+
 	$("#frm_single_invoice").on('submit',function(ev){
 		if($("#frm_single_invoice #amount_due").val() == "0"){
 			//alert($("#frm_single_invoice #amount_due").val());
@@ -295,10 +295,10 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 			ev.preventDefault();
 		}
 	});
-	
+
 
 	$("#btn_mass_submit").on('click',function(ev){
-		
+
 		var checked_students = $('.check:checked').length;
 		var msg = "";
 		//alert(checked_students);
@@ -307,16 +307,16 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 			if($("#mass_amount_due").val() == 0){
 				msg +='You can\'t create an invoice with zero due amount or without selected students';
 			}
-			
+
 			ev.preventDefault();
-			
+
 			alert(msg);
 		}
-		
+
 		//ev.preventDefault();
-		
+
 	});
-	
+
 
 	function select() {
 		var chk = $('.check');
@@ -339,12 +339,12 @@ $(".get_ajax_details").change(function(){
     	var fees_structure_year = $("#fees_structure_year").val();
     	var fees_structure_term = $("#fees_structure_term").val();
     	var student = $("#student_selection_holder").val();
-    	
+
     	if(fees_structure_class!=="" && fees_structure_year!=="" && fees_structure_term!==""){
     		//alert(fees_structure_class + " - " + fees_structure_year + " - " + fees_structure_term + " - " + student);
-    		
+
     		//Get Student Names
-    		
+
 	        $.ajax({
 	            url: '<?php echo base_url();?>index.php?student/get_class_students/' + fees_structure_class + '/' + fees_structure_year + '/' + fees_structure_term,
 	            success: function(response)
@@ -352,44 +352,44 @@ $(".get_ajax_details").change(function(){
 	                jQuery('#student_selection_holder').html(response);
 	            }
 	        });
-	        
-	        
+
+
 	        //Get Total Fees
-	        
+
     	    $.ajax({
 	            url: '<?php echo base_url();?>index.php?finance/get_total_fees/' + fees_structure_term +'/'+ fees_structure_year + '/'+ fees_structure_class,
 	            success: function(response)
 	            {
-	
+
 	            		jQuery('#total_fees_amount').val(response);
 	            }
 	        });
-	        
+
 	        //Payable_fees_amount
 	        // var overpay_balance = parseFloat($("#overpay").val()) - parseFloat($("#amount_due").val());
 	        // $("#overpay").val(overpay_balance);
-	             
+
        }
-       
+
 	});
-	
-    
+
+
     $(".student_info").change(function(){
     	var fees_structure_class = $("#fees_structure_class").val();
     	var fees_structure_year = $("#fees_structure_year").val();
     	var fees_structure_term = $("#fees_structure_term").val();
     	var student = $("#student_selection_holder").val();
-    	
+
     	if(fees_structure_class!=="" && fees_structure_year!=="" && fees_structure_term!=="" && student!==""){
 
 	        	//Get Fees Items
-	
+
 		    	    $.ajax({
 		            url: '<?php echo base_url();?>index.php?finance/get_fees_items/' + fees_structure_term +'/'+ fees_structure_year + '/'+ fees_structure_class + '/' + student,
 		            success: function(response)
 		            {
 		            	//alert(response);
-		
+
 		            		jQuery('#fee_items').html(response);
 							//alert(response);
 							var total_payable = 0;
@@ -401,14 +401,14 @@ $(".get_ajax_details").change(function(){
 				    			total_payable=parseInt(total_payable)+parseInt(to_add);
 				    		});
 				    		$('#amount_due').val(total_payable);
-				    		
-				    		
+
+
 		            }
-		        }); 
-		        
-		        
+		        });
+
+
 		     //Transport Info
-		     
+
 		        jQuery('#transport_info').css('display','block');
 		    	jQuery('#transport_info').html("");
 		        $.ajax({
@@ -417,31 +417,31 @@ $(".get_ajax_details").change(function(){
 		            {
 		                jQuery('#transport_info').html(response);
 		            }
-		        });	
+		        });
 
-				
+
 			//Get Total Over Pay
-	        
+
     	    $.ajax({
 	            url: '<?php echo base_url();?>index.php?finance/get_overpay/' + student,
 	            success: function(response)
 	            {
-	
+
 	            		jQuery('#overpay').val(response);
 	            }
 	        });
-	        	
+
 	        }
     });
-    
 
-    
-   
-    
+
+
+
+
     function get_full_amount(id){
     	if($('#chk_'+id).is(':checked')){
     		$('#payable_'+id).val($('#full_amount_'+id).html());
-    		
+
     		var total_payable = 0;
     		$('.payable_items').each(function(){
     			var to_add = 0;
@@ -451,21 +451,21 @@ $(".get_ajax_details").change(function(){
     			total_payable=parseInt(total_payable)+parseInt(to_add);
     		});
     		$('#amount_due').val(total_payable);
-    		
+
     	}else{
-    		
+
     		var total_payable = $('#amount_due').val()-$('#payable_'+id).val();
-    		
+
     		$('#amount_due').val(total_payable);
-    		
+
     		$('#payable_'+id).val('0');
-    		
-    		
+
+
     	}
-    	
-    	
+
+
     }
-    
+
     function get_payable_amount(id){
 
     	  var total_payable = 0;
@@ -477,11 +477,11 @@ $(".get_ajax_details").change(function(){
     			total_payable=parseInt(total_payable)+parseInt(to_add);
     		});
     		$('#amount_due').val(total_payable);
-    		
+
     		$('#chk_'+id).prop('checked',false);
-    	
+
     }
-    
+
         function get_mass_total_fees(){
     		var fees_structure_class = $("#fees_mass_structure_class").val();
     		var fees_structure_year = $("#fees_mass_structure_year").val();
@@ -491,30 +491,30 @@ $(".get_ajax_details").change(function(){
             success: function(response)
             {
                jQuery('#total_mass_fees_amount').val(response);
-               
+
             }
         });
     }
-    
+
  	$('#fees_mass_structure_class,#fees_mass_structure_year,#fees_mass_structure_term').change(function(){
  			var fees_structure_class = $("#fees_mass_structure_class").val();
     		var fees_structure_year = $("#fees_mass_structure_year").val();
     		var fees_structure_term = $("#fees_mass_structure_term").val();
-    		
+
 	    	$.ajax({
 	            url: '<?php echo base_url();?>index.php?finance/get_mass_fees_items/' + fees_structure_term +'/'+ fees_structure_year + '/'+ fees_structure_class,
 	            success: function(response)
 	            {
 	               jQuery('#mass_fee_items').html(response);
-	               
+
 	            }
 	        });
  	});
- 	
+
  	function get_mass_full_amount(id){
     	if($('#mass_chk_'+id).is(':checked')){
     		$('#mass_payable_'+id).val($('#mass_full_amount_'+id).html());
-    		
+
     		var total_payable = 0;
     		$('.mass_payable_items').each(function(){
     			var to_add = 0;
@@ -524,21 +524,21 @@ $(".get_ajax_details").change(function(){
     			total_payable=parseInt(total_payable)+parseInt(to_add);
     		});
     		$('#mass_amount_due').val(total_payable);
-    		
+
     	}else{
-    		
+
     		var total_payable = $('#mass_amount_due').val()-$('#mass_payable_'+id).val();
-    		
+
     		$('#mass_amount_due').val(total_payable);
-    		
+
     		$('#mass_payable_'+id).val('0');
-    		
-    		
+
+
     	}
-    	
-    	
+
+
     }
-    
+
       function get_mass_payable_amount(id){
 
     	  var total_payable = 0;
@@ -550,20 +550,20 @@ $(".get_ajax_details").change(function(){
     			total_payable=parseInt(total_payable)+parseInt(to_add);
     		});
     		$('#mass_amount_due').val(total_payable);
-    		
+
     		//$('#mass_chk_'+id).prop('checked',false);
-    	
-    }  
-    
+
+    }
+
 
     function get_class_students_mass() {
-    	
+
     	var mass_class = $("#fees_mass_structure_class").val();
 		var yr = $("#fees_mass_structure_year").val();
 		var term = $("#fees_mass_structure_term").val();
     	//alert(mass_class);
     	if(fees_mass_structure_class!="" && yr!="" && term!=""){
-    		
+
 	        $.ajax({
 	        	beforeSend:function(){
 	        		jQuery('#student_selection_holder_mass').html('<div style="text-align:center;margin-top:200px;"><img src="assets/images/preloader.gif" /></div>');
@@ -575,19 +575,19 @@ $(".get_ajax_details").change(function(){
 	            }
 	        });
 		}
-        
+
     }
-    
+
     function check_overpay_balance(elem){
     	$payable = $(elem).parent().prev().find('input').val();
     	$charge_over = $(elem).val();
-    	
+
     	var sum_overcharge = 0;
-    	
+
     	$('.charge_overpay').each(function(i,el){
     		sum_overcharge = parseInt(sum_overcharge) + parseInt($(this).val());
     	});
-    	
+
     	var total_payable = 0;
 		$('.payable_items').each(function(i,el){
 			var to_add = 0;
@@ -596,9 +596,9 @@ $(".get_ajax_details").change(function(){
 				}
 			total_payable=parseInt(total_payable)+parseInt(to_add);
 		});
-		
+
 		var amount_due = parseInt(total_payable) - parseInt(sum_overcharge);
-    	
+
     	if(parseInt($payable) < parseInt($charge_over)){
     		alert('Exhausted the payable amount');
     		$(elem).val(0);
@@ -611,27 +611,27 @@ $(".get_ajax_details").change(function(){
     	}else{
     		$("#amount_due").val(amount_due);
     	}
-    	
-    	
-    	
-    }   
-    
-    $(document).ready(function(){
-    	
 
-    	
+
+
+    }
+
+    $(document).ready(function(){
+
+
+
     	if (location.hash) {
 			        $("a[href='" + location.hash + "']").tab("show");
 			    }
 			    $(document.body).on("click", "a[data-toggle]", function(event) {
 			        location.hash = this.getAttribute("href");
 			    });
-		
+
 			$(window).on("popstate", function() {
 			    var anchor = location.hash || $("a[data-toggle='tab']").first().attr("href");
 			    $("a[href='" + anchor + "']").tab("show");
-		
+
 			});
-		
+
 		});
 </script>

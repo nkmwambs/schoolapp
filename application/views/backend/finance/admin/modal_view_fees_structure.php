@@ -79,26 +79,5 @@ $structure_details = $this->db->get_where('fees_structure_details', array('fees_
 
 <script type="text/javascript">
 
-    // print invoice function
-    function PrintElem(elem)
-    {
-        Popup($(elem).html());
-    }
-
-    function Popup(data)
-    {
-        var mywindow = window.open('', 'invoice', 'height=400,width=600');
-        mywindow.document.write('<html><head><title>Invoice</title>');
-        mywindow.document.write('<link rel="stylesheet" href="assets/css/neon-theme.css" type="text/css" />');
-        mywindow.document.write('<link rel="stylesheet" href="assets/js/datatables/responsive/css/datatables.responsive.css" type="text/css" />');
-        mywindow.document.write('</head><body >');
-        mywindow.document.write(data);
-        mywindow.document.write('</body></html>');
-
-        mywindow.print();
-        mywindow.close();
-
-        return true;
-    }
 
 </script>

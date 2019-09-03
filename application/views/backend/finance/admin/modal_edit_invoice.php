@@ -225,39 +225,36 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 		$("#amount_due").val(sum_amount_due(elem));
 	}
 	
-	// $('.change_item').change(function(){
-		// var balance = $("#balance").val();
-// 		
-		// var amount_due = 0;
-// 		
-		// $.each($(".detail_amount_due"),function(i,el){
-			// amount_due += amount_due + parseInt($(el).val());
-		// });
-// 		
-		// $("#balance").val(amount_due);
-	// });
 	
 	$(".detail_amount_due").change(function(){
 		
 		var detail_paid = $(this).parent().prev().html();
-		var detail_amount_due = $(this).parent().prev().prev().html();
+		var detail_amount_due = $(this).parent().prev().prev().html().replace(/\,/g,'');
 		var changed_detail_due = $(this).val();
 		var el_id = $(this).attr("id");
 		var detail_id = el_id.split("_")[1];
 		var amount_due = 0;
+		var paid  = $('#amount_paid').val();
 		
-		$.each($(".detail_amount_due"),function(i,el){
-			amount_due += +parseInt($(el).val());
-		});
-		
-
-		var paid  = <?=$sum_paid;?>;
 				
 		if((parseInt(changed_detail_due)-parseInt(detail_paid)) < 0 && $("#overpay_"+detail_id).is(":checked")==false){
 			alert("<?=get_phrase("amount_lesser_than_paid");?>");
 			$(this).val(detail_amount_due);
-			return false;
+			
+			//Recalculate amount due
+			$.each($(".detail_amount_due"),function(i,el){
+				amount_due += +parseInt($(el).val());
+			});
+			
+			//return false;
+		}else{
+			$.each($(".detail_amount_due"),function(i,el){
+				amount_due += +parseInt($(el).val());
+			});
+			
+			//alert(amount_due);
 		}
+		
 		
 		var balance = amount_due - parseInt(paid);
 		

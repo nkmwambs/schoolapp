@@ -21,50 +21,59 @@ $row = $transaction[0];
 
 ?>
 <center>
-    <a onClick="PrintElem('#invoice_print')" 
+    <a onClick="PrintElem('#invoice_print')"
     class="btn btn-default btn-icon icon-left hidden-print pull-right">
         <?=get_phrase('print_transaction');?>
         <i class="entypo-print"></i>
     </a>
-    
+
     <?php
     if($row['is_cancelled'] == 0 && $row['can_be_cancelled'] == 1){
     ?>
     <div class="<?=get_access_class('reverse_transaction','admin','accounting');?>">
     	<?php
-    		$approval_status =  $this->crud_model->check_transaction_reverse_approval($row['transaction_id']);
-    		//echo $approval_status;
-    		if($approval_status == -1){
+    		//$approval_status =  $this->crud_model->check_transaction_reverse_approval($row['transaction_id']);
+        $approval_status = $this->school_model->get_approval_record_status('transaction', $row['transaction_id']);
+        //echo $approval_status;
+    		if($approval_status['request_status'] == "" || $approval_status['request_status'] == 2){
     			//Request for approval
     	?>
-    			<a onclick="confirm_action('<?=base_url();?>index.php?finance/reverse_transaction_approval_request/<?=$row['transaction_id'];?>');"
+    			<!-- <a onclick="confirm_action('<?=base_url();?>index.php?finance/reverse_transaction_approval_request/<?=$row['transaction_id'];?>');"
+    				  class="btn btn-danger btn-icon icon-left hidden-print pull-left">
+			    	<?=get_phrase('request_reversal_approval');?>
+			        <i class="entypo-ccw"></i>
+			    </a> -->
+
+          <a onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_request_comment_add/request_cancel/<?php echo $row['transaction_id']; ?>/transaction');"
     				  class="btn btn-danger btn-icon icon-left hidden-print pull-left">
 			    	<?=get_phrase('request_reversal_approval');?>
 			        <i class="entypo-ccw"></i>
 			    </a>
-    	<?php		
-    		}elseif($approval_status == 0){
+
+
+    	<?php
+    }elseif($approval_status['request_status'] == 0){
     			//Pending Approval
     	?>
-    			<a onclick="javascript:alert('<?=get_phrase('pending_aproval')?>');" 
+    			<a onclick="javascript:alert('<?=get_phrase('pending_approval')?>');"
 			    	class="btn btn-info btn-icon icon-left hidden-print pull-left">
 			    	<?=get_phrase('pending_reversal_approval');?>
 			        <i class="entypo-ccw"></i>
 			    </a>
-    	<?php		
-    		}elseif($approval_status == 1){
+    	<?php
+    }elseif($approval_status['request_status'] == 1){
     			//Approved
     	?>
-	    		<a onclick="confirm_action('<?=base_url();?>index.php?finance/reverse_transaction/<?=$row['transaction_id'];?>');" 
+	    		<a onclick="confirm_action('<?=base_url();?>index.php?finance/reverse_transaction/<?=$row['transaction_id'];?>');"
 			    	class="btn btn-success btn-icon icon-left hidden-print pull-left">
 			    	<?=get_phrase('reverse_transaction');?>
 			        <i class="entypo-ccw"></i>
-			    </a>	
-    	<?php		
+			    </a>
+    	<?php
     		}
-    	?>	
-	    
-    
+    	?>
+
+
     </div>
     <?php
 	}
@@ -80,12 +89,12 @@ $row = $transaction[0];
                     <h5><?php echo get_phrase('creation_date'); ?> : <?php echo date('d M,Y', strtotime($row['t_date']));?></h5>
                     <h5><?php echo get_phrase('batch_number'); ?> : <?php echo $row['batch_number'];?></h5>
                     <h5><?php echo get_phrase('cheque_number'); ?> : <?php echo $row['cheque_no'];?></h5>
-                    
+
                 </td>
             </tr>
         </table>
         <hr />
-        <table width="100%" border="0">    
+        <table width="100%" border="0">
             <tr>
                 <td align="left"><h4><?php echo get_phrase('payment_from'); ?> </h4></td>
                 <td align="right"><h4><?php echo get_phrase('transaction_type'); ?> </h4></td>
@@ -97,7 +106,7 @@ $row = $transaction[0];
                     <?php
                     	if($row['invoice_id'] > 0){
                     ?>
-                    	
+
                     	<?php echo get_phrase('invoice_number'); ?> : <?php echo $row['invoice_id'];?><br/>
                     	<?php echo get_phrase('invoice_term'); ?> : <?php echo $this->crud_model->get_type_name_by_id('terms',$this->db->get_where('invoice'
                     	,array('invoice_id'=>$row['invoice_id']))->row()->term);?><br/>
@@ -107,38 +116,38 @@ $row = $transaction[0];
                     	,array('invoice_id'=>$row['invoice_id']))->row()->class_id);?><br/>
                     	<?php echo get_phrase('student'); ?> : <?php echo $this->crud_model->get_type_name_by_id('student',$this->db->get_where('invoice',
                     	array('invoice_id'=>$row['invoice_id']))->row()->student_id);?><br/>
-                    	
-                    <?php		
+
+                    <?php
                     	}
-                    ?>         
+                    ?>
                 </td>
                 <td align="right" valign="top">
                     <?php echo get_phrase('transaction_type'); ?> : <?php echo $this->db->get_where('transaction_type',array('transaction_type_id'=>$row['transaction_type_id']))->row()->description;?><br/>
                     <?php echo get_phrase('transaction_method'); ?> : <?php echo $this->db->get_where('transaction_method',array('transaction_method_id'=>$row['transaction_method_id']))->row()->description;?><br/>
                 </td>
-               
-	            
+
+
             </tr>
         </table>
         <hr />
-        
-        <table width="100%" border="0">    
+
+        <table width="100%" border="0">
             <tr>
                 <td align="right" width="80%"><?php echo get_phrase('total_amount'); ?> :</td>
                 <td align="right"><?php echo number_format($row['amount'],2); ?></td>
             </tr>
-                        
+
         </table>
         <hr />
         <table width="100%" border="0">
         	<tr>
                 <td width="5%"><?php echo get_phrase('description'); ?> : <?php echo $row['description']; ?></td>
-              
+
             </tr>
         </table>
-        
+
         <hr>
-        
+
         <h4><?php echo get_phrase('transaction_breakdown'); ?></h4>
 
 		<table class="table table-bordered" width="100%" border="1" style="border-collapse:collapse;">
@@ -149,12 +158,12 @@ $row = $transaction[0];
 					<th><?php echo get_phrase('unit_cost');?></th>
 					<th><?php echo get_phrase('total_cost');?></th>
 					<th><?php echo get_phrase('account');?></th>
-					
+
                 </tr>
             </thead>
             <tbody>
             	<?php
-					//print_r($transaction);											
+					//print_r($transaction);
 					foreach($transaction as $details):
 				?>
 					<tr>
@@ -163,37 +172,37 @@ $row = $transaction[0];
 						<td><?=number_format($details['unitcost'],2);?></td>
 						<td><?=number_format($details['cost'],2);?></td>
 						<td>
-							<?php 
+							<?php
 								if($details['expense_category_id'] >  0){
 									echo $this->crud_model->get_type_name_by_id('expense_category',$details['expense_category_id']);
 								}else{
 									$income_category_name_obj = $this->db->select('name')->get_where('income_categories',
 									array('income_category_id'=> $details['income_category_id']));
-									
+
 									if($income_category_name_obj->num_rows() == 0){
 										echo "";
 									}else{
 										echo $income_category_name_obj->row()->name;
 									}
 								}
-								
+
 							?>
 						</td>
 					</tr>
-									
+
 					<?php
-																			
+
 						endforeach;
-						
-						
+
+
 					?>
-						
+
             </tbody>
-          	
+
 		</table>
-		
+
     </div>
 
 <script>
-	
+
 </script>

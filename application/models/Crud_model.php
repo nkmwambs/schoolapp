@@ -1200,13 +1200,45 @@ class Crud_model extends CI_Model {
 		return $total_paid;
 	}
 
+	function fees_amount_due_by_invoice($invoice_id){
+    $this->db->join('invoice_details','invoice_details.invoice_id=invoice.invoice_id');
+		$details_amount_due = $this->db->select_sum('invoice_details.amount_due')->get_where('invoice',array('invoice.invoice_id'=>$invoice_id))->row()->amount_due;
+
+    $invoice_amount_due = $this->db->select_sum('amount_due')->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->amount_due;
+
+    if($invoice_amount_due !== $details_amount_due){
+        $this->db->where(array('invoice_id'=>$invoice_id));
+        $this->db->update('invoice',array('amount_due'=>$details_amount_due));
+    }
+
+    return $details_amount_due;
+  }
+
+
 	function fees_balance_by_invoice($invoice_id){
 
-		$amount_due = $this->db->select_sum('amount_due')->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->amount_due;
+		$amount_due = $this->fees_amount_due_by_invoice($invoice_id);//$this->db->select_sum('amount_due')->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->amount_due;
 
 		$paid = $this->fees_paid_by_invoice($invoice_id);
 
-		return $amount_due - $paid;
+		$balance = $amount_due - $paid;
+
+		//$this->db->where(array('invoice_id'=>$invoice_id));
+
+		if($balance == 0){
+			$this->db->where(array('invoice_id'=>$invoice_id,'status<>'=>'cancelled'));
+			$this->db->update('invoice',array('status'=>'paid'));
+		}
+		elseif($balance < 0){
+			$this->db->where(array('invoice_id'=>$invoice_id,'status<>'=>'cancelled'));
+			$this->db->update('invoice',array('status'=>'excess'));
+		}elseif($balance > 0){
+
+			$this->db->where(array('invoice_id'=>$invoice_id,'status<>'=>'cancelled'));
+			$this->db->update('invoice',array('status'=>'unpaid'));
+		}
+
+		return $balance;
 	}
 
 	function fees_paid_by_invoice_detail($invoice_details_id){
@@ -1256,7 +1288,8 @@ class Crud_model extends CI_Model {
 
 	function term_total_fees_balance($year, $term){
 		$this->db->join('invoice_details','invoice_details.invoice_id=invoice.invoice_id');
-		$amount_due = $this->db->select_sum('invoice_details.amount_due')->get_where('invoice',array('yr'=>$year,'term'=>$term))->row()->amount_due;
+		$amount_due = $this->db->select_sum('invoice_details.amount_due')->get_where('invoice',
+    array('yr'=>$year,'term'=>$term,'invoice.status<>'=>'cancelled'))->row()->amount_due;
 
 		$paid = $this->term_total_paid_fees($year, $term);
 
@@ -1266,7 +1299,7 @@ class Crud_model extends CI_Model {
 	function get_invoice_transaction_history($invoice_id){
 		$this->db->join('transaction_method','transaction_method.transaction_method_id=transaction.transaction_method_id');
 
-		$history = $this->db->select(array('t_date','amount','transaction.description as description',
+		$history = $this->db->select(array('transaction.batch_number','t_date','amount','transaction.description as description',
 		'transaction_method.description as transaction_method'))->get_where('transaction',
 		array('invoice_id'=>$invoice_id))->result_object();
 

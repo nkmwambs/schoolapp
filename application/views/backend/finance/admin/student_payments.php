@@ -34,8 +34,15 @@ $this -> db -> order_by('creation_timestamp', 'desc');
 $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 ?>
 
+<style>
+.hidden-xs{
+	font-size:8pt;
+}
+
+</style>
+
 <div class="row">
-	<div class="col-xs-12">
+	<div class="col-xs-12 text-center" style="align:center;padding:5px;margin-bottom: 25px;">
 		<a href="<?= base_url(); ?>index.php?finance/student_collection_tally/<?= date('Y'); ?>" class="btn btn-info btn-icon"> <i class="fa fa-list"></i> <?= get_phrase('payment_tally_sheet'); ?></a>
 		<?php $count_to_notify = $this -> db -> get_where('invoice', array('status' => 'unpaid')) -> num_rows(); ?>
 		<a href="#" onclick="confirm_action('<?= base_url(); ?>index.php?finance/sms_fee_balances');" class="btn btn-info btn-icon"><i class="fa fa-mobile"></i><?= get_phrase('SMS_balances'); ?><span class="badge badge-primary"><?= $count_to_notify; ?></span></a>
@@ -43,8 +50,6 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 		<a href="<?php echo base_url(); ?>index.php?finance/missing_invoices" class="btn btn-info  btn-icon"><i class="fa fa-times"></i><?= get_phrase('missing_invoices'); ?></a>
 	</div>
 </div>
-
-<hr />
 
 <div class="row">
 	<div class="col-xs-1">
@@ -113,6 +118,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                 	<thead>
                 		<tr>
                 			<th>#</th>
+												<th><?php echo get_phrase('admission_number'); ?></th>
                     		<th><div><?php echo get_phrase('student'); ?></div></th>
                     		<th><div><?php echo get_phrase('year'); ?></div></th>
                     		<th><div><?php echo get_phrase('term'); ?></div></th>
@@ -121,7 +127,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                             <th><div><?php echo get_phrase('payable_amount'); ?></div></th>
                             <th><div><?php echo get_phrase('actual_paid'); ?></div></th>
                             <th><div><?php echo get_phrase('balance'); ?></div></th>
-                    		<th><div><?php echo get_phrase('date'); ?></div></th>
+                    		<!-- <th><div><?php echo get_phrase('date'); ?></div></th> -->
 												<th><div><?php echo get_phrase('approval_request_type'); ?></div></th>
 												<th><div><?php echo get_phrase('approval_status'); ?></div></th>
                     		<th><div><?php echo get_phrase('options'); ?></div></th>
@@ -142,6 +148,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                                             ?>
                         <tr>
                         	<td><?php echo $row['invoice_id']; ?></td>
+													<td><?php echo $this -> crud_model -> get_type_name_by_id('student', $row['student_id'],'roll'); ?></td>
 							<td><?php echo $this -> crud_model -> get_type_name_by_id('student', $row['student_id']); ?></td>
 							<td><?php echo $row['yr']; ?></td>
 							<td><?php echo $row['term']; ?></td>
@@ -155,7 +162,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 							<?php $bal = $this -> crud_model -> fees_balance_by_invoice($row['invoice_id']); ?>
 
               <td><?php echo number_format($bal, 2); ?></td>
-							<td><?php echo date('d M,Y', $row['creation_timestamp']); ?></td>
+							<!-- <td><?php echo date('d M,Y', $row['creation_timestamp']); ?></td> -->
 							<td><?= ucfirst($approval_info['request_type']); ?></td>
 
 							<td><?= isset($states[$approval_info['request_status']]) ? ucfirst($states[$approval_info['request_status']]) : ''; ?></td>
@@ -268,6 +275,8 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 			                		<tr>
 			                			<th>#</th>
 			                    		<th><div><?php echo get_phrase('student'); ?></div></th>
+															<th><div><?php echo get_phrase('class'); ?></div></th>
+
 			                    		<th><div><?php echo get_phrase('year'); ?></div></th>
 			                    		<th><div><?php echo get_phrase('term'); ?></div></th>
 			                    		<th><div><?php echo get_phrase('class'); ?></div></th>
@@ -285,11 +294,12 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                                         foreach ($paid_invoices as $row3):
                                     ?>
 			                        <tr>
-			                        	<td><?php echo $count++; ?></td>
+			                        	<td><?php echo $row3['invoice_id']; ?></td>
 										<td><?php echo $this -> crud_model -> get_type_name_by_id('student', $row3['student_id']); ?></td>
+											<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row3['class_id']); ?></td>
 										<td><?php echo $row3['yr']; ?></td>
 										<td><?php echo $row3['term']; ?></td>
-										<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row['class_id']); ?></td>
+										<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row3['class_id']); ?></td>
 										<td><?php echo number_format($row3['amount'], 2); ?></td>
 			                            <td><?php echo number_format($row3['amount_due'], 2); ?></td>
 
@@ -335,6 +345,8 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                 		<tr>
                 			<th>#</th>
                     		<th><div><?php echo get_phrase('student'); ?></div></th>
+												<th><div><?php echo get_phrase('class'); ?></div></th>
+
                     		<th><div><?php echo get_phrase('year'); ?></div></th>
                     		<th><div><?php echo get_phrase('term'); ?></div></th>
                             <th><div><?php echo get_phrase('fee_structure_total'); ?></div></th>
@@ -354,8 +366,9 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                             foreach ($overpaid_invoices as $row3):
                         ?>
                         <tr>
-                        	<td><?php echo $count++; ?></td>
+                        <td><?php echo $row3['invoice_id']; ?></td>
 							<td><?php echo $this -> crud_model -> get_type_name_by_id('student', $row3['student_id']); ?></td>
+							<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row3['class_id']); ?></td>
 							<td><?php echo $row3['yr']; ?></td>
 							<td><?php echo $row3['term']; ?></td>
 							<td><?php echo number_format($row3['amount'], 2); ?></td>
@@ -397,53 +410,8 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 				<div class="tab-pane" id="overpay_notes">
 
 					<div class="row">
-						<div class="col-sm-12">
-								<table class="table table-bordered datatable example">
-							    <thead>
-							        <tr>
-							            <th><div>#</div></th>
-							            <th><div><?php echo get_phrase('student'); ?></div></th>
-							            <th><div><?php echo get_phrase('amount'); ?></div></th>
-							            <th><div><?php echo get_phrase('balance'); ?></div></th>
-							            <th><div><?php echo get_phrase('description'); ?></div></th>
-							            <th><div><?php echo get_phrase('status'); ?></div></th>
-							            <th><div><?php echo get_phrase('date'); ?></div></th>
 
-							        </tr>
-							    </thead>
-							    <tbody>
-							    	<?php
-                                        $notes_object = $this->db->get_where("overpay", array("status"=>"active"));
-
-                                        if ($notes_object->num_rows() > 0) {
-                                            $cnt = 1;
-                                            foreach ($notes_object->result_object() as $row) {
-                                                ?>
-							    			<tr>
-							    				<td><?=$cnt; ?></td>
-							    				<td><?= $this -> crud_model -> get_type_name_by_id("student", $row -> student_id); ?></td>
-							    				<td><?= $row -> amount; ?></td>
-							    				<td><?= $row -> amount_due; ?></td>
-							    				<td><?= $row -> description; ?></td>
-							    				<td><?= $row -> status; ?></td>
-							    				<td><?= $row -> creation_timestamp; ?></td>
-							    			</tr>
-							    	<?php $cnt++;
-									}
-									}
-                                    ?>
-
-								</tbody>
-							</table>
-							</div>
-						</div>
-
-				</div>
-
-				<div class="tab-pane" id="cleared_overpay_notes">
-					<div class="row">
-
-						<div class="col-sm-12">
+						<div class="col-sm-12 <?= get_access_class('add_overpay_note', 'admin', 'accounting'); ?>">
 							<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_overpay_add/');"
 							class="btn btn-primary pull-right">
 							<i class="entypo-plus-circled"></i>
@@ -462,6 +430,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 							        <tr>
 							            <th><div>#</div></th>
 							            <th><div><?php echo get_phrase('student'); ?></div></th>
+													<th><div><?php echo get_phrase('class'); ?></div></th>
 							            <th><div><?php echo get_phrase('amount'); ?></div></th>
 							            <th><div><?php echo get_phrase('balance'); ?></div></th>
 							            <th><div><?php echo get_phrase('description'); ?></div></th>
@@ -472,7 +441,8 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 							    </thead>
 							    <tbody>
 							    	<?php
-                                        $notes_object = $this->db->get_where("overpay", array("status"=>"cleared"));
+																				$this->db->join('student','overpay.student_id=student.student_id');
+																				$notes_object = $this->db->get_where("overpay", array("overpay.status"=>"active"));
 
                                         if ($notes_object->num_rows() > 0) {
                                             $cnt = 1;
@@ -481,8 +451,58 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 							    			<tr>
 							    				<td><?=$cnt; ?></td>
 							    				<td><?= $this -> crud_model -> get_type_name_by_id("student", $row -> student_id); ?></td>
-							    				<td><?= $row -> amount; ?></td>
-							    				<td><?= $row -> amount_due; ?></td>
+													<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row -> class_id); ?></td>
+													<td><?= $row -> amount; ?></td>
+							    				<td><?= $this->crud_model->overpay_balance($row -> overpay_id); ?></td>
+							    				<td><?= $row -> description; ?></td>
+							    				<td><?= $row -> status; ?></td>
+							    				<td><?= $row -> creation_timestamp; ?></td>
+							    			</tr>
+							    	<?php $cnt++;
+									}
+									}
+                                    ?>
+
+								</tbody>
+							</table>
+							</div>
+						</div>
+
+				</div>
+
+				<div class="tab-pane" id="cleared_overpay_notes">
+
+					<div class="row">
+						<div class="col-sm-12">
+								<table class="table table-bordered datatable example">
+							    <thead>
+							        <tr>
+							            <th><div>#</div></th>
+							            <th><div><?php echo get_phrase('student'); ?></div></th>
+														<th><div><?php echo get_phrase('class'); ?></div></th>
+							            <th><div><?php echo get_phrase('amount'); ?></div></th>
+							            <th><div><?php echo get_phrase('balance'); ?></div></th>
+							            <th><div><?php echo get_phrase('description'); ?></div></th>
+							            <th><div><?php echo get_phrase('status'); ?></div></th>
+							            <th><div><?php echo get_phrase('date'); ?></div></th>
+
+							        </tr>
+							    </thead>
+							    <tbody>
+							    	<?php
+																				$this->db->join('student','overpay.student_id=student.student_id');
+																			  $notes_object = $this->db->get_where("overpay", array("status"=>"cleared"));
+
+                                        if ($notes_object->num_rows() > 0) {
+                                            $cnt = 1;
+                                            foreach ($notes_object->result_object() as $row) {
+                                                ?>
+							    			<tr>
+							    				<td><?=$cnt; ?></td>
+							    				<td><?= $this -> crud_model -> get_type_name_by_id("student", $row -> student_id); ?></td>
+																										<td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row -> class_id); ?></td>		
+													<td><?= $row -> amount; ?></td>
+							    				<td><?= $this->crud_model->overpay_balance($row -> overpay_id); ?></td>
 							    				<td><?= $row -> description; ?></td>
 							    				<td><?= $row -> status; ?></td>
 							    				<td><?= $row -> creation_timestamp; ?></td>
@@ -529,7 +549,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
                                         /**
                                         * Check if this invoice has any approval request:
                                         *	If yes get the request_type and status
-                                        *
+                                        * 0-new,1-approved,2-declined,3-reinstated, 4-implemented
                                         **/
                                         $approval_info = $this->school_model->get_approval_record_status('invoice', $row['invoice_id']);
                                         //print_r($approval_info);
