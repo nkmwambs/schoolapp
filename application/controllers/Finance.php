@@ -1450,14 +1450,13 @@ class Finance extends CI_Controller
 
             $data1['t_date'] = $this -> input -> post('t_date');
             $data1['batch_number'] = $this -> crud_model -> next_batch_number();
-            //$this->crud_model->populate_batch_number(date('Y-m-d'));
+            $data1['cheque_no'] =  $this -> input -> post('bank_reference_number');
             $data1['description'] = $this -> input -> post('description');
             $data1['transaction_type_id'] = $this -> input -> post('entry_type');
             $data1['transaction_method_id'] = 4;
             $data1['invoice_id'] = 0;
             $data1['amount'] = $this -> input -> post('amount');
             $data1['payee'] = get_phrase('system_generated');
-            $data1['cheque_no'] = 0;
             $data1['createddate'] = $this -> input -> post('t_date');
             $data1['createdby'] = $this -> session -> login_user_id;
             $data1['lastmodifiedby'] = $this -> session -> login_user_id;
