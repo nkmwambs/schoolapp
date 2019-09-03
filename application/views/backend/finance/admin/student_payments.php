@@ -197,7 +197,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 																		<?php
 																		$settings = $this->school_model->get_system_settings();
 
-																		if($settings['manage_invoice_require_approval'] == 'true'){
+																		if($settings['manage_invoice_require_approval'] == 'false'){
 																		?>
 																						<li class="<?= get_access_class('edit_invoice', 'admin', 'accounting'); ?>">
 																								<a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_edit_invoice/<?php echo $row['invoice_id']; ?>');">
