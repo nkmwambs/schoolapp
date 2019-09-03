@@ -5,8 +5,7 @@
               <?php echo get_phrase('finance_settings');?>
           </div>
       </div>
-
-
+      
       <div class="panel-body form-horizontal form-groups-bordered">
         <?php echo form_open(base_url().'index.php?finance/settings' , array('class' => 'form-horizontal form-groups-bordered', 'enctype' => 'multipart/form-data'));?>
 
