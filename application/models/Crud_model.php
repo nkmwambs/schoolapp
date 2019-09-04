@@ -1328,4 +1328,61 @@ class Crud_model extends CI_Model {
 	 /**
 	  * End of Upgraded Finance Model
 	  */
+
+  function year_unpaid_invoices($year){
+
+    $this -> db -> where('status', 'unpaid');
+    $this -> db -> where('yr', $year);
+    $this -> db -> order_by('creation_timestamp', 'desc');
+    $unpaid_invoices = $this -> db -> get('invoice') -> result_array();
+
+    return $unpaid_invoices;
+  }
+
+function year_paid_invoices($year){
+    $this -> db -> where('status', 'paid');
+    $this -> db -> where('yr', $year);
+    $this -> db -> order_by('creation_timestamp', 'desc');
+    $paid_invoices = $this -> db -> get('invoice') -> result_array();
+
+    return $paid_invoices;
+}
+
+function year_overpaid_invoice($year){
+  $this -> db -> where('status', 'excess');
+  $this -> db -> where('yr', $year);
+  $this -> db -> order_by('creation_timestamp', 'desc');
+  $overpaid_invoices = $this -> db -> get('invoice') -> result_array();
+
+  return $overpaid_invoices;
+}
+
+function active_overpay_notes(){
+  $this -> db -> where('status', 'active');
+  //$this->db->where('yr' , $year);
+  $this -> db -> order_by('creation_timestamp', 'desc');
+  $overpay_notes = $this -> db -> get('overpay') -> result_array();
+
+  return $overpay_notes;
+}
+
+function cleared_overpay_notes(){
+  $this -> db -> where('status', 'cleared');
+  //$this->db->where('yr' , $year);
+  $this -> db -> order_by('creation_timestamp', 'desc');
+  $cleared_overpay_notes = $this -> db -> get('overpay') -> result_array();
+
+  return $cleared_overpay_notes;
+}
+
+function year_cancelled_invoices($year){
+  $this -> db -> where('status', 'cancelled');
+  $this -> db -> where('yr', $year);
+  $this -> db -> order_by('creation_timestamp', 'desc');
+  $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
+
+  return $cancelled_invoices;
+}
+
+
 }

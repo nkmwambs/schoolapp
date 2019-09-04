@@ -233,9 +233,47 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 						</li>
 
 						<li>
-							<a href="<?php echo base_url(); ?>index.php?finance/student_payments">
+							<a href="#">
 								<span class="title"><?=get_phrase('invoices');?></span>
 							</a>
+							<ul>
+								<li>
+									<a href="<?php echo base_url(); ?>index.php?finance/unpaid_invoices">
+										<span class="title"><?=get_phrase('unpaid_invoices');?></span>
+									</a>
+								</li>
+
+								<li>
+									<a href="<?php echo base_url(); ?>index.php?finance/paid_invoices">
+										<span class="title"><?=get_phrase('paid_invoices');?></span>
+									</a>
+								</li>
+
+								<li>
+									<a href="<?php echo base_url(); ?>index.php?finance/overpaid_invoices">
+										<span class="title"><?=get_phrase('overpaid_invoices');?></span>
+									</a>
+								</li>
+
+								<li>
+									<a href="<?php echo base_url(); ?>index.php?finance/cancelled_invoices">
+										<span class="title"><?=get_phrase('cancelled_invoices');?></span>
+									</a>
+								</li>
+
+								<li>
+									<a href="<?php echo base_url(); ?>index.php?finance/active_overpay_notes">
+										<span class="title"><?=get_phrase('active_overpay_notes');?></span>
+									</a>
+								</li>
+
+								<li>
+									<a href="<?php echo base_url(); ?>index.php?finance/cleared_overpay_notes">
+										<span class="title"><?=get_phrase('cleared_overpay_notes');?></span>
+									</a>
+								</li>
+
+							</ul>
 						</li>
 						<li>
 							<a href="<?php echo base_url(); ?>index.php?finance/cashbook">

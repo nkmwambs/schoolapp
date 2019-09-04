@@ -2,36 +2,6 @@
 if (!defined('BASEPATH')) {
 	exit('No direct script access allowed');
 }
-
-$this -> db -> where('status', 'unpaid');
-$this -> db -> where('yr', $year);
-$this -> db -> order_by('creation_timestamp', 'desc');
-$unpaid_invoices = $this -> db -> get('invoice') -> result_array();
-
-$this -> db -> where('status', 'paid');
-$this -> db -> where('yr', $year);
-$this -> db -> order_by('creation_timestamp', 'desc');
-$paid_invoices = $this -> db -> get('invoice') -> result_array();
-
-$this -> db -> where('status', 'excess');
-$this -> db -> where('yr', $year);
-$this -> db -> order_by('creation_timestamp', 'desc');
-$overpaid_invoices = $this -> db -> get('invoice') -> result_array();
-
-$this -> db -> where('status', 'active');
-//$this->db->where('yr' , $year);
-$this -> db -> order_by('creation_timestamp', 'desc');
-$overpay_notes = $this -> db -> get('overpay') -> result_array();
-
-$this -> db -> where('status', 'cleared');
-//$this->db->where('yr' , $year);
-$this -> db -> order_by('creation_timestamp', 'desc');
-$cleared_overpay_notes = $this -> db -> get('overpay') -> result_array();
-
-$this -> db -> where('status', 'cancelled');
-$this -> db -> where('yr', $year);
-$this -> db -> order_by('creation_timestamp', 'desc');
-$cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 ?>
 
 <style>
@@ -82,7 +52,7 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 				<li class="">
 					<a href="#overpay_notes" data-toggle="tab">
 						<span class="hidden-xs"><?php echo get_phrase('overpay_notes'); ?></span>
-						<span class="badge badge-default"><?php echo count($overpay_notes); ?></span>
+						<span class="badge badge-default"><?php echo count($active_overpay_notes); ?></span>
 					</a>
 				</li>
 
@@ -93,11 +63,6 @@ $cancelled_invoices = $this -> db -> get('invoice') -> result_array();
 					</a>
 				</li>
 
-				<!-- <li>
-					<a href="#paid" data-toggle="tab">
-						<span class="hidden-xs"><?php echo get_phrase('payment_history');?></span>
-					</a>
-				</li> -->
 
 				<li>
 					<a href="#cancelled" data-toggle="tab">

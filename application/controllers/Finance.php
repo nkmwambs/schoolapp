@@ -1061,7 +1061,7 @@ class Finance extends CI_Controller
             redirect('login', 'refresh');
         }
 
-        $term = 1;
+        $term = $this->crud_model->get_current_term();
 
         if (isset($_POST['year'])) {
             $year = $this -> input -> post('year');
@@ -1070,6 +1070,13 @@ class Finance extends CI_Controller
 
         $page_data['year'] = $year;
         $page_data['term'] = $term;
+
+        $page_data['unpaid_invoices'] = $this->crud_model->year_unpaid_invoices($year);
+        $page_data['paid_invoices'] = $this->crud_model->year_paid_invoices($year);
+        $page_data['overpaid_invoices'] = $this->crud_model->year_overpaid_invoice($year);
+        $page_data['active_overpay_notes'] = $this->crud_model->active_overpay_notes();
+        $page_data['cleared_overpay_notes'] = $this->crud_model->cleared_overpay_notes();
+        $page_data['cancelled_invoices'] = $this->crud_model->year_cancelled_invoices($year);
 
         $page_data['page_name'] = 'student_payments';
         $page_data['page_view'] = "finance";
@@ -1107,115 +1114,256 @@ class Finance extends CI_Controller
         redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
     }
 
+    public function create_overpay_note(){
+        //Check if student has an paid or excess invoice for the term
+
+        $message = get_phrase('failure');
+
+        $this -> db -> trans_start();
+
+        $student_id = $this->db->get_where('invoice',array('invoice_id'=> $this -> input -> post('invoice_id')))->row()->student_id;
+        //if($check_balance->num_rows() > 0){
+          //Create a transactions
+          $data_payment['batch_number'] = $this -> crud_model -> next_batch_number();
+          $data_payment['t_date'] = $this -> input -> post('timestamp');
+          $data_payment['invoice_id'] = $this -> input -> post('invoice_id'); //$this->db->select_max('invoice_id')->get_where('invoice',array('student_id'=>$this -> input -> post('student_id')))->row()->invoice_id;
+
+          $data_payment['transaction_method_id'] = $this -> input -> post('method');
+          $data_payment['description'] = $this -> input -> post('description');
+          $data_payment['payee'] = $this->crud_model->get_type_name_by_id('student',$student_id);
+          $data_payment['transaction_type_id'] = "1";
+          $data_payment['amount'] = $this -> input -> post('amount');
+          $data_payment['createddate'] = strtotime($this -> input -> post('timestamp'));
+          $data_payment['createdby'] = $this -> session -> login_user_id;
+          $data_payment['lastmodifiedby'] = $this -> session -> login_user_id;
+
+
+          $this -> db -> insert('transaction', $data_payment);
+
+          $last_transaction_id = $this -> db -> insert_id();
+
+          //Create transaction Details
+          $data_payment_details['transaction_id'] = $last_transaction_id;
+          $data_payment_details['income_category_id'] = $this -> db -> get_where('income_categories', array('default_category' => 1)) -> row() -> income_category_id;
+          $data_payment_details['qty'] = 1;
+          $data_payment_details['detail_description'] = $this -> input -> post('description');
+          $data_payment_details['unitcost'] = $this -> input -> post('amount');
+          $data_payment_details['cost'] = $this -> input -> post('amount');
+
+          $this -> db -> insert("transaction_detail", $data_payment_details);
+
+          //Create an overpay note
+
+          $data['student_id'] = $student_id;
+          //$data['income_id'] = $this -> db -> get_where('income_categories', array('default_category' => 1)) -> row() -> income_category_id;//$this -> input -> post('income_id');
+          $data['amount'] = $this -> input -> post('amount');
+          $data['amount_due'] = 0;//$this -> input -> post('amount');
+          $data['description'] = $this -> input -> post('description');
+          $data['status'] = 'active';//$this -> input -> post('status');
+          $data['transaction_id'] = $last_transaction_id;
+
+          //Check if an active overpay note exists for the student. If yes update it or else insert
+
+          $active_note = $this->db->get_where('overpay',array('student_id'=>$student_id,'status'=>'active'));
+
+          if($active_note->num_rows()>0){
+            $new_amount = $this -> input -> post('amount') + $active_note->row()->amount;
+            $update_data['amount'] = $new_amount;
+            $this->db->where(array('overpay_id'=>$active_note->row()->overpay_id));
+            $this -> db -> update("overpay", $update_data);
+          }else{
+            $this -> db -> insert("overpay", $data);
+          }
+
+
+
+          $this->crud_model->fees_balance_by_invoice($this -> input -> post('invoice_id'));
+
+          $message = get_phrase('note_created');
+
+          if ($this -> db -> trans_status() === false) {
+              $this -> db -> trans_rollback();
+              $this -> session -> set_flashdata('flash_message', $message);
+          } else {
+              $this -> db -> trans_commit();
+              $this -> session -> set_flashdata('flash_message', $message);
+          }
+
+        //}
+
+          $this -> session -> set_flashdata('flash_message', $message);
+          redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
+
+    }
+
+    function unpaid_invoices($param1=""){
+      if ($this -> session -> userdata('active_login') != 1) {
+          redirect('login', 'refresh');
+      }
+
+      $year = date('Y');
+      $term  = $this->crud_model->get_current_term();
+
+      if($param1 !== "" ){
+        $year = $param1;
+      }
+
+      $page_data['year'] = $year;
+      $page_data['term'] = $term;
+      $page_data['states'] = array('new','approved','declined','reinstated','implemented');
+      $page_data['unpaid_invoices'] = $this->crud_model->year_unpaid_invoices($year);
+      $page_data['page_name'] = 'invoices_unpaid';
+      $page_data['page_view'] = "finance";
+      $page_data['page_title'] = get_phrase('student_payments');
+      $this -> load -> view('backend/index', $page_data);
+    }
+
+    function paid_invoices($param1 = ""){
+      if ($this -> session -> userdata('active_login') != 1) {
+          redirect('login', 'refresh');
+      }
+
+      $year = date('Y');
+      $term = $this->crud_model->get_current_term();
+
+      if($param1 !== ""){
+        $year = $param1;
+      }
+
+      $page_data['year'] = $year;
+      $page_data['term'] = $term;
+      $page_data['states'] = array('new','approved','declined','reinstated','implemented');
+      $page_data['paid_invoices'] = $this->crud_model->year_paid_invoices($year);
+      $page_data['page_name'] = 'invoices_paid';
+      $page_data['page_view'] = "finance";
+      $page_data['page_title'] = get_phrase('student_payments');
+      $this -> load -> view('backend/index', $page_data);
+    }
+
+    function overpaid_invoices($param1 = ""){
+      if ($this -> session -> userdata('active_login') != 1) {
+          redirect('login', 'refresh');
+      }
+
+      $year = date('Y');
+      $term = $this->crud_model->get_current_term();
+
+      if($param1 !== ""){
+        $year = $param1;
+      }
+
+      $page_data['year'] = $year;
+      $page_data['term'] = $term;
+
+      $page_data['states'] = array('new','approved','declined','reinstated','implemented');
+      $page_data['overpaid_invoices'] = $this->crud_model->year_overpaid_invoice($year);
+      $page_data['page_name'] = 'invoices_overpaid';
+      $page_data['page_view'] = "finance";
+      $page_data['page_title'] = get_phrase('student_payments');
+      $this -> load -> view('backend/index', $page_data);
+    }
+
+    function cancelled_invoices($param1 = ""){
+      if ($this -> session -> userdata('active_login') != 1) {
+          redirect('login', 'refresh');
+      }
+
+      $year = date('Y');
+      $term = $this->crud_model->get_current_term();
+
+      if($param1 !== ""){
+        $year = $param1;
+      }
+
+      $page_data['year'] = $year;
+      $page_data['term'] = $term;
+      $page_data['states'] = array('new','approved','declined','reinstated','implemented');
+      $page_data['cancelled_invoices'] = $this->crud_model->year_cancelled_invoices($year);
+
+      $page_data['page_name'] = 'invoices_cancelled';
+      $page_data['page_view'] = "finance";
+      $page_data['page_title'] = get_phrase('student_payments');
+      $this -> load -> view('backend/index', $page_data);
+    }
+
+    function active_overpay_notes($param1 = ""){
+      if ($this -> session -> userdata('active_login') != 1) {
+          redirect('login', 'refresh');
+      }
+
+      $year = date('Y');
+      $term = $this->crud_model->get_current_term();
+
+      if($param1 !== ""){
+        $year = $param1;
+      }
+
+      $page_data['year'] = $year;
+      $page_data['term'] = $term;
+
+      $page_data['term'] = $this->crud_model->get_current_term();
+      $page_data['states'] = array('new','approved','declined','reinstated','implemented');
+      $page_data['active_overpay_notes'] = $this->crud_model->active_overpay_notes();
+
+      $page_data['page_name'] = 'active_overpay_notes';
+      $page_data['page_view'] = "finance";
+      $page_data['page_title'] = get_phrase('student_payments');
+      $this -> load -> view('backend/index', $page_data);
+    }
+
+    function cleared_overpay_notes($param1 = ""){
+      if ($this -> session -> userdata('active_login') != 1) {
+          redirect('login', 'refresh');
+      }
+
+      $year = date('Y');
+      $term = $this->crud_model->get_current_term();
+
+      if($param1 !== ""){
+        $year = $param1;
+      }
+
+      $page_data['year'] = $year;
+      $page_data['term'] = $term;
+
+      $page_data['states'] = array('new','approved','declined','reinstated','implemented');
+      $page_data['cleared_overpay_notes'] = $this->crud_model->cleared_overpay_notes();
+
+      $page_data['page_name'] = 'cleared_overpay_notes';
+      $page_data['page_view'] = "finance";
+      $page_data['page_title'] = get_phrase('student_payments');
+      $this -> load -> view('backend/index', $page_data);
+    }
+
     public function student_payments($param1 = '', $param2 = '')
     {
         if ($this -> session -> userdata('active_login') != 1) {
             redirect('login', 'refresh');
         }
 
-        if ($param1 == "create_overpay_note") {
+        $year = date('Y');
 
-          //Check if student has an paid or excess invoice for the term
+        $page_data['year'] = $year;
+        $page_data['term'] = $this->crud_model->get_current_term();
 
-          $message = get_phrase('failure');
-
-          $this -> db -> trans_start();
-
-          $student_id = $this->db->get_where('invoice',array('invoice_id'=> $this -> input -> post('invoice_id')))->row()->student_id;
-          //if($check_balance->num_rows() > 0){
-            //Create a transactions
-            $data_payment['batch_number'] = $this -> crud_model -> next_batch_number();
-            $data_payment['t_date'] = $this -> input -> post('timestamp');
-            $data_payment['invoice_id'] = $this -> input -> post('invoice_id'); //$this->db->select_max('invoice_id')->get_where('invoice',array('student_id'=>$this -> input -> post('student_id')))->row()->invoice_id;
-
-            $data_payment['transaction_method_id'] = $this -> input -> post('method');
-            $data_payment['description'] = $this -> input -> post('description');
-            $data_payment['payee'] = $this->crud_model->get_type_name_by_id('student',$student_id);
-            $data_payment['transaction_type_id'] = "1";
-            $data_payment['amount'] = $this -> input -> post('amount');
-            $data_payment['createddate'] = strtotime($this -> input -> post('timestamp'));
-            $data_payment['createdby'] = $this -> session -> login_user_id;
-            $data_payment['lastmodifiedby'] = $this -> session -> login_user_id;
-
-
-            $this -> db -> insert('transaction', $data_payment);
-
-            $last_transaction_id = $this -> db -> insert_id();
-
-            //Create transaction Details
-            $data_payment_details['transaction_id'] = $last_transaction_id;
-            $data_payment_details['income_category_id'] = $this -> db -> get_where('income_categories', array('default_category' => 1)) -> row() -> income_category_id;
-            $data_payment_details['qty'] = 1;
-            $data_payment_details['detail_description'] = $this -> input -> post('description');
-            $data_payment_details['unitcost'] = $this -> input -> post('amount');
-            $data_payment_details['cost'] = $this -> input -> post('amount');
-
-            $this -> db -> insert("transaction_detail", $data_payment_details);
-
-            //Create an overpay note
-
-            $data['student_id'] = $student_id;
-            //$data['income_id'] = $this -> db -> get_where('income_categories', array('default_category' => 1)) -> row() -> income_category_id;//$this -> input -> post('income_id');
-            $data['amount'] = $this -> input -> post('amount');
-            $data['amount_due'] = 0;//$this -> input -> post('amount');
-            $data['description'] = $this -> input -> post('description');
-            $data['status'] = 'active';//$this -> input -> post('status');
-            $data['transaction_id'] = $last_transaction_id;
-
-            //Check if an active overpay note exists for the student. If yes update it or else insert
-
-            $active_note = $this->db->get_where('overpay',array('student_id'=>$student_id,'status'=>'active'));
-
-            if($active_note->num_rows()>0){
-              $new_amount = $this -> input -> post('amount') + $active_note->row()->amount;
-              $update_data['amount'] = $new_amount;
-              $this->db->where(array('overpay_id'=>$active_note->row()->overpay_id));
-              $this -> db -> update("overpay", $update_data);
-            }else{
-              $this -> db -> insert("overpay", $data);
-            }
-
-
-
-            $this->crud_model->fees_balance_by_invoice($this -> input -> post('invoice_id'));
-
-            $message = get_phrase('note_created');
-
-            if ($this -> db -> trans_status() === false) {
-                $this -> db -> trans_rollback();
-                $this -> session -> set_flashdata('flash_message', $message);
-            } else {
-                $this -> db -> trans_commit();
-                $this -> session -> set_flashdata('flash_message', $message);
-            }
-
-          //}
-
-            $this -> session -> set_flashdata('flash_message', $message);
-            redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
-        }
 
         $page_data['states'] = array('new','approved','declined','reinstated','implemented');
+
+        $page_data['unpaid_invoices'] = $this->crud_model->year_unpaid_invoices($year);
+        $page_data['paid_invoices'] = $this->crud_model->year_paid_invoices($year);
+        $page_data['overpaid_invoices'] = $this->crud_model->year_overpaid_invoice($year);
+        $page_data['active_overpay_notes'] = $this->crud_model->active_overpay_notes();
+        $page_data['cleared_overpay_notes'] = $this->crud_model->cleared_overpay_notes();
+        $page_data['cancelled_invoices'] = $this->crud_model->year_cancelled_invoices($year);
 
         $page_data['page_name'] = 'student_payments';
         $page_data['page_view'] = "finance";
         $page_data['page_title'] = get_phrase('student_payments');
-        $page_data['year'] = date('Y');
-        $page_data['term'] = 1;
+
         $this -> db -> order_by('creation_timestamp', 'desc');
         $page_data['invoices'] = $this -> db -> get_where('invoice', array('yr' => date('Y'))) -> result_array();
         $this -> load -> view('backend/index', $page_data);
     }
-
-    // function income_scroll($param1=""){
-    // $this->db->where(array("YEAR(t_date)"=>date("Y",$param1)));
-    // $this->db->order_by('timestamp' , 'desc');
-    // $payments = $this->db->get('payment')->result_object();
-    // $data['payments'] = $payments;
-    // $data['timestamp'] = $param1;
-    //
-    // echo $this->load->view("backend/finance/scroll_income",$data,true);
-    // }
 
     public function scroll_income($month = "")
     {
