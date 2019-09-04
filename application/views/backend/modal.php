@@ -5,7 +5,7 @@
 		jQuery('#modal_ajax .modal-body').html('<div style="text-align:center;margin-top:200px;"><img src="assets/images/preloader.gif" /></div>');
 
 		// LOADING THE AJAX MODAL
-		jQuery('#modal_ajax').modal('show', {backdrop: 'static'});
+		jQuery('#modal_ajax').modal({backdrop: 'static',keyboard: false});
 
 		// SHOW AJAX RESPONSE ON REQUEST SUCCESS
 		$.ajax({

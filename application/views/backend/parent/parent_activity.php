@@ -106,58 +106,6 @@
 
 <script type="text/javascript">
 
-	jQuery(document).ready(function($)
-	{
-
-
-		var datatable = $("#table_export").dataTable({
-			"sPaginationType": "bootstrap",
-			"sDom": "<'row'<'col-xs-3 col-left'l><'col-xs-9 col-right'<'export-data'T>f>r>t<'row'<'col-xs-3 col-left'i><'col-xs-9 col-right'p>>",
-			"oTableTools": {
-				"aButtons": [
-
-					{
-						"sExtends": "xls",
-						"mColumns": [0, 2, 3, 4]
-					},
-					{
-						"sExtends": "pdf",
-						"mColumns": [0, 2, 3, 4]
-					},
-					{
-						"sExtends": "print",
-						"fnSetText"	   : "Press 'esc' to return",
-						"fnClick": function (nButton, oConfig) {
-							datatable.fnSetColumnVis(1, false);
-							datatable.fnSetColumnVis(5, false);
-
-							this.fnPrint( true, oConfig );
-
-							window.print();
-
-							$(window).keyup(function(e) {
-								  if (e.which == 27) {
-									  datatable.fnSetColumnVis(1, true);
-									  datatable.fnSetColumnVis(5, true);
-								  }
-							});
-						},
-
-					},
-				]
-			},
-
-		});
-
-		$(".dataTables_wrapper select").select2({
-			minimumResultsForSearch: -1
-		});
-
-
-
-
-	});
-
 	function show_attendance(elem){
 
 		var url = "<?=base_url();?>index.php?parents/load_activity_register/"+$(elem).attr("id");

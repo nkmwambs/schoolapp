@@ -63,13 +63,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
 <!--Table Header Fixer-->
-<script src="<?php echo base_url();?>assets/js/tableHeadFixer.js"></script>
+<!-- <script src="<?php echo base_url();?>assets/js/tableHeadFixer.js"></script> -->
 
 <!--Print This JS-->
 <script src="<?php echo base_url();?>assets/js/printThis.js"></script>
 
 <!--my extension-->
-<script src="<?php echo base_url();?>assets/js/myExtension.js"></script>
+<!-- <script src="<?php echo base_url();?>assets/js/myExtension.js"></script> -->
 
 <!-- SHOW TOASTR NOTIFIVATION -->
 <?php if ($this->session->flashdata('flash_message') != ""):?>
