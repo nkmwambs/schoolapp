@@ -9,6 +9,9 @@ if (!defined('BASEPATH')) {
 	font-size:8pt;
 }
 
+.scroll_tabs{
+	position: fixed;
+}
 </style>
 
 <div class="row">
@@ -23,7 +26,7 @@ if (!defined('BASEPATH')) {
 
 <div class="row">
 	<div class="col-xs-1">
-		<a href="<?= base_url(); ?>index.php?finance/unpaid_invoices/<?= $year - 1; ?>"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>
+		<a class="scroll_tabs" href="<?= base_url(); ?>index.php?finance/unpaid_invoices/<?= $year - 1; ?>"><i style="font-size: 60pt;" class="fa fa-minus-circle"></i></a>
 	</div>
 
   <div class="col-xs-10">
@@ -213,6 +216,6 @@ if (!defined('BASEPATH')) {
   </div>
 
   <div class="col-xs-1">
-    <a href="<?= base_url(); ?>index.php?finance/unpaid_invoices/<?= $year + 1; ?>"><i style="font-size: 145pt;" class="fa fa-angle-right"></i></a>
+    <a class="scroll_tabs" href="<?= base_url(); ?>index.php?finance/unpaid_invoices/<?= $year + 1; ?>"><i style="font-size: 60pt;" class="fa fa-plus-circle"></i></a>
   </div>
 </div>
