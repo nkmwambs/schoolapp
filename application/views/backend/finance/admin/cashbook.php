@@ -60,17 +60,17 @@ if(isset($current)){
 	<div class="col-sm-10">
 		<div class="" style="font-weight: bolder;text-align: center;">Cash Book for the Month of <?=date('F-Y',strtotime($current));?></div>
 	<hr>
-		<table class="table table-hover table-bordered table-responsive datatable">
+		<table class="table table-hover table-bordered table-responsive journal_datatable">
 			<thead>
-				<tr>
-					<th colspan="5">&nbsp;</th>
+				<!-- <tr>
+					<th colspan="6">&nbsp;</th>
 					<th colspan="3"><?=get_phrase('bank');?> <br/> <?=get_phrase('balance_brought_forward');?>: <?=number_format($bank_balance,2);?></th>
 					<th colspan="3"><?=get_phrase('cash');?> <br/> <?=get_phrase('balance_brought_forward');?>: <?=number_format($cash_balance,2);?></th>
-				</tr>
+				</tr> -->
 
 				<tr>
 					<th><?=get_phrase('date');?></th>
-					<th><?=get_phrase('batch_number');?></th>
+					<th class="no-sort"><?=get_phrase('batch_number');?></th>
 					<th><?=get_phrase('reference_number');?></th>
 					<th><?=get_phrase('payee');?></th>
 					<th><?=get_phrase('description');?></th>
@@ -134,11 +134,12 @@ if(isset($current)){
 					<tr>
 						<td><?=$rows->t_date;?></td>
 						<td nowrap="nowrap">
+								<div class="btn <?=$btn_color;?>" title="<?=$btn_title;?>" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_transaction/<?=$rows->batch_number?>');"><?=$rows->batch_number?></div>
 							<?php if($approval_status['request_status'] =="" || $approval_status['request_status'] == 2){ ?>
 								<i class="fa fa-undo" style="font-size: 12pt;cursor: pointer;" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_request_comment_add/request_cancel/<?php echo $rows->transaction_id; ?>/transaction');" ></i>
 							<?php } ?>
-							<div class="btn <?=$btn_color;?>" title="<?=$btn_title;?>" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_view_transaction/<?=$rows->batch_number?>');"><?=$rows->batch_number?></div></td>
-						<td><?=$rows->cheque_no;?></td>	
+						</td>
+						<td><?=$rows->cheque_no;?></td>
 						<td><?=$rows->payee;?></td>
 						<td><?=$rows->description;?></td>
 						<td>
@@ -208,7 +209,7 @@ if(isset($current)){
 			</tbody>
 			<tfoot>
 				<tr>
-					<td colspan="5"><?=get_phrase('total');?></td>
+					<td colspan="6"><?=get_phrase('total');?></td>
 
 					<td><?=number_format($sum_bank_income,2);?></td>
 					<td><?=number_format($sum_bank_expense,2);?></td>
@@ -233,4 +234,18 @@ if(isset($current)){
 		e.preventDefault();
 	});
 
+	jQuery(document).ready(function($)
+	{
+	  $('.journal_datatable').DataTable({
+	      dom: 'lBfrtip',
+	      buttons: [
+	           'copy', 'csv', 'excel', 'pdf', 'print'
+	      ],
+				"order": [[ 1, "asc" ]],
+				"columnDefs": [ {
+          "targets": 'no-sort',
+          "orderable": false
+    		} ]
+	  });
+	});
 </script>
