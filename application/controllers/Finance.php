@@ -1643,10 +1643,11 @@ class Finance extends CI_Controller
             redirect('login', 'refresh');
         }
 
-        $term = 2;
-
+        $term = $this->crud_model->get_current_term();
+        //$t_date = date('Y-m-d');
         //Get all unpaid invoices for the term
-        $this -> db -> select(array('student.name as student', 'invoice.student_id', 'student.roll as roll', 'fees_structure_details.income_category_id', 'invoice.invoice_id', 'income_categories.name as category', 'class.name as class'));
+        $this -> db -> select(array('student.name as student', 'invoice.student_id', 'student.roll as roll',
+        'fees_structure_details.income_category_id', 'invoice.invoice_id', 'income_categories.name as category', 'class.name as class'));
 
         $this -> db -> select_sum('invoice_details.amount_due');
 
@@ -1659,7 +1660,7 @@ class Finance extends CI_Controller
         $this -> db -> group_by('student.student_id');
         $this -> db -> group_by('fees_structure_details.income_category_id');
 
-        $ungrouped_payments = $this -> db -> get_where('invoice_details', array('yr' => $year, 'term' => $term, 'status' => 'unpaid')) -> result_object();
+        $ungrouped_payments = $this -> db -> get_where('invoice_details', array('invoice.yr' => $year, 'invoice.term' => $term, 'invoice.status' => 'unpaid')) -> result_object();
 
         foreach ($ungrouped_payments as $row) {
             $this -> db -> select_sum('cost');
@@ -1669,7 +1670,13 @@ class Finance extends CI_Controller
             $this -> db -> group_by('transaction_detail.income_category_id');
 
             $this -> db -> where(array('transaction.invoice_id' => $row -> invoice_id, 'income_category_id' => $row -> income_category_id));
-            $paid = $this -> db -> get('transaction_detail') -> row() -> cost;
+            $paid_obj = $this -> db -> get('transaction_detail');
+
+            $paid = 0;
+
+            if($paid_obj->num_rows()>0){
+                $paid = $paid_obj-> row() -> cost;
+            }
 
             $payments[$row -> student_id]['fees'][$row -> category]['due'] = $row -> amount_due;
             $payments[$row -> student_id]['fees'][$row -> category]['paid'] = $paid;
@@ -1681,7 +1688,7 @@ class Finance extends CI_Controller
 
         $page_data['payments'] = $payments;
         $page_data['page_name'] = __FUNCTION__;
-        $page_data['current_date'] = $t_date;
+        //$page_data['current_date'] = $t_date;
         $page_data['page_view'] = "finance";
         $page_data['page_title'] = get_phrase(__FUNCTION__) . " (" . get_phrase('unpaid_invoices') . ")";
         $this -> load -> view('backend/index', $page_data);
