@@ -273,6 +273,12 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 									</a>
 								</li>
 
+								<li>
+									<a href="<?php echo base_url(); ?>index.php?finance/student_collection_tally">
+										<span class="title"><?=get_phrase('invoice_tally_sheet');?></span>
+									</a>
+								</li>
+
 							</ul>
 						</li>
 						<li>

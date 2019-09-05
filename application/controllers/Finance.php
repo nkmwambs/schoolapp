@@ -1637,46 +1637,25 @@ class Finance extends CI_Controller
         //$this->cash_book($param2);
     }
 
-    public function student_collection_tally($year, $filter = "")
+    public function student_collection_tally($year = "", $invoice_status = "unpaid")
     {
         if ($this -> session -> userdata('active_login') != 1) {
             redirect('login', 'refresh');
         }
 
-        $term = $this->crud_model->get_current_term();
-        //$t_date = date('Y-m-d');
-        //Get all unpaid invoices for the term
-        $this -> db -> select(array('student.name as student', 'invoice.student_id', 'student.roll as roll',
-        'fees_structure_details.income_category_id', 'invoice.invoice_id', 'income_categories.name as category', 'class.name as class'));
+        if($year == ""){
+          $year = date('Y');
+        }
 
-        $this -> db -> select_sum('invoice_details.amount_due');
+        if($this->input->post()){
+          $invoice_status = $this->input->post('invoice_status');
+        }
 
-        $this -> db -> join('invoice', 'invoice.invoice_id=invoice_details.invoice_id');
-        $this -> db -> join('student', 'student.student_id=invoice.student_id');
-        $this -> db -> join('fees_structure_details', 'fees_structure_details.detail_id=invoice_details.detail_id');
-        $this -> db -> join('income_categories', 'income_categories.income_category_id=fees_structure_details.income_category_id');
-        $this -> db -> join('class', 'class.class_id = invoice.class_id');
-
-        $this -> db -> group_by('student.student_id');
-        $this -> db -> group_by('fees_structure_details.income_category_id');
-
-        $ungrouped_payments = $this -> db -> get_where('invoice_details', array('invoice.yr' => $year, 'invoice.term' => $term, 'invoice.status' => 'unpaid')) -> result_object();
+        $ungrouped_payments = $this->crud_model->student_invoice_tally_by_income_category($year,$invoice_status);
 
         foreach ($ungrouped_payments as $row) {
-            $this -> db -> select_sum('cost');
-            $this -> db -> join('transaction', 'transaction.transaction_id=transaction_detail.transaction_id');
-            $this -> db -> join('invoice', 'invoice.invoice_id=transaction.invoice_id');
 
-            $this -> db -> group_by('transaction_detail.income_category_id');
-
-            $this -> db -> where(array('transaction.invoice_id' => $row -> invoice_id, 'income_category_id' => $row -> income_category_id));
-            $paid_obj = $this -> db -> get('transaction_detail');
-
-            $paid = 0;
-
-            if($paid_obj->num_rows()>0){
-                $paid = $paid_obj-> row() -> cost;
-            }
+            $paid = $this->crud_model->get_invoice_amount_paid_by_income_category($row -> invoice_id,$row -> income_category_id);
 
             $payments[$row -> student_id]['fees'][$row -> category]['due'] = $row -> amount_due;
             $payments[$row -> student_id]['fees'][$row -> category]['paid'] = $paid;
@@ -1686,12 +1665,19 @@ class Finance extends CI_Controller
             $payments[$row -> student_id]['student']['roll'] = $row -> roll;
         }
 
+        $income_categories = $this->db->get('income_categories')->result_object();
+
+        $page_data['invoice_status'] = $invoice_status;
         $page_data['payments'] = $payments;
         $page_data['page_name'] = __FUNCTION__;
-        //$page_data['current_date'] = $t_date;
+        $page_data['income_categories'] = $income_categories;
         $page_data['page_view'] = "finance";
         $page_data['page_title'] = get_phrase(__FUNCTION__) . " (" . get_phrase('unpaid_invoices') . ")";
         $this -> load -> view('backend/index', $page_data);
+    }
+
+    public function mass_update_invoice_amount_due(){
+      echo "Amount is ".$this->input->post('amount_due');
     }
 
     public function month_fees_income_by_income_category($category_id = "", $start_month = "")
