@@ -81,7 +81,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 							foreach($income_categories as $category){
 						?>
 							<!-- <td class="<?php if($invoice_status == 'unpaid') echo 'editable';?>" data-state="due"> -->
-							<td class="<?php if($invoice_status == 'unpaid') echo 'editable';?>" data-state="due">
+							<td>
 								<?=number_format(isset($payment['fees'][$category->name]['due'])?$payment['fees'][$category->name]['due']:0,2);?>
 						 	</td>
 							<td>
