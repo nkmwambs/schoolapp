@@ -1651,7 +1651,7 @@ class Finance extends CI_Controller
           $invoice_status = $this->input->post('invoice_status');
         }
 
-        $ungrouped_payments = $this->crud_model->student_invoice_tally_by_income_category($year,$invoice_status);
+        $ungrouped_payments = $this->crud_model->student_invoice_tally_by_invoice_status($year,$invoice_status);
 
         foreach ($ungrouped_payments as $row) {
 
@@ -1677,7 +1677,100 @@ class Finance extends CI_Controller
     }
 
     public function mass_update_invoice_amount_due(){
-      echo "Amount is ".$this->input->post('amount_due');
+      $amount_due = $this->input->post('amount_due');
+      $invoice_details_id = $this->input->post('invoice_details_id');
+      $invoice_id = $this->input->post('invoice_id');
+      $message = "";
+
+      $this -> db -> trans_start();
+      //Update the amount due
+      $this->db->update('invoice_details',array('amount_due'=>$amount_due),
+      array('invoice_details_id'=>$invoice_details_id));
+
+      //Get new sum for the invoice
+      $this->db->select_sum('amount_due');
+      $sum_amount_due = $this->db->get_where('invoice_details',array('invoice_id'=>$invoice_id))->row()->amount_due;
+
+      //Update the invoice with sum $amount_due
+      $this->db->update('invoice',array('amount_due'=>$sum_amount_due),array('invoice_id'=>$invoice_id));
+
+      //Get invoice balance
+      $invoice_balance = $this->crud_model->get_invoice_balance($invoice_id);
+
+      //Get invoice status
+      $invoice_status = $this->db->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->status;
+
+      //Make the status of the invoice paid when balance is zero, but when a user immediately changes it
+      // before refershing the browser, it will be chnaged to unpaid
+      if($invoice_balance == 0){
+        $this->db->update('invoice',array('status'=>'paid'),array('invoice_id'=>$invoice_id));
+        $message = "Invoice cleared";
+      }elseif($invoice_balance > 0 && $invoice_status !=='unpaid'){
+        $this->db->update('invoice',array('status'=>'unpaid'),array('invoice_id'=>$invoice_id));
+      }
+
+      if ($this -> db -> trans_status() === false) {
+          $this -> db -> trans_rollback();
+          $message = "Update failed";
+      } else {
+          $this -> db -> trans_commit();
+          //$this -> session -> set_flashdata('flash_message', get_phrase('funds_transferred_successfully'));
+      }
+
+      echo $message;
+    }
+
+    public function mass_edit_invoices($class_id="",$invoice_status='unpaid',$term = "",$year=""){
+      if ($this -> session -> userdata('active_login') != 1) {
+          redirect('login', 'refresh');
+      }
+
+      if($year == ""){
+        $year = date('Y');
+      }
+
+      if($this->input->post()){
+        $invoice_status = $this->input->post('invoice_status');
+        $class_id = $this->input->post('class_id');
+      }
+
+      if($term == ""){
+        $term = $this->crud_model->get_current_term();
+      }
+
+      $ungrouped_payments = $this->crud_model->get_class_invoices_by_status($year,$class_id,$invoice_status);
+
+      $payments = array();
+
+      foreach ($ungrouped_payments as $row) {
+
+          $paid = $this->crud_model->get_invoice_amount_paid_by_invoice_detail($row -> invoice_details_id);
+
+          $payments[$row -> student_id]['fees'][$row -> fees_structure_detail]['invoice_details_id'] = $row -> invoice_details_id;
+          $payments[$row -> student_id]['fees'][$row -> fees_structure_detail]['invoice_id'] = $row -> invoice_id;
+          $payments[$row -> student_id]['fees'][$row -> fees_structure_detail]['due'] = $row -> amount;
+          $payments[$row -> student_id]['fees'][$row -> fees_structure_detail]['paid'] = $paid;
+          $payments[$row -> student_id]['fees'][$row -> fees_structure_detail]['balance'] = $row -> amount - $paid;
+          $payments[$row -> student_id]['student']['name'] = $row -> student;
+          $payments[$row -> student_id]['student']['class'] = $row -> class_name;
+          $payments[$row -> student_id]['student']['roll'] = $row -> roll;
+      }
+
+      $this->db->select(array('fees_structure_details.name as name'));
+      $this->db->join('fees_structure_details','fees_structure_details.fees_id=fees_structure.fees_id');
+
+      $fees_structure_vote_heads = $this->db->get_where('fees_structure',
+      array('fees_structure.class_id'=>$class_id,'fees_structure.yr'=>$year,'term'=>$term))->result_object();
+
+      $page_data['class'] = $this->db->order_by('name_numeric asc')->get('class')->result_object();
+      $page_data['fees_structure_vote_heads'] = $fees_structure_vote_heads;
+      $page_data['invoice_status'] = $invoice_status;
+      $page_data['class_id'] = $class_id;
+      $page_data['payments'] = $payments;
+      $page_data['page_name'] = __FUNCTION__;
+      $page_data['page_view'] = "finance";
+      $page_data['page_title'] = get_phrase(__FUNCTION__);
+      $this -> load -> view('backend/index', $page_data);
     }
 
     public function month_fees_income_by_income_category($category_id = "", $start_month = "")

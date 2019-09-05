@@ -1011,7 +1011,19 @@ class Crud_model extends CI_Model {
 	}
 
 	function get_invoice_balance($invoice_id){
-		$invoice_due = $this->db->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->amount_due;
+    $this->db->select(array('invoice_details.invoice_id'));
+    $this->db->select_sum('invoice_details.amount_due');
+    $this->db->join('invoice_details','invoice_details.invoice_id=invoice.invoice_id');
+    $this->db->group_by('invoice_details.invoice_id');
+
+    $invoice_due_obj = $this->db->get_where('invoice',
+    array('invoice_details.invoice_id'=>$invoice_id));
+
+    $invoice_due = 0;
+
+    if($invoice_due_obj->num_rows()>0){
+        $invoice_due = $invoice_due_obj->row()->amount_due;
+    }
 
 		$balance = $invoice_due - $this->get_invoice_amount_paid($invoice_id);
 
@@ -1384,7 +1396,7 @@ function year_cancelled_invoices($year){
   return $cancelled_invoices;
 }
 
-function student_invoice_tally_by_income_category($year = "" , $invoice_status = 'unpaid'){
+function student_invoice_tally_by_invoice_status($year = "" , $invoice_status = 'unpaid'){
 
   $term = $this->get_current_term();
 
@@ -1419,6 +1431,50 @@ function get_invoice_amount_paid_by_income_category($invoice_id,$income_category
   $this -> db -> group_by('transaction_detail.income_category_id');
 
   $this -> db -> where(array('transaction.invoice_id' => $invoice_id, 'income_category_id' => $income_category_id));
+  $paid_obj = $this -> db -> get('transaction_detail');
+
+  $paid = 0;
+
+  if($paid_obj->num_rows()>0){
+      $paid = $paid_obj-> row() -> cost;
+  }
+
+  return $paid;
+}
+
+function get_class_invoices_by_status($year = "", $class_id = "", $invoice_status = "unpaid"){
+
+    $term = $this->get_current_term();
+
+    //Get all unpaid invoices for the term
+    $this -> db -> select(array('student.name as student', 'invoice.student_id', 'student.roll as roll',
+    'fees_structure_details.detail_id','fees_structure_details.name as fees_structure_detail',
+     'invoice.invoice_id','class.name as class_name','invoice_details.amount_due as amount',
+     'invoice_details.invoice_details_id'));
+
+    $this -> db -> join('invoice', 'invoice.invoice_id=invoice_details.invoice_id');
+    $this -> db -> join('student', 'student.student_id=invoice.student_id');
+    $this -> db -> join('fees_structure_details', 'fees_structure_details.detail_id=invoice_details.detail_id');
+    //$this -> db -> join('income_categories', 'income_categories.income_category_id=fees_structure_details.income_category_id');
+    $this -> db -> join('class', 'class.class_id = invoice.class_id');
+
+    //$this -> db -> group_by('student.student_id');
+    //$this -> db -> group_by('fees_structure_details.income_category_id');
+
+    $ungrouped_payments = $this -> db -> get_where('invoice_details',
+    array('invoice.yr' => $year, 'invoice.term' => $term,'invoice.class_id'=>$class_id, 'invoice.status' => $invoice_status)) -> result_object();
+
+    return $ungrouped_payments;
+}
+
+function get_invoice_amount_paid_by_invoice_detail($invoice_details_id){
+  $this -> db -> select_sum('cost');
+  $this -> db -> join('transaction', 'transaction.transaction_id=transaction_detail.transaction_id');
+  $this -> db -> join('invoice_details', 'invoice_details.invoice_details_id=transaction_detail.invoice_details_id');
+
+  $this -> db -> group_by('transaction_detail.invoice_details_id');
+
+  $this -> db -> where(array('transaction_detail.invoice_details_id' => $invoice_details_id));
   $paid_obj = $this -> db -> get('transaction_detail');
 
   $paid = 0;
