@@ -2,6 +2,12 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 //print_r($this->crud_model->get_invoice_balance(135));
 ?>
+<style>
+.editable {
+	background-color: turquoise;
+}
+</style>
+
 <div class="row">
 	<div class="col-xs-12">
 		<?php echo form_open(base_url() . 'index.php?finance/mass_edit_invoices/' , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
@@ -38,6 +44,10 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 <hr/>
 
 <div class="row">
+	<div class="col-xs-12 text-center">
+		Double click on any of the <span style="color:turquoise;font-weight:bold;">turquoise</span> colored cell to edit
+	</div>
+
 	<div class="col-xs-12">
 		<table class="table table-bordered datatable">
 			<thead>
@@ -80,9 +90,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 					foreach($payments as $student=>$payment){
 				?>
 					<tr>
-						<td nowrap="nowrap"><?=$payment['student']['name'];?>
-              <i class="fa fa-envelope <?=get_access_class('send_fees_balance_by_sms', 'admin', 'accounting'); ?> pull-right" style="cursor:pointer;" title="<?=get_phrase('send_balance_text');?>"></i>
-            </td>
+						<td nowrap="nowrap"><?=$payment['student']['name'];?> <i class="fa fa-envelope" title="<?=get_phrase('send_balance_text');?>"></i></td>
 						<td><?=$payment['student']['class'];?></td>
 						<td><?=$payment['student']['roll'];?></td>
 
