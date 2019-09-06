@@ -28,7 +28,15 @@ if (!defined('BASEPATH'))
 </div>
 
 <div class="row">
-  <div class="col-xs-12">
+
+  <div class="col-xs-12 text-center" style="font-weight:bold;margin:25px;">
+      Daily Collection and Expense Report for <?=date('F Y',$month);?>
+  </div>
+
+  <div class="col-sm-1">
+		<a href="<?=base_url();?>index.php?finance/daily_reports/<?=strtotime('-1 month',$month);?>"><i style="font-size: 60pt;" class="fa fa-minus-circle"></i></a>
+	</div>
+  <div class="col-xs-10">
 
     <table class="table table-bordered datatable">
         <thead>
@@ -79,4 +87,7 @@ if (!defined('BASEPATH'))
         </tfoot>
     </table>
   </div>
+  <div class="col-sm-1">
+		<a href="<?=base_url();?>index.php?finance/daily_reports/<?=strtotime('+1 month',$month);?>"><i style="font-size: 60pt;" class="fa fa-plus-circle"></i></a>
+	</div>
 </div>

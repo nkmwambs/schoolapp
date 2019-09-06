@@ -2057,13 +2057,15 @@ class Finance extends CI_Controller
 
     }
 
-    public function daily_reports($month = "2019-05-01", $transaction_type = 'income'){
+    public function daily_reports($month = "", $transaction_type = 'income'){
       if ($this -> session -> userdata('active_login') != 1) {
           redirect('login', 'refresh');
       }
 
       if($month == ""){
         $month = date('Y-m-01');
+      }else{
+        $month = date('Y-m-01',$month);
       }
 
       if($this->input->post()){
@@ -2076,6 +2078,7 @@ class Finance extends CI_Controller
 
       $page_data['transaction_type'] = $transaction_type;
       $page_data['income_categories'] = $income_categories;
+      $page_data['month'] = strtotime($month);
       $page_data['transactions'] = $transactions;
       $page_data['page_name'] = 'daily_reports';
       $page_data['page_view'] = "finance";
