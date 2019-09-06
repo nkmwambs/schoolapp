@@ -1486,4 +1486,38 @@ function get_invoice_amount_paid_by_invoice_detail($invoice_details_id){
   return $paid;
 }
 
+function month_transactions_grouped_by_date_by_transaction_type($month,$transaction_type = 'income'){
+
+  $this->db->join('transaction_detail','transaction_detail.transaction_id=transaction.transaction_id');
+
+  $this->db->select(array('t_date'));
+  $this->db->group_by('t_date');
+
+  if($transaction_type == 'income'){
+    $this->db->join('income_categories','income_categories.income_category_id=transaction_detail.income_category_id');
+    $this->db->select(array('income_categories.name as account'));
+    $this->db->group_by('income_categories.name');
+  }else{
+
+    $this->db->join('expense_category','expense_category.expense_category_id=transaction_detail.expense_category_id');
+    $this->db->join('income_categories','income_categories.income_category_id=expense_category.income_category_id');
+    $this->db->select(array('income_categories.name as account'));
+    $this->db->group_by('income_categories.name');
+  }
+
+  $this->db->select_sum('cost');
+
+  $this->db->where(array('t_date>='=>date('Y-m-01',strtotime($month)),'t_date<='=>date('Y-m-t',strtotime($month))));
+
+  $result = $this->db->get_where('transaction')->result_object();
+
+  $grouped = array();
+
+  foreach ($result as $value) {
+      $grouped[$value->t_date][$value->account] = $value->cost;
+  }
+
+  return $grouped;
+}
+
 }

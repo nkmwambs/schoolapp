@@ -2057,6 +2057,32 @@ class Finance extends CI_Controller
 
     }
 
+    public function daily_reports($month = "2019-05-01", $transaction_type = 'income'){
+      if ($this -> session -> userdata('active_login') != 1) {
+          redirect('login', 'refresh');
+      }
+
+      if($month == ""){
+        $month = date('Y-m-01');
+      }
+
+      if($this->input->post()){
+        $transaction_type = $this->input->post('transaction_type');
+      }
+
+      $transactions = $this->crud_model->month_transactions_grouped_by_date_by_transaction_type($month,$transaction_type);
+
+      $income_categories = $this->db->select(array('income_category_id','name'))->get('income_categories')->result_object();
+
+      $page_data['transaction_type'] = $transaction_type;
+      $page_data['income_categories'] = $income_categories;
+      $page_data['transactions'] = $transactions;
+      $page_data['page_name'] = 'daily_reports';
+      $page_data['page_view'] = "finance";
+      $page_data['page_title'] = get_phrase('daily_reports');
+      $this -> load -> view('backend/index', $page_data);
+    }
+
     public function fund_balances($month_start_date = "")
     {
         $fund_balances = array();
@@ -2955,4 +2981,5 @@ class Finance extends CI_Controller
       $page_data['page_title'] = get_phrase('finance_settings');
       $this -> load -> view('backend/index', $page_data);
     }
+
 }

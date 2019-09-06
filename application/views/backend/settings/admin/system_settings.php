@@ -5,7 +5,7 @@
       array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
         <div class="col-md-6">
 
-            <div class="panel panel-primary" >
+            <div class="panel panel-default" >
 
                 <div class="panel-heading">
                     <div class="panel-title">
@@ -180,7 +180,7 @@
 
         <div class="col-md-6">
 
-            <div class="panel panel-primary" >
+            <div class="panel panel-default" >
 
                 <div class="panel-heading">
                     <div class="panel-title">
@@ -333,7 +333,7 @@
             <?php echo form_open(base_url() . 'index.php?settings/system_settings/upload_logo' , array(
             'class' => 'form-horizontal form-groups-bordered validate','target'=>'_top' , 'enctype' => 'multipart/form-data'));?>
 
-              <div class="panel panel-primary" >
+              <div class="panel panel-default" >
 
                   <div class="panel-heading">
                       <div class="panel-title">

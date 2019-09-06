@@ -324,6 +324,13 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 										<span class="title"><?=get_phrase('funds_transfers');?></span>
 									</a>
 								</li>
+
+								<li>
+									<a href="<?php echo base_url(); ?>index.php?finance/daily_reports">
+										<span class="title"><?=get_phrase('daily_reports');?></span>
+									</a>
+								</li>
+
 							</ul>
 						</li>
 
