@@ -1520,4 +1520,24 @@ function month_transactions_grouped_by_date_by_transaction_type($month,$transact
   return $grouped;
 }
 
+function get_term_expected_income_grouped_by_income_category($year,$term){
+  $this->db->select(array('income_categories.income_category_id','income_categories.name'));
+  $this->db->select_sum('invoice_details.amount_due');
+  $this->db->group_by('fees_structure_details.income_category_id');
+
+  $this->db->join('invoice_details','invoice_details.invoice_id=invoice.invoice_id');
+  $this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');
+  $this->db->join('income_categories','income_categories.income_category_id=fees_structure_details.income_category_id');
+  $result = $this->db->get_where('invoice',array('yr'=>$year,'term'=>$term))->result_object();
+
+  //return group_array_by_key($result,'name');
+  $grouped = array();
+
+  foreach ($result as $value) {
+    $grouped[$value->name] = $value->amount_due;
+  }
+
+  return $grouped;
+}
+
 }
