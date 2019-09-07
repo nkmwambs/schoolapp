@@ -28,6 +28,12 @@ $row = $edit_data[0];
 					<?php $bal = $this->crud_model->fees_balance_by_invoice($param2);?>
 		           <input type="hidden" id="get_bal" class="form-control" value="<?php echo $bal;?>" readonly/>
 
+								<div class="form-group">
+										<label class="control-label col-xs-3"><?=get_phrase('enter_cash_received');?></label>
+										<div class="col-xs-6">
+											<input type="number"  id="cash_received" class="form-control" />
+										</div>
+								</div>
 
 		            <div class="form-group">
 		                <label class="col-sm-offset-6 control-label"><?php echo get_phrase('payment');?></label>
@@ -58,7 +64,7 @@ $row = $edit_data[0];
 									?>
 										<tr>
 											<td><?php echo $inv->name;?></td>
-											<td><?php echo number_format($inv->amount_due,2);?></td>
+											<td class="amount_due_cell"><?php echo number_format($inv->amount_due,2);?></td>
 											<td><?php echo number_format($this->crud_model->fees_paid_by_invoice_detail($inv->invoice_details_id),2);?></td>
 											<td><?php echo number_format($this->crud_model->fees_balance_by_invoice_detail($inv->invoice_details_id),2);?></td>
 											<td><input type="text" onkeyup="return get_total_payment();" class="form-control paying" name="take_payment[<?php echo $inv->invoice_details_id;?>]" id="" value="0"/></td>
@@ -73,7 +79,7 @@ $row = $edit_data[0];
 									?>
 									<tr><td><?=get_phrase('overpayment');?></td><td colspan="3"><input type="text" class="form-control overpay" name="overpayment_description" readonly="readonly" /></td><td><input type="text" onkeyup="return get_total_payment();" id="overpayment" name="overpayment" class="form-control paying overpay" value="0" readonly="readonly"/></td></tr>
 									<tr>
-										<td>Totals</td><td><?php echo number_format($tot_due,2);?></td>
+										<td>Totals</td><td id="total_amount_due_cell"><?php echo number_format($tot_due,2);?></td>
 										<td><?php echo number_format($this->crud_model->fees_paid_by_invoice($param2),2);?></td>
 										<td id="total_balance"><?php echo number_format($this->crud_model->fees_balance_by_invoice($param2),2);?></td>
 										<td><input type="text" class="form-control" name="total_payment" id="total_payment" value="0" readonly="readonly"/></td>
@@ -154,6 +160,27 @@ $row = $edit_data[0];
 
 
 <script>
+
+	$("#cash_received").keyup(function(){
+		var count_of_paying_cell = $(".paying").length;
+		var cash_received = $(this).val();
+		var amount_due = 0;
+		var total_amount_due = accounting.unformat($("#total_amount_due_cell").html().trim());
+		var paying_ratio = 0;
+		var pay_amount = 0;
+
+		$('.paying').each(function(i,el){
+			 amount_due = accounting.unformat($(el).parent().prev().prev().prev().html().trim());
+			 paying_ratio = parseFloat(amount_due)/parseFloat(total_amount_due);
+			 pay_amount = parseFloat(paying_ratio) * parseFloat(cash_received);
+
+			 $(this).val(pay_amount);
+			 get_total_payment();
+		});
+
+
+
+	});
 
 	$("#method").on('change',function(){
 		if($(this).val() == 2){
