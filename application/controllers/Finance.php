@@ -2985,4 +2985,21 @@ class Finance extends CI_Controller
       $this -> load -> view('backend/index', $page_data);
     }
 
+    function change_pay_order(){
+      $post = $this->input->post();
+      //echo json_encode($post);
+      $self_order = $post['self']['self_order'];
+      $self_detail = $post['self']['self_detail'];
+      $insert_after_order = $post['relative']['relative_order'];
+      $insert_after_detail_id = $post['relative']['relative_detailid'];
+
+      $this->db->where(array('detail_id'=>$self_detail));
+      $data['pay_order'] = $insert_after_order;
+      $this->db->update('fees_structure_details',$data);
+
+      $this->db->where(array('detail_id'=>$insert_after_detail_id));
+      $data2['pay_order'] = $self_order;
+      $this->db->update('fees_structure_details',$data2);
+
+    }
 }
