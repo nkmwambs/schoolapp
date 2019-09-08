@@ -67,7 +67,7 @@ $row = $edit_data[0];
 											<td class="amount_due_cell"><?php echo number_format($inv->amount_due,2);?></td>
 											<td><?php echo number_format($this->crud_model->fees_paid_by_invoice_detail($inv->invoice_details_id),2);?></td>
 											<td><?php echo number_format($this->crud_model->fees_balance_by_invoice_detail($inv->invoice_details_id),2);?></td>
-											<td><input type="text" onkeyup="return get_total_payment();" class="form-control paying" name="take_payment[<?php echo $inv->invoice_details_id;?>]" id="" value="0"/></td>
+											<td><input required="required" type="text" onkeyup="return get_total_payment();" class="form-control paying" name="take_payment[<?php echo $inv->invoice_details_id;?>]" id="" value="0"/></td>
 										</tr>
 
 									<?php
@@ -77,7 +77,7 @@ $row = $edit_data[0];
 										$tot_paid = $this->crud_model->fees_paid_by_invoice($param2);//array_sum(array_column($invoice_details, 'amount_paid'));
 										$tot_bal  = $this->crud_model->fees_balance_by_invoice($param2);//array_sum(array_column($invoice_details, 'balance'));
 									?>
-									<tr><td><?=get_phrase('overpayment');?></td><td colspan="3"><input type="text" class="form-control overpay" name="overpayment_description" readonly="readonly" /></td><td><input type="text" onkeyup="return get_total_payment();" id="overpayment" name="overpayment" class="form-control paying overpay" value="0" readonly="readonly"/></td></tr>
+									<tr><td><?=get_phrase('overpayment');?></td><td colspan="3"><input type="text" class="form-control overpay" name="overpayment_description" id="overpayment_description" readonly="readonly" /></td><td><input type="text" onkeyup="return get_total_payment();" id="overpayment" name="overpayment" class="form-control paying overpay" value="0" readonly="readonly"/></td></tr>
 									<tr>
 										<td>Totals</td><td id="total_amount_due_cell"><?php echo number_format($tot_due,2);?></td>
 										<td><?php echo number_format($this->crud_model->fees_paid_by_invoice($param2),2);?></td>
@@ -168,15 +168,34 @@ $row = $edit_data[0];
 		var total_amount_due = accounting.unformat($("#total_amount_due_cell").html().trim());
 		var paying_ratio = 0;
 		var pay_amount = 0;
+		var overpay_amount = 0;
 
 		$('.paying').each(function(i,el){
+			if($(el).attr('id')!=='overpayment'){
 			 amount_due = accounting.unformat($(el).parent().prev().prev().prev().html().trim());
 			 paying_ratio = parseFloat(amount_due)/parseFloat(total_amount_due);
 			 pay_amount = parseFloat(paying_ratio) * parseFloat(cash_received);
 
-			 $(this).val(pay_amount);
+			 var detail_balance = accounting.unformat($(this).parent().prev().html().trim());
+			 var rounded_pay_amount = accounting.unformat(accounting.format(pay_amount));
+
+			 if(rounded_pay_amount > detail_balance){
+				 //var dif = parseFloat(rounded_pay_amount) - parseFloat(detail_balance);
+					rounded_pay_amount = detail_balance;
+			 }
+
+			 $(this).val(rounded_pay_amount);
+
 			 get_total_payment();
+		 }
 		});
+
+		if(parseFloat(cash_received) > parseFloat(total_amount_due)){
+			overpay_amount = parseFloat(cash_received) - total_amount_due;
+			$("#overpayment").val(overpay_amount);
+			$("#overpayment_description").val('Overpayment');
+			get_total_payment();
+		}
 
 
 
