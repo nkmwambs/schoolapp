@@ -92,7 +92,7 @@ $row = $edit_data[0];
 		            <div class="form-group">
 		                <label class="col-sm-3 control-label"><?php echo get_phrase('description');?></label>
 		                <div class="col-sm-6">
-		                    <input type="text" required="required" class="form-control" name="description" id="description" placeholder="<?php echo get_phrase('description');?>"/>
+		                    <input value="Being amount recieved for school fees" type="text" required="required" class="form-control" name="description" id="description" placeholder="<?php echo get_phrase('description');?>"/>
 		                </div>
 		            </div>
 
@@ -129,7 +129,7 @@ $row = $edit_data[0];
 	                        	data-start-date="<?php echo $this->crud_model->next_transaction_date()->start_date;?>"
 	                        	data-end-date="<?php echo $this->crud_model->next_transaction_date()->end_date;?>"
 	                        	data-format="yyyy-mm-dd" name="timestamp"
-	                            value="" required="required"/>
+	                            value="<?php echo $this->crud_model->next_transaction_date()->start_date;?>" required="required"/>
 	                    </div>
 					</div>
 
@@ -165,22 +165,22 @@ $row = $edit_data[0];
 		var count_of_paying_cell = $(".paying").length;
 		var cash_received = $(this).val();
 		var amount_due = 0;
-		var total_amount_due = accounting.unformat($("#total_amount_due_cell").html().trim());
+		var detail_balance = 0;
+		//var total_amount_due = accounting.unformat($("#total_amount_due_cell").html().trim());
+		var total_balance = accounting.unformat($("#total_balance").html().trim());
 		var paying_ratio = 0;
 		var pay_amount = 0;
 		var overpay_amount = 0;
 
 		$('.paying').each(function(i,el){
 			if($(el).attr('id')!=='overpayment'){
-			 amount_due = accounting.unformat($(el).parent().prev().prev().prev().html().trim());
-			 paying_ratio = parseFloat(amount_due)/parseFloat(total_amount_due);
+			 var detail_balance = accounting.unformat($(this).parent().prev().html().trim());
+			 paying_ratio = parseFloat(detail_balance)/parseFloat(total_balance);
 			 pay_amount = parseFloat(paying_ratio) * parseFloat(cash_received);
 
-			 var detail_balance = accounting.unformat($(this).parent().prev().html().trim());
 			 var rounded_pay_amount = accounting.unformat(accounting.format(pay_amount));
 
 			 if(rounded_pay_amount > detail_balance){
-				 //var dif = parseFloat(rounded_pay_amount) - parseFloat(detail_balance);
 					rounded_pay_amount = detail_balance;
 			 }
 
@@ -190,14 +190,12 @@ $row = $edit_data[0];
 		 }
 		});
 
-		if(parseFloat(cash_received) > parseFloat(total_amount_due)){
-			overpay_amount = parseFloat(cash_received) - total_amount_due;
+		if(parseFloat(cash_received) > parseFloat(total_balance)){
+			overpay_amount = parseFloat(cash_received) - parseFloat(total_balance);
 			$("#overpayment").val(overpay_amount);
 			$("#overpayment_description").val('Overpayment');
 			get_total_payment();
 		}
-
-
 
 	});
 
