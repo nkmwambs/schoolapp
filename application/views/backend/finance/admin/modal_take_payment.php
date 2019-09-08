@@ -7,6 +7,10 @@ $this->db->select(array('student.name as student','invoice.student_id as student
 $this->db->join('student','student.student_id=invoice.student_id');
 $edit_data	=	$this->db->get_where('invoice' , array('invoice_id' => $param2) )->result_array();
 
+//Spreading mode
+$spreading_mode = $this->db->get_where('settings',
+array('type'=>'student_payment_spread_mode'))->row()->description;
+
 $row = $edit_data[0];
 
 //foreach ($edit_data as $row):
@@ -28,10 +32,33 @@ $row = $edit_data[0];
 					<?php $bal = $this->crud_model->fees_balance_by_invoice($param2);?>
 		           <input type="hidden" id="get_bal" class="form-control" value="<?php echo $bal;?>" readonly/>
 
+							 <div class="form-group">
+									 <label class="col-sm-offset-4 control-label"><?=get_phrase('student_name');?> : <?php echo $row["student"];?></label>
+							 </div>
+
 								<div class="form-group">
 										<label class="control-label col-xs-3"><?=get_phrase('enter_cash_received');?></label>
 										<div class="col-xs-6">
 											<input type="number"  id="cash_received" class="form-control" />
+										</div>
+								</div>
+
+								<div class="form-group">
+										<label class="control-label col-xs-3"><?=get_phrase('choose_spreading_mode');?></label>
+										<div class="col-xs-6">
+											<div class="col-xs-4">
+												By Balance Ratio:
+											</div>
+											<div class="col-xs-2">
+												 <input <?php if($spreading_mode == 'ratio') echo "checked";?> type="radio" name="sreading_mode" class="spreading_mode" value="ratio"/>
+											</div>
+
+											<div class="col-xs-4">
+												By Pay Order Ranking:
+											</div>
+											<div class="col-xs-2">
+												<input <?php if($spreading_mode == 'order') echo "checked";?> type="radio" name="sreading_mode" class="spreading_mode" value="order"/>
+											</div>
 										</div>
 								</div>
 
@@ -161,14 +188,47 @@ $row = $edit_data[0];
 
 <script>
 
-	$("#cash_received").keyup(function(){
-			payment_spread($(this));
+	$(".spreading_mode").click(function(){
+		var mode = $(this).val();
+		var url = "<?=base_url();?>index.php?finance/change_spreading_mode/"+mode;
+
+		$.ajax({
+			url:url,
+			type:"POST",
+			success:function(resp){
+				//alert(resp);
+			}
+		});
 	});
 
-	function payment_spread(elem){
+	$("#cash_received").keyup(function(){
+
+		var mode = "ratio";
+
+		$('.spreading_mode').each(function(i,el){
+
+				if($(el).attr("checked")){
+					mode = $(el).val();
+				}
+		});
+
+		if(mode == 'ratio'){
+			payment_spread_by_ratio($(this));
+		}else{
+			payment_spread_by_order($(this));
+		}
+
+	});
+
+	function payment_spread_by_order(){
+
+	}
+
+	function payment_spread_by_ratio(elem){
 		var count_of_paying_cell = $(".paying").length;
 		var cash_received = elem.val();
-		var amount_due = 0;
+		var
+		 amount_due = 0;
 		var detail_balance = 0;
 		var total_balance = accounting.unformat($("#total_balance").html().trim());
 		var paying_ratio = 0;

@@ -3002,4 +3002,11 @@ class Finance extends CI_Controller
       $this->db->update('fees_structure_details',$data2);
 
     }
+
+    function change_spreading_mode($mode){
+      $this->db->where(array('type'=>'student_payment_spread_mode'));
+      $data['description'] = $mode;
+      $this->db->update('settings',$data);
+
+    }
 }
