@@ -162,11 +162,14 @@ $row = $edit_data[0];
 <script>
 
 	$("#cash_received").keyup(function(){
+			payment_spread($(this));
+	});
+
+	function payment_spread(elem){
 		var count_of_paying_cell = $(".paying").length;
-		var cash_received = $(this).val();
+		var cash_received = elem.val();
 		var amount_due = 0;
 		var detail_balance = 0;
-		//var total_amount_due = accounting.unformat($("#total_amount_due_cell").html().trim());
 		var total_balance = accounting.unformat($("#total_balance").html().trim());
 		var paying_ratio = 0;
 		var pay_amount = 0;
@@ -197,7 +200,7 @@ $row = $edit_data[0];
 			get_total_payment();
 		}
 
-	});
+	}
 
 	$("#method").on('change',function(){
 		if($(this).val() == 2){
