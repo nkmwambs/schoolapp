@@ -89,7 +89,7 @@ if($structure_details[0]['pay_order'] == 0){
         	$sum+=$row['amount'];
         	endforeach;
         ?>
-        <tr><td colspan="2"><?=get_phrase('total');?></td><td><?=number_format($sum,2);?></td></tr>
+        <tr><td colspan="3"><?=get_phrase('total');?></td><td><?=number_format($sum,2);?></td></tr>
     </tbody>
 </table>
 
