@@ -44,25 +44,10 @@ $row = $edit_data[0];
 								</div>
 
 								<div class="form-group">
-										<label class="control-label col-xs-3"><?=get_phrase('choose_spreading_mode');?></label>
-										<div class="col-xs-6">
-											<div class="col-xs-4">
-												By Balance Ratio:
-											</div>
-											<div class="col-xs-2">
-												 <input <?php if($spreading_mode == 'ratio') echo "checked";?> type="radio" name="sreading_mode" class="spreading_mode" value="ratio"/>
-											</div>
+ 									 <label class="col-sm-offset-3 control-label"><?=get_phrase('automatic_details_spreading_mode');?> : <?php echo ucfirst($spreading_mode);?></label>
+ 							 </div>
 
-											<div class="col-xs-4">
-												By Pay Order Ranking:
-											</div>
-											<div class="col-xs-2">
-												<input <?php if($spreading_mode == 'order') echo "checked";?> type="radio" name="sreading_mode" class="spreading_mode" value="order"/>
-											</div>
-										</div>
-								</div>
-
-		            <div class="form-group">
+							  <div class="form-group">
 		                <label class="col-sm-offset-6 control-label"><?php echo get_phrase('payment');?></label>
 		            </div>
 
@@ -188,29 +173,9 @@ $row = $edit_data[0];
 
 <script>
 
-	$(".spreading_mode").click(function(){
-		var mode = $(this).val();
-		var url = "<?=base_url();?>index.php?finance/change_spreading_mode/"+mode;
-
-		$.ajax({
-			url:url,
-			type:"POST",
-			success:function(resp){
-				//alert(resp);
-			}
-		});
-	});
-
 	$("#cash_received").keyup(function(){
 
-		var mode = "ratio";
-
-		$('.spreading_mode').each(function(i,el){
-
-				if($(el).attr("checked")){
-					mode = $(el).val();
-				}
-		});
+		var mode = "<?=$spreading_mode;?>";
 
 		if(mode == 'ratio'){
 			payment_spread_by_ratio($(this));

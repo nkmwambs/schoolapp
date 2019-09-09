@@ -91,7 +91,8 @@ class School_model extends CI_Model {
     $required_settings_array = array(
       'manage_invoice_require_approval'=>true,
       'allowable_variance_lower_limit'=>-10,
-      'allowable_variance_upper_limit'=>10);
+      'allowable_variance_upper_limit'=>10,
+      'student_payment_spread_mode'=>'ratio');
 
     foreach ($required_settings_array as $required_setting_key=>$required_setting_value) {
       $type = $this->db->get_where('settings',array('type'=>$required_setting_key));
