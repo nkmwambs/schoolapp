@@ -564,7 +564,7 @@ class Finance extends CI_Controller
             }
 
 
-            redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
+            redirect(base_url() . 'index.php?finance/unpaid_invoices', 'refresh');
         }
 
         if ($param1 == 'do_update') {
