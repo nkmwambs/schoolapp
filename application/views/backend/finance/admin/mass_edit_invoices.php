@@ -101,11 +101,12 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 							foreach($fees_structure_vote_heads as $category){
 						?>
-							<td class="<?php if($invoice_status == 'unpaid') echo 'editable';?>"
+							<td class="<?php if($invoice_status == 'unpaid' && isset($payment['fees'][$category->name]['invoice_id']) ) echo 'editable';?>"
                 data-invoiceid = "<?=isset($payment['fees'][$category->name]['invoice_id'])?$payment['fees'][$category->name]['invoice_id']:"";?>"
                 id = "<?=isset($payment['fees'][$category->name]['invoice_details_id'])?$payment['fees'][$category->name]['invoice_details_id']:"";?>">
 								<?=number_format(isset($payment['fees'][$category->name]['due'])?$payment['fees'][$category->name]['due']:0,2);?>
 						 	</td>
+
 							<td>
 								<?=number_format(isset($payment['fees'][$category->name]['paid'])?$payment['fees'][$category->name]['paid']:0,2);?>
 							</td>
