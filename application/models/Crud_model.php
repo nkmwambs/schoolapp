@@ -1004,8 +1004,14 @@ class Crud_model extends CI_Model {
 	function get_invoice_amount_paid($invoice_id){
 
 		$this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
-		$amount_paid = $this->db->select_sum('cost')->get_where('transaction_detail',
-		array('invoice_id'=>$invoice_id))->row()->cost;
+		$amount_paid_obj = $this->db->select_sum('cost')->get_where('transaction_detail',
+		array('invoice_id'=>$invoice_id));
+
+    $amount_paid = 0;
+
+    if($amount_paid_obj->num_rows()>0{
+      $amount_paid = $amount_paid_obj->row()->cost
+    }
 
 		return $amount_paid;
 	}
