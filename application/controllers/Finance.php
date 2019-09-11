@@ -500,10 +500,12 @@ class Finance extends CI_Controller
             $this -> db -> trans_start();
 
             $approved = $this->action_approval_status_before_implementation('invoice',$param2);
-            if($approved){
+            $manage_invoice_require_approval = $this->db->get_where('settings',
+            array('type'=>'manage_invoice_require_approval'))->row()->description;
+
+            if($approved || $manage_invoice_require_approval == 'false'){
               $data['amount_due'] = $this -> input -> post('amount_due');
-              //$data['amount_paid'] = $this->input->post('amount_paid');
-              //$data['balance'] = $this->input->post('balance');
+
               if ($this -> input -> post('balance') === 0) {
                   $data['status'] = "paid";
               } elseif ($this -> input -> post('balance') < 0) {
@@ -559,9 +561,9 @@ class Finance extends CI_Controller
                   $this -> db -> trans_commit();
                   $this -> session -> set_flashdata('flash_message', get_phrase('edit_successful'));
               }
-            }else{
+        }else{
               $this->session->set_flashdata('flash_message' , get_phrase('approval_required'));
-            }
+        }
 
 
             redirect(base_url() . 'index.php?finance/unpaid_invoices', 'refresh');
@@ -604,7 +606,7 @@ class Finance extends CI_Controller
             }
 
             $this -> session -> set_flashdata('flash_message', $msg);
-            redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
+            redirect(base_url() . 'index.php?finance/unpaid_invoices', 'refresh');
         }
 
         if ($param1 == 'cancel') {
@@ -623,7 +625,7 @@ class Finance extends CI_Controller
             $this -> session -> set_flashdata('flash_message', get_phrase('invoice_cancellation_failed'));
           }
 
-            redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
+            redirect(base_url() . 'index.php?finance/unpaid_invoices', 'refresh');
         }
 
         if($param1 == 'request_edit'){
@@ -639,7 +641,7 @@ class Finance extends CI_Controller
               $this -> session -> set_flashdata('flash_message', get_phrase('request_sent_successfully'));
           }
 
-          redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
+          redirect(base_url() . 'index.php?finance/unpaid_invoices', 'refresh');
         }
 		if($param1 == 'request_reinstate'){
 			$this -> db -> trans_start();
@@ -654,7 +656,7 @@ class Finance extends CI_Controller
               $this -> session -> set_flashdata('flash_message', get_phrase('request_sent_successfully'));
           }
 
-          redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
+          redirect(base_url() . 'index.php?finance/unpaid_invoices', 'refresh');
 		}
 
         if($param1 == 'request_cancel'){
@@ -670,7 +672,7 @@ class Finance extends CI_Controller
               $this -> session -> set_flashdata('flash_message', get_phrase('request_sent_successfully'));
           }
 
-          redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
+          redirect(base_url() . 'index.php?finance/unpaid_invoices', 'refresh');
         }
 
         if ($param1 == 'reclaim') {
@@ -696,7 +698,7 @@ class Finance extends CI_Controller
             } else {
                 $this -> session -> set_flashdata('flash_message', get_phrase('invoice_cannot_be_reclaimed'));
             }
-            redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
+            redirect(base_url() . 'index.php?finance/unpaid_invoices', 'refresh');
         }
 
         $page_data['page_name'] = 'invoice';
@@ -1111,7 +1113,7 @@ class Finance extends CI_Controller
         }
 
         $this -> session -> set_flashdata('flash_message', 'SMS sent');
-        redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
+        redirect(base_url() . 'index.php?finance/unpaid_invoices', 'refresh');
     }
 
     public function create_overpay_note(){
@@ -1192,7 +1194,7 @@ class Finance extends CI_Controller
         //}
 
           $this -> session -> set_flashdata('flash_message', $message);
-          redirect(base_url() . 'index.php?finance/student_payments', 'refresh');
+          redirect(base_url() . 'index.php?finance/unpaid_invoices', 'refresh');
 
     }
 
