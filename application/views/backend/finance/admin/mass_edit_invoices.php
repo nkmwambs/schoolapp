@@ -6,6 +6,76 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 .editable {
 	background-color: turquoise;
 }
+
+.table-fixed  {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td {
+    border: 1px solid #FFA07A;
+    text-align: right;
+    padding: 8px;
+}
+
+.table-fixed thead th
+{
+	position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 999;
+    background-color: #FFA07A;
+    color: #fff;
+    border: 1px solid #ccc;
+    height: 75px;
+    width: 50px;
+    text-align:left;
+}
+
+
+tbody td:nth-child(-n+1)
+{
+  position:sticky;
+  left:0px;
+ background-color:#ccc;
+}
+
+thead th:nth-child(-n+1)
+{
+  position:sticky;
+  left:0px;
+}
+
+tfoot th:nth-child(-n+1)
+{
+  position:sticky;
+  left:0px;
+
+}
+
+ tbody td:first-child
+ {
+  background-color:#ccc;
+ }
+
+ tfoot td:first-child
+ {
+  background-color:#FFA07A;
+ }
+
+
+
+/**Freeze top row**/
+.table-fixed thead {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  z-index: 999;
+  background-color: #000;
+  color: #fff;
+}
+
 </style>
 
 <div class="row">
@@ -49,7 +119,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 	</div>
 
 	<div class="col-xs-12">
-		<table class="table table-bordered datatable">
+		<table class="table table-bordered datatable table-fixed">
 			<thead>
 				<tr>
 					<th nowrap="nowrap" rowspan="2"><?=get_phrase('student_name');?></th>
