@@ -1009,7 +1009,7 @@ class Crud_model extends CI_Model {
 
     $amount_paid = 0;
 
-    if($amount_paid_obj->num_rows()>0{
+    if($amount_paid_obj->num_rows()>0){
       $amount_paid = $amount_paid_obj->row()->cost
     }
 
