@@ -7,11 +7,20 @@ $this->db->select(array('student.name as student','invoice.student_id as student
 $this->db->join('student','student.student_id=invoice.student_id');
 $edit_data	=	$this->db->get_where('invoice' , array('invoice_id' => $param2) )->result_array();
 
+
 //Spreading mode
 $spreading_mode = $this->db->get_where('settings',
 array('type'=>'student_payment_spread_mode'))->row()->description;
 
 $row = $edit_data[0];
+
+$this->db->select(array('pay_order','fees_structure_details.detail_id','fees_structure_details.name',
+'fees_structure_details.amount','invoice_details.invoice_details_id','invoice_details.amount_due'));
+
+$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');
+$this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
+$this->db->order_by('pay_order');
+$invoice_details = $this->db->get_where("invoice_details",array('invoice_details.invoice_id'=>$row['invoice_id']))->result_object();
 
 //foreach ($edit_data as $row):
 ?>
@@ -47,6 +56,18 @@ $row = $edit_data[0];
  									 <label class="col-sm-offset-3 control-label"><?=get_phrase('automatic_details_spreading_mode');?> : <?php echo ucfirst($spreading_mode);?></label>
  							 </div>
 
+							 <?php
+								 if($invoice_details[0]->pay_order == 0 && $spreading_mode == 'order'){
+							 ?>
+								 <div class="form-group">
+									 <div class="col-xs-12 text-center">
+												 <span class="label label-danger">Fees structure items order not set</span>
+									 </div>
+								 </div>
+							 <?php
+									}
+								?>
+
 							  <div class="form-group">
 		                <label class="col-sm-offset-6 control-label"><?php echo get_phrase('payment');?></label>
 		            </div>
@@ -65,21 +86,15 @@ $row = $edit_data[0];
 								</thead>
 								<tbody>
 									<?php
-										$this->db->select(array('fees_structure_details.detail_id','fees_structure_details.name',
-	                                	'fees_structure_details.amount','invoice_details.invoice_details_id','invoice_details.amount_due'));
-
-										$this->db->join('fees_structure_details','fees_structure_details.detail_id=invoice_details.detail_id');
-	                                	$this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
-	                                	$invoice_details = $this->db->get_where("invoice_details",array('invoice_details.invoice_id'=>$row['invoice_id']))->result_object();
 
 										foreach($invoice_details as $inv):
 									?>
 										<tr>
-											<td><?php echo $inv->name;?></td>
+											<td title="Item Order: <?=$inv->pay_order;?>"><?php echo $inv->name;?></td>
 											<td class="amount_due_cell"><?php echo number_format($inv->amount_due,2);?></td>
 											<td><?php echo number_format($this->crud_model->fees_paid_by_invoice_detail($inv->invoice_details_id),2);?></td>
 											<td><?php echo number_format($this->crud_model->fees_balance_by_invoice_detail($inv->invoice_details_id),2);?></td>
-											<td><input required="required" type="text" onkeyup="return get_total_payment();" class="form-control paying" name="take_payment[<?php echo $inv->invoice_details_id;?>]" id="" value="0"/></td>
+											<td><input data-order="<?=$inv->pay_order;?>" required="required" type="text" onkeyup="return get_total_payment();" class="form-control paying" name="take_payment[<?php echo $inv->invoice_details_id;?>]" id="" value="0"/></td>
 										</tr>
 
 									<?php
@@ -101,7 +116,7 @@ $row = $edit_data[0];
 		                </div>
 		            </div>
 
-		            <div class="form-group">
+								<div class="form-group">
 		                <label class="col-sm-3 control-label"><?php echo get_phrase('description');?></label>
 		                <div class="col-sm-6">
 		                    <input value="Being amount recieved for school fees" type="text" required="required" class="form-control" name="description" id="description" placeholder="<?php echo get_phrase('description');?>"/>
@@ -185,15 +200,57 @@ $row = $edit_data[0];
 
 	});
 
-	function payment_spread_by_order(){
+	function payment_spread_by_order(elem){
+		var cash_received = elem.val();
+		var detail_balance = 0;
+		var paid = 0;
+		var running_balance = cash_received;
+		var detail_balance = 0;
+		var topay = 0;
 
+		$('.paying').each(function(i,el){
+
+				detail_balance = accounting.unformat($(this).parent().prev().html().trim());
+
+				if(parseFloat(detail_balance) <= parseFloat(running_balance)){
+					topay = detail_balance;
+				}else if(parseFloat(running_balance) > 0){
+					topay = running_balance;
+				}else{
+					topay = 0;
+				}
+
+				$(el).val(topay);
+				get_total_payment();
+				paid = parseFloat(paid) + parseFloat($(el).val());
+				running_balance  = parseFloat(cash_received) - parseFloat(paid);
+
+				var overpayment = parseFloat(cash_received) - parseFloat(sum_total_payment());
+
+				if(overpayment > 0){
+					$('#overpayment').val(overpayment);
+					$("#overpayment_description").val('Overpayment');
+					get_total_payment();
+				}
+
+
+		});
+
+	}
+
+	function sum_total_payment(){
+		    var sum = 0;
+		    $('.paying').each(function() {
+		        sum += Number($(this).val());
+		    });
+
+				return sum;
 	}
 
 	function payment_spread_by_ratio(elem){
 		var count_of_paying_cell = $(".paying").length;
 		var cash_received = elem.val();
-		var
-		 amount_due = 0;
+		var amount_due = 0;
 		var detail_balance = 0;
 		var total_balance = accounting.unformat($("#total_balance").html().trim());
 		var paying_ratio = 0;
