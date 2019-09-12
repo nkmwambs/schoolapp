@@ -171,9 +171,10 @@ $invoice_details = $this->db->get_where("invoice_details",array('invoice_details
                     <input type="hidden" name="invoice_id" value="<?php echo $row['invoice_id'];?>">
 
 		            <div class="form-group">
-		                <div class="col-sm-5">
-		                    <button type="submit" class="btn btn-info"><?php echo get_phrase('take_payment');?></button>
-		                </div>
+		                <div class="col-sm-12">
+		                    <input name="cashbook" type="submit" class="btn btn-info pull-left" value="<?php echo get_phrase('save_and_go_to_cashbook');?>" />
+												<input name="invoices" type="submit" class="btn btn-info pull-right" value="<?php echo get_phrase('save_and_go_to_invoices');?>" />
+										</div>
 		            </div>
 
 				<?php echo form_close();?>

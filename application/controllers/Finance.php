@@ -2642,8 +2642,12 @@ class Finance extends CI_Controller
                 $this -> session -> set_flashdata('flash_message', get_phrase('payment_successfull'));
             }
 
-            redirect(base_url() . 'index.php?finance/unpaid_invoices/', 'refresh');
-            //redirect(base_url() . 'index.php?finance/cashbook/scroll/' . strtotime($this -> input -> post('timestamp')), 'refresh');
+            if($this->input->post('cashbook')){
+              redirect(base_url() . 'index.php?finance/cashbook/scroll/' . strtotime($this -> input -> post('timestamp')), 'refresh');
+            }else{
+              redirect(base_url() . 'index.php?finance/unpaid_invoices/', 'refresh');
+            }
+
         }
     }
 
