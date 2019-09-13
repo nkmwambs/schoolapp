@@ -2074,6 +2074,33 @@ class Finance extends CI_Controller
 
     }
 
+    public function list_paying_students($month,$transaction_type){
+      if ($this -> session -> userdata('active_login') != 1) {
+          redirect('login', 'refresh');
+      }
+
+      $transaction_type_id = $this->db->get_where('transaction_type',array('name'=>$transaction_type))->row()->transaction_type_id;
+
+      $current_transaction_date = date('Y-m-d',$month);
+
+      $this->db->select(array('batch_number','transaction.payee','transaction.description'));
+      $this->db->select_sum('transaction_detail.cost');
+      $this->db->join('transaction','transaction.transaction_id=transaction_detail.transaction_id');
+      $this->db->where(array('transaction_type_id'=>$transaction_type_id));
+      $this->db->where(array('t_date'=>$current_transaction_date));
+      $this->db->group_by('transaction.transaction_id','transaction.payee');
+      $result = $this->db->get('transaction_detail');
+
+      $page_data['current_transaction_date'] = $current_transaction_date;
+      $page_data['transaction_type'] = $transaction_type;
+      $page_data['result'] = $result->result_object();
+      $page_data['month'] = $month;
+      $page_data['page_name'] = 'list_paying_students';
+      $page_data['page_view'] = "finance";
+      $page_data['page_title'] = get_phrase('daily_reports');
+      $this -> load -> view('backend/index', $page_data);
+    }
+
     public function daily_reports($month = "", $transaction_type = 'income'){
       if ($this -> session -> userdata('active_login') != 1) {
           redirect('login', 'refresh');
