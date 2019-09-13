@@ -1775,7 +1775,7 @@ class Finance extends CI_Controller
 
       $this->db->select(array('fees_structure_details.detail_id as detail_id','fees_structure_details.name as name'));
       $this->db->join('fees_structure_details','fees_structure_details.fees_id=fees_structure.fees_id');
-
+      $this->db->order_by('pay_order');
       $fees_structure_vote_heads = $this->db->get_where('fees_structure',
       array('fees_structure.class_id'=>$class_id,'fees_structure.yr'=>$year,'term'=>$term))->result_object();
 
