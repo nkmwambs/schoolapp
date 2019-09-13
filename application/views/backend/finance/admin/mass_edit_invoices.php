@@ -1,81 +1,14 @@
 <?php
 if (!defined('BASEPATH')) exit('No direct script access allowed');
-//print_r($this->crud_model->get_invoice_balance(135));
+//print_r($payments);
 ?>
 <style>
 .editable {
 	background-color: turquoise;
 }
-
-.table-fixed  {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
+.add_editable{
+	background-color:lightsalmon;
 }
-
-td {
-    border: 1px solid #FFA07A;
-    text-align: right;
-    padding: 8px;
-}
-
-.table-fixed thead th
-{
-	position: sticky;
-    position: -webkit-sticky;
-    top: 0;
-    z-index: 999;
-    background-color: #FFA07A;
-    color: #fff;
-    border: 1px solid #ccc;
-    height: 75px;
-    width: 50px;
-    text-align:left;
-}
-
-
-tbody td:nth-child(-n+1)
-{
-  position:sticky;
-  left:0px;
- background-color:#ccc;
-}
-
-thead th:nth-child(-n+1)
-{
-  position:sticky;
-  left:0px;
-}
-
-tfoot th:nth-child(-n+1)
-{
-  position:sticky;
-  left:0px;
-
-}
-
- tbody td:first-child
- {
-  background-color:#ccc;
- }
-
- tfoot td:first-child
- {
-  background-color:#FFA07A;
- }
-
-
-
-/**Freeze top row**/
-.table-fixed thead {
-  position: sticky;
-  position: -webkit-sticky;
-  top: 0;
-  z-index: 999;
-  background-color: #000;
-  color: #fff;
-}
-
 </style>
 
 <div class="row">
@@ -115,11 +48,11 @@ tfoot th:nth-child(-n+1)
 
 <div class="row">
 	<div class="col-xs-12 text-center">
-		Double click on any of the <span style="color:turquoise;font-weight:bold;">turquoise</span> colored cell to edit
+		Double click on any of the <span style="color:turquoise;font-weight:bold;">turquoise</span> colored cell to edit and <span style="color:lightsalmon;font-weight:bold;"> light salmon </span> to add an item to invoice
 	</div>
 
 	<div class="col-xs-12">
-		<table class="table table-bordered datatable table-fixed">
+		<table class="table table-bordered datatable">
 			<thead>
 				<tr>
 					<th nowrap="nowrap" rowspan="2"><?=get_phrase('student_name');?></th>
@@ -171,9 +104,10 @@ tfoot th:nth-child(-n+1)
 
 							foreach($fees_structure_vote_heads as $category){
 						?>
-							<td class="<?php if($invoice_status == 'unpaid' && isset($payment['fees'][$category->name]['invoice_id']) ) echo 'editable';?>"
-                data-invoiceid = "<?=isset($payment['fees'][$category->name]['invoice_id'])?$payment['fees'][$category->name]['invoice_id']:"";?>"
-                id = "<?=isset($payment['fees'][$category->name]['invoice_details_id'])?$payment['fees'][$category->name]['invoice_details_id']:"";?>">
+							<td class="<?php if($invoice_status == 'unpaid' && isset($payment['fees'][$category->name]['invoice_id']) ) echo 'editable';?> <?php if($invoice_status == 'unpaid' && !isset($payment['fees'][$category->name]['invoice_id'])) echo 'add_editable';?>"
+								data-feesdetailid = "<?=$category->detail_id;?>"
+								data-invoiceid = "<?=$payment['student']['invoice_id'];?>"
+                id = "<?=isset($payment['fees'][$category->name]['invoice_details_id'])?$payment['fees'][$category->name]['invoice_details_id']:0;?>">
 								<?=number_format(isset($payment['fees'][$category->name]['due'])?$payment['fees'][$category->name]['due']:0,2);?>
 						 	</td>
 
@@ -205,6 +139,7 @@ tfoot th:nth-child(-n+1)
 					<th colspan="3">Total</th>
 
 					<?php
+						//print_r($fees_structure_vote_heads);
 						foreach($fees_structure_vote_heads as $category){
 					?>
 						<th><?=number_format(isset($payments['fees'],$category->name)?array_sum(array_column(array_column($payments['fees'],$category->name),'due')):0,2);?></th>
@@ -223,7 +158,12 @@ tfoot th:nth-child(-n+1)
 </div>
 
 <script>
-$(".editable").dblclick(function(){
+
+$('td').click(function(){
+	//alert($(this).attr('data-feesdetailid'));
+});
+
+$(".editable,.add_editable").dblclick(function(){
 
 	//Get the value of the cell
 	var amount = accounting.unformat($(this).html().trim());
@@ -234,9 +174,11 @@ $(".editable").dblclick(function(){
   //Invoice details id for the updated item
   var invoice_details_id = $(this).attr('id');
   var invoice_id = $(this).attr('data-invoiceid');
+	var feesdetailid = $(this).attr('data-feesdetailid');
+	//alert(feesdetailid);
 
 	//Change the inner content of the cell to a textbox
-	var textbox = '<input style="min-width:75px;" onchange="update_invoice_amount_due(this,'+amount+','+original_aggregate_due_amount+','+invoice_details_id+','+invoice_id+');" type="textbox" class="form-control" value="'+amount+'"/>'
+	var textbox = '<input style="min-width:75px;" onchange="update_invoice_amount_due(this,'+amount+','+original_aggregate_due_amount+','+invoice_details_id+','+invoice_id+','+feesdetailid+');" type="textbox" class="form-control" value="'+amount+'"/>'
 
 	// Only change the inner html if their is not textbox in the cell
 	if($(this).find('.form-control').length == 0 ){
@@ -245,7 +187,7 @@ $(".editable").dblclick(function(){
 
 });
 
-function update_invoice_amount_due(el,original_due_amount,original_aggregate_due_amount,invoice_details_id,invoice_id){
+function update_invoice_amount_due(el,original_due_amount,original_aggregate_due_amount,invoice_details_id,invoice_id,feesdetailid){
 
 	//Get new input value
 	var updated_due_amount = $(el).val();
@@ -280,7 +222,6 @@ function update_invoice_amount_due(el,original_due_amount,original_aggregate_due
 			updated_due_amount = original_due_amount;
 	}
 
-
 		//Compute the new category Balance
 		var updated_category_balance_amount = parseFloat(updated_due_amount) - parseFloat(category_paid_amount);
 		$(el).parent().next().next().html(accounting.format(updated_category_balance_amount));
@@ -293,14 +234,16 @@ function update_invoice_amount_due(el,original_due_amount,original_aggregate_due
 		var updated_aggregate_balance_amount = parseFloat(updated_aggregate_due_amount) - parseFloat(aggregate_paid_amount);
 		$(el).parent().parent().find('.aggregate_balance').html(accounting.format(updated_aggregate_balance_amount));
 
-		post_updated_invoice_amount_due(updated_due_amount,invoice_details_id,invoice_id);
+		post_updated_invoice_amount_due(updated_due_amount,invoice_details_id,invoice_id,feesdetailid);
 
 }
 
-function post_updated_invoice_amount_due(new_due_amount,invoice_details_id,invoice_id){
-
+function post_updated_invoice_amount_due(new_due_amount,invoice_details_id,invoice_id,feesdetailid){
+	//	alert(feesdetailid);
 	var url = "<?=base_url();?>index.php?finance/mass_update_invoice_amount_due/";
-	var data = {'amount_due':new_due_amount,'invoice_details_id':invoice_details_id,'invoice_id':invoice_id};
+	var data = {'amount_due':new_due_amount,'invoice_details_id':invoice_details_id,'invoice_id':invoice_id,'fees_details_id':feesdetailid};
+
+	//alert(feesdetailid);
 
 	$.ajax({
 		url:url,

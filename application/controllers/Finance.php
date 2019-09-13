@@ -1679,48 +1679,61 @@ class Finance extends CI_Controller
     }
 
     public function mass_update_invoice_amount_due(){
-      $amount_due = $this->input->post('amount_due');
-      $invoice_details_id = $this->input->post('invoice_details_id');
-      $invoice_id = $this->input->post('invoice_id');
-      $message = "";
+     $amount_due = $this->input->post('amount_due');
+     $invoice_details_id = $this->input->post('invoice_details_id');
+     $invoice_id = $this->input->post('invoice_id');
+     $detail_id = $this->input->post('fees_details_id');
+     $message = "";
 
-      $this -> db -> trans_start();
-      //Update the amount due
-      $this->db->update('invoice_details',array('amount_due'=>$amount_due),
-      array('invoice_details_id'=>$invoice_details_id));
+     $this -> db -> trans_start();
 
-      //Get new sum for the invoice
-      $this->db->select_sum('amount_due');
-      $sum_amount_due = $this->db->get_where('invoice_details',array('invoice_id'=>$invoice_id))->row()->amount_due;
+     //Check if the details item doesn't exists and add a new detail
+     if($invoice_details_id == 0){
+       $data['invoice_id'] = $invoice_id;
+       $data['detail_id'] = $detail_id;
+       $data['amount_due'] = 0;
+       $this->db->insert('invoice_details',$data);
 
-      //Update the invoice with sum $amount_due
-      $this->db->update('invoice',array('amount_due'=>$sum_amount_due),array('invoice_id'=>$invoice_id));
+       $invoice_details_id = $this->db->insert_id();
+     }
 
-      //Get invoice balance
-      $invoice_balance = $this->crud_model->get_invoice_balance($invoice_id);
+     //Update the amount due
+     $this->db->update('invoice_details',array('amount_due'=>$amount_due),
+     array('invoice_details_id'=>$invoice_details_id));
 
-      //Get invoice status
-      $invoice_status = $this->db->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->status;
+     //Get new sum for the invoice
+     $this->db->select_sum('amount_due');
+     $sum_amount_due = $this->db->get_where('invoice_details',array('invoice_id'=>$invoice_id))->row()->amount_due;
 
-      //Make the status of the invoice paid when balance is zero, but when a user immediately changes it
-      // before refershing the browser, it will be chnaged to unpaid
-      if($invoice_balance == 0){
-        $this->db->update('invoice',array('status'=>'paid'),array('invoice_id'=>$invoice_id));
-        $message = "Invoice cleared";
-      }elseif($invoice_balance > 0 && $invoice_status !=='unpaid'){
-        $this->db->update('invoice',array('status'=>'unpaid'),array('invoice_id'=>$invoice_id));
-      }
+     //Update the invoice with sum $amount_due
+     $this->db->update('invoice',array('amount_due'=>$sum_amount_due),array('invoice_id'=>$invoice_id));
 
-      if ($this -> db -> trans_status() === false) {
-          $this -> db -> trans_rollback();
-          $message = "Update failed";
-      } else {
-          $this -> db -> trans_commit();
-          //$this -> session -> set_flashdata('flash_message', get_phrase('funds_transferred_successfully'));
-      }
+     //Get invoice balance
+     $invoice_balance = $this->crud_model->get_invoice_balance($invoice_id);
 
-      echo $message;
-    }
+     //Get invoice status
+     $invoice_status = $this->db->get_where('invoice',array('invoice_id'=>$invoice_id))->row()->status;
+
+     //Make the status of the invoice paid when balance is zero, but when a user immediately changes it
+     // before refershing the browser, it will be chnaged to unpaid
+     if($invoice_balance == 0){
+       $this->db->update('invoice',array('status'=>'paid'),array('invoice_id'=>$invoice_id));
+       $message = "Invoice cleared";
+     }elseif($invoice_balance > 0 && $invoice_status !=='unpaid'){
+       $this->db->update('invoice',array('status'=>'unpaid'),array('invoice_id'=>$invoice_id));
+     }
+
+     if ($this -> db -> trans_status() === false) {
+         $this -> db -> trans_rollback();
+         $message = "Update failed";
+     } else {
+         $this -> db -> trans_commit();
+         //$this -> session -> set_flashdata('flash_message', get_phrase('funds_transferred_successfully'));
+     }
+
+     echo $message;
+   }
+
 
     public function mass_edit_invoices($class_id="",$invoice_status='unpaid',$term = "",$year=""){
       if ($this -> session -> userdata('active_login') != 1) {
@@ -1756,9 +1769,11 @@ class Finance extends CI_Controller
           $payments[$row -> student_id]['student']['name'] = $row -> student;
           $payments[$row -> student_id]['student']['class'] = $row -> class_name;
           $payments[$row -> student_id]['student']['roll'] = $row -> roll;
+          $payments[$row -> student_id]['student']['student_id'] = $row -> student_id;
+          $payments[$row -> student_id]['student']['invoice_id'] = $row -> invoice_id;
       }
 
-      $this->db->select(array('fees_structure_details.name as name'));
+      $this->db->select(array('fees_structure_details.detail_id as detail_id','fees_structure_details.name as name'));
       $this->db->join('fees_structure_details','fees_structure_details.fees_id=fees_structure.fees_id');
 
       $fees_structure_vote_heads = $this->db->get_where('fees_structure',
