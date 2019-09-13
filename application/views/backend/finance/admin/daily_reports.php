@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
 ?>
 <div class="row" style="margin-bottom:25px;">
   <div class="col-xs-12">
-    <?php echo form_open(base_url() . 'index.php?finance/daily_reports/' ,
+    <?php echo form_open(base_url() . 'index.php?finance/daily_reports/'.$month ,
       array('class' => 'form-horizontal form-groups-bordered validate','target'=>'_top'));?>
 
       <div class="form-group">
@@ -63,7 +63,10 @@ if (!defined('BASEPATH'))
               foreach($transactions as $date=>$transaction){
             ?>
               <tr>
-                <td nowrap="nowrap"><?=$date;?></td>
+                <td nowrap="nowrap">
+                  <?=$date;?>
+                  <a target="_blank" href="<?=base_url();?>index.php?finance/list_paying_students/<?=strtotime($date);?>/<?=$transaction_type;?>"><i class="fa fa-print"></i></a>
+                </td>
 
                 <?php $grand_total+=array_sum($transaction);?>
 
