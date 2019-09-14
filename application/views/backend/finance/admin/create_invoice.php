@@ -288,8 +288,11 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 		var sum_overcharge = get_sum_overcharge();
 		var sum_payable_items = get_sum_payable();
 
-		if($("#frm_single_invoice #amount_due").val() == "0" && sum_overcharge ==  0){
+		//Check if the user has considered the balance forward in the invoices
+		
 
+		//Check if a user is creating an invoice with zero amount_due without overpay absorption
+		if($("#frm_single_invoice #amount_due").val() == "0" && sum_overcharge ==  0){
 			alert('You can\'t create an invoice with zero due amount');
 			ev.preventDefault();
 		}

@@ -789,59 +789,104 @@ class Finance extends CI_Controller
         return $default_category_detail;
     }
 
+    /**
+    * create_invoice_detail_row
+    * This method create a row for the invoice details of a single invoice
+    * @param $year : Fee structure year
+    * @param $term_id : Fee structure term_id
+    * @param $class_id : Fee structure class_id
+    * @param $student_id : Student record primary key
+    * @param $detail_id : Fee structure detail primary key
+    * @param $detail_name : Fee structure detail name
+    * @param $amount : Fees structure details amount
+    *
+    * @return row string
+    */
+
+    private function create_invoice_detail_row($year,$term_id,$class_id,$student_id,$detail_id,$detail_name,$amount){
+
+              $row = "";
+                          //Get if the is a balance in the previous terms
+              if ($this -> default_income_category_fees_structure_detail($term_id, $year, $class_id) -> detail_id == $detail_id) {
+                      $amount = $this -> crud_model -> student_unpaid_invoice_balance($student_id);
+              }
+
+                          //Create the balance brought forward row of the payment details
+                          $row .= "<tr>
+      							<td><input type='checkbox'
+      							onchange='return get_full_amount(" . $detail_id . ")'
+      							id='chk_" . $detail_id . "'/></td>
+      							<td>" . $detail_name . "</td>
+      							<td id='full_amount_" . $detail_id . "'>" . $amount . "</td>
+      							<td><input type='text'
+      							onkeyup='return get_payable_amount(" . $detail_id . ")'
+                    onchange='check_overpay_balance(this);'
+      							class='form-control payable_items' id='payable_" . $detail_id . "'
+      							name='payable[" . $detail_id . "]' value='0' /></td>
+      							<td><input type='text' onchange='check_overpay_balance(this);' class='form-control charge_overpay'
+      							value='0' name='charge_overpay[" . $detail_id. "]' /></td>
+      							<tr>";
+
+          return $row;
+    }
+
+    /**
+    * get_fees_items
+    * This method create the table rows for a single invoice payment details. It automatically brings the balance carried forward
+    * as the first row of the payment details.
+    * @param term integer
+    * @param year integer
+    * @param class integer
+    * @param student integer
+    * @return body string
+    */
+
     public function get_fees_items($term = "", $year = "", $class = "", $student = "")
     {
+      //Get a fee structure for the class, term and year
         $fees = $this -> db -> get_where('fees_structure', array("term" => $term, "yr" => $year, "class_id" => $class));
 
+        //Initialize creating a table body content of the single invoice payment information table
         $body = "";
 
+        //Create rows of the fees_items table body if fee structure exists else give a not found message in the table body
         if ($fees -> num_rows() > 0) {
+          //Get the primary key of the fees structure
             $fees_id = $fees -> row() -> fees_id;
 
+            //Return the fee structure details of the id above
             $details_object = $this -> db -> get_where('fees_structure_details', array("fees_id" => $fees_id));
 
+            //Check if the fee structure has details else return items not found in the table body
             if ($details_object -> num_rows() > 0) {
                 $details = $details_object -> result_object();
 
-                $invoice = $this -> db -> get_where('invoice', array('student_id' => $student, 'yr' => $year, 'term' => $term,'status'=>'unpaid'));
+                //Check if there is unpaid invoice for the student in the fee structure term and year
+                $invoice = $this -> db -> get_where('invoice',
+                array('student_id' => $student, 'yr' => $year, 'term' => $term,'status'=>'unpaid'));
 
                 $invoice_count = $invoice -> num_rows();
 
                 if ($invoice_count === 0) {
                     foreach ($details as $row) :
                         $amount = $row -> amount;
-
-                    if ($this -> default_income_category_fees_structure_detail($term, $year, $class) -> detail_id == $row -> detail_id) {
-                        $amount = $this -> crud_model -> student_unpaid_invoice_balance($student);
-                    }
-
-                    $body .= "<tr>
-							<td><input type='checkbox'
-							onchange='return get_full_amount(" . $row -> detail_id . ")'
-							id='chk_" . $row -> detail_id . "'/></td>
-							<td>" . $row -> name . "</td>
-							<td id='full_amount_" . $row -> detail_id . "'>" . $amount . "</td>
-							<td><input type='text'
-							onkeyup='return get_payable_amount(" . $row -> detail_id . ")'
-              onchange='check_overpay_balance(this);' 
-							class='form-control payable_items' id='payable_" . $row -> detail_id . "'
-							name='payable[" . $row -> detail_id . "]' value='0' /></td>
-							<td><input type='text' onchange='check_overpay_balance(this);' class='form-control charge_overpay'
-							value='0' name='charge_overpay[" . $row -> detail_id . "]' /></td>
-							<tr>";
+                        $detail_id = $row -> detail_id;
+                        $detail_name = $row -> name;
+                        $body .= $this->create_invoice_detail_row($year,$term,$class,$student,$detail_id,$detail_name,$amount);
                     endforeach;
                 } else {
-                    $amount_due = 0;
-                    echo "<input type='hidden' id='edit_invoice_id' value='" . $invoice -> row() -> invoice_id . "'/>";
-                    foreach ($details as $row) :
 
-                        $amount_due = $this -> db -> get_where('invoice_details', array('invoice_id' => $invoice -> row() -> invoice_id, 'detail_id' => $row -> detail_id)) -> row() -> amount_due;
-                    $body .= "<tr><td><input type='checkbox' onchange='return get_full_amount(" . $row -> detail_id . ")' id='chk_" . $row -> detail_id . "'/></td><td>" . $row -> name . "</td><td id='full_amount_" . $row -> detail_id . "'>" . $row -> amount . "</td><td><input type='text' onkeyup='return get_payable_amount(" . $row -> detail_id . ")' class='form-control payable_items' id='payable_" . $row -> detail_id . "' name='payable[" . $row -> detail_id . "]' value='" . $amount_due . "'/></td><td><input type='text' value='0' class='form-control charge_overpay' name='charge_overpay[" . $row -> detail_id . "]' /></td><tr>";
-                    endforeach;
+                    // Error td when student has an invoice unpaid in the fee structure term and year
+                    // Will never run since the invoice create form filters out such students
+                    $body .= "<tr><td colspan='5' style='text-align:center;color:red;'>" . get_phrase('student_already_has_an_invoice_in_the_term') . "</td></tr>";
                 }
+            }else{
+              // Error td when fee structure lacks details
+              // Will never run since invoice without details are restricted
+              $body .= "<tr><td colspan='5' style='text-align:center;color:red;'>" . get_phrase('fee_structure_lacks_details') . "</td></tr>";
             }
         } else {
-            $body .= "<tr><td class='col-sm-4'>" . get_phrase('no_items_found') . "</td></tr>";
+            $body .= "<tr><td colspan='5' style='text-align:center;color:red;'>" . get_phrase('fee_structure_is_missing') . "</td></tr>";
         }
 
         echo $body;

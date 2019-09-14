@@ -39,7 +39,7 @@ $default_category_obj = $this->db->get_where('income_categories',
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('class');?></label>
 
 						<div class="col-sm-6">
-							<select name="class_id" id="class_id" class="form-control">
+							<select required="required" name="class_id" id="class_id" class="form-control">
                               <option value=""><?php echo get_phrase('select');?></option>
                               <?php
 								$class = $this->db->order_by("name_numeric")->get('class')->result_array();
@@ -62,7 +62,7 @@ $default_category_obj = $this->db->get_where('income_categories',
 
 						<div class="col-sm-6">
 							<!--<input type="text" class="form-control" id="yr" name="yr" min="2010" max="2050" data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>" value="" autofocus>-->
-							<select name="yr" id="yr" class="form-control"  required="required">
+							<select required="required" name="yr" id="yr" class="form-control"  required="required">
 								<option disabled selected value=""><?=get_phrase('select');?></option>
 											<?php
 												$fy = range(date('Y')-3, date('Y')+3);
@@ -83,7 +83,7 @@ $default_category_obj = $this->db->get_where('income_categories',
 
 						<div class="col-sm-6">
 							<!--<input type="text" class="form-control" name="term" id="term" data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>" value="" autofocus>-->
-							<select class="form-control" id="term" name="term">
+							<select required="required" class="form-control" id="term" name="term">
 								<option disabled selected value=""><?=get_phrase('select');?></option>
 								<?php
 									$terms = $this->db->get('terms')->result_object();
@@ -117,7 +117,7 @@ $default_category_obj = $this->db->get_where('income_categories',
 
 						<div class="form-group">
 							<div class="col-sm-4">
-								<select class="form-control" id="" name="income_category_id[]" >
+								<select required="required" class="form-control" id="" name="income_category_id[]" >
 									<option value=""><?=get_phrase('select_category')?></option>
 									<?php
 
@@ -132,8 +132,8 @@ $default_category_obj = $this->db->get_where('income_categories',
 									?>
 								</select>
 							</div>
-							<div class="col-sm-4"><input type="text" class="form-control" id="" name="category_name[]" /></div>
-							<div class="col-sm-3"><input type="number" class="form-control" id="" name="amount[]" /></div>
+							<div class="col-sm-4"><input required="required" type="text" class="form-control" id="" name="category_name[]" /></div>
+							<div class="col-sm-3"><input required="required" type="number" class="form-control" id="" name="amount[]" /></div>
 							<div class="col-sm-1 add_row" onclick="javascript:add_row_event(this);" style="cursor: pointer;" title="<?=get_phrase('add_row');?>">
 								<i class="fa fa-plus-circle"></i>
 							</div>
