@@ -823,6 +823,7 @@ class Finance extends CI_Controller
 							<td id='full_amount_" . $row -> detail_id . "'>" . $amount . "</td>
 							<td><input type='text'
 							onkeyup='return get_payable_amount(" . $row -> detail_id . ")'
+              onchange='check_overpay_balance(this);' 
 							class='form-control payable_items' id='payable_" . $row -> detail_id . "'
 							name='payable[" . $row -> detail_id . "]' value='0' /></td>
 							<td><input type='text' onchange='check_overpay_balance(this);' class='form-control charge_overpay'

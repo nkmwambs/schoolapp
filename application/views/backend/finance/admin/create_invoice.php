@@ -105,10 +105,12 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                             <div class="panel-body">
 
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label"><?php echo get_phrase('overpay');?></label>
+                                    <label class="col-sm-3 control-label"><?php echo get_phrase('overpay_balance');?></label>
                                     <div class="col-sm-9">
                                         <input type="text" value="0" class="form-control" name="overpay" readonly="readonly" placeholder="<?php echo get_phrase('overpay');?>" id='overpay'/>
-                                    </div>
+																				<input type="hidden" value="0" id='overpay_hidden'/>
+
+																		</div>
                                 </div>
 
                                 <div class="form-group">
@@ -282,15 +284,12 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 </div>
 
 <script type="text/javascript">
-	// function check() {
- //    	$("#selectall").click(function () {
- //    		$("input:checkbox").prop('checked', $(this).prop("checked"));
-	// 	});
-	// }
-
 	$("#frm_single_invoice").on('submit',function(ev){
-		if($("#frm_single_invoice #amount_due").val() == "0"){
-			//alert($("#frm_single_invoice #amount_due").val());
+		var sum_overcharge = get_sum_overcharge();
+		var sum_payable_items = get_sum_payable();
+
+		if($("#frm_single_invoice #amount_due").val() == "0" && sum_overcharge ==  0){
+
 			alert('You can\'t create an invoice with zero due amount');
 			ev.preventDefault();
 		}
@@ -312,9 +311,6 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 			alert(msg);
 		}
-
-		//ev.preventDefault();
-
 	});
 
 
@@ -323,8 +319,6 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 			for (i = 0; i < chk.length; i++) {
 				chk[i].checked = true ;
 			}
-
-		//alert('asasas');
 	}
 	function unselect() {
 		var chk = $('.check');
@@ -336,13 +330,11 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 $(".get_ajax_details").change(function(){
 		var fees_structure_class = $("#fees_structure_class").val();
-    	var fees_structure_year = $("#fees_structure_year").val();
-    	var fees_structure_term = $("#fees_structure_term").val();
-    	var student = $("#student_selection_holder").val();
+    var fees_structure_year = $("#fees_structure_year").val();
+    var fees_structure_term = $("#fees_structure_term").val();
+    var student = $("#student_selection_holder").val();
 
     	if(fees_structure_class!=="" && fees_structure_year!=="" && fees_structure_term!==""){
-    		//alert(fees_structure_class + " - " + fees_structure_year + " - " + fees_structure_term + " - " + student);
-
     		//Get Student Names
 
 	        $.ajax({
@@ -353,21 +345,15 @@ $(".get_ajax_details").change(function(){
 	            }
 	        });
 
-
-	        //Get Total Fees
+					//Get Total Fees
 
     	    $.ajax({
 	            url: '<?php echo base_url();?>index.php?finance/get_total_fees/' + fees_structure_term +'/'+ fees_structure_year + '/'+ fees_structure_class,
 	            success: function(response)
 	            {
-
 	            		jQuery('#total_fees_amount').val(response);
 	            }
 	        });
-
-	        //Payable_fees_amount
-	        // var overpay_balance = parseFloat($("#overpay").val()) - parseFloat($("#amount_due").val());
-	        // $("#overpay").val(overpay_balance);
 
        }
 
@@ -390,7 +376,7 @@ $(".get_ajax_details").change(function(){
 		            {
 		            	//alert(response);
 
-		            		jQuery('#fee_items').html(response);
+		           jQuery('#fee_items').html(response);
 							//alert(response);
 							var total_payable = 0;
 				    		$('.payable_items').each(function(){
@@ -406,10 +392,8 @@ $(".get_ajax_details").change(function(){
 		            }
 		        });
 
-
 		     //Transport Info
-
-		        jQuery('#transport_info').css('display','block');
+		      jQuery('#transport_info').css('display','block');
 		    	jQuery('#transport_info').html("");
 		        $.ajax({
 		            url: '<?php echo base_url();?>index.php?finance/get_transport_info/' + student ,
@@ -428,15 +412,12 @@ $(".get_ajax_details").change(function(){
 	            {
 
 	            		jQuery('#overpay').val(response);
+									$("#overpay_hidden").val(response);
 	            }
 	        });
 
 	        }
     });
-
-
-
-
 
     function get_full_amount(id){
     	if($('#chk_'+id).is(':checked')){
@@ -459,11 +440,7 @@ $(".get_ajax_details").change(function(){
     		$('#amount_due').val(total_payable);
 
     		$('#payable_'+id).val('0');
-
-
     	}
-
-
     }
 
     function get_payable_amount(id){
@@ -482,7 +459,7 @@ $(".get_ajax_details").change(function(){
 
     }
 
-        function get_mass_total_fees(){
+  function get_mass_total_fees(){
     		var fees_structure_class = $("#fees_mass_structure_class").val();
     		var fees_structure_year = $("#fees_mass_structure_year").val();
     		var fees_structure_term = $("#fees_mass_structure_term").val();
@@ -532,14 +509,10 @@ $(".get_ajax_details").change(function(){
     		$('#mass_amount_due').val(total_payable);
 
     		$('#mass_payable_'+id).val('0');
-
-
     	}
-
-
     }
 
-      function get_mass_payable_amount(id){
+    function get_mass_payable_amount(id){
 
     	  var total_payable = 0;
     		$('.mass_payable_items').each(function(){
@@ -550,17 +523,13 @@ $(".get_ajax_details").change(function(){
     			total_payable=parseInt(total_payable)+parseInt(to_add);
     		});
     		$('#mass_amount_due').val(total_payable);
-
-    		//$('#mass_chk_'+id).prop('checked',false);
-
     }
 
 
     function get_class_students_mass() {
-
     	var mass_class = $("#fees_mass_structure_class").val();
-		var yr = $("#fees_mass_structure_year").val();
-		var term = $("#fees_mass_structure_term").val();
+			var yr = $("#fees_mass_structure_year").val();
+			var term = $("#fees_mass_structure_term").val();
     	//alert(mass_class);
     	if(fees_mass_structure_class!="" && yr!="" && term!=""){
 
@@ -579,47 +548,65 @@ $(".get_ajax_details").change(function(){
     }
 
     function check_overpay_balance(elem){
-    	$payable = $(elem).parent().prev().find('input').val();
-    	$charge_over = $(elem).val();
+    	var payable = 0;
+    	var charge_over = "";
+			var original_overpay = $("#overpay_hidden").val();
 
-    	var sum_overcharge = 0;
+			if($(elem).hasClass('charge_overpay')){
+				var payable = $(elem).parent().prev().find('input').val();
+				var charge_over = $(elem);
+			}else if($(elem).hasClass('payable_items')){
+				var payable = $(elem).val();
+				var charge_over = $(elem).parent().next().find('input');
+			}
 
-    	$('.charge_overpay').each(function(i,el){
-    		sum_overcharge = parseInt(sum_overcharge) + parseInt($(this).val());
-    	});
+		//Calculate total overcharge
+    var sum_overcharge = get_sum_overcharge();
 
-    	var total_payable = 0;
-		$('.payable_items').each(function(i,el){
-			var to_add = 0;
-				if($(this).val()!==""){
-				 	to_add = $(this).val();
-				}
-			total_payable=parseInt(total_payable)+parseInt(to_add);
-		});
+		//Calculate total payable
+    var total_payable = get_sum_payable();
 
 		var amount_due = parseInt(total_payable) - parseInt(sum_overcharge);
+		var overpay_balance = parseFloat(original_overpay) - parseFloat(sum_overcharge);
+		$("#overpay").val(overpay_balance);
 
-    	if(parseInt($payable) < parseInt($charge_over)){
+    if(parseInt(payable) < parseInt(charge_over.val())){
     		alert('Exhausted the payable amount');
-    		$(elem).val(0);
+    		charge_over.val(0);
     		$("#amount_due").val(amount_due);
-    	}else if(parseInt(sum_overcharge) > parseInt($("#overpay").val())){
-    		var variance = parseInt($("#overpay").val()) - (parseInt(sum_overcharge) - parseInt($(elem).val()));
+    	}else if(parseInt(sum_overcharge) > parseInt(original_overpay)){
+    		var variance = parseInt(original_overpay) - (parseInt(sum_overcharge) - parseInt(charge_over.val()));
     		alert("You have exhausted the overpaid amount. The balance is "+variance);
-    		$(elem).val(0);
+    		charge_over.val(0);
     		$("#amount_due").val(amount_due);
     	}else{
     		$("#amount_due").val(amount_due);
     	}
-
-
-
     }
 
+function get_sum_payable(){
+	var total_payable = 0;
+	$('.payable_items').each(function(i,el){
+		var to_add = 0;
+			if($(this).val()!==""){
+				to_add = $(this).val();
+			}
+		total_payable=parseInt(total_payable)+parseInt(to_add);
+	});
+
+	return total_payable;
+}
+
+function get_sum_overcharge(){
+	var sum_overcharge = 0;
+	$('.charge_overpay').each(function(i,el){
+			sum_overcharge = parseInt(sum_overcharge) + parseInt($(this).val());
+	});
+
+	return sum_overcharge;
+}
+
     $(document).ready(function(){
-
-
-
     	if (location.hash) {
 			        $("a[href='" + location.hash + "']").tab("show");
 			    }
