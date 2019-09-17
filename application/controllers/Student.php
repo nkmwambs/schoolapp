@@ -463,12 +463,19 @@ class Student extends CI_Controller {
 		$students = array();
 
 		foreach ($students_array as $student) {
+			//Get value of "show_unpaid_invoice_when_mass_creating_invoices" system setting
+			$show_unpaid_invoice_when_mass_creating_invoices =
+			$this->school_model->get_system_settings('show_unpaid_invoice_when_mass_creating_invoices');
+
 			//Check if student has an invoice for this term and year or unpaid invoice
-			//$this->db->where(array("student_id" => $student['student_id'], "yr" => $yr, "term" => $term));
-			$str_condition = " student_id = ".$student['student_id']." AND ((yr = ".$yr." AND term = ".$term.") OR status = 'unpaid') ";
-			//$this->db->where(array("student_id" => $student['student_id'],'status'=>'unpaid'));
-			//$this->db->or_where(array("student_id" => $student['student_id'], "yr" => $yr, "term" => $term));
-			$this->db->where($str_condition);
+			$condition = array("student_id" => $student['student_id'], "yr" => $yr, "term" => $term);
+
+			if($show_unpaid_invoice_when_mass_creating_invoices == 'false'){
+				$condition = " student_id = ".$student['student_id']." AND ((yr = ".$yr." AND term = ".$term.") OR status = 'unpaid') ";
+			}
+
+			$this->db->where($condition);
+
 			$check_invoice_object = $this -> db -> get("invoice");
 			if ($check_invoice_object -> num_rows() === 0) {
 				$students[] = $student;

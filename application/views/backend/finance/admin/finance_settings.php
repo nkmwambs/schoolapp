@@ -19,6 +19,12 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label class="col-xs-5 control-label"><?php echo get_phrase('show_unpaid_invoice_when_mass_creating_invoices');?></label>
+                    <div class="col-xs-7">
+                        <input type="checkbox" <?php if($settings['show_unpaid_invoice_when_mass_creating_invoices'] == 'true') echo 'checked';?> class="settings" name="show_unpaid_invoice_when_mass_creating_invoices" id="show_unpaid_invoice_when_mass_creating_invoices" data-toggle="toggle">
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label class="col-xs-5 control-label"><?php echo get_phrase('allowable_variance_lower_limit');?> (%)</label>

@@ -77,22 +77,33 @@ class School_model extends CI_Model {
       return $status;
   }
 
-  function get_system_settings(){
+  function get_system_settings($type = ""){
 
+    if($type!==""){
+      $this->db->where(array('type'=>$type));
+    }
     $settings = $this->db->get('settings')->result_object();
     $type_keys = array_column($settings,'type');
     $desc_keys = array_column($settings,'description');
 
-    return array_combine($type_keys,$desc_keys);
+    if($type!==""){
+        $description =  array_combine($type_keys,$desc_keys);
+        return $description[$type];
+    }else{
+        return array_combine($type_keys,$desc_keys);
+    }
+
   }
+
 
 
   function auto_set_settings_values(){
     $required_settings_array = array(
-      'manage_invoice_require_approval'=>true,
+      'manage_invoice_require_approval'=>'true',
       'allowable_variance_lower_limit'=>-10,
       'allowable_variance_upper_limit'=>10,
-      'student_payment_spread_mode'=>'ratio');
+      'student_payment_spread_mode'=>'ratio',
+      'show_unpaid_invoice_when_mass_creating_invoices'=>'true');
 
     foreach ($required_settings_array as $required_setting_key=>$required_setting_value) {
       $type = $this->db->get_where('settings',array('type'=>$required_setting_key));
@@ -103,6 +114,26 @@ class School_model extends CI_Model {
     }
   }
 
+  function get_default_income_category(){
+    $default_category_obj = $this->db->get_where('income_categories',
+    array('default_category'=>1));
 
+    $default_category = "";
+
+    if($default_category_obj->num_rows()>0){
+      $default_category = $default_category_obj->row()->income_category_id;
+    }
+
+    return $default_category;
+  }
+
+  function get_fees_structure_detail_id_of_default_category($fees_id){
+    $this->db->select(array('detail_id'));
+    $this->db->join('fees_structure','fees_structure.fees_id=fees_structure_details.fees_id');
+    $this->db->where(array('income_category_id'=>$this->get_default_income_category(),'fees_id'=>$fees_id));
+    $detail_id = $this->db->get_where('fees_structure_details')->row()->detail_id;
+
+    return $detail_id;
+  }
 
 }

@@ -1,5 +1,32 @@
 <?php
 if (!defined('BASEPATH')) exit('No direct script access allowed');
+$id = 227;
+if($this->school_model->get_system_settings('show_unpaid_invoice_when_mass_creating_invoices')=='true'){
+
+		$unpaid_invoice_obj = $this->db->get_where('invoice',array('student_id'=>$id,'invoice.status'=>'unpaid'));
+		$detail_id = 0;
+		$amount = 0;
+		$fees_id = 0;
+		$class_id = 3;
+
+		if($unpaid_invoice_obj->num_rows()>0){
+			$amount = $this -> crud_model -> student_unpaid_invoice_balance($id);
+
+			$fees_id = $this->db->get_where('fees_structure',
+			array('class_id'=>$class_id,
+					'term'=>$unpaid_invoice_obj->row()->term,
+						'yr'=>$this -> $unpaid_invoice_obj->row()->yr))->row()->fees_id;
+
+			//$detail_id = $this->school_model->get_fees_structure_detail_id_of_default_category($fees_id);
+
+		}
+
+		echo $fees_id;
+
+	}else{
+		echo $this->school_model->get_system_settings('show_unpaid_invoice_when_mass_creating_invoices');
+	}
+
 ?>
 <div class="row">
 	<div class="col-md-12">
@@ -289,7 +316,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 		var sum_payable_items = get_sum_payable();
 
 		//Check if the user has considered the balance forward in the invoices
-		
+
 
 		//Check if a user is creating an invoice with zero amount_due without overpay absorption
 		if($("#frm_single_invoice #amount_due").val() == "0" && sum_overcharge ==  0){
@@ -486,6 +513,7 @@ $(".get_ajax_details").change(function(){
 	            success: function(response)
 	            {
 	               jQuery('#mass_fee_items').html(response);
+								 get_class_students_mass();
 
 	            }
 	        });

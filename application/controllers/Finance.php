@@ -469,6 +469,25 @@ class Finance extends CI_Controller
                         $structure_ids = $this -> input -> post('detail_id');
                         $payable_amount = $this -> input -> post('payable');
 
+                        if($this->school_model->get_system_settings('show_unpaid_invoice_when_mass_creating_invoices')=='true'){
+                            $fees_id = $this->db->get_where('fee_structure',
+                            array('class_id'=>$this -> input -> post('class_id'),
+                                'term'=>$this -> input -> post('term'),
+                                  'yr'=>$this -> input -> post('yr')))->row()->fees_id;
+
+                            $detail_id = $this->school_model->get_fees_structure_detail_id_of_default_category($fees_id);
+
+                            $amount = $this -> crud_model -> student_unpaid_invoice_balance($id);
+
+                            if($amount>0){
+                              $data3['invoice_id'] = $invoice_id;
+                              $data3['detail_id'] = $detail_id;
+                              $data3['amount_due'] = $amount;
+                              $this -> db -> insert('invoice_details', $data3);
+                            }
+
+                        }
+
                         foreach ($payable_amount as $key => $value) {
                             if ($value > 0) {
                                 $data2['invoice_id'] = $invoice_id;
@@ -904,7 +923,14 @@ class Finance extends CI_Controller
             $details = $this -> db -> get_where('fees_structure_details', array("fees_id" => $fees_id)) -> result_object();
 
             foreach ($details as $row) :
-                $str .= "<tr><td><input type='checkbox' onchange='return get_mass_full_amount(" . $row -> detail_id . ")' id='mass_chk_" . $row -> detail_id . "'/></td><td>" . $row -> name . "</td><td id='mass_full_amount_" . $row -> detail_id . "'>" . $row -> amount . "</td><td><input type='text' onkeyup='return get_mass_payable_amount(" . $row -> detail_id . ")' class='form-control mass_payable_items' id='mass_payable_" . $row -> detail_id . "' name='payable[" . $row -> detail_id . "]'/></td><tr>";
+              //get_default_income_category
+              $str .= "<tr><td><input type='checkbox' onchange='return get_mass_full_amount(" . $row -> detail_id . ")' id='mass_chk_" . $row -> detail_id . "'/></td><td>" . $row -> name . "</td><td id='mass_full_amount_" . $row -> detail_id . "'>" . $row -> amount . "</td><td><input type='text' onkeyup='return get_mass_payable_amount(" . $row -> detail_id . ")' class='form-control mass_payable_items' id='mass_payable_" . $row -> detail_id . "' name='payable[" . $row -> detail_id . "]'/></td><tr>";
+
+              //Only show the balance b/f row if the "show_unpaid_invoice_when_mass_creating_invoices" settings is true
+              if($this->school_model->get_system_settings('show_unpaid_invoice_when_mass_creating_invoices')=='false' && $this->school_model->get_default_income_category() == $row->income_category_id){
+                  $str = "";
+              }
+
             endforeach;
         } else {
             $str .= "<tr><td colspan='3'>" . get_phrase('no_items_found') . "</td></tr>";

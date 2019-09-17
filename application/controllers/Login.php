@@ -97,6 +97,9 @@ class Login extends CI_Controller {
 
       			$this->session->set_userdata('type_login_user_id',  $type_table_id);
 
+            //Check if all system settings are in the table if not insert them
+            $this->school_model->auto_set_settings_values();
+
 			// if($row->app_id > 0){
 				// $this->session->set_userdata('app', $this->config->item('db_prefix').'_app'.$row->app_id);
 			// }else{
