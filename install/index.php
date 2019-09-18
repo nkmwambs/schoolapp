@@ -13,10 +13,11 @@ if($_POST) {
 	// Load the classes and create the new objects
 	require_once('includes/core_class.php');
 	require_once('includes/database_class.php');
-	require_once('includes/config.php');
+	//require_once('includes/config.php');
 
 	$core = new Core();
 	$database = new Database();
+
 
 			// Validate the post data
 			//if($core->validate_post($_POST) == true)
@@ -30,14 +31,51 @@ if($_POST) {
 							$message = $core->show_message('error', $db_create['msg']);
 						} else if ($database->create_tables($_POST) == false) {
 							$message = $core->show_message('error',"The database tables could not be created, please verify your settings.");
-						} else if ($core->write_config($_POST) == false) {
-							$message = $core->show_message('error',"The database configuration file could not be written, please chmod install/config/database.php file to 777");
 						}
+						// else if ($core->write_config($_POST) == false) {
+						// 	$message = $core->show_message('error',"The database configuration file could not be written, please chmod install/config/database.php file to 777");
+						// }
 
 						// If no errors, redirect to login page
 						if(!isset($message)) {
 						  	$_SESSION['db_param'] = $_POST;
 						}
+				}elseif (isset($_POST['set_admin'])) {
+
+
+					//include(BASEPATH.'/install/config/database.php');
+
+					$mysqli = new mysqli($_SESSION['db_param']['hostname'],$_SESSION['db_param']['db_user'],$_SESSION['db_param']['db_password'],$_SESSION['db_param']['db_name']);
+
+
+					foreach($_POST as $key=>$value){
+							// $sql = "UPDATE settings SET description='".$value."' WHERE type='".$key."'";
+							//
+							// if(!$mysqli){
+							// 	$message = $core->show_message('error','Cannot connect to the database.');
+							// }else{
+							// 	$mysqli->query($sql);
+							// }
+
+							$sql = "INSERT INTO admin VALUES()";
+
+					}
+
+
+
+					if(!isset($message)){
+
+						//$_SESSION['advance'] = FALSE;
+						//$_SESSION['db_param'] = "";
+
+						$redir = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https" : "http");
+						$redir .= "://".$_SERVER['HTTP_HOST'];
+						$redir .= str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+						$redir = str_replace('install/','',$redir);
+						header( 'Location: ' . $redir) ;
+					}
+
+
 				}elseif(isset($_POST['finish'])){
 						//include(BASEPATH.'/install/config/database.php');
 
@@ -90,6 +128,7 @@ if($_POST) {
 		<title>Sign Up | Techsys Systems</title>
 	</head>
 	<body>
+
     <?php if(is_writable($db_config_path)){?>
 
 		  <form id="install_form" class="smart-blue" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
@@ -105,7 +144,7 @@ if($_POST) {
 		  				echo '<p class="alert alert-danger">The specified database does not exist, please set the correct database in <b> application/config/database.php </b> or run the installer again !!</p>';
 		  			}
 		  		}
-		 if(!isset($_POST['next'])){
+		 if(!isset($_POST['next']) && !isset($_POST['set_admin'])){
 		  ?>
 
 		  	<h3>initialization (Step 1/3)</h3>
@@ -118,10 +157,20 @@ if($_POST) {
           	<input type="hidden" id="db_password" value="<?=$config['db_password'];?>" class="input_text" name="db_password" />
 			<input type="submit" name="next" value="Initialize" class="button" id="submit" style="float:right"/>
 		<?php
-		}elseif(!isset($_POST['finish'])){
+	}elseif (!isset($_POST['set_admin'])) {
+	?>
+		<h3>Setup Admin User (Step 2/3)</h3>
+		<label for="First Name">First Name</label><input type="text" id="firstname" value="<?php echo (isset($_POST['firstname'])) ? $_POST['firstname']: ''; ?>" class="input_text" name="firstname" />
+		<label for="Last Name">Last Name</label><input type="text" id="lastname" value="<?php echo (isset($_POST['lastname'])) ? $_POST['lastname'] : ''; ?>" class="input_text" name="lastname" />
+		<label for="Email">Email</label><input type="email" id="email" value="<?php echo (isset($_POST['email'])) ? $_POST['email'] : ''; ?>" class="input_text" name="email" />
+		<label for="Password">Password</label><input type="password" id="password" value="<?php echo (isset($_POST['password'])) ? $_POST['password'] : ''; ?>" class="input_text" name="password" />
+		<label for="Confirm Password">Confirm Password</label><input type="password" id="confirm_password" value="<?php echo (isset($_POST['confirm_password'])) ? $_POST['confirm_password'] : ''; ?>" class="input_text" name="confirm_password" />
+		<input type="submit" name="set_admin" value="Set Admin User" class="button" id="set_admin" style="float:right"/>
+	<?php
+	}elseif(!isset($_POST['finish'])){
 			//print_r($_SESSION['db_param']);
 		?>
-			<h3>System Details (Step 2/3)</h3>
+			<h3>System Details (Step 3/3)</h3>
           	<label for="system_name">System Name</label><input type="text" id="system_name" value="<?php echo (isset($_POST['system_name'])) ? $_POST['system_name'] : ''; ?>" class="input_text" name="system_name" />
           	<label for="system_title">System Title</label><input type="text" id="system_title" value="<?php echo (isset($_POST['system_title'])) ? $_POST['system_title'] : ''; ?>" class="input_text" name="system_title" />
           	<label for="address">Address</label><input type="text" id="address" value="<?php echo (isset($_POST['address'])) ? $_POST['address'] : ''; ?>" class="input_text" name="address" />

@@ -1,31 +1,44 @@
 <?php
+
+//require_once('config.php');
+
 class Database {
 
 	private $db_name;
+	private $config = array();
+
+	function __construct(){
+		$this->config['db_user'] = 'compatl8_root';
+		$this->config['db_password'] = '@Compassion123';
+		$this->config['db_prefix'] = "techsys_";
+	}
 
 	// Function to the database and tables and fill them with the default data
 	function create_database($data)
 	{
 
-		$this->db_name  = "schoolapp_100";//$this->new_database_name();
+		$this->db_name  = $this->new_database_name();
 
 		$response  = array();
 		// Connect to the database
-		$mysqli = new mysqli($data['hostname'],$data['db_user'],$data['db_password'],'');
+		$mysqli = new mysqli('localhost',$this->config['db_user'],$this->config['db_password'],'');
 
 		// Check for errors
 		if($mysqli->connect_errno)
 		{
 			$response['msg'] = 'Failed to connect to MySQL : '. $mysqli->connect_error;
+			//$response['test'] = $this->db_name;
 			$response['success'] = false;
 		}
 		else  if(!$mysqli->query("CREATE DATABASE IF NOT EXISTS ".$this->db_name)){
 			$response['msg'] = "Database Error : Database <b>".$this->db_name."</b> does not exist and could not be created. Please create the Database manually and retry installing.";
+			//$response['test'] = $this->db_name;
 			$response['success'] = false;
 		}
 		else
 		{
 			$response['success'] = true;
+			//$response['test'] = $this->db_name;
 		}
 
 		// Close the connection
@@ -38,7 +51,9 @@ class Database {
 	function create_tables($data)
 	{
 		// Connect to the database
-		$mysqli = new mysqli($data['hostname'],$data['db_user'],$data['db_password'],$this->db_name);
+		//$mysqli = new mysqli($data['hostname'],$data['db_user'],$data['db_password'],$this->db_name);
+		$mysqli = new mysqli('localhost','compatl8_root','@Compassion123',$this->db_name);
+		//$mysqli = new mysqli('localhost',$this->config['db_user'],$this->config['db_password'],$this->db_name);
 
 		// Check for errors
 		if($mysqli->connect_errno){
@@ -61,8 +76,9 @@ class Database {
 	}
 
 	function new_database_name(){
-		// Connect to the database
-		$mysqli = new mysqli($data['hostname'],$data['db_user'],$data['db_password'],'');
+		//Connect to the database
+
+		$mysqli = new mysqli('localhost',$this->config['db_user'],$this->config['db_password'],'');
 
 		// Check for errors
 		if($mysqli->connect_errno){
@@ -70,8 +86,13 @@ class Database {
 			return false;
 		}
 
-		$count_of_databases = $mysqli->query("SELECT COUNT(*) FROM information_schema.SCHEMATA");
+		$result = $mysqli->query("SELECT COUNT(*) as count FROM information_schema.SCHEMATA") or die(mysql_error());
 
-		return "schoolapp_".$count_of_databases + 1;
+		$row = mysqli_fetch_array($result) or die(mysql_error());
+
+		$count_of_databases = $row['count'] + 1;
+
+		return "schoolapp_".$count_of_databases;
 	}
+
 }
