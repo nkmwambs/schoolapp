@@ -130,7 +130,7 @@ class Login extends CI_Controller {
         $email                  = $_POST["email"];
         $reset_account_type     = '';
         //resetting user password here
-        $new_password           =   substr( md5( rand(100000000,20000000000) ) , 0,7);
+        $new_password           =   substr( md5( rand(100000,900000) ) , 0,7);
 
         // Checking credential for admin
         $query = $this->db->get_where('admin' , array('email' => $email));
