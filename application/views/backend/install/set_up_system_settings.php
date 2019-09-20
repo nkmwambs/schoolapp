@@ -1,7 +1,4 @@
-<?php
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
-?>
+<?php if (!defined('BASEPATH'))  exit('No direct script access allowed');?>
 
 <div class="row">
   <div class="col-xs-offset-2 col-xs-8 col-xs-offset-2">
