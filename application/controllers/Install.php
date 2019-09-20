@@ -94,6 +94,7 @@ class Install extends CI_Controller
       if($this->session->db_name && !$this->session->db_tables_created){
           $db_name = $this->session->db_name;
 
+          //Get the contents of the install.sql file
           $sql = file_get_contents('install/assets/install.sql');
 
           $this->db->db_select($db_name);
@@ -133,7 +134,7 @@ class Install extends CI_Controller
 
         $db_name = $this->session->db_name;
         $this->db->db_select($db_name);
-        
+
         //Count number of record and update if one exists else create
         $count_admins = $this->db->get('admin')->num_rows();
 
