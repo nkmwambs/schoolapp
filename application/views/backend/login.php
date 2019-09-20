@@ -85,7 +85,7 @@ var baseurl = '<?php echo base_url();?>';
 			<form method="post" role="form" id="form_login">
 				<div class="form-group">
 						<div class="col-xs-12">
-								<a class="btn btn-success btn-block" style="color:white;font-weight:bold;font-size:16pt;" href="http://localhost/schoolapp/install"><?=get_phrase('sign_up');?></a>
+								<a class="btn btn-success btn-block" style="color:white;font-weight:bold;font-size:16pt;" href="http://localhost/schoolapp/index.php?install"><?=get_phrase('sign_up');?></a>
 						</div>
 				</div>
 

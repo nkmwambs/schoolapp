@@ -28,18 +28,22 @@ class Database {
 		{
 			$response['msg'] = 'Failed to connect to MySQL : '. $mysqli->connect_error;
 			//$response['test'] = $this->db_name;
+			$response['db_name'] = $this->db_name;
 			$response['success'] = false;
 		}
 		else  if(!$mysqli->query("CREATE DATABASE IF NOT EXISTS ".$this->db_name)){
 			$response['msg'] = "Database Error : Database <b>".$this->db_name."</b> does not exist and could not be created. Please create the Database manually and retry installing.";
 			//$response['test'] = $this->db_name;
 			$response['success'] = false;
+			$response['db_name'] = $this->db_name;
 		}
 		else
 		{
 			$response['success'] = true;
 			//$response['test'] = $this->db_name;
+			$response['db_name'] = $this->db_name;
 		}
+
 
 		// Close the connection
 		$mysqli->close();

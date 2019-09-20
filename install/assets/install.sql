@@ -1,20 +1,10 @@
--- Adminer 4.6.3 MySQL dump
-
-SET NAMES utf8;
-SET time_zone = '+00:00';
-SET foreign_key_checks = 0;
-SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 DROP TABLE IF EXISTS `access`;
 CREATE TABLE `access` (
   `access_id` int(100) NOT NULL AUTO_INCREMENT,
   `entitlement_id` int(100) NOT NULL,
   `profile_id` int(100) NOT NULL,
-  PRIMARY KEY (`access_id`),
-  KEY `entitlement_id` (`entitlement_id`),
-  KEY `profile_id` (`profile_id`),
-  CONSTRAINT `access_ibfk_1` FOREIGN KEY (`entitlement_id`) REFERENCES `entitlement` (`entitlement_id`),
-  CONSTRAINT `access_ibfk_2` FOREIGN KEY (`profile_id`) REFERENCES `profile` (`profile_id`)
+  PRIMARY KEY (`access_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -48,12 +38,7 @@ CREATE TABLE `activity_attendance` (
   `parent_id` int(11) NOT NULL,
   `expected` tinyint(5) NOT NULL,
   `attendance` int(5) NOT NULL COMMENT '0=Absent,1=Not Attending, 2=Attended',
-  PRIMARY KEY (`activity_attendance_id`),
-  KEY `activity_id` (`activity_id`),
-  KEY `parent_id` (`parent_id`),
-  CONSTRAINT `activity_attendance_ibfk_1` FOREIGN KEY (`activity_id`) REFERENCES `activity` (`activity_id`),
-  CONSTRAINT `activity_attendance_ibfk_2` FOREIGN KEY (`activity_id`) REFERENCES `activity` (`activity_id`),
-  CONSTRAINT `activity_attendance_ibfk_3` FOREIGN KEY (`parent_id`) REFERENCES `parent` (`parent_id`)
+  PRIMARY KEY (`activity_attendance_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -84,11 +69,7 @@ CREATE TABLE `approval_request` (
   `created_by` int(100) NOT NULL,
   `last_modified_by` int(100) NOT NULL,
   `approved_by` int(100) NOT NULL,
-  PRIMARY KEY (`approval_request_id`),
-  KEY `record_type_id` (`record_type_id`),
-  KEY `request_type_id` (`request_type_id`),
-  CONSTRAINT `approval_request_ibfk_1` FOREIGN KEY (`record_type_id`) REFERENCES `record_type` (`record_type_id`),
-  CONSTRAINT `approval_request_ibfk_2` FOREIGN KEY (`request_type_id`) REFERENCES `request_type` (`request_type_id`)
+  PRIMARY KEY (`approval_request_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -101,9 +82,7 @@ CREATE TABLE `approval_request_messaging` (
   `message` longtext NOT NULL,
   `created_date` date NOT NULL,
   `last_modified_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`approval_request_messaging_id`),
-  KEY `approval_request_id` (`approval_request_id`),
-  CONSTRAINT `approval_request_messaging_ibfk_1` FOREIGN KEY (`approval_request_id`) REFERENCES `approval_request` (`approval_request_id`)
+  PRIMARY KEY (`approval_request_messaging_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -114,9 +93,7 @@ CREATE TABLE `attendance` (
   `afternoon` int(11) NOT NULL COMMENT '	0 undefined , 1 present , 2 absent',
   `student_id` int(11) NOT NULL,
   `date` date NOT NULL,
-  PRIMARY KEY (`attendance_id`),
-  KEY `student_id` (`student_id`),
-  CONSTRAINT `attendance_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`)
+  PRIMARY KEY (`attendance_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -145,11 +122,7 @@ CREATE TABLE `budget` (
   `often` int(10) NOT NULL,
   `total` decimal(10,2) NOT NULL,
   `smtp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`budget_id`),
-  KEY `expense_category_id` (`expense_category_id`),
-  KEY `terms_id` (`terms_id`),
-  CONSTRAINT `budget_ibfk_1` FOREIGN KEY (`expense_category_id`) REFERENCES `expense_category` (`expense_category_id`),
-  CONSTRAINT `budget_ibfk_2` FOREIGN KEY (`terms_id`) REFERENCES `terms` (`terms_id`)
+  PRIMARY KEY (`budget_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -160,9 +133,7 @@ CREATE TABLE `budget_schedule` (
   `month` int(10) NOT NULL,
   `amount` decimal(10,2) NOT NULL,
   `stmp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`budget_schedule_id`),
-  KEY `budget_id` (`budget_id`),
-  CONSTRAINT `budget_schedule_ibfk_1` FOREIGN KEY (`budget_id`) REFERENCES `budget` (`budget_id`)
+  PRIMARY KEY (`budget_schedule_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -171,23 +142,9 @@ CREATE TABLE `caregiver` (
   `caregiver_id` int(100) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) NOT NULL,
   `student_id` int(11) NOT NULL,
-  PRIMARY KEY (`caregiver_id`),
-  KEY `student_id` (`student_id`),
-  KEY `parent_id` (`parent_id`),
-  CONSTRAINT `caregiver_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`),
-  CONSTRAINT `caregiver_ibfk_2` FOREIGN KEY (`parent_id`) REFERENCES `parent` (`parent_id`)
+  PRIMARY KEY (`caregiver_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
-DROP TABLE IF EXISTS `ci_sessions`;
-CREATE TABLE `ci_sessions` (
-  `id` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
-  `ip_address` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
-  `timestamp` int(10) unsigned NOT NULL DEFAULT '0',
-  `data` blob NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `ci_sessions_timestamp` (`timestamp`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
 DROP TABLE IF EXISTS `class`;
@@ -196,9 +153,7 @@ CREATE TABLE `class` (
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `name_numeric` tinyint(4) NOT NULL,
   `teacher_id` int(11) NOT NULL,
-  PRIMARY KEY (`class_id`),
-  KEY `teacher_id` (`teacher_id`),
-  CONSTRAINT `class_ibfk_1` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`teacher_id`)
+  PRIMARY KEY (`class_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
@@ -212,11 +167,7 @@ CREATE TABLE `class_routine` (
   `time_start_min` int(11) NOT NULL,
   `time_end_min` int(11) NOT NULL,
   `day` longtext COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`class_routine_id`),
-  KEY `class_id` (`class_id`),
-  KEY `subject_id` (`subject_id`),
-  CONSTRAINT `class_routine_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`),
-  CONSTRAINT `class_routine_ibfk_2` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`subject_id`)
+  PRIMARY KEY (`class_routine_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
@@ -226,9 +177,7 @@ CREATE TABLE `class_routine_attendance` (
   `class_routine_id` int(11) NOT NULL,
   `attendance_date` date NOT NULL,
   `notes` longtext NOT NULL,
-  PRIMARY KEY (`class_routine_attendance_id`),
-  KEY `class_routine_id` (`class_routine_id`),
-  CONSTRAINT `class_routine_attendance_ibfk_1` FOREIGN KEY (`class_routine_id`) REFERENCES `class_routine` (`class_routine_id`)
+  PRIMARY KEY (`class_routine_attendance_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -376,9 +325,7 @@ CREATE TABLE `expense_category` (
   `name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `income_category_id` int(100) NOT NULL,
   `status` int(5) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`expense_category_id`),
-  KEY `income_category_id` (`income_category_id`),
-  CONSTRAINT `expense_category_ibfk_1` FOREIGN KEY (`income_category_id`) REFERENCES `income_categories` (`income_category_id`)
+  PRIMARY KEY (`expense_category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
@@ -389,9 +336,7 @@ CREATE TABLE `expense_variance_note` (
   `income_category_id` int(100) NOT NULL,
   `note` longtext NOT NULL,
   `createddate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`expense_variance_note_id`),
-  KEY `income_category_id` (`income_category_id`),
-  CONSTRAINT `expense_variance_note_ibfk_1` FOREIGN KEY (`income_category_id`) REFERENCES `income_categories` (`income_category_id`)
+  PRIMARY KEY (`expense_variance_note_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -414,11 +359,7 @@ CREATE TABLE `fees_structure_details` (
   `fees_id` int(10) NOT NULL,
   `income_category_id` int(100) NOT NULL,
   `amount` int(10) NOT NULL,
-  PRIMARY KEY (`detail_id`),
-  KEY `income_category_id` (`income_category_id`),
-  KEY `fees_id` (`fees_id`),
-  CONSTRAINT `fees_structure_details_ibfk_1` FOREIGN KEY (`income_category_id`) REFERENCES `income_categories` (`income_category_id`),
-  CONSTRAINT `fees_structure_details_ibfk_2` FOREIGN KEY (`fees_id`) REFERENCES `fees_structure` (`fees_id`)
+  PRIMARY KEY (`detail_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -459,11 +400,7 @@ CREATE TABLE `invoice` (
   `carry_forward` int(11) NOT NULL DEFAULT '0',
   `transitioned` int(11) NOT NULL DEFAULT '0',
   `last_approval_request_id` int(100) NOT NULL,
-  PRIMARY KEY (`invoice_id`),
-  KEY `student_id` (`student_id`),
-  KEY `class_id` (`class_id`),
-  CONSTRAINT `invoice_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`),
-  CONSTRAINT `invoice_ibfk_2` FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`)
+  PRIMARY KEY (`invoice_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
@@ -473,11 +410,7 @@ CREATE TABLE `invoice_details` (
   `invoice_id` int(200) NOT NULL,
   `detail_id` int(200) NOT NULL,
   `amount_due` int(200) NOT NULL,
-  PRIMARY KEY (`invoice_details_id`),
-  KEY `detail_id` (`detail_id`),
-  KEY `invoice_id` (`invoice_id`),
-  CONSTRAINT `invoice_details_ibfk_1` FOREIGN KEY (`detail_id`) REFERENCES `fees_structure_details` (`detail_id`),
-  CONSTRAINT `invoice_details_ibfk_2` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`invoice_id`)
+  PRIMARY KEY (`invoice_details_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -1362,15 +1295,7 @@ CREATE TABLE `lesson_plan` (
   `lastmodifiedby` int(100) NOT NULL,
   `createddate` datetime NOT NULL,
   `lastmodifieddate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`lesson_plan_id`),
-  KEY `scheme_id` (`scheme_id`),
-  KEY `createdby` (`createdby`),
-  KEY `lastmodifiedby` (`lastmodifiedby`),
-  KEY `signed_off_by` (`signed_off_by`),
-  CONSTRAINT `lesson_plan_ibfk_1` FOREIGN KEY (`scheme_id`) REFERENCES `scheme` (`scheme_id`),
-  CONSTRAINT `lesson_plan_ibfk_4` FOREIGN KEY (`createdby`) REFERENCES `user` (`user_id`),
-  CONSTRAINT `lesson_plan_ibfk_5` FOREIGN KEY (`lastmodifiedby`) REFERENCES `user` (`user_id`),
-  CONSTRAINT `lesson_plan_ibfk_6` FOREIGN KEY (`signed_off_by`) REFERENCES `user` (`user_id`)
+  PRIMARY KEY (`lesson_plan_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -1397,15 +1322,7 @@ CREATE TABLE `mark` (
   `mark_obtained` int(11) NOT NULL DEFAULT '0',
   `mark_total` int(11) NOT NULL DEFAULT '100',
   `comment` longtext COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`mark_id`),
-  KEY `student_id` (`student_id`),
-  KEY `subject_id` (`subject_id`),
-  KEY `class_id` (`class_id`),
-  KEY `exam_id` (`exam_id`),
-  CONSTRAINT `mark_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`),
-  CONSTRAINT `mark_ibfk_2` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`subject_id`),
-  CONSTRAINT `mark_ibfk_3` FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`),
-  CONSTRAINT `mark_ibfk_4` FOREIGN KEY (`exam_id`) REFERENCES `exam` (`exam_id`)
+  PRIMARY KEY (`mark_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
@@ -1452,11 +1369,7 @@ CREATE TABLE `overpay` (
   `description` longtext NOT NULL,
   `status` varchar(10) NOT NULL DEFAULT 'active' COMMENT 'active,cleared',
   `creation_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`overpay_id`),
-  KEY `student_id` (`student_id`),
-  KEY `income_id` (`transaction_id`),
-  CONSTRAINT `overpay_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`),
-  CONSTRAINT `overpay_ibfk_2` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`transaction_id`)
+  PRIMARY KEY (`overpay_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -1470,11 +1383,7 @@ CREATE TABLE `overpay_charge_detail` (
   `createdby` int(100) NOT NULL,
   `lastmodifieddate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `lastmodifiedby` int(100) NOT NULL,
-  PRIMARY KEY (`overpay_detail_id`),
-  KEY `overpay_id` (`overpay_id`),
-  KEY `invoice_id` (`invoice_id`),
-  CONSTRAINT `overpay_charge_detail_ibfk_2` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`invoice_id`),
-  CONSTRAINT `overpay_charge_detail_ibfk_3` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`invoice_id`)
+  PRIMARY KEY (`overpay_detail_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -1489,9 +1398,7 @@ CREATE TABLE `parent` (
   `care_type` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `profession` longtext COLLATE utf8_unicode_ci NOT NULL,
   `status` int(5) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`parent_id`),
-  KEY `relationship_id` (`relationship_id`),
-  CONSTRAINT `parent_ibfk_1` FOREIGN KEY (`relationship_id`) REFERENCES `relationship` (`relationship_id`)
+  PRIMARY KEY (`parent_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
@@ -1504,6 +1411,8 @@ CREATE TABLE `profile` (
   PRIMARY KEY (`profile_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+INSERT INTO `profile` (`profile_id`, `name`, `login_type_id`, `description`) VALUES
+(1,	'Super Admin',	1,	'System Main Administrator');
 
 DROP TABLE IF EXISTS `reconcile`;
 CREATE TABLE `reconcile` (
@@ -1588,13 +1497,7 @@ CREATE TABLE `scheme` (
   `lastmodifiedby` int(100) NOT NULL,
   `createddate` datetime NOT NULL,
   `lastmodifieddate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`scheme_id`),
-  KEY `scheme_header_id` (`scheme_header_id`),
-  KEY `createdby` (`createdby`),
-  KEY `lastmodifiedby` (`lastmodifiedby`),
-  CONSTRAINT `scheme_ibfk_1` FOREIGN KEY (`scheme_header_id`) REFERENCES `scheme_header` (`scheme_header_id`),
-  CONSTRAINT `scheme_ibfk_2` FOREIGN KEY (`createdby`) REFERENCES `user` (`user_id`),
-  CONSTRAINT `scheme_ibfk_3` FOREIGN KEY (`lastmodifiedby`) REFERENCES `user` (`user_id`)
+  PRIMARY KEY (`scheme_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -1609,17 +1512,7 @@ CREATE TABLE `scheme_header` (
   `lastmodifiedby` int(100) NOT NULL,
   `createddate` datetime NOT NULL,
   `lastmodifieddate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`scheme_header_id`),
-  KEY `class_id` (`class_id`),
-  KEY `subject_id` (`subject_id`),
-  KEY `term_id` (`term_id`),
-  KEY `createdby` (`createdby`),
-  KEY `lastmodifiedby` (`lastmodifiedby`),
-  CONSTRAINT `scheme_header_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`),
-  CONSTRAINT `scheme_header_ibfk_2` FOREIGN KEY (`subject_id`) REFERENCES `subject` (`subject_id`),
-  CONSTRAINT `scheme_header_ibfk_3` FOREIGN KEY (`term_id`) REFERENCES `terms` (`terms_id`),
-  CONSTRAINT `scheme_header_ibfk_4` FOREIGN KEY (`createdby`) REFERENCES `user` (`user_id`),
-  CONSTRAINT `scheme_header_ibfk_5` FOREIGN KEY (`lastmodifiedby`) REFERENCES `user` (`user_id`)
+  PRIMARY KEY (`scheme_header_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -1630,11 +1523,7 @@ CREATE TABLE `section` (
   `nick_name` longtext COLLATE utf8_unicode_ci NOT NULL,
   `class_id` int(11) NOT NULL,
   `teacher_id` int(11) NOT NULL,
-  PRIMARY KEY (`section_id`),
-  KEY `class_id` (`class_id`),
-  KEY `teacher_id` (`teacher_id`),
-  CONSTRAINT `section_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`),
-  CONSTRAINT `section_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`teacher_id`)
+  PRIMARY KEY (`section_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
@@ -1709,9 +1598,7 @@ CREATE TABLE `student` (
   `dormitory_room_number` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `active` int(5) NOT NULL DEFAULT '1',
   PRIMARY KEY (`student_id`),
-  UNIQUE KEY `roll` (`roll`(20)),
-  KEY `class_id` (`class_id`),
-  CONSTRAINT `student_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`)
+  UNIQUE KEY `roll` (`roll`(20))
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -1777,11 +1664,7 @@ CREATE TABLE `transaction` (
   `lastmodifieddate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `lastmodifiedby` int(100) NOT NULL,
   `last_approval_request_id` int(100) NOT NULL,
-  PRIMARY KEY (`transaction_id`),
-  KEY `transaction_type_id` (`transaction_type_id`),
-  KEY `transaction_method_id` (`transaction_method_id`),
-  CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`transaction_type_id`) REFERENCES `transaction_type` (`transaction_type_id`),
-  CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`transaction_method_id`) REFERENCES `transaction_method` (`transaction_method_id`)
+  PRIMARY KEY (`transaction_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -1796,9 +1679,7 @@ CREATE TABLE `transaction_detail` (
   `detail_description` varchar(100) NOT NULL,
   `unitcost` decimal(10,2) NOT NULL,
   `cost` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`transaction_detail_id`),
-  KEY `transaction_id` (`transaction_id`),
-  CONSTRAINT `transaction_detail_ibfk_1` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`transaction_id`)
+  PRIMARY KEY (`transaction_detail_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -1849,11 +1730,7 @@ CREATE TABLE `transition_detail` (
   `transition_date` date NOT NULL,
   `reason` varchar(200) NOT NULL,
   `status` int(5) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`transition_detail_id`),
-  KEY `transition_id` (`transition_id`),
-  KEY `student_id` (`student_id`),
-  CONSTRAINT `transition_detail_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`),
-  CONSTRAINT `transition_detail_ibfk_2` FOREIGN KEY (`transition_id`) REFERENCES `transition` (`transition_id`)
+  PRIMARY KEY (`transition_detail_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -1886,4 +1763,116 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
--- 2019-09-17 04:36:03
+
+ALTER TABLE `access`
+ADD FOREIGN KEY (`entitlement_id`) REFERENCES `entitlement` (`entitlement_id`),
+ADD FOREIGN KEY (`profile_id`) REFERENCES `profile` (`profile_id`);
+
+ALTER TABLE `activity_attendance`
+ADD FOREIGN KEY (`activity_id`) REFERENCES `activity` (`activity_id`),
+ADD FOREIGN KEY (`parent_id`) REFERENCES `parent` (`parent_id`);
+
+ALTER TABLE `approval_request`
+ADD FOREIGN KEY (`record_type_id`) REFERENCES `record_type` (`record_type_id`),
+ADD FOREIGN KEY (`request_type_id`) REFERENCES `request_type` (`request_type_id`);
+
+ALTER TABLE `approval_request_messaging`
+ADD FOREIGN KEY (`approval_request_id`) REFERENCES `approval_request` (`approval_request_id`);
+
+ALTER TABLE `attendance`
+ADD FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`);
+
+ALTER TABLE `budget`
+ADD FOREIGN KEY (`expense_category_id`) REFERENCES `expense_category` (`expense_category_id`),
+ADD FOREIGN KEY (`terms_id`) REFERENCES `terms` (`terms_id`);
+
+ALTER TABLE `budget_schedule`
+ADD FOREIGN KEY (`budget_id`) REFERENCES `budget` (`budget_id`);
+
+ALTER TABLE `caregiver`
+ADD FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`),
+ADD FOREIGN KEY (`parent_id`) REFERENCES `parent` (`parent_id`);
+
+ALTER TABLE `class`
+ADD FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`teacher_id`);
+
+ALTER TABLE `class_routine`
+ADD FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`),
+ADD FOREIGN KEY (`subject_id`) REFERENCES `subject` (`subject_id`);
+
+ALTER TABLE `class_routine_attendance`
+ADD FOREIGN KEY (`class_routine_id`) REFERENCES `class_routine` (`class_routine_id`);
+
+ALTER TABLE `expense_category`
+ADD FOREIGN KEY (`income_category_id`) REFERENCES `income_categories` (`income_category_id`);
+
+ALTER TABLE `expense_variance_note`
+ADD FOREIGN KEY (`income_category_id`) REFERENCES `income_categories` (`income_category_id`);
+
+ALTER TABLE `fees_structure_details`
+ADD FOREIGN KEY (`income_category_id`) REFERENCES `income_categories` (`income_category_id`),
+ADD FOREIGN KEY (`fees_id`) REFERENCES `fees_structure` (`fees_id`);
+
+ALTER TABLE `invoice`
+ADD FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`),
+ADD FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`);
+
+
+ALTER TABLE `invoice_details`
+ADD FOREIGN KEY (`detail_id`) REFERENCES `fees_structure_details` (`detail_id`),
+ADD FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`invoice_id`);
+
+
+ALTER TABLE `lesson_plan`
+ADD FOREIGN KEY (`scheme_id`) REFERENCES `scheme` (`scheme_id`),
+ADD FOREIGN KEY (`createdby`) REFERENCES `user` (`user_id`),
+ADD FOREIGN KEY (`lastmodifiedby`) REFERENCES `user` (`user_id`),
+ADD FOREIGN KEY (`signed_off_by`) REFERENCES `user` (`user_id`);
+
+
+ALTER TABLE `mark`
+ADD FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`),
+ADD FOREIGN KEY (`subject_id`) REFERENCES `subject` (`subject_id`),
+ADD FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`),
+ADD FOREIGN KEY (`exam_id`) REFERENCES `exam` (`exam_id`);
+
+ALTER TABLE `overpay`
+ADD FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`),
+ADD FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`transaction_id`);
+
+ALTER TABLE `overpay_charge_detail`
+ADD FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`invoice_id`),
+ADD FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`invoice_id`);
+
+ALTER TABLE `parent`
+ADD FOREIGN KEY (`relationship_id`) REFERENCES `relationship` (`relationship_id`);
+
+ALTER TABLE `scheme`
+ADD FOREIGN KEY (`scheme_header_id`) REFERENCES `scheme_header` (`scheme_header_id`),
+ADD FOREIGN KEY (`createdby`) REFERENCES `user` (`user_id`),
+ADD FOREIGN KEY (`lastmodifiedby`) REFERENCES `user` (`user_id`);
+
+ALTER TABLE `scheme_header`
+ADD FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`),
+ADD FOREIGN KEY (`subject_id`) REFERENCES `subject` (`subject_id`),
+ADD FOREIGN KEY (`term_id`) REFERENCES `terms` (`terms_id`),
+ADD FOREIGN KEY (`createdby`) REFERENCES `user` (`user_id`),
+ADD FOREIGN KEY (`lastmodifiedby`) REFERENCES `user` (`user_id`);
+
+ALTER TABLE `section`
+ADD FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`),
+ADD FOREIGN KEY (`teacher_id`) REFERENCES `teacher` (`teacher_id`);
+
+ALTER TABLE `student`
+ADD FOREIGN KEY (`class_id`) REFERENCES `class` (`class_id`);
+
+ALTER TABLE `transaction`
+ADD FOREIGN KEY (`transaction_type_id`) REFERENCES `transaction_type` (`transaction_type_id`),
+ADD FOREIGN KEY (`transaction_method_id`) REFERENCES `transaction_method` (`transaction_method_id`);
+
+ALTER TABLE `transaction_detail`
+ADD FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`transaction_id`);
+
+ALTER TABLE `transition_detail`
+ADD FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`),
+ADD FOREIGN KEY (`transition_id`) REFERENCES `transition` (`transition_id`);

@@ -39,6 +39,7 @@ if($_POST) {
 						// If no errors, redirect to login page
 						if(!isset($message)) {
 						  	$_SESSION['db_param'] = $_POST;
+								$_SESSION['db_param']['db_name'] = $db_create['db_name'];
 						}
 				}elseif (isset($_POST['set_admin'])) {
 
@@ -49,15 +50,19 @@ if($_POST) {
 
 
 					foreach($_POST as $key=>$value){
-							// $sql = "UPDATE settings SET description='".$value."' WHERE type='".$key."'";
-							//
-							// if(!$mysqli){
-							// 	$message = $core->show_message('error','Cannot connect to the database.');
-							// }else{
-							// 	$mysqli->query($sql);
-							// }
+							$mysqli = new mysqli($_SESSION['db_param']['hostname'],$_SESSION['db_param']['db_user'],$_SESSION['db_param']['db_password'],$_SESSION['db_param']['db_name']);
 
-							$sql = "INSERT INTO admin VALUES()";
+							$fullname = $_POST['firstname']. ' '.$_POST['lastname'];
+							$sql = "INSERT INTO admin (name,email,birthday,sex,phone,level,is_approver) VALUES ('".$_POST['firstname']."','".$_POST['email']."','','','','','')";
+
+							if(!$mysqli){
+								$message = $core->show_message('error','Cannot connect to the database.');
+							}else{
+									$mysqli->query($sql);
+								// 	$message = "Insert Error occurred ".mysqli_error();
+								// }
+									//mysqli_query($mysqli,$sql) or die(mysqli_error($mysqli));
+							}
 
 					}
 
@@ -68,11 +73,11 @@ if($_POST) {
 						//$_SESSION['advance'] = FALSE;
 						//$_SESSION['db_param'] = "";
 
-						$redir = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https" : "http");
-						$redir .= "://".$_SERVER['HTTP_HOST'];
-						$redir .= str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
-						$redir = str_replace('install/','',$redir);
-						header( 'Location: ' . $redir) ;
+						// $redir = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https" : "http");
+						// $redir .= "://".$_SERVER['HTTP_HOST'];
+						// $redir .= str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+						// $redir = str_replace('install/','',$redir);
+						// header( 'Location: ' . $redir) ;
 					}
 
 
