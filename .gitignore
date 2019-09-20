@@ -12,8 +12,8 @@ readme.rst
 /application/**/config/localrepositoryvars.php
 /uploads/logo.png
 /vendor
-index.php
+/index.php
 /uploads/student_import.xlsx
 /uploads/blank_excel_file.xlsx
 /uploads/bank_statements/*
-log.txt
+/log.txt
