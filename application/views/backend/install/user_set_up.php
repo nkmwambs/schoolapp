@@ -15,21 +15,21 @@
               <div class="form-group">
                   <label for="" class="label-control col-xs-3"><?=get_phrase('first_name');?></label>
                   <div class="col-xs-9">
-                      <input type="text" class="form-control" name="first_name" />
+                      <input type="text" class="form-control required" name="first_name" />
                   </div>
               </div>
 
               <div class="form-group">
                   <label for="" class="label-control col-xs-3"><?=get_phrase('last_name');?></label>
                   <div class="col-xs-9">
-                      <input type="text" class="form-control" name="last_name" />
+                      <input type="text" class="form-control required" name="last_name" />
                   </div>
               </div>
 
               <div class="form-group">
                   <label for="" class="label-control col-xs-3"><?=get_phrase('gender');?></label>
                   <div class="col-xs-9">
-                      <select class="form-control" name="sex">
+                      <select class="form-control required" name="sex" >
                         <option value=""><?=get_phrase('select');?></option>
                         <option value="male"><?=get_phrase('male');?></option>
                         <option value="female"><?=get_phrase('female');?></option>
@@ -40,43 +40,64 @@
               <div class="form-group">
                   <label for="" class="label-control col-xs-3"><?=get_phrase('email');?></label>
                   <div class="col-xs-9">
-                      <input type="email" class="form-control" name="email" />
+                      <input type="email" class="form-control required" name="email"  />
                   </div>
               </div>
 
               <div class="form-group">
                   <label for="" class="label-control col-xs-3"><?=get_phrase('phone');?></label>
                   <div class="col-xs-9">
-                      <input type="text" class="form-control" name="phone" />
+                      <input type="text" class="form-control required" name="phone" required />
                   </div>
               </div>
 
               <div class="form-group">
                   <label for="" class="label-control col-xs-3"><?=get_phrase('password');?></label>
                   <div class="col-xs-9">
-                      <input type="password" class="form-control" name="password" />
+                      <input type="password" class="form-control required" name="password" required/>
                   </div>
               </div>
 
               <div class="form-group">
                   <label for="" class="label-control col-xs-3"><?=get_phrase('confirm_password');?></label>
                   <div class="col-xs-9">
-                      <input type="password" class="form-control" name="password" />
+                      <input type="password" class="form-control required" name="password" required/>
                   </div>
               </div>
 
               <div class="form-group">
                   <div class="col-xs-12">
-                      <button type="submit" class="btn btn-success"><?=get_phrase('create_account');?></button>
+                      <button id='create_account' type="submit" class="btn btn-success"><?=get_phrase('create_account');?></button>
                   </div>
               </div>
 
             </form>
-            <script type='text/javascript'>
-            	
-            	$("#my_form")[0].reset();
-            </script>
+            
           </div>
       </div>
   </div>
 </div>
+
+<script type="text/javascript">
+//Reset the form values to avoid resubmitting and creating a new dbase and dump tables when a user refreshes.
+
+$("#my_form")[0].reset();
+
+//Check required fields
+ $('#create_account').click(function(e){ //submit button name
+ 	
+   // e.preventDefault();
+    
+    $('.required').each(function() {   //a constant class for evert input item
+	    if($(this).val() == '') 
+	    {
+	    	$(this).css({'border-color': '#FF0000', "border-weight":"1px", "border-style":"solid"});
+	    	$(this).attr("placeholder", "Required");
+	    }
+	    else{
+	    	$(this).removeAttr('style');
+	    }
+    });
+  });
+	
+</script>
