@@ -1,5 +1,5 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');?>
-
+<?php $asterick="<span style ='color:red;'><b>*</b></span>"; ?>
 <div class="row">
   <div class="col-xs-offset-2 col-xs-8 col-xs-offset-2">
     <div class="panel panel-success" data-collapsed="0">
@@ -13,21 +13,21 @@
             <?php echo form_open(base_url() . 'index.php?install/set_up_admin_user/create' , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data' , 'id'=>'my_form'));?>
 
               <div class="form-group">
-                  <label for="" class="label-control col-xs-3"><?=get_phrase('first_name');?></label>
+                  <label for="" class="label-control col-xs-3"><?=get_phrase('first_name').$asterick;?></label>
                   <div class="col-xs-9">
                       <input type="text" class="form-control required" name="first_name" />
                   </div>
               </div>
 
               <div class="form-group">
-                  <label for="" class="label-control col-xs-3"><?=get_phrase('last_name');?></label>
+                  <label for="" class="label-control col-xs-3"><?=get_phrase('last_name').$asterick;?></label>
                   <div class="col-xs-9">
                       <input type="text" class="form-control required" name="last_name" />
                   </div>
               </div>
 
               <div class="form-group">
-                  <label for="" class="label-control col-xs-3"><?=get_phrase('gender');?></label>
+                  <label for="" class="label-control col-xs-3"><?=get_phrase('gender').$asterick;?></label>
                   <div class="col-xs-9">
                       <select class="form-control required" name="sex" >
                         <option value=""><?=get_phrase('select');?></option>
@@ -38,28 +38,28 @@
               </div>
 
               <div class="form-group">
-                  <label for="" class="label-control col-xs-3"><?=get_phrase('email');?></label>
+                  <label for="" class="label-control col-xs-3"><?=get_phrase('email').$asterick;?></label>
                   <div class="col-xs-9">
                       <input type="email" class="form-control required" name="email"  />
                   </div>
               </div>
 
               <div class="form-group">
-                  <label for="" class="label-control col-xs-3"><?=get_phrase('phone');?></label>
+                  <label for="" class="label-control col-xs-3"><?=get_phrase('phone').$asterick;?></label>
                   <div class="col-xs-9">
                       <input type="text" class="form-control required" name="phone" required />
                   </div>
               </div>
 
               <div class="form-group">
-                  <label for="" class="label-control col-xs-3"><?=get_phrase('password');?></label>
+                  <label for="" class="label-control col-xs-3"><?=get_phrase('password').$asterick;?></label>
                   <div class="col-xs-9">
                       <input type="password" class="form-control required" name="password" required/>
                   </div>
               </div>
 
               <div class="form-group">
-                  <label for="" class="label-control col-xs-3"><?=get_phrase('confirm_password');?></label>
+                  <label for="" class="label-control col-xs-3"><?=get_phrase('confirm_password').$asterick;?></label>
                   <div class="col-xs-9">
                       <input type="password" class="form-control required" name="password" required/>
                   </div>
