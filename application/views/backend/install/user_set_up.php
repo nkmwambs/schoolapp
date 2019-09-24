@@ -54,20 +54,25 @@
               <div class="form-group">
                   <label for="" class="label-control col-xs-3"><?=get_phrase('password').$asterick;?></label>
                   <div class="col-xs-9">
-                      <input type="password" class="form-control required" name="password" required/>
+                      <input id='password' type="password" class="form-control required" name="password" required/>
                   </div>
               </div>
 
               <div class="form-group">
                   <label for="" class="label-control col-xs-3"><?=get_phrase('confirm_password').$asterick;?></label>
                   <div class="col-xs-9">
-                      <input type="password" class="form-control required" name="password" required/>
+                      <input id='confirm_password' type="password" class="form-control required" name="confirm_password"  required/>
                   </div>
               </div>
+              
+                
+                  <div class='col-xs-3' ></div>
+                  <div class="col-xs-9" id='message'></div>
+            
 
               <div class="form-group">
                   <div class="col-xs-12">
-                      <button id='create_account' type="submit" class="btn btn-success"><?=get_phrase('create_account');?></button>
+                      <button  id='create_account' type="submit" class="btn btn-success"><?=get_phrase('create_account');?></button>
                   </div>
               </div>
 
@@ -99,5 +104,40 @@ $("#my_form")[0].reset();
 	    }
     });
   });
-	
+
+
+//Compare the password and confirm password values
+
+	//function check_password() {
+		$('#my_form').on('submit',function(e){
+			//$('#password, #confirm_password').on('change', function() {
+
+			var password = $('#password').val();
+			var confirm_pass = $('#confirm_password').val();
+
+			if ((password != confirm_pass) && password != '' && confirm_pass != '') {
+				//$('#message').html('Matching').css('color', 'green');
+				$('#message').removeAttr("hidden");
+				$('#message').html('Password and password confirm not Matching').css('color', 'red');
+
+				e.preventDefault();
+			} else if (password == confirm_pass) {
+				$('#message').attr("hidden", true);
+				return true;
+			}
+		//});
+		});
+		
+	//}
+
+  // $('#my_form').validate({
+       // rules : {
+          // password : {
+              // minlength : 5
+            // },
+            // confirm_password : {
+                // minlength : 5,
+                // equalTo : '[name="password"]'
+            // }
+       // }});
 </script>
