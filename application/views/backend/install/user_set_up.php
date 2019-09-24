@@ -72,7 +72,10 @@
               </div>
 
             </form>
-           
+            <script type='text/javascript'>
+            	
+            	$("#my_form")[0].reset();
+            </script>
           </div>
       </div>
   </div>
