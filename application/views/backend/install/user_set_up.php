@@ -10,7 +10,7 @@
                 </div>
           </div>
           <div class="panel-body">
-            <?php echo form_open(base_url() . 'index.php?install/set_up_admin_user/create' , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
+            <?php echo form_open(base_url() . 'index.php?install/set_up_admin_user/create' , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data' , 'id'=>'my_form'));?>
 
               <div class="form-group">
                   <label for="" class="label-control col-xs-3"><?=get_phrase('first_name');?></label>
@@ -72,6 +72,7 @@
               </div>
 
             </form>
+           
           </div>
       </div>
   </div>
