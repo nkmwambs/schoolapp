@@ -561,7 +561,7 @@ class Settings extends CI_Controller
 
             $name_array = explode(" ", $name);
 
-            $password = substr(md5(rand(100000000, 20000000000)), 0, 7);
+            $password = substr(md5(rand(10000, 20000)), 0, 7);
 
             $data['firstname'] = array_shift($name_array);
             $data['lastname'] = implode(" ", $name_array);
