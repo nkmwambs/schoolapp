@@ -58,15 +58,15 @@ class Account extends CI_Controller
             $current_password = $this->db->get_where('user', array(
                 'user_id' => $this->session->userdata('login_user_id')
             ))->row()->password;
-            if (($current_password == md5($data['password'])) && ($data['new_password'] == $data['confirm_new_password'])) {
+            //if (($current_password == md5($data['password'])) && ($data['new_password'] == $data['confirm_new_password'])) {
                 $this->db->where('user_id', $this->session->userdata('user_id'));
                 $this->db->update('user', array(
                     'password' => md5($data['new_password'])
                 ));
                 $this->session->set_flashdata('flash_message', get_phrase('password_updated'));
-            } else {
-                $this->session->set_flashdata('flash_message', get_phrase('password_mismatch'));
-            }
+            //} else {
+              //  $this->session->set_flashdata('flash_message', get_phrase('password_mismatch'));
+            //}
             redirect(base_url() . 'index.php?account/manage_profile/', 'refresh');
         }
         $page_data['page_name']  = 'manage_profile';
