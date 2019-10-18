@@ -16,7 +16,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="panel panel-primary panel-shadow" data-collapsed="0">
+        <div class="panel panel-default panel-shadow" data-collapsed="0">
             <div class="panel-heading">
                 <div class="panel-title"><?php echo $row2['name'];?></div>
             </div>
@@ -56,7 +56,7 @@
                                                                 'student_id' => $student_id));
                                         if ( $obtained_mark_query->num_rows() > 0) {
                                             $marks = $obtained_mark_query->result_array();
-                                            if(count($obtained_mark_query)>0){
+                                            if(is_array($obtained_mark_query) && count($obtained_mark_query)>0){
                                               foreach ($marks as $row4) {
                                                   echo $row4['mark_obtained'];
                                                   $total_marks += $row4['mark_obtained'];
@@ -106,7 +106,9 @@
                             $this->db->where('class_id' , $class_id);
                             $this->db->from('subject');
                             $number_of_subjects = $this->db->count_all_results();
-                            echo ($total_grade_point / $number_of_subjects);
+
+                            echo $number_of_subjects == 0?0:($total_grade_point / $number_of_subjects);
+
                         ?>
 
                     <br> <br>
