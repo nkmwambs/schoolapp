@@ -1,1 +1,1 @@
-# schoolapp
+# School App
