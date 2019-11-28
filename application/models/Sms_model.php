@@ -1,5 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+require_once FCPATH."vendor/autoload.php";
+
+use AfricasTalking\SDK\AfricasTalking;
+
 class Sms_model extends CI_Model {
     
     public function __construct() {
@@ -30,17 +34,31 @@ class Sms_model extends CI_Model {
 
         $account_apikey   = $this->db->get_where('settings', array('type' => 'africastalking_api_id'))->row()->description;
         $username     = $this->db->get_where('settings', array('type' => 'africastalking_user'))->row()->description;
-        
+        $from     = $this->db->get_where('settings', array('type' => 'africastalking_sender_id'))->row()->description;
 		        
-		$this->config->set_item('username', $username);
-		$this->config->set_item('apiKey', $account_apikey);
-		$this->config->set_item('default_country_code', '+254');
-		$this->config->set_item('sms_sender', '');  //Leave as NULL to send using the default senderId 'AFRICASTKNG'
+		// $this->config->set_item('username', $username);
+		// $this->config->set_item('apiKey', $account_apikey);
+		// $this->config->set_item('default_country_code', '+254');
+		// $this->config->set_item('sms_sender', '');  //Leave as NULL to send using the default senderId 'AFRICASTKNG'
 		
-        // LOAD AT LIBRARY
-        $this->load->library('AfricasTalking');
+        // // LOAD AT LIBRARY
+        // $this->load->library('AfricasTalking');
 
-		return $this->africastalking->sendMessage($reciever_phone, $message);
+        // return $this->africastalking->sendMessage($reciever_phone, $message);
+        
+        $username = $username; // use 'sandbox' for development in the test environment
+        $apiKey   = $account_apikey; // use your sandbox app API key for development in the test environment
+        $AT       = new AfricasTalking($username, $apiKey);
+
+        // Get one of the services
+        $sms      = $AT->sms();
+
+        // Use the service
+        $result   = $sms->send([
+            'to'      => $reciever_phone,
+            'message' => $message,
+            'from' => $from,
+        ]);
 
     } 
    
