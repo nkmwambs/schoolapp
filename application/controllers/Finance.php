@@ -1608,7 +1608,7 @@ class Finance extends CI_Controller
         }
     }
 
-    public function reconcile($param1 = "", $param2 = "")
+    public function reconcile($param1 = "", $param2 = "create")
     {
         if ($this -> session -> userdata('active_login') != 1) {
             redirect('login', 'refresh');
