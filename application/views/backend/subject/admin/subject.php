@@ -148,11 +148,11 @@
 	{
 
 
-		var datatable = $("#table_export").dataTable();
+		// var datatable = $("#table_export").dataTable();
 
-		$(".dataTables_wrapper select").select2({
-			minimumResultsForSearch: -1
-		});
+		// $(".dataTables_wrapper select").select2({
+		// 	minimumResultsForSearch: -1
+		// });
 	});
 
 </script>
