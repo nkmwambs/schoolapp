@@ -2739,7 +2739,7 @@ class Finance extends CI_Controller
             if($this->input->post('cashbook')){
               redirect(base_url() . 'index.php?finance/cashbook/scroll/' . strtotime($this -> input -> post('timestamp')), 'refresh');
             }else{
-              redirect(base_url() . 'index.php?finance/unpaid_invoices/', 'refresh');
+              redirect(base_url() . 'index.php?finance/unpaid_invoices/'.date('Y',strtotime($this -> input -> post('timestamp'))), 'refresh');
             }
 
         }
