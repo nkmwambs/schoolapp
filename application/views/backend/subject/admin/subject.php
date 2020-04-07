@@ -17,7 +17,7 @@
             <!----TABLE LISTING STARTS-->
             <div class="tab-pane box active" id="list">
 
-                <table class="table table-bordered datatable" id="table_export">
+                <table class="table datatable" id="table_export">
                 	<thead>
                 		<tr>
                     		<th><div><?php echo get_phrase('class');?></div></th>
