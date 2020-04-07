@@ -81,12 +81,16 @@ tfoot th:nth-child(-n+1)
 </style>
 
 <div class="row">
+<!-- <div class="col-xs-1">
+		<a class="scroll_tabs" href="<?= base_url(); ?>index.php?finance/mass_edit_invoices/<?= $year - 1; ?>"><i style="font-size: 60pt;" class="fa fa-minus-circle"></i></a>
+	</div> -->
+
 	<div class="col-xs-12">
 		<?php echo form_open(base_url() . 'index.php?finance/mass_edit_invoices/' , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
 				<div class="form-group">
-						<label class="control-label col-xs-3"><?=get_phrase('choose_invoice_status_and_class');?></label>
+						<label class="control-label col-xs-2"><?=get_phrase('choose_invoices');?></label>
 
-            <div class="col-xs-3">
+            <div class="col-xs-2">
 							<select class="form-control" name="class_id" required="required">
 									<option value=""><?=get_phrase('select_class');?></option>
 							    <?php foreach($class as $class){?>
@@ -95,7 +99,7 @@ tfoot th:nth-child(-n+1)
               </select>
 						</div>
 
-            <div class="col-xs-3">
+            <div class="col-xs-2">
               <select class="form-control" name="invoice_status"  required="required">
                   <option value=""><?=get_phrase('select_status');?></option>
                   <option value="unpaid" <?php if($invoice_status == 'unpaid') echo 'selected';?> ><?=get_phrase('unpaid');?></option>
@@ -105,12 +109,35 @@ tfoot th:nth-child(-n+1)
               </select>
             </div>
 
+			<div class="col-xs-2">
+              <select class="form-control" name="invoice_year"  required="required">
+                  <option value=""><?=get_phrase('select_year');?></option>
+				  <option value='2019' <?php if($year == 2019) echo "selected";?> >2019</option>
+				  <option value='2020' <?php if($year == 2020) echo "selected";?> >2020</option>
+				  <option value='2021'  <?php if($year == 2021) echo "selected";?> >2021</option>
+			  </select>
+            </div>
+
+			<div class="col-xs-2">
+              <select class="form-control" name="invoice_term"  required="required">
+                  <option value=""><?=get_phrase('select_term');?></option>
+				  <option value='1' <?php if($term == 1) echo "selected";?> >Term 1</option>
+				  <option value='2' <?php if($term == 2) echo "selected";?> >Term 2</option>
+				  <option value='3' <?php if($term == 3) echo "selected";?> >Term 3</option>
+			  </select>
+            </div>
+
+
 						<div class="col-xs-2">
 							<input type="submit" class="btn btn-default" value="<?=get_phrase('go');?>"/>
 						</div>
 				</div>
 		</form>
 	</div>
+
+	<!-- <div class="col-xs-1">
+    <a class="scroll_tabs" href="<?= base_url(); ?>index.php?finance/mass_edit_invoices/<?= $year + 1; ?>"><i style="font-size: 60pt;" class="fa fa-plus-circle"></i></a>
+  	</div> -->
 </div>
 
 <hr/>

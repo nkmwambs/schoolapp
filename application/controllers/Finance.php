@@ -1785,19 +1785,23 @@ class Finance extends CI_Controller
       if ($this -> session -> userdata('active_login') != 1) {
           redirect('login', 'refresh');
       }
-
+      
       if($year == ""){
         $year = date('Y');
+      }
+      
+      if($term == ""){
+        $term = $this->crud_model->get_current_term();
       }
 
       if($this->input->post()){
         $invoice_status = $this->input->post('invoice_status');
         $class_id = $this->input->post('class_id');
+        $year = $this->input->post('invoice_year');
+        $term = $this->input->post('invoice_term');
       }
 
-      if($term == ""){
-        $term = $this->crud_model->get_current_term();
-      }
+      
 
       $ungrouped_payments = $this->crud_model->get_class_invoices_by_status($year,$class_id,$invoice_status);
 
@@ -1832,6 +1836,8 @@ class Finance extends CI_Controller
       $page_data['payments'] = $payments;
       $page_data['page_name'] = __FUNCTION__;
       $page_data['page_view'] = "finance";
+      $page_data['year'] = $year;
+      $page_data['term'] = $term;
       $page_data['page_title'] = get_phrase(__FUNCTION__);
       $this -> load -> view('backend/index', $page_data);
     }
