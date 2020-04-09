@@ -2475,10 +2475,14 @@ class Finance extends CI_Controller
         }
     }
 
-    public function create_transaction($page = "", $page_to_show = "")
+    public function create_transaction($page = "", $page_to_show = "", $year = "")
     {
         if ($this -> session -> userdata('active_login') != 1) {
             redirect('login', 'refresh');
+        }
+
+        if($year == ""){
+            $year = date('Y');
         }
 
         if ($this -> input -> post('page_to_show')) {
@@ -2511,7 +2515,7 @@ class Finance extends CI_Controller
             redirect(base_url() . 'index.php?finance/create_transaction/' . $page . "/" . $page_to_show, 'refresh');
         }
 
-        $data['year'] = date('Y');
+        $data['year'] = $year;
         $data['page_to_show'] = $page_to_show;
         $data['next_serial_number'] = $this -> crud_model -> next_serial_number();
 

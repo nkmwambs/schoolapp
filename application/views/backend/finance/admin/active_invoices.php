@@ -8,7 +8,10 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
     $unpaid_invoices = $this->db->get('invoice')->result_array();
 ?>
 <div class="row">
-	<div class="col-xs-12">
+    <div class="col-xs-1">
+        <a class="scroll_tabs" href="<?= base_url(); ?>index.php?finance/create_transaction/active_invoices/fees_income/<?= $year - 1; ?>"><i style="font-size: 60pt;" class="fa fa-minus-circle"></i></a>
+    </div>
+	<div class="col-xs-10">
 		<table  class="table table-bordered datatable example">
                 	<thead>
                 		<tr>
@@ -105,6 +108,9 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                     </tbody>
                 </table>
 	</div>
+    <div class="col-xs-1">
+        <a class="scroll_tabs" href="<?= base_url(); ?>index.php?finance/create_transaction/active_invoices/fees_income/<?= $year + 1; ?>"><i style="font-size: 60pt;" class="fa fa-plus-circle"></i></a>
+    </div>
 </div>
 
 <script>
