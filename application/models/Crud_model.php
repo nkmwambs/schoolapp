@@ -1115,6 +1115,7 @@ class Crud_model extends CI_Model {
 
 			if(in_array($month, $term_months[$term->terms_id])){
 				$term_data['term_id'] = $term->terms_id;
+				$term_data['term_number'] = $term->term_number;
 				$term_data['key'] = array_search($month, $term_months[$term->terms_id]) + 1;
 				break;
 			}

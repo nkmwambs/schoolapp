@@ -1,11 +1,13 @@
 <?php
 if (!defined('BASEPATH')) exit('No direct script access allowed');
-//print_r($user_data);
+//print_r($this->crud_model->get_current_term_based_on_date(date('Y-m-d'))['term_id']);
 ?>
 
 		<div class="row  <?= get_access_class('dashboard_shortcuts', 'admin', 'dashboard'); ?>">
-
-				<div class="col-xs-5 <?= get_access_class('create_transaction', 'admin', 'dashboard'); ?>">
+			<div class="col-xs-1">
+				<a class="scroll_tabs" id="prev_period" href="<?= base_url(); ?>index.php?dashboard/home/"><i style="font-size: 60pt;" class="fa fa-minus-circle"></i></a>
+			</div>	
+			<div class="col-xs-4 <?= get_access_class('create_transaction', 'admin', 'dashboard'); ?>">
 					<!-- <a href="<?=base_url();?>index.php?finance/create_transaction" class="btn btn-success btn-icon float-left">
 						<i class="fa fa-tasks"></i><?=get_phrase('create_a_transaction');?>
 					</a> -->
@@ -42,18 +44,30 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 				</div>
 
 
-			<div class="col-xs-5 <?= get_access_class('pending_approvals', 'admin', 'dashboard'); ?>">
+
+			
+			
+			<div class="col-xs-4 <?= get_access_class('pending_approvals', 'admin', 'dashboard'); ?>">
 					<a href="<?=base_url();?>index.php?admin/list_approvals" class="btn btn-danger btn-icon"><?=get_phrase('pending_approvals');?> <i class="fa fa-thumbs-up"></i></a>
 			</div>
 
 			<div class="col-xs-2 <?= get_access_class('sms_gateway_balance', 'admin', 'dashboard'); ?>">
 				<div class="label label-primary">SMS Gateway Balance: <?=$user_data->balance;?></div>
 			</div>
+
+			<div class="col-xs-1">
+				<a class="scroll_tabs" id='next_period' href="<?= base_url(); ?>index.php?dashboard/home/"><i style="font-size: 60pt;" class="fa fa-plus-circle"></i></a>
+			</div>	
+
 		</div>
 
 		<hr class="<?= get_access_class('create_transaction', 'admin', 'dashboard'); ?>"/>
 
 		<div class="row <?= get_access_class('dashboard', 'admin'); ?>">
+			<!-- <div class="col-xs-1">
+				<a class="scroll_tabs" href="<?= base_url(); ?>index.php?dashboard/home/<?=$year;?>/<?=$term;?>"><i style="font-size: 60pt;" class="fa fa-minus-circle"></i></a>
+			</div> -->
+			
 			<div class="col-xs-12">
 		            <div class="col-md-3 <?= get_access_class('student_count', 'admin', 'dashboard'); ?>">
 
@@ -115,6 +129,10 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 		            </div>
 
 			</div>
+
+			<!-- <div class="col-xs-1">
+				<a class="scroll_tabs" href="<?= base_url(); ?>index.php?dashboard/home/<?=$year;?>/<?=$term;?>"><i style="font-size: 60pt;" class="fa fa-plus-circle"></i></a>
+			</div> -->
 		</div>
 
 		<div class="row  <?= get_access_class('dashboard', 'admin'); ?>">
@@ -140,7 +158,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 							<?php
 							//echo $this->crud_model->get_current_term();
-								$balance = $this->crud_model->term_total_fees_balance(date('Y'),$this->crud_model->get_current_term());
+								$balance = $this->crud_model->term_total_fees_balance($this->uri->segment(3)?$this->uri->segment(3):date('Y'),$this->uri->segment(4)?$this->uri->segment(4):$this->crud_model->get_current_term());
 							?>
 
 							<div class="num"><?= number_format($balance); ?></div>
@@ -333,4 +351,29 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 							]
 							});
 							});
+
+
+	$(".scroll_tabs").on('click',function(ev){
+		var id = $(this).attr('id');
+		var year = '<?=$this->uri->segment(3);?>' == ""?"<?=date('Y');?>":"<?=$this->uri->segment(3);?>";
+		var term = '<?=$this->uri->segment(4);?>' == ""?"<?=$this->crud_model->get_current_term();?>":"<?=$this->uri->segment(4);?>";
+
+		var url = "<?=base_url();?>index.php?dashboard/get_dashboard_year_and_term";
+
+		$.ajax({
+			url:url,
+			data:{'year':year,'term':term},
+			type:"POST",
+			success:function(response){
+				var obj = JSON.parse(response);
+				window.location.href = "<?=base_url();?>index.php?dashboard/home/"+obj.year+"/"+obj.term;
+				//alert(response);
+			},
+			error:function(){
+
+			}
+		});
+		
+		ev.preventDefault();
+	});						
   </script>

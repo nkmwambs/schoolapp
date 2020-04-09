@@ -30,10 +30,10 @@ class Login extends CI_Controller {
     public function index() {
 		//$this->db->db_select($this->session->app);
       if ($this->session->userdata('active_login') == 1)
-          redirect(base_url() . 'index.php?dashboard', 'refresh');
+          redirect(base_url() . 'index.php?dashboard/home/'.date('Y').'/'.$this->crud_model->get_current_term_based_on_date(date('Y-m-d'))['term_id'], 'refresh');
 
         if ($this->session->userdata('admin_login') == 1)
-            redirect(base_url() . 'index.php?admin/dashboard', 'refresh');
+            redirect(base_url() . 'index.php?admin/dashboard/home', 'refresh');
 
         if ($this->session->userdata('teacher_login') == 1)
             redirect(base_url() . 'index.php?teacher/dashboard', 'refresh');

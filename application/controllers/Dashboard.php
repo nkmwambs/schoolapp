@@ -29,7 +29,7 @@ class Dashboard extends CI_Controller
     }
 
     /***default functin, redirects to login page if no admin logged in yet***/
-    function index()
+    function home($year = "",$term ="")
     {
         if ($this->session->userdata('active_login') != 1)
             redirect(base_url(), 'refresh');
@@ -48,12 +48,46 @@ class Dashboard extends CI_Controller
 			$page_data['user_data'] = $this->africastalking->getUserData();
 		}catch(AfricasTalkingGatewayException $e){
 			$page_data['user_data'] = (object)array('balance'=>0.00);
-		}
+        }
+
+        if($year == ""){
+            $year = date('Y');
+            $term = $this->crud_model->get_current_term();
+        }
 		        
         $page_data['page_name']  = 'dashboard';
         $page_data['page_view'] = "dashboard";
         $page_data['page_title'] = get_phrase('dashboard');
+        $page_data['year'] = $year;
+        $page_data['term'] = $term;
         $this->load->view('backend/index', $page_data);
+    }
+
+    function get_dashboard_year_and_term(){
+        
+        $post = $this->input->post();
+
+        $term  = $this->crud_model->get_current_term();
+        $year = date('Y');
+
+        if($post['year'] == ""){
+            if($this->crud_model->get_current_term() == 1){
+                $year = date('Y') - 1;
+                $term = 3;
+            }elseif($this->crud_model->get_current_term() > 1){
+                $year = date('Y');
+                $term = $post['term'] - 1;
+            }
+        }else{
+            if($post['term'] == 1){
+                $year = $post['year'] - 1;
+                $term = 3;
+            }else{
+                $term = $post['term'] - 1;
+            }
+        }
+
+        echo json_encode(['year'=>$year,'term'=>$term]);
     }
 
 }
