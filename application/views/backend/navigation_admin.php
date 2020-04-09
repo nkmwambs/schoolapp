@@ -19,7 +19,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 			<ul class="navbar-nav">
 				<!-- DASHBOARD -->
 		        <li class="<?=get_access_class('dashboard','admin');?>">
-		            <a href="<?php echo base_url(); ?>index.php?dashboard/home/<?=date('Y');?>/<?=$this->crud_model->get_current_term();?>">
+		            <a href="<?php echo base_url(); ?>index.php?dashboard/home/<?=date('Y');?>/<?=$this->crud_model->get_current_term_based_on_date(date('Y-m-d'))['term_id'];?>">
 		                <i class="entypo-gauge"></i>
 		                <span><?php echo get_phrase('dashboard'); ?> </span>
 		            </a>

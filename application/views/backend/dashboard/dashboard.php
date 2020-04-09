@@ -158,7 +158,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 							<?php
 							//echo $this->crud_model->get_current_term();
-								$balance = $this->crud_model->term_total_fees_balance($this->uri->segment(3)?$this->uri->segment(3):date('Y'),$this->uri->segment(4)?$this->uri->segment(4):$this->crud_model->get_current_term());
+								$balance = $this->crud_model->term_total_fees_balance($year,$term);
 							?>
 
 							<div class="num"><?= number_format($balance); ?></div>
@@ -173,7 +173,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 						<div class="tile-stats tile-plum <?= get_access_class('total_fees_received', 'admin', 'dashboard'); ?>">
 							<div class="icon"><i class="entypo-mail <?= get_access_class('total_fees_received', 'admin', 'dashboard'); ?>"></i></div>
-							<?php $fees_paid = $this -> crud_model-> term_total_paid_fees(date('Y'),$this->crud_model->get_current_term()); ?>
+							<?php $fees_paid = $this -> crud_model-> term_total_paid_fees($year,$term); ?>
 							<div class="num"><?= number_format($fees_paid); ?></div>
 
 							<h3>Fees</h3>
@@ -186,7 +186,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 						<div class="tile-stats tile-brown <?= get_access_class('total_invoices_cleared', 'admin', 'dashboard'); ?>">
 							<div class="icon"><i class="entypo-suitcase"></i></div>
-							<?php $cleared_invoices = $this -> db -> get_where('invoice', array('status' => 'paid', 'yr' => date("Y"))) -> num_rows(); ?>
+							<?php $cleared_invoices = $this -> db -> get_where('invoice', array('status' => 'paid', 'yr' => $year)) -> num_rows(); ?>
 							<div class="num"><?= number_format($cleared_invoices); ?></div>
 
 							<h3>Invoices</h3>
@@ -205,7 +205,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 						<div class="tile-stats tile-cyan <?= get_access_class('years_expense_to_date', 'admin', 'dashboard'); ?>">
 							<div class="icon"><i class="entypo-paper-plane"></i></div>
-							<?php $expense = $this -> db -> select_sum('amount') -> get_where('transaction', array('YEAR(t_date)' => date('Y'), 'transaction_type_id' => 2)) -> row() -> amount; ?>
+							<?php $expense = $this -> db -> select_sum('amount') -> get_where('transaction', array('YEAR(t_date)' => $year, 'transaction_type_id' => 2)) -> row() -> amount; ?>
 							<div class="num"><?= number_format($expense); ?></div>
 
 							<h3>Expenses</h3>
@@ -220,7 +220,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 							<div class="icon"><i class="entypo-gauge"></i></div>
 							<?php $this -> db -> where_in('month', range(1, date('n')));
 								$this -> db -> join('budget', 'budget.budget_id=budget_schedule.budget_id');
-								$budget = $this -> db -> select_sum('amount') -> get_where('budget_schedule', array('fy' => date('Y'))) -> row() -> amount;
+								$budget = $this -> db -> select_sum('amount') -> get_where('budget_schedule', array('fy' => $year)) -> row() -> amount;
 							?>
 							<div class="num"><?= number_format($budget); ?></div>
 
