@@ -83,6 +83,7 @@ class Dashboard extends CI_Controller
                 $year = $post['year'] - 1;
                 $term = 3;
             }else{
+                $year = $post['year'];
                 $term = $post['term'] - 1;
             }
         }
