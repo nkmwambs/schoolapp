@@ -82,7 +82,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 		                    		data-postfix="" data-duration="1500" data-delay="0">0</div>
 
 		                    <h3><?php echo get_phrase('students'); ?></h3>
-		                   <p>Total active students</p>
+		                   <p>Total completed student profiles</p>
 		                </div>
 
 		            </div>
