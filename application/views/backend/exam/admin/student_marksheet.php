@@ -16,7 +16,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="panel panel-primary panel-shadow" data-collapsed="0">
+        <div class="panel panel-default panel-shadow" data-collapsed="0">
             <div class="panel-heading">
                 <div class="panel-title"><?php echo $row2['name'];?></div>
             </div>
@@ -106,7 +106,8 @@
                             $this->db->where('class_id' , $class_id);
                             $this->db->from('subject');
                             $number_of_subjects = $this->db->count_all_results();
-                            echo ($total_grade_point / $number_of_subjects);
+                            $grade_point = @($total_grade_point / $number_of_subjects);
+                            echo is_nan($grade_point?0:$grade_point);
                         ?>
 
                     <br> <br>

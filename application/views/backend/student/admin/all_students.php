@@ -16,6 +16,7 @@
 	<table class="table table-striped" id="table_export">
 		<thead>
 	    	<tr>
+				<th><?php echo get_phrase('action');?></th>
 	        	<th><?php echo get_phrase('admission_number');?></th>
 	            <th><?php echo get_phrase('name');?></th>
 	            <th><?php echo get_phrase('caregiver');?></th>
@@ -32,7 +33,38 @@
 				foreach($students as $student){
 			?>
 				<tr>
+					<td>
+					<div class="btn-group">
+                                    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                                        <?=get_phrase('action');?> <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-default pull-left" role="menu">
 
+                                        <!-- STUDENT MARKSHEET LINK  -->
+                                        <li>
+                                            <a href="<?php echo base_url();?>index.php?exam/student_marksheet/<?php echo $student['student_id'];?>">
+                                                <i class="entypo-chart-bar"></i>
+                                                    <?php echo get_phrase('mark_sheet');?>
+                                                </a>
+                                        </li>
+
+										<li class="divider"></li>
+
+
+                                        <!-- STUDENT EDITING LINK -->
+                                        <li class="<?=get_access_class("edit_student",$this->session->login_type,"accounts");?> ">
+                                            <a  href="<?php echo base_url();?>index.php?student/student_edit/<?php echo $student['student_id'];?>" >
+                                                <i class="entypo-pencil"></i>
+                                                    <?php echo get_phrase('edit');?>
+                                                </a>
+                                        </li>
+
+                                       <li class="divider <?=get_access_class("edit_student",$this->session->login_type,"accounts");?>"></li>
+
+                                        
+                                    </ul>
+                                </div>
+					</td>
 					<td><?=$student['roll'];?></td>
 					<td><a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_student_profile/<?php echo $student['student_id'];?>');"><?=ucwords($student['student_name']);?></a></td>
 					<td><?php echo $student['parent_id']!=0?$this->crud_model->get_type_name_by_id('parent',$student['parent_id']):get_phrase('not_set');?></td>
