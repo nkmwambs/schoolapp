@@ -4,27 +4,37 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
 ?>
 
 <hr />
-<a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/student_add/');"
-    class="btn btn-primary pull-right <?=get_access_class("student_admission",$this->session->login_type,"accounts");?>" >
-        <?php echo get_phrase('add_new_student');?>
-</a>
+<div class='row'>
+    <div class='col-xs-4'>
+        <a href="javascript:;" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/student_add/');"
+            class="btn btn-primary <?=get_access_class("student_admission",$this->session->login_type,"accounts");?>" >
+                <?php echo get_phrase('add_new_student');?>
+        </a>
+    </div>
 
-<?php
-	$new_numeric = $class->row()->name_numeric + 1;
-    $new_class = $this->db->get_where("class",array("name_numeric"=>$new_numeric));
+    <div class='col-xs-4' style='text-align:center;'>
+        <?=get_phrase('class_name');?>: <?=$class->row()->name;?>
+    </div>
 
-	if($new_class->num_rows() > 0 && $this->db->get_where('student',array('class_id'=>$class_id))->num_rows() > 0){
-?>
-<a href="javascript:;" onclick="confirm_action('<?php echo base_url();?>index.php?student/student_promote/mass_promotion/<?php echo $class_id;?>');"
-    class="btn btn-primary pull-left promote_student <?=get_access_class("promote_student",$this->session->login_type,"accounts");?>">
-        <i class="entypo-forward"></i>
-        <?php echo get_phrase('promote_students');?> : <?php echo $new_class->row()->name;?>
-<?php
-	}
-?>
-</a>
+    <div class='col-xs-4'>
+        <?php
+        $new_numeric = $class->row()->name_numeric + 1;
+        $new_class = $this->db->get_where("class",array("name_numeric"=>$new_numeric));
 
-<br>
+            if($new_class->num_rows() > 0 && $this->db->get_where('student',array('class_id'=>$class_id))->num_rows() > 0){
+        ?>
+        <a href="javascript:;" onclick="confirm_action('<?php echo base_url();?>index.php?student/student_promote/mass_promotion/<?php echo $class_id;?>');"
+            class="btn btn-primary promote_student <?=get_access_class("promote_student",$this->session->login_type,"accounts");?>">
+                <i class="entypo-forward"></i>
+                <?php echo get_phrase('promote_students');?> : <?php echo $new_class->row()->name;?>
+        <?php
+            }
+        ?>
+        </a>
+    </div>
+</div>
+
+
 <hr/>
 <div class="row">
     <div class="col-md-12">

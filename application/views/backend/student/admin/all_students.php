@@ -74,12 +74,21 @@
                                        <li class="divider <?=get_access_class("edit_student",$this->session->login_type,"accounts");?>"></li>
 
                                          <!-- STUDENT SUSPEND LINK -->
-										 <li class=" <?=get_access_class("suspend_student",$this->session->login_type,"accounts");?>">
-                                            <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_transition_student/<?php echo $student['student_id'];?>');">
-                                                <i class="entypo-trash"></i>
-                                                    <?php echo get_phrase('transition');?>
-                                                </a>
-                                        </li>
+										 <?php if($toggle_status == 0){?>
+											<li class=" <?=get_access_class("suspend_student",$this->session->login_type,"accounts");?>">
+												<a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_transition_student/<?php echo $student['student_id'];?>');">
+													<i class="entypo-trash"></i>
+														<?php echo get_phrase('transition');?>
+													</a>
+											</li>
+										 <?php }else{?>
+											<li class=" <?=get_access_class("suspend_student",$this->session->login_type,"accounts");?>">
+												<a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?student/unsuspended_student/<?php echo $student['student_id'];?>');">
+													<i class="entypo-trash"></i>
+														<?php echo get_phrase('unsuspend');?>
+													</a>
+											</li>
+										 <?php }?>
                                     </ul>
                                 </div>
 					</td>

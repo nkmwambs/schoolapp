@@ -272,6 +272,18 @@ class Student extends CI_Controller {
 		}
 	}
 
+	function unsuspended_student($student_id){
+		$this->db->where(array('student_id'=>$student_id));
+		$student_data['active'] = 1;
+		$this->db->update('student',$student_data);
+
+		$transition_data['status'] = 0;
+		$this->db->where(array('student_id'=>$student_id,'status'=>1));
+		$this->db->update('transition_detail',$student_data);
+
+		redirect(base_url() . 'index.php?student/all_students/1', 'refresh');
+	}
+
 	function all_students($status = 1) {
 		if ($this -> session -> userdata('active_login') != 1)
 			redirect('login', 'refresh');
