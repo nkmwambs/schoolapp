@@ -272,7 +272,7 @@ class Student extends CI_Controller {
 		}
 	}
 
-	function all_students() {
+	function all_students($status = 1) {
 		if ($this -> session -> userdata('active_login') != 1)
 			redirect('login', 'refresh');
 
@@ -282,9 +282,10 @@ class Student extends CI_Controller {
 		$this->db->join('class','class.class_id=student.class_id','LEFT');
 		$this->db->join('parent','parent.parent_id=student.parent_id','LEFT');
 
-		$page_data['students'] = $this->db->get_where('student',array('student.active'=>1))->result_array();
+		$page_data['students'] = $this->db->get_where('student',array('student.active'=>$status))->result_array();
 		$page_data['page_name'] = 'all_students';
 		$page_data['page_view'] = "student";
+		$page_data['toggle_status'] = $status == 1?0:1;
 		$page_data['page_title'] = get_phrase('students_information');
 		$this -> load -> view('backend/index', $page_data);
 	}

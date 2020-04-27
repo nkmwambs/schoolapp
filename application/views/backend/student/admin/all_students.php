@@ -10,6 +10,8 @@
 <link href="https://cdn.datatables.net/fixedheader/3.1.5/css/fixedHeader.dataTables.min.css"/>
 <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css"/>
 
+<a class='btn btn-default' href='<?=base_url();?>index.php?student/all_students/<?=$toggle_status;?>'><?=$toggle_status == 1?get_phrase('show_active'):get_phrase('show_suspended');?></a>
+<hr/>
 
 <?php echo form_open('' , array('id'=>'form-filter','class' => 'form-vertical form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
 
@@ -50,6 +52,16 @@
 
 										<li class="divider"></li>
 
+                                        <!-- STUDENT PROFILE LINK -->
+                                        <li>
+                                            <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_student_profile/<?php echo $student['student_id'];?>');">
+                                                <i class="entypo-user"></i>
+                                                    <?php echo get_phrase('profile');?>
+                                                </a>
+                                        </li>
+
+                                        <li class="divider"></li>
+
 
                                         <!-- STUDENT EDITING LINK -->
                                         <li class="<?=get_access_class("edit_student",$this->session->login_type,"accounts");?> ">
@@ -61,7 +73,13 @@
 
                                        <li class="divider <?=get_access_class("edit_student",$this->session->login_type,"accounts");?>"></li>
 
-                                        
+                                         <!-- STUDENT SUSPEND LINK -->
+										 <li class=" <?=get_access_class("suspend_student",$this->session->login_type,"accounts");?>">
+                                            <a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_transition_student/<?php echo $student['student_id'];?>');">
+                                                <i class="entypo-trash"></i>
+                                                    <?php echo get_phrase('transition');?>
+                                                </a>
+                                        </li>
                                     </ul>
                                 </div>
 					</td>
@@ -110,8 +128,8 @@
     } );
 } );
 </script>
-
-<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<!-- 
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script> -->
 <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
