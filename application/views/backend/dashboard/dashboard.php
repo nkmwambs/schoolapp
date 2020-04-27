@@ -73,7 +73,11 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 		                <div class="tile-stats tile-red <?= get_access_class('student_count', 'admin', 'dashboard'); ?>">
 		                    <div class="icon"><i class="fa fa-group"></i></div>
-		                    <?php $students = $this -> db -> get_where('student', array('active' => 1)) -> num_rows(); ?>
+							<?php 
+								$this->db->join('class','class.class_id=student.class_id');
+								$this->db->join('parent','parent.parent_id=student.parent_id');
+								$students = $this -> db -> get_where('student', array('active' => 1)) -> num_rows(); 
+							?>
 		                    <div class="num" data-start="0" data-end="<?= $students; ?>"
 		                    		data-postfix="" data-duration="1500" data-delay="0">0</div>
 
