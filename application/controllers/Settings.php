@@ -526,16 +526,54 @@ class Settings extends CI_Controller
 
     public function promote_to_user($param1="", $param2="")
     {
+        if ($param1=="student") {
+            $teacher = $this->db->get_where("student", array("student_id"=>$param2))->result_array();
+            extract($teacher[0]);
+
+            $name_array = explode(" ", $name);
+
+            $username = $email !== ""?strtolower(explode('@',$email)[0]):'';
+            $password = substr(md5(rand(10000, 200000)), 0, 7);
+
+            $data['username'] = $username;
+            $data['firstname'] = array_shift($name_array);
+            $data['lastname'] = implode(" ", $name_array);
+            $data['email'] = $email;
+            $data['password'] = md5($password);//md5("default");
+            $data['phone'] = $phone;
+            $data['login_type_id'] = $this->db->get_where("login_type", array("name"=>"student"))->row()->login_type_id;
+            $data['profile_id'] = 0;
+            $data['type_user_id'] = $student_id;
+            $data['auth'] = 1;
+
+            $msg = get_phrase("failed");
+
+            /**Check if exists**/
+            $exists = $this->db->get_where("user", array("email"=>$email))->num_rows();
+            if ($exists == 0 && $email !== '') {
+                $this->db->insert("user", $data);
+                $msg = get_phrase("success");
+                $this->email_model->account_opening_email('student', $email, $password);
+            }
+
+            $this->session->set_flashdata('flash_message', $msg);
+            redirect(base_url() . 'index.php?student/all_students/', 'refresh');
+        }
+
         if ($param1=="teacher") {
             $teacher = $this->db->get_where("teacher", array("teacher_id"=>$param2))->result_array();
             extract($teacher[0]);
 
             $name_array = explode(" ", $name);
 
+            $username = $email !== ""?strtolower(explode('@',$email)[0]):'';
+            $password = substr(md5(rand(10000, 200000)), 0, 7);
+
+            $data['username'] = $username;
             $data['firstname'] = array_shift($name_array);
             $data['lastname'] = implode(" ", $name_array);
             $data['email'] = $email;
-            $data['password'] = md5("default");
+            $data['password'] = md5($password);//md5("default");
             $data['phone'] = $phone;
             $data['login_type_id'] = $this->db->get_where("login_type", array("name"=>"teacher"))->row()->login_type_id;
             $data['profile_id'] = 0;
@@ -546,9 +584,10 @@ class Settings extends CI_Controller
 
             /**Check if exists**/
             $exists = $this->db->get_where("user", array("email"=>$email))->num_rows();
-            if ($exists == 0) {
+            if ($exists == 0 && $email !== '') {
                 $this->db->insert("user", $data);
                 $msg = get_phrase("success");
+                $this->email_model->account_opening_email('teacher', $email, $password);
             }
 
             $this->session->set_flashdata('flash_message', $msg);
@@ -561,8 +600,11 @@ class Settings extends CI_Controller
 
             $name_array = explode(" ", $name);
 
-            $password = substr(md5(rand(100000000, 20000000000)), 0, 7);
+            $password = substr(md5(rand(10000, 200000)), 0, 7);
 
+            $username = $email !== ""?strtolower(explode('@',$email)[0]):'';
+            
+            $data['username'] = $username;
             $data['firstname'] = array_shift($name_array);
             $data['lastname'] = implode(" ", $name_array);
             $data['email'] = $email;

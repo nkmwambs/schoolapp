@@ -81,6 +81,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                             <th><div><?php echo get_phrase('name');?></div></th>
                             <th class="span3"><div><?php echo get_phrase('caregiver');?></div></th>
                             <th><div><?php echo get_phrase('phone');?></div></th>
+                            <th><div><?php echo get_phrase('email');?></div></th>
                             <th><div><?php echo get_phrase('options');?></div></th>
                         </tr>
                     </thead>
@@ -94,6 +95,7 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                             <td><?php echo $row['name'];?></td>
                             <td><?php echo $row['parent_id']!=0?$this->crud_model->get_type_name_by_id('parent',$row['parent_id']):get_phrase('not_set');?></td>
                             <td><?php echo $row['phone'];?></td>
+                            <td><?php echo $row['email'];?></td>
                             <td>
 
                                 <div class="btn-group">
@@ -172,6 +174,16 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                                                     <?php echo get_phrase('transition');?>
                                                 </a>
                                         </li>
+
+                                        <li class="divider <?=get_access_class("suspend_student",$this->session->login_type,"accounts");?>"></li>
+
+                                         <!-- Promote a Admin to A user -->
+                                         <li class="<?=get_access_class('promote_admin_to_user',$this->session->login_type,'accounts')?>">
+			                                    <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?settings/promote_to_user/student/<?php echo $row['student_id'];?>');">
+			                                        <i class="fa fa-thumbs-up"></i>
+												        <?php echo get_phrase('promote_to_user');?>
+			                                    </a>
+			                                </li>
                                     </ul>
                                 </div>
 

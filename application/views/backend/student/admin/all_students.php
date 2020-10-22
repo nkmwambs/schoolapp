@@ -22,7 +22,7 @@
 	        	<th><?php echo get_phrase('admission_number');?></th>
 	            <th><?php echo get_phrase('name');?></th>
 	            <th><?php echo get_phrase('caregiver');?></th>
-	            <th><?php echo get_phrase('address');?></th>
+	            <th><?php echo get_phrase('email');?></th>
 	            <th><?php echo get_phrase('class');?></th>
 	            <th><?php echo get_phrase('gender');?></th>
 	            <!-- <th><?php echo get_phrase('parent');?></th> -->
@@ -89,13 +89,22 @@
 													</a>
 											</li>
 										 <?php }?>
-                                    </ul>
+                                         <li class="divider <?=get_access_class("suspend_student",$this->session->login_type,"accounts");?>"></li>
+
+                                         <!-- Promote a Admin to A user -->
+                                         <li class="<?=get_access_class('promote_admin_to_user',$this->session->login_type,'accounts')?>">
+			                                    <a href="#" onclick="confirm_action('<?php echo base_url();?>index.php?settings/promote_to_user/student/<?php echo $student['student_id'];?>');">
+			                                        <i class="fa fa-thumbs-up"></i>
+												        <?php echo get_phrase('promote_to_user');?>
+			                                    </a>
+			                                </li>
+                                        </ul>
                                 </div>
 					</td>
 					<td><?=$student['roll'];?></td>
 					<td><a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_student_profile/<?php echo $student['student_id'];?>');"><?=ucwords($student['student_name']);?></a></td>
 					<td><?php echo $student['parent_id']!=0?$this->crud_model->get_type_name_by_id('parent',$student['parent_id']):get_phrase('not_set');?></td>
-					<td><?=ucwords($student['address']);?></td>
+					<td><?=ucwords($student['email']);?></td>
 					<td><?=ucwords($student['class_name']);?></td>
 					<td><?=$student['sex'] == 'female'?'F':'M';?></td>
 					<!-- <td><?=ucwords($student->parent_name);?></td> -->
