@@ -73,6 +73,7 @@ class Student extends CI_Controller {
 			redirect('login', 'refresh');
 
 		$page_data['student_id'] = $student_id;
+		$page_data['class_id'] = $this->db->get_where('student',array('student_id'=>$student_id))->row()->class_id;
 		$page_data['page_name'] = 'student_edit';
 		$page_data['page_view'] = "student";
 		$page_data['page_title'] = get_phrase('edit_student');
@@ -289,7 +290,7 @@ class Student extends CI_Controller {
 			redirect('login', 'refresh');
 
 		$this->db->select(array('student_id','student.name as student_name','class.name as class_name',
-		'student.address','roll','sex','student.class_id as class_id','student.parent_id as parent_id'));
+		'student.address','student.email as email','roll','sex','student.class_id as class_id','student.parent_id as parent_id'));
 
 		$this->db->join('class','class.class_id=student.class_id','LEFT');
 		$this->db->join('parent','parent.parent_id=student.parent_id','LEFT');
