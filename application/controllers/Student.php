@@ -313,8 +313,8 @@ class Student extends CI_Controller {
 
 		$student_name = $student->name;
 		$student_name_array = explode(' ',$student_name);
-		$first_name = end($student_name_array);
-		$last_name = reset($student_name_array);
+		$last_name = end($student_name_array);
+		$first_name = reset($student_name_array);
 		$username = strtolower(substr($first_name,0,1).$last_name).$student_id;
 
 		$msg = "LMS user added successfully";
