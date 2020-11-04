@@ -290,7 +290,7 @@ class Student extends CI_Controller {
 			redirect('login', 'refresh');
 
 		$this->db->select(array('student_id','student.name as student_name','class.name as class_name',
-		'student.address','student.email as email','roll','sex','student.class_id as class_id','student.parent_id as parent_id'));
+		'student.address','student.email as email','roll','sex','student.class_id as class_id','student.parent_id as parent_id','lms_enrolled'));
 
 		$this->db->join('class','class.class_id=student.class_id','LEFT');
 		$this->db->join('parent','parent.parent_id=student.parent_id','LEFT');
@@ -301,6 +301,62 @@ class Student extends CI_Controller {
 		$page_data['toggle_status'] = $status == 1?0:1;
 		$page_data['page_title'] = get_phrase('students_information');
 		$this -> load -> view('backend/index', $page_data);
+	}
+
+	function enrol_to_lms(){
+		$post = $this->input->post();
+		$student_id = $post['student_id'];
+
+		// Get student record
+		$student = $this->db->get_where('student',array('student_id'=>$student_id))->row();
+		$lms_enrol_status = $student->lms_enrolled;
+
+		$student_name = $student->name;
+		$student_name_array = explode(' ',$student_name);
+		$first_name = end($student_name_array);
+		$last_name = reset($student_name_array);
+		$username = strtolower(substr($first_name,0,1).$last_name).$student_id;
+
+		$msg = "LMS user added successfully";
+		$lms_enrolled = 0;
+
+		if($lms_enrol_status){
+			// Remove student enrolment
+			$this->db->where(array('student_id'=>$student_id));
+			$this->db->delete('lms_user');
+
+			$msg = "LMS user suspended successfully";
+
+		}else{
+			// Get username from student table
+			$student_username = $student->username;
+
+			if($student_username == ''){
+				$student_username_data['username'] = $username;
+				$this->db->where(array('student_id'=>$student_id));
+				$this->db->update('student',$student_username_data);
+			}
+
+
+			// Add student enrolment
+			$data['student_id'] = $student_id;
+			$data['lms_user_name'] = $this->db->get_where('student',array('student_id'=>$student_id))->row()->username;;
+			$data['lms_user_first_name'] = $first_name;
+			$data['lms_user_last_name'] = $last_name;
+			$data['lms_user_password'] = md5('@VineGarden2020');
+			$data['lms_user_email'] = $student->email == ''?$username.'@vinegardenschool.com':$student->email;
+
+			$this->db->insert('lms_user',$data);
+
+			$lms_enrolled = 1;
+		}
+
+		// Update Student account lms_enrolled
+		$update['lms_enrolled'] = $lms_enrolled;
+		$this->db->where(array('student_id'=>$student_id));
+		$this->db->update('student',$update);
+
+		echo $msg;
 	}
 
 	function transition($param1 = '', $student_id = "") {
