@@ -4,6 +4,14 @@
         padding: 3px;
         box-sizing: border-box;
     }
+
+.enrol_suspended{
+	color:red;
+}	
+
+.enrol_active{
+	color:green
+}
 </style>
 
 <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
@@ -99,7 +107,19 @@
 			                                    </a>
 			                                </li>
                                         </ul>
-                                </div>
+								</div>
+							
+							<?php 
+								//$enrol_color = "red";
+								$enrol_status = 'enrol_suspended';
+
+								if($student['lms_enrolled']){
+									//$enrol_color = 'green';	
+									$enrol_status = 'enrol_active';
+								}
+							?>
+
+							<i class='fa fa-book lms_enrol <?=$enrol_status;?>' id='<?=$student['student_id'];?>' style='cursor:pointer;'><i>
 					</td>
 					<td><?=$student['roll'];?></td>
 					<td><a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_student_profile/<?php echo $student['student_id'];?>');"><?=ucwords($student['student_name']);?></a></td>
@@ -145,6 +165,25 @@
 
     } );
 } );
+
+$(".lms_enrol").on('click',function(){
+	var student_id = $(this).attr('id');
+	var url = '<?=base_url();?>index.php?student/enrol_to_lms';
+	var data = {'student_id':student_id};
+
+	if($(this).hasClass('enrol_suspended')){
+		$(this).removeClass('enrol_suspended');
+		$(this).addClass('enrol_active');
+	}else{
+		$(this).removeClass('enrol_active');
+		$(this).addClass('enrol_suspended');
+	}
+
+	$.post(url,data,function(response){
+		alert(response);
+	});
+	
+})
 </script>
 <!-- 
 <script src="https://code.jquery.com/jquery-3.3.1.js"></script> -->
