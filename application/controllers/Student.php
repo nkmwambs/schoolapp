@@ -289,7 +289,7 @@ class Student extends CI_Controller {
 		if ($this -> session -> userdata('active_login') != 1)
 			redirect('login', 'refresh');
 
-		$this->db->select(array('student_id','student.name as student_name','class.name as class_name',
+		$this->db->select(array('student_id','username','student.name as student_name','class.name as class_name',
 		'student.address','student.email as email','roll','sex','student.class_id as class_id','student.parent_id as parent_id','lms_enrolled'));
 
 		$this->db->join('class','class.class_id=student.class_id','LEFT');
@@ -339,11 +339,12 @@ class Student extends CI_Controller {
 
 
 			// Add student enrolment
+			$student_username = $this->db->get_where('student',array('student_id'=>$student_id))->row()->username;
 			$data['student_id'] = $student_id;
-			$data['lms_user_name'] = $this->db->get_where('student',array('student_id'=>$student_id))->row()->username;;
+			$data['lms_user_name'] = $student_username;
 			$data['lms_user_first_name'] = $first_name;
 			$data['lms_user_last_name'] = $last_name;
-			$data['lms_user_password'] = md5('@VineGarden2020');
+			$data['lms_user_password'] = md5($student_username);
 			$data['lms_user_email'] = $student->email == ''?$username.'@vinegardenschool.com':$student->email;
 
 			$this->db->insert('lms_user',$data);

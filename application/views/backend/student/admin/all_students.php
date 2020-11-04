@@ -27,7 +27,8 @@
 		<thead>
 	    	<tr>
 				<th><?php echo get_phrase('action');?></th>
-	        	<th><?php echo get_phrase('admission_number');?></th>
+				<th><?php echo get_phrase('admission_number');?></th>
+				<th><?php echo get_phrase('username');?></th>
 	            <th><?php echo get_phrase('name');?></th>
 	            <th><?php echo get_phrase('caregiver');?></th>
 	            <th><?php echo get_phrase('email');?></th>
@@ -121,6 +122,7 @@
 
 							<i class='fa fa-book lms_enrol <?=$enrol_status;?>' id='<?=$student['student_id'];?>' style='cursor:pointer;'><i>
 					</td>
+					<td><?=$student['username'];?></td>
 					<td><?=$student['roll'];?></td>
 					<td><a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_student_profile/<?php echo $student['student_id'];?>');"><?=ucwords($student['student_name']);?></a></td>
 					<td><?php echo $student['parent_id']!=0?$this->crud_model->get_type_name_by_id('parent',$student['parent_id']):get_phrase('not_set');?></td>
