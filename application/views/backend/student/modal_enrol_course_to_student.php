@@ -23,7 +23,7 @@ $list_of_courses = $this->db->get('course');
                         <div class='form=group'>
                             <label class='col-xs-2'>Course Name</label>
                             <div class='col-xs-8'>
-                                <select id='select_course' class="form-control">
+                                <select id='select_course' class="form-control select2">
                                     <option value=''>Select a course</option>
                                     <?php foreach($list_of_courses->result_object() as $course){?>
                                         <option value="<?=$course->course_id;?>"><?=$course->course_shortname;?></option>
