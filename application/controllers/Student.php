@@ -360,6 +360,71 @@ class Student extends CI_Controller {
 		echo $msg;
 	}
 
+	function enrol_to_course(){
+		$post = $this->input->post();
+		
+		$success = false;
+
+		// Get student record
+		$course = $this->db->get_where('course',array('course_id'=>$post['course_id']))->row();
+
+		//Get course record
+		$student = $this->db->get_where('student',array('student_id'=>$post['student_id']))->row();
+
+		// Check if course exists
+		$enrolment_count = $this->db->get_where('course_enrolment',
+		array('student_id'=>$post['student_id'],'course_id'=>$post['course_id']))->num_rows();
+
+		if($enrolment_count == 0){
+			$this->db->trans_start();
+
+			$data['course_id'] = $post['course_id'];
+			$data['student_id'] = $post['student_id'];
+			$data['course_enrolment_username'] = $student->username;
+			$data['course_enrolment_role'] = 'student';
+			$data['course_enrolment_course_idnumber'] = $course->course_idnumber;
+			$data['course_enrolment_date'] = date('Y-m-d');
+	
+			$this->db->insert('course_enrolment',$data);
+
+			$this->db->trans_commit();
+
+			if($this->db->trans_status()){
+				$success = true;
+			}
+			
+		}
+		
+		echo $success;
+	}
+
+	function unenrol_from_course(){
+		$post = $this->input->post();
+
+		// Check if course exists
+		$enrolment_count = $this->db->get_where('course_enrolment',
+		array('student_id'=>$post['student_id'],'course_id'=>$post['course_id']))->num_rows();
+
+		$success = false;
+
+		if($enrolment_count > 0){
+			
+			$this->db->trans_start();
+
+			$this->db->where(array('student_id'=>$post['student_id'],'course_id'=>$post['course_id']));
+			$this->db->delete('course_enrolment');
+
+			$this->db->trans_commit();
+
+			if($this->db->trans_status()){
+				$success = true;
+			}
+		}
+
+		echo $success;
+		
+	}
+
 	function transition($param1 = '', $student_id = "") {
 
 		$student = $this -> db -> get_where('student', array('student_id' => $student_id)) -> row();

@@ -113,14 +113,18 @@
 							<?php 
 								//$enrol_color = "red";
 								$enrol_status = 'enrol_suspended';
+								$hide_enrol_to_course = 'hidden';
 
 								if($student['lms_enrolled']){
 									//$enrol_color = 'green';	
 									$enrol_status = 'enrol_active';
+									$hide_enrol_to_course = '';
 								}
 							?>
-
-							<i class='fa fa-book lms_enrol <?=$enrol_status;?>' id='<?=$student['student_id'];?>' style='cursor:pointer;'><i>
+							<span>
+								<i class='fa fa-book lms_enrol <?=$enrol_status;?>' id='<?=$student['student_id'];?>' style='cursor:pointer;'></i>
+								<i onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_enrol_course_to_student/<?php echo $student['student_id'];?>');" class='fa fa-plus-circle enrol_to_course <?=$hide_enrol_to_course;?> <?=$enrol_status;?>' style='cursor:pointer;'></i>
+							</span>
 					</td>
 					<td><?=$student['username'];?></td>
 					<td><?=$student['roll'];?></td>
@@ -174,11 +178,13 @@ $(".lms_enrol").on('click',function(){
 	var data = {'student_id':student_id};
 
 	if($(this).hasClass('enrol_suspended')){
-		$(this).removeClass('enrol_suspended');
-		$(this).addClass('enrol_active');
+		$(this).parent().children().removeClass('enrol_suspended');
+		$(this).parent().children().addClass('enrol_active');
+		$(this).parent().find('.enrol_to_course').removeClass('hidden');
 	}else{
-		$(this).removeClass('enrol_active');
-		$(this).addClass('enrol_suspended');
+		$(this).parent().children().removeClass('enrol_active');
+		$(this).parent().children().addClass('enrol_suspended');
+		$(this).parent().find('.enrol_to_course').addClass('hidden');
 	}
 
 	$.post(url,data,function(response){
