@@ -3,7 +3,6 @@
 $this->db->where(array('student_id'=>$param2));
 $this->db->join('course','course.course_id=course_enrolment.course_id');
 $course_enrolment = $this->db->get('course_enrolment');
-
 $list_of_courses = $this->db->get('course');
 
 ?>
