@@ -13,20 +13,21 @@ class Sms_model extends CI_Model {
     //COMMON FUNCTION FOR SENDING SMS
     function send_sms($message = '' , $reciever_phone = '')
     {
-        $active_sms_service = $this->db->get_where('settings' , array(
-            'type' => 'active_sms_service'
-        ))->row()->description;
-        if ($active_sms_service == '' || $active_sms_service == 'disabled')
-            return;
-		if ($active_sms_service == 'africastalking') {
-            $this->send_sms_via_africastalking($message , $reciever_phone );
-        }
-        if ($active_sms_service == 'clickatell') {
-            $this->send_sms_via_clickatell($message , $reciever_phone );
-        }
-        if ($active_sms_service == 'twilio') {
-            $this->send_sms_via_twilio($message , $reciever_phone );
-        }
+        // $active_sms_service = $this->db->get_where('settings' , array(
+        //     'type' => 'active_sms_service'
+        // ))->row()->description;
+        // if ($active_sms_service == '' || $active_sms_service == 'disabled')
+        //     return;
+		// if ($active_sms_service == 'africastalking') {
+        //     $this->send_sms_via_africastalking($message , $reciever_phone );
+        // }
+        // if ($active_sms_service == 'clickatell') {
+        //     $this->send_sms_via_clickatell($message , $reciever_phone );
+        // }
+        // if ($active_sms_service == 'twilio') {
+        //     $this->send_sms_via_twilio($message , $reciever_phone );
+        // }
+        return "Good day";
     }
    	
 	 // SEND SMS VIA Africastalking API
