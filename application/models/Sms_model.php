@@ -60,7 +60,7 @@ class Sms_model extends CI_Model {
             'from' => $from,
         ]);
 
-        return $result['status'] == 'success' ? "All messages have been sent successfully" : "Message were not sent";
+        return "Hello";//$result['status'] == 'success' ? "All messages have been sent successfully" : "Message were not sent";
     } 
    
     // SEND SMS VIA CLICKATELL API
