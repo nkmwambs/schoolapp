@@ -36,6 +36,7 @@
 					<div class="col-xs-12">	
 						<textarea required='required' class="form-control" id="message" name="message" rows="6" placeholder='Type message here'></textarea>
 					</div>
+					<div class="col-xs-12" id="response"></div>
 				</div>
 			</div>
 			
@@ -105,7 +106,7 @@
             	$("#overlay").css('display','block');
             },
             success: function(resp){
-               //$("#response").html(resp);
+               $("#response").html(resp);
                $("#overlay").css('display','none');
             },
             error:function(error,msg){
