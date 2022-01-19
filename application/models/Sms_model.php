@@ -33,7 +33,7 @@ class Sms_model extends CI_Model {
     function send_africastalking($message = '' , $reciever_phone = '') {
 
         
-        return "This is great";
+        echo "This is great";
     } 
    
     // SEND SMS VIA CLICKATELL API
