@@ -33,7 +33,7 @@ class Sms_model extends CI_Model {
     function send_sms_via_africastalking($message = '' , $reciever_phone = '') {
 
         $account_apikey   = $this->db->get_where('settings', array('type' => 'africastalking_api_id'))->row()->description;
-        $username     = 'vinegardenschool';//$this->db->get_where('settings', array('type' => 'africastalking_user'))->row()->description;
+        $username     = $this->db->get_where('settings', array('type' => 'africastalking_user'))->row()->description;
         $from     = 'VINEGARSCH';//$this->db->get_where('settings', array('type' => 'africastalking_sender_id'))->row()->description;
 		        
                     // $this->config->set_item('username', $username);
