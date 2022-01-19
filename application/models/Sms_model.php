@@ -19,7 +19,8 @@ class Sms_model extends CI_Model {
         if ($active_sms_service == '' || $active_sms_service == 'disabled')
             return;
 		if ($active_sms_service == 'africastalking') {
-            $this->send_sms_via_africastalking($message , $reciever_phone );
+            //$this->send_sms_via_africastalking($message , $reciever_phone );
+            return "Find me";
         }
         if ($active_sms_service == 'clickatell') {
             $this->send_sms_via_clickatell($message , $reciever_phone );
