@@ -89,7 +89,7 @@ class Messages extends CI_Controller
 	    $recipients = implode(',',$this->input->post('reciever'));
 		$message = $this->input->post('message');
 	    $response = $this->sms_model->send_sms($message,$recipients);
-		echo json_encode($response);
+		echo $response;
 		
 	}
 	
