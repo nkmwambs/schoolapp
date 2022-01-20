@@ -34,7 +34,7 @@ class Sms_model extends CI_Model {
 
         $account_apikey   = $this->db->get_where('settings', array('type' => 'africastalking_api_id'))->row()->description;
         $username     = $this->db->get_where('settings', array('type' => 'africastalking_user'))->row()->description;
-        $from     = '';//$this->db->get_where('settings', array('type' => 'africastalking_sender_id'))->row()->description;
+        $from     = $this->db->get_where('settings', array('type' => 'africastalking_sender_id'))->row()->description;
 		        
                     // $this->config->set_item('username', $username);
                     // $this->config->set_item('apiKey', $account_apikey);
