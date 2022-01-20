@@ -64,19 +64,20 @@ class Messages extends CI_Controller
 		
 		//Africa is Talking Fetch Messages
 		
-		$username = $this->db->get_where('settings',array('type'=>'africastalking_user'))->row()->description;
-		$apiKey = $this->db->get_where('settings',array('type'=>'africastalking_api_id'))->row()->description;
+		// $username = $this->db->get_where('settings',array('type'=>'africastalking_user'))->row()->description;
+		// $apiKey = $this->db->get_where('settings',array('type'=>'africastalking_api_id'))->row()->description;
 		
-		$this->config->set_item('username', $username);
-		$this->config->set_item('apiKey', $apiKey);
+		// $this->config->set_item('username', $username);
+		// $this->config->set_item('apiKey', $apiKey);
 		
-		$this->load->library('AfricasTalking');
+		// $this->load->library('AfricasTalking');
 		
-		try{
-			$page_data['outbox'] = $this->africastalking->fetchMessages(0);
-		}catch(AfricasTalkingGatewayException $e){
-			$page_data['outbox'] = (object)array();
-		}
+		//try{
+		//$page_data['outbox'] = $this->sms_model->fetch_messages_africastalking();//$this->africastalking->fetchMessages(0);
+		// }catch(AfricasTalkingGatewayException $e){
+		// 	$page_data['outbox'] = (object)array();
+		// }
+		//$page_data['outbox'] = $this->sms_reports(); 
 		
 		$page_data['page_name']  = 'bulksms';
 		$page_data['page_view']  = 'message';
@@ -84,6 +85,14 @@ class Messages extends CI_Controller
         $this->load->view('backend/index', $page_data);		
 	}
 	
+	function sms_reports(){
+		$data['message_thread_code'] = "None";
+		$data['message'] = json_encode($_POST);
+		$data['sender'] = "None";
+		$data['timestamp'] = "None";
+		$this->db->insert('message',$data);
+	}
+
 	function send_bulksms(){
 		
 	    $recipients = $this->input->post('reciever');//implode(',',$this->input->post('reciever'));

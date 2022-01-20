@@ -58,11 +58,39 @@ class Sms_model extends CI_Model {
             'to'      => $reciever_phone,
             'message' => $message,
             'from' => $from,
+            'enqueue' => true
         ]);
 
         return $result['status'] == 'success' ? "All messages have been sent successfully" : "Message were not sent";
     
-    } 
+    }
+    
+    function fetch_messages_africastalking(){
+        $account_apikey   = $this->db->get_where('settings', array('type' => 'africastalking_api_id'))->row()->description;
+        $username     = $this->db->get_where('settings', array('type' => 'africastalking_user'))->row()->description;
+        // $from     = $this->db->get_where('settings', array('type' => 'africastalking_sender_id'))->row()->description;
+		        
+                    // $this->config->set_item('username', $username);
+                    // $this->config->set_item('apiKey', $account_apikey);
+                    // $this->config->set_item('default_country_code', '+254');
+                    // $this->config->set_item('sms_sender', '');  //Leave as NULL to send using the default senderId 'AFRICASTKNG'
+                    
+                    // // LOAD AT LIBRARY
+                    // $this->load->library('AfricasTalking');
+
+                    // return $this->africastalking->sendMessage($reciever_phone, $message);
+                    
+        $username = $username; // use 'sandbox' for development in the test environment
+        $apiKey   = $account_apikey; // use your sandbox app API key for development in the test environment
+        $AT       = new AfricasTalking($username, $apiKey);
+
+        // Get one of the services
+        $sms      = $AT->sms();
+
+        $messages = $sms->fetchMessages();
+
+        return  $messages;
+    }
    
     // SEND SMS VIA CLICKATELL API
     function send_sms_via_clickatell($message = '' , $reciever_phone = '') {
