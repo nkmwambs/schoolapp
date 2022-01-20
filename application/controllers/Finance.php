@@ -2743,11 +2743,16 @@ class Finance extends CI_Controller
             // Send an SMS to parent
             $active_sms_service = $this->db->get_where('settings' , array('type' => 'active_sms_service'))->row()->description;
             if ($active_sms_service != '' || $active_sms_service != 'disabled') {
-                $message =  "A payment of Kes.".$data_payment['amount']. " has been received for payment of school fees";
-                $recipients = $this->invoiced_student_parent_phone_number($invoice_id);
+                
+                $invoiced_student = $this->invoiced_student($invoice_id);
+                $invoice_balance = $this->invoice_balance($invoice_id);
+                $message = "A payment of Kes.".$data_payment['amount']." has been received for ".$invoiced_student->student_name.", ".$invoiced_student->class_name.". Your current balance is Kes.".$invoice_balance.". Thank you for your cooperation.";
+                //$message =  "A payment of Kes.".$data_payment['amount']. " has been received for payment of school fees";
+                
+                $recipients = $invoiced_student->phone;
 
                 if(!empty($recipients)){
-                    $this->sms_model->send_sms($message,$recipients);
+                    $this->sms_model->send_sms($message,[$recipients]);
                 }
                 
             }
@@ -2761,20 +2766,42 @@ class Finance extends CI_Controller
         }
     }
 
-    function invoiced_student_parent_phone_number($invoice_id){
-        $this->db->select(array('parent.phone as phone'));
+    function invoice_balance($invoice_id){
+        // Invoice amount
+        $this->db->where(array('invoice_id'=>$invoice_id));
+        $invoice_amount = $this->db->get('invoice')->row()->amount;
+
+        // Sum transaction amount for the invoice
+        $this->db->select_sum('amount');
+        $this->db->where(array('invoice_id'=>$invoice_id));
+        $transaction_obj = $this->db->get('transaction');
+
+        $transaction_amount = 0;
+
+        if($transaction_obj->num_rows() > 0){
+            $transaction_amount = $transaction_obj->row()->amount;
+        }
+
+        $balance =  $invoice_amount - $transaction_amount;
+
+        return $balance;
+    }
+
+    function invoiced_student($invoice_id){
+        $this->db->select(array('parent.phone as phone','student.name as student_name','class.name as class_name'));
         $this->db->where(array('invoice_id' => $invoice_id));
         $this->db->join('student','student.parent_id=parent.parent_id');
         $this->db->join('invoice','invoice.student_id=student.student_id');
-        $parent_obj = $this->db->get('parent');
+        $this->db->join('class','class.class_id=invoice.class_id');
+        $invoiced_student_obj = $this->db->get('parent');
 
-        $parent_phone = '';
+        $invoiced_student = '';
 
-        if($parent_obj->num_rows() >0){
-            $parent_phone = $parent_obj->row()->phone;
+        if($invoiced_student_obj->num_rows() >0){
+            $invoiced_student = $invoiced_student_obj->row();
         }
 
-        return [$parent_phone];
+        return $invoiced_student;
     }
 
     public function record_other_income()
