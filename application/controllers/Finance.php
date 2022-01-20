@@ -2746,7 +2746,11 @@ class Finance extends CI_Controller
                 
                 $invoiced_student = $this->invoiced_student($invoice_id);
                 $invoice_balance = $this->invoice_balance($invoice_id);
-                $message = "A payment of Kes.".$data_payment['amount']." has been received for ".$invoiced_student->student_name.", ".$invoiced_student->class_name.". Your current balance is Kes.".$invoice_balance.". Thank you for your cooperation.";
+                $amount_paid = $data_payment['amount'];
+                $student_name = $invoiced_student->student_name;
+                $class_name = $invoiced_student->class_name;
+
+                $message = "A payment of Kes.".$amount_paid." has been received for ".$student_name.", ".$class_name.". Your current balance is Kes.".$invoice_balance.". Thank you for your cooperation.";
                 //$message =  "A payment of Kes.".$data_payment['amount']. " has been received for payment of school fees";
                 
                 $recipients = $invoiced_student->phone;
