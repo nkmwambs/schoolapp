@@ -26,6 +26,50 @@ class Account extends CI_Controller
 
     }
 
+    function search_student(){
+        $post = $this->input->post();
+
+        $data['data'] = $this->search_students_by_name_string($post['name']);
+
+        $view = $this->load->view('backend/dashboard/search/search_result',$data,true);
+
+        echo $view;
+    }
+
+    function search_students_by_name_string($name_string){
+
+        $this->db->select(
+            array(
+                'student.student_id as student_id',
+                'student.name as student_name',
+                'student.birthday as birthday',
+                'student.sex as sex',
+                'student.religion as religion',
+                'student.blood_group as blood_group',
+                'student.address as address',
+                'student.class_id as class_id',
+                'class.name as class_name',
+                'teacher.name as teacher_name',
+                'section_id',
+                'roll',
+                'upi_number',
+                'student.active as active'
+                )
+            );
+        $this->db->like('student.name',$name_string,'both');
+        $this->db->join('class','class.class_id=student.class_id');
+        $this->db->join('teacher','teacher.teacher_id=class.teacher_id');
+        $student_object = $this->db->get('student');
+        
+        $students = [];
+        
+        if($student_object->num_rows() > 0){
+            $students = $student_object->result_array();
+        }
+
+        return $students;
+    }
+
     /******MANAGE OWN PROFILE AND CHANGE PASSWORD***/
     function manage_profile($param1 = '', $param2 = '', $param3 = '')
     {

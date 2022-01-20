@@ -2,6 +2,27 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 //print_r($this->crud_model->get_current_term_based_on_date(date('Y-m-d'))['term_id']);
 ?>
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="form-group">
+					<div class="col-xs-3">
+						<input type="text" class="form-control" placeholder="Search a student" id="search" />
+					</div>
+					<div class="col-xs-2">
+						<input type="submit" class="btn btn-success" value="Search" id="submit_search" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr/>
+
+		<div class="row">
+			<div class="col-xs-12" id="search_result">
+			
+			</div>
+		</div>
+
+		<hr/>
 
 		<div class="row  <?= get_access_class('dashboard_shortcuts', 'admin', 'dashboard'); ?>">
 			<div class="col-xs-1">
@@ -317,7 +338,16 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 
     <script>
-  				$(document).ready(function() {
+  	
+	  $("#submit_search").click(function(){
+		  	const search = $("#search").val()
+			const url = "<?=base_url();?>index.php?account/search_student";
+			$.post(url,{'name':search},function(response){
+				$("#search_result").html(response);
+			});
+	  });
+
+	  $(document).ready(function() {
 
 	  var calendar = $('#notice_calendar');
 
@@ -340,8 +370,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 						foreach($notices as $row):
 						?>
 																				{
-							title: "<?php echo $row['notice_title']; ?>
-								",
+							title: "<?php echo $row['notice_title']; ?>",
 								start: new Date(
 <?php echo date('Y', $row['create_timestamp']); ?>,<?php echo date('m', $row['create_timestamp']) - 1; ?>,<?php echo date('d', $row['create_timestamp']); ?>),
 							end:	new Date(<?php echo date('Y', $row['create_timestamp']); ?>,<?php echo date('m', $row['create_timestamp']) - 1; ?>,<?php echo date('d', $row['create_timestamp']); ?>

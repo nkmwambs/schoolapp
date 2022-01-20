@@ -71,7 +71,7 @@ var neonLogin = neonLogin || {};
 						},
 						error: function()
 						{
-							alert("An error occoured!");
+							alert("An error occured!");
 						},
 						success: function(response)
 						{
