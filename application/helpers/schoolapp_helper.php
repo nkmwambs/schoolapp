@@ -155,4 +155,14 @@ if ( ! function_exists('header_details_merger'))
 		
 		return $merger;
 	}
-}			
+}	
+
+if(!function_exists('current_time')){
+    function current_time($timezone = "Africa/Nairobi"){
+        
+        $datetime = new DateTime("now", new DateTimeZone($timezone) );
+        $timestamp = $datetime->format('Y-m-d H:i:s');
+        
+        return  $timestamp;
+    }
+}

@@ -89,7 +89,7 @@ class Messages extends CI_Controller
 		$data['message_thread_code'] = "None";
 		$data['message'] = json_encode($_POST);
 		$data['sender'] = "None";
-		$data['timestamp'] = "None";
+		$data['timestamp'] = current_time();
 		$this->db->insert('message',$data);
 	}
 
