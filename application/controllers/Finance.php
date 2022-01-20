@@ -2621,7 +2621,7 @@ class Finance extends CI_Controller
      *
      */
 
-    public function record_fees_income($param1 = "")
+    public function record_fees_income($param1 = "", $invoice_id = "")
     {
         if ($param1 == 'take_payment') {
             $take_payment = $this -> input -> post('take_payment');
@@ -2740,6 +2740,18 @@ class Finance extends CI_Controller
                 $this -> session -> set_flashdata('flash_message', get_phrase('payment_successfull'));
             }
 
+            // Send an SMS to parent
+            $active_sms_service = $this->db->get_where('settings' , array('type' => 'active_sms_service'))->row()->description;
+            if ($active_sms_service != '' || $active_sms_service != 'disabled') {
+                $message =  "A payment of Kes.".$data_payment['amount']. " has been received for payment of school fees";
+                $recipients = $this->invoiced_student_parent_phone_number($invoice_id);
+
+                if(!empty($recipients)){
+                    $this->sms_model->send_sms($message,$recipients);
+                }
+                
+            }
+
             if($this->input->post('cashbook')){
               redirect(base_url() . 'index.php?finance/cashbook/scroll/' . strtotime($this -> input -> post('timestamp')), 'refresh');
             }else{
@@ -2747,6 +2759,22 @@ class Finance extends CI_Controller
             }
 
         }
+    }
+
+    function invoiced_student_parent_phone_number($invoice_id){
+        $this->db->select(array('parent.phone as phone'));
+        $this->db->where(array('invoice_id' => $invoice_id));
+        $this->db->join('student','student.parent_id=parent.parent_id');
+        $this->db->join('invoice','invoice.student_id=student.student_id');
+        $parent_obj = $this->db->get('parent');
+
+        $parent_phone = '';
+
+        if($parent_obj->num_rows() >0){
+            $parent_phone = $parent_obj->row()->phone;
+        }
+
+        return [$parent_phone];
     }
 
     public function record_other_income()

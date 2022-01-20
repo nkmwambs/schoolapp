@@ -828,13 +828,17 @@ class Crud_model extends CI_Model {
 
       $voucher_count = $this->db->get('transaction')->num_rows();
 
-      $last_mfr_date = $this->db->select_max('month')->get('reconcile')->row()->month;
+	  	$start_month_date = date("Y-m-01");
 
-      $max_voucher_id = $this->db->select_max('transaction_id')->get('transaction')->row()->transaction_id;
-
-      $voucher_date = $this->db->get_where('transaction',array("transaction_id"=>$max_voucher_id))->row()->t_date;
+    	$end_month_date = date("Y-m-t");
 
       if($voucher_count>0){
+
+		$last_mfr_date = $this->db->select_max('month')->get('reconcile')->row()->month;
+
+		$max_voucher_id = $this->db->select_max('transaction_id')->get('transaction')->row()->transaction_id;
+  
+		$voucher_date = $this->db->get_where('transaction',array("transaction_id"=>$max_voucher_id))->row()->t_date;
 
         $current_voucher_date = $voucher_date;
 

@@ -11,7 +11,7 @@ class Sms_model extends CI_Model {
     }
 
     //COMMON FUNCTION FOR SENDING SMS
-    function send_sms($message = '' , $reciever_phone = '')
+    function send_sms($message = '' , $reciever_phone = [])
     {
         $active_sms_service = $this->db->get_where('settings' , array(
             'type' => 'active_sms_service'
@@ -22,15 +22,15 @@ class Sms_model extends CI_Model {
             return $this->send_sms_via_africastalking($message , $reciever_phone );
         }
         if ($active_sms_service == 'clickatell') {
-            $this->send_sms_via_clickatell($message , $reciever_phone );
+            return $this->send_sms_via_clickatell($message , $reciever_phone );
         }
         if ($active_sms_service == 'twilio') {
-            $this->send_sms_via_twilio($message , $reciever_phone );
+            return $this->send_sms_via_twilio($message , $reciever_phone );
         }
     }
    	
 	 // SEND SMS VIA Africastalking API
-    function send_sms_via_africastalking($message = '' , $reciever_phone = '') {
+    function send_sms_via_africastalking($message = '' , $reciever_phone = []) {
 
         $account_apikey   = $this->db->get_where('settings', array('type' => 'africastalking_api_id'))->row()->description;
         $username     = $this->db->get_where('settings', array('type' => 'africastalking_user'))->row()->description;

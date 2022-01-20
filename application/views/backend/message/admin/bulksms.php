@@ -81,13 +81,20 @@
 	  });
   
 	
-	$('textarea').keypress(function(){
+	// $('textarea').keypress(function(){
 
-	    if($(this).val().length > 155){
+	//     if($(this).val().length > 155){
+	//         return false;
+	//     }
+	//     $("#counter").html("Remaining characters : " +(155 - $(this).val().length));
+	// });
+
+	$('textarea').bind('blur keyup keypress', function(e){
+       	    if($(this).val().length > 155){
 	        return false;
 	    }
 	    $("#counter").html("Remaining characters : " +(155 - $(this).val().length));
-	});
+    });
 	
 	$('#send').on('click',function(){
 		

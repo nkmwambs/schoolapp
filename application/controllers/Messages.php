@@ -86,7 +86,7 @@ class Messages extends CI_Controller
 	
 	function send_bulksms(){
 		
-	    $recipients = implode(',',$this->input->post('reciever'));
+	    $recipients = $this->input->post('reciever');//implode(',',$this->input->post('reciever'));
 		$message = $this->input->post('message');
 	    $response = $this->sms_model->send_sms($message,$recipients);
 		echo json_encode($response);
