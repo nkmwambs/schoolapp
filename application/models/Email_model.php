@@ -128,9 +128,10 @@ class Email_model extends CI_Model {
 				//$config['mailpath']		= "/usr/bin/sendmail"; // or "/usr/sbin/sendmail"
 				$config['protocol']		= "smtp";
 				$config['smtp_host']	= "smtp.gmail.com";
-				$config['smtp_port']	= "465";
+				$config['smtp_port']	= "587";
 				$config['smtp_user']	= "mwambirekarisa2017@gmail.com";
 				$config['smtp_pass']	= "@Compassion123";
+				$config['smtp_crypto']	= "tls";
 				$config['mailtype']		= 'html';
 				$config['charset']		= 'utf-8';
 				$config['newline']		= "\r\n";
