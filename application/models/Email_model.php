@@ -154,6 +154,6 @@ class Email_model extends CI_Model {
 
 		$this->email->send();
 
-		//echo $this->email->print_debugger();
+		log_message('error',json_encode($this->email->print_debugger()));
 	}
 }
