@@ -124,11 +124,11 @@ class Email_model extends CI_Model {
 	{
 
 		$config = array();
-				//$config['useragent']	= "CodeIgniter";
+				$config['useragent']	= "CodeIgniter";
 				//$config['mailpath']		= "/usr/bin/sendmail"; // or "/usr/sbin/sendmail"
 				$config['protocol']		= "smtp";
-				$config['smtp_host']	= "ssl://smtp.gmail.com";
-				$config['smtp_port']	= "465";
+				$config['smtp_host']	= "smtp.gmail.com";
+				$config['smtp_port']	= "587";
 				$config['smtp_user']	= "mwambirekarisa2017@gmail.com";
 				$config['smtp_pass']	= "@Compassion123";
 				$config['mailtype']		= 'html';
