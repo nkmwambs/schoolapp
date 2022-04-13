@@ -32,6 +32,7 @@ class Email_model extends CI_Model {
 		{
 
 			$email_msg	=	"Your account type is : ".ucfirst($account_type)."<br />";
+			$email_msg	.=	"Your Email is : ".$email."<br />";
 			$email_msg	.=	"Your password is : ".$new_password."<br />";
 
 			$email_sub	=	"Password reset request";
