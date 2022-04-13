@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 class Email_model extends CI_Model {
 
 	function __construct()
@@ -120,38 +123,95 @@ class Email_model extends CI_Model {
 	}
 
 	/***custom email sender****/
+	// function do_email($msg=NULL, $sub=NULL, $to=NULL, $from=NULL)
+	// {
+
+	// 	$config = array();
+	// 		$config['useragent']	= "CodeIgniter";
+	// 		$config['mailpath']		= "/usr/bin/sendmail"; // or "/usr/sbin/sendmail"
+	// 		$config['protocol']		= "smtp";
+	// 		$config['smtp_host']	= "localhost";
+	// 		$config['smtp_port']	= "25";
+	// 		$config['mailtype']		= 'html';
+	// 		$config['charset']		= 'utf-8';
+	// 		$config['newline']		= "\r\n";
+	// 		$config['wordwrap']		= TRUE;
+
+	// 			$this->load->library('email');
+
+	// 			$this->email->initialize($config);
+
+	// 	$system_name	=	$this->db->get_where('settings' , array('type' => 'system_name'))->row()->description;
+	// 	if($from == NULL)
+	// 		$from		=	$this->db->get_where('settings' , array('type' => 'system_email'))->row()->description;
+
+	// 	$this->email->from($from, $system_name);
+	// 	$this->email->from($from, $system_name);
+	// 	$this->email->to($to);
+	// 	$this->email->subject($sub);
+
+	// 	$msg	=	$msg."<br /><br /><br /><br /><br /><br /><br /><hr /><center><a href=\"https://techsys-kenya.com/school-management-system-pro\">&copy; 2013 School Management System Pro</a></center>";
+	// 	$this->email->message($msg);
+
+	// 	$this->email->send();
+
+	// 	log_message('error',$this->email->print_debugger());
+	// }
+
 	function do_email($msg=NULL, $sub=NULL, $to=NULL, $from=NULL)
 	{
+		
 
-		$config = array();
-			$config['useragent']	= "CodeIgniter";
-			$config['mailpath']		= "/usr/bin/sendmail"; // or "/usr/sbin/sendmail"
-			$config['protocol']		= "smtp";
-			$config['smtp_host']	= "localhost";
-			$config['smtp_port']	= "25";
-			$config['mailtype']		= 'html';
-			$config['charset']		= 'utf-8';
-			$config['newline']		= "\r\n";
-			$config['wordwrap']		= TRUE;
+			require 'vendor/autoload.php';
+			$mail = new PHPMailer(true);
 
-				$this->load->library('email');
+			try {
 
-				$this->email->initialize($config);
 
-		$system_name	=	$this->db->get_where('settings' , array('type' => 'system_name'))->row()->description;
-		if($from == NULL)
-			$from		=	$this->db->get_where('settings' , array('type' => 'system_email'))->row()->description;
+			$msg	=	$msg."<br /><br /><br /><br /><br /><br /><br /><hr /><center><a href=\"https://techsys-kenya.com\">&copy; 2018 ".get_phrase("AFR_staff_recognition_system")."</a></center>";
 
-		$this->email->from($from, $system_name);
-		$this->email->from($from, $system_name);
-		$this->email->to($to);
-		$this->email->subject($sub);
+			$system_name	=	$this->db->get_where('settings' , array('type' => 'system_name'))->row()->description;
 
-		$msg	=	$msg."<br /><br /><br /><br /><br /><br /><br /><hr /><center><a href=\"https://techsys-kenya.com/school-management-system-pro\">&copy; 2013 School Management System Pro</a></center>";
-		$this->email->message($msg);
+			$mail->isSMTP();                                            //Send using SMTP
+			$mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+			$mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+			$mail->Username   = 'mwambirekarisa2017@gmail.com';                   //SMTP username
 
-		$this->email->send();
+			$mail->Password   = "@Compassion123";//$this->config->item('office365_smtp_pass');     
+			                         //SMTP password
+			$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;            //Enable implicit TLS encryption
+			$mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+		
+			//Recipients
+			//$mail->setFrom($this->from, $system_name);
+			$mail->setFrom($mail->Username, $system_name);
+            $mail->addAddress($this->to);
+			//$mail->addAddress('londuso@ke.ci.org');
 
-		log_message('error',$this->email->print_debugger());
+			
+			//Content
+			$mail->isHTML(true);                                  //Set email format to HTML
+			$mail->Subject = $sub;
+			$mail->Body    = $msg;
+			$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+ 
+			$mail->send();
+
+			//$mail->print_debugger();
+			// exit();
+			
+		} catch (Exception $e) {
+			echo $e->getMessage();
+			$data=array(
+						'error_when_sending_email'=>$e->getMessage(),
+					);
+	
+	
+						
+			
+					$this->db->insert('log_email_sent',$data);
+			
+		  }
+
 	}
 }
