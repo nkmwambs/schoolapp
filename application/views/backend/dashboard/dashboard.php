@@ -1,6 +1,12 @@
 <?php
 if (!defined('BASEPATH')) exit('No direct script access allowed');
-//print_r($this->crud_model->get_current_term_based_on_date(date('Y-m-d'))['term_id']);
+$invoice_id = 531;
+$this->db->select_sum('invoice_details.amount_due');
+        $this->db->join('invoice_details','invoice_details.invoice_id=invoice.invoice_id');
+        $this->db->where(array('invoice_details.invoice_id'=>$invoice_id));
+        $invoice_amount = $this->db->get('invoice')->row()->amount_due;
+
+		echo $invoice_amount;
 ?>
 		<div class="row">
 			<div class="col-xs-12">

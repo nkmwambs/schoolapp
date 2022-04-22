@@ -2772,8 +2772,10 @@ class Finance extends CI_Controller
 
     function invoice_balance($invoice_id){
         // Invoice amount
-        $this->db->where(array('invoice_id'=>$invoice_id));
-        $invoice_amount = $this->db->get('invoice')->row()->amount;
+        $this->db->select_sum('invoice_details.amount_due');
+        $this->db->join('invoice_details','invoice_details.invoice_id=invoice.invoice_id');
+        $this->db->where(array('invoice_details.invoice_id'=>$invoice_id));
+        $invoice_amount = $this->db->get('invoice')->row()->amount_due;
 
         // Sum transaction amount for the invoice
         $this->db->select_sum('amount');
