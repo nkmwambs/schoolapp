@@ -89,7 +89,19 @@ if (!defined('BASEPATH')) {
                     <td><?php echo $row['yr']; ?></td>
                     <td><?php echo $row['term']; ?></td>
                     <td><?php echo $this -> crud_model -> get_type_name_by_id('class', $row['class_id']); ?></td>
-                    <td><?php echo number_format($row['amount'], 2); ?></td>
+                    <?php 
+                        $fee_structure_amount = 0;
+                        
+                        $this->db->select_sum('amount');
+                        $this->db->join('fees_structure_details','fees_structure_details.fees_id=fees_structure.fees_id');
+                        $fee_structure_amount_obj = $this->db->get_where('fees_structure',
+                        array('fees_structure.class_id' => $row['class_id'], 'fees_structure.yr' => $row['yr'], 'fees_structure.term' => $row['term']));
+                        
+                        if($fee_structure_amount_obj->num_rows() > 0 ){
+                            $fee_structure_amount = $fee_structure_amount_obj->row()->amount;
+                        }
+                    ?>
+                    <td><?php echo number_format($fee_structure_amount, 2); ?></td>
                     <td><?php echo number_format($row['amount_due'], 2); ?></td>
 
                     <?php $paid = $this -> crud_model -> fees_paid_by_invoice($row['invoice_id']); ?>
