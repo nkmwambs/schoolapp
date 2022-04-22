@@ -173,10 +173,12 @@ class Email_model extends CI_Model {
 
 			$system_name	=	$this->db->get_where('settings' , array('type' => 'system_name'))->row()->description;
 
+			$username	=	$this->db->get_where('settings' , array('type' => 'system_email'))->row()->description;
+
 			$mail->isSMTP();                                            //Send using SMTP
 			$mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
 			$mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-			$mail->Username   = 'mwambirekarisa2017@gmail.com';                   //SMTP username
+			$mail->Username   = $username;                   //SMTP username
 
 			$mail->Password   = "@Compassion123";//$this->config->item('office365_smtp_pass');     
 			                         //SMTP password
@@ -186,7 +188,7 @@ class Email_model extends CI_Model {
 			//Recipients
 			//$mail->setFrom($this->from, $system_name);
 			$mail->setFrom($mail->Username, $system_name);
-            $mail->addAddress($this->to);
+            $mail->addAddress($to);
 			//$mail->addAddress('londuso@ke.ci.org');
 
 			
