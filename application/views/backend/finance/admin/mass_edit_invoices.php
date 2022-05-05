@@ -111,10 +111,17 @@ tfoot th:nth-child(-n+1)
 
 			<div class="col-xs-2">
               <select class="form-control" name="invoice_year"  required="required">
+				  <?php 
+				 	$years = range(date('Y') - 3, date('Y') + 3); 
+				  ?>
                   <option value=""><?=get_phrase('select_year');?></option>
-				  <option value='2019' <?php if($year == 2019) echo "selected";?> >2019</option>
-				  <option value='2020' <?php if($year == 2020) echo "selected";?> >2020</option>
-				  <option value='2021'  <?php if($year == 2021) echo "selected";?> >2021</option>
+				  
+				  <?php 
+				  		foreach($years as $year){
+					?>
+						<option value='<?=$year;?>' <?php if($year == date('Y')) echo "selected";?> ><?=$year;?></option>
+				  <?php }?>
+				  
 			  </select>
             </div>
 
