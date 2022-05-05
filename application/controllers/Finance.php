@@ -1155,7 +1155,7 @@ class Finance extends CI_Controller
                 $paid = $this -> crud_model -> fees_paid_by_invoice($row['invoice_id']);
                 $bal = $this -> crud_model -> fees_balance_by_invoice($row['invoice_id']);
 
-                $message .= "Amount Paid:" . $paid . ", Balance:" . $bal;
+                $message .= "Amount Paid:" . number_format($paid,2) . ", Balance:" . number_format($bal,2);
 
                 $this -> sms_model -> send_sms($message, $receiver_phone);
             }
