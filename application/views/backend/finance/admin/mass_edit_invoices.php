@@ -3,6 +3,11 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 //print_r($payments);
 ?>
 <style>
+
+#send_single_balance_sms {
+	cursor: pointer;
+}
+
 .editable {
 	background-color: turquoise;
 }
@@ -91,7 +96,7 @@ tfoot th:nth-child(-n+1)
 						<label class="control-label col-xs-2"><?=get_phrase('choose_invoices');?></label>
 
             <div class="col-xs-2">
-							<select class="form-control" name="class_id" required="required">
+							<select class="form-control" name="class_id" id="class_id" required="required">
 									<option value=""><?=get_phrase('select_class');?></option>
 							    <?php foreach($class as $class){?>
                       <option value="<?=$class->class_id;?>" <?php if($class->class_id == $class_id) echo "selected";?> ><?=$class->name;?></option>
@@ -100,7 +105,7 @@ tfoot th:nth-child(-n+1)
 						</div>
 
             <div class="col-xs-2">
-              <select class="form-control" name="invoice_status"  required="required">
+              <select class="form-control" name="invoice_status" id="invoice_status"  required="required">
                   <option value=""><?=get_phrase('select_status');?></option>
                   <option value="unpaid" <?php if($invoice_status == 'unpaid') echo 'selected';?> ><?=get_phrase('unpaid');?></option>
                   <option value="paid"  <?php if($invoice_status == 'paid') echo 'selected';?>  ><?=get_phrase('paid');?></option>
@@ -110,7 +115,7 @@ tfoot th:nth-child(-n+1)
             </div>
 
 			<div class="col-xs-2">
-              <select class="form-control" name="invoice_year"  required="required">
+              <select class="form-control" name="invoice_year" id="year"  required="required">
 				  <?php 
 				 	$years = range(date('Y') - 3, date('Y') + 3); 
 				  ?>
@@ -126,7 +131,7 @@ tfoot th:nth-child(-n+1)
             </div>
 
 			<div class="col-xs-2">
-              <select class="form-control" name="invoice_term"  required="required">
+              <select class="form-control" name="invoice_term" id="term"  required="required">
                   <option value=""><?=get_phrase('select_term');?></option>
 				  <option value='1' <?php if($term == 1) echo "selected";?> >Term 1</option>
 				  <option value='2' <?php if($term == 2) echo "selected";?> >Term 2</option>
@@ -196,7 +201,7 @@ tfoot th:nth-child(-n+1)
 					foreach($payments as $student=>$payment){
 				?>
 					<tr>
-						<td nowrap="nowrap"><?=$payment['student']['name'];?> <i class="fa fa-envelope" title="<?=get_phrase('send_balance_text');?>"></i></td>
+						<td nowrap="nowrap" id='<?=$payment['student']['student_id'];?>'> <?=$payment['student']['name'];?> <i id='send_single_balance_sms' data-invoice_id = "<?=$payment['student']['invoice_id'];?>" class="fa fa-envelope" title="<?=get_phrase('send_balance_text');?>"></i></td>
 						<td><?=$payment['student']['class'];?></td>
 						<td><?=$payment['student']['roll'];?></td>
 
@@ -364,4 +369,24 @@ function post_updated_invoice_amount_due(new_due_amount,invoice_details_id,invoi
 	});
 
 }
+
+$("#send_single_balance_sms").on('click',function() {
+
+	// const class_id = $("#class_id").val()
+	// const invoice_status = $("#invoice_status").val()
+	// const year = $("#year").val()
+	// const term = $("#term").val()
+	const student_id = $(this).closest('td').attr('id')
+
+	const invoice_id = $(this).data('invoice_id');
+
+	const data = {invoice_id: invoice_id, student_id: student_id}
+
+	const url = "<?=base_url();?>index.php?finance/sms_single_balance/"
+	
+
+	$.post(url,data, (response) => {
+		alert(response);
+	})
+});
 </script>

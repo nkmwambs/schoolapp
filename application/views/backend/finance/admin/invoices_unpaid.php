@@ -22,7 +22,7 @@ if (!defined('BASEPATH')) {
 
 		<div class="<?=get_access_class('send_fees_balance_by_sms', 'admin', 'accounting'); ?> pull-left">
 			<?php $count_to_notify = $this -> db -> get_where('invoice', array('status' => 'unpaid')) -> num_rows(); ?>
-			<a href="#" onclick="confirm_action('<?= base_url(); ?>index.php?finance/sms_fee_balances');" class="btn btn-default"> <i class="fa fa-mobile"></i> <?= get_phrase('SMS_balances'); ?> <span class="badge badge-warning"><?= $count_to_notify; ?></span></a>
+			<a href="#" id = "sms_balances" class="btn btn-default"> <i class="fa fa-mobile"></i> <?= get_phrase('SMS_balances'); ?> <span class="badge badge-warning"><?= $count_to_notify; ?></span></a>
 		</div>
 
 		<div class="<?=get_access_class('create_invoice', 'admin', 'accounting'); ?> pull-left">
@@ -243,3 +243,19 @@ if (!defined('BASEPATH')) {
     <a class="scroll_tabs" href="<?= base_url(); ?>index.php?finance/unpaid_invoices/<?= $year + 1; ?>"><i style="font-size: 60pt;" class="fa fa-plus-circle"></i></a>
   </div>
 </div>
+
+<script>
+    $("#sms_balances").on('click',function(){
+        const url = '<?= base_url(); ?>index.php?finance/sms_fee_balances'
+
+        let cfm = confirm("Are you sure you want to send these messages?")
+
+        if(cfm){
+            $.get(url,function(response){
+                alert(response)
+            })
+        }
+
+        
+    })
+</script>

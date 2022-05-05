@@ -1134,35 +1134,54 @@ class Finance extends CI_Controller
         $this -> load -> view('backend/index', $page_data);
     }
 
-    public function sms_fee_balances()
-    {
-        $this -> db -> where('status', 'unpaid');
-        $unpaid_invoices = $this -> db -> get('invoice') -> result_array();
+    private function sms_balance($student_id, $invoice_id){
+        $confirmation = 'Message not sent';
 
-        
-        foreach ($unpaid_invoices as $row) {
-
-            $receiver_phone = "";
+        $receiver_phone = "";
             $message = "";
 
-            $student = $this -> db -> get_where('student', array('student_id' => $row['student_id'])) -> row();
+            $student = $this -> db -> get_where('student', array('student_id' => $student_id)) -> row();
 
             if ($student -> parent_id != 0) {
                 $receiver_phone = $this -> db -> get_where('parent', array('parent_id' => $student -> parent_id)) -> row() -> phone;
 
                 $message .= "Fee balance status for " . $student -> name . ":";
 
-                $paid = $this -> crud_model -> fees_paid_by_invoice($row['invoice_id']);
-                $bal = $this -> crud_model -> fees_balance_by_invoice($row['invoice_id']);
+                $paid = $this -> crud_model -> fees_paid_by_invoice($invoice_id);
+                $bal = $this -> crud_model -> fees_balance_by_invoice($invoice_id);
 
                 $message .= "Amount Paid:" . number_format($paid,2) . ", Balance:" . number_format($bal,2);
 
                 $this -> sms_model -> send_sms($message, $receiver_phone);
+
+                $confirmation = 'Message for '.$student->name.' sent successfully';
             }
+
+            return $confirmation;
+    }
+
+    public function sms_single_balance(){
+
+        $post = $this->input->post();
+
+        echo $this->sms_balance($post['student_id'], $post['invoice_id']);
+    }
+
+    public function sms_fee_balances()
+    {
+        $this -> db -> where('status', 'unpaid');
+        $unpaid_invoices = $this -> db -> get('invoice') -> result_array();
+
+        $message = "Messages sent";
+        
+        foreach ($unpaid_invoices as $row) {
+
+            $this->sms_balance($row['student_id'], $row['invoice_id']);
         }
 
-        $this -> session -> set_flashdata('flash_message', 'SMS sent');
-        redirect(base_url() . 'index.php?finance/unpaid_invoices', 'refresh');
+
+
+        echo $message;
     }
 
     public function create_overpay_note(){
