@@ -1139,9 +1139,12 @@ class Finance extends CI_Controller
         $this -> db -> where('status', 'unpaid');
         $unpaid_invoices = $this -> db -> get('invoice') -> result_array();
 
-        $receiver_phone = "";
-        $message = "";
+        
         foreach ($unpaid_invoices as $row) {
+
+            $receiver_phone = "";
+            $message = "";
+
             $student = $this -> db -> get_where('student', array('student_id' => $row['student_id'])) -> row();
 
             if ($student -> parent_id != 0) {

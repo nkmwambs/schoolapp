@@ -1,6 +1,5 @@
 .editorconfig
 .project
-composer.json
 contributing.md
 license.txt
 readme.rst
@@ -16,3 +15,6 @@ index.php
 /uploads/blank_excel_file.xlsx
 /uploads/bank_statements/*
 log.txt
+/**/logs
+ci_sessions
+vendor
