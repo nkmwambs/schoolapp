@@ -199,7 +199,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 							<div class="num"><?= number_format($fees_paid); ?></div>
 
 							<h3>Fees</h3>
-							<p>Total year amount received</p>
+							<p>Total term amount received</p>
 						</div>
 
 					</div>
