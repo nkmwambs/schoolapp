@@ -81,6 +81,15 @@ class Parents extends CI_Controller
             $this->session->set_flashdata('flash_message' , get_phrase('data_updated'));
             redirect(base_url() . 'index.php?parents/parent/', 'refresh');
         }
+
+        if ($param1 == 'change_status') {
+          $data['status'] = $param3 == 1 ? 0 : 1;
+          $this->db->where('parent_id' , $param2);
+          $this->db->update('parent' , $data);
+          $this->session->set_flashdata('flash_message' , get_phrase('data_updated'));
+          redirect(base_url() . 'index.php?parents/parent/', 'refresh');
+      }
+
         if ($param1 == 'delete') {
             $this->db->where('parent_id' , $param2);
             $this->db->delete('parent');
@@ -100,9 +109,17 @@ class Parents extends CI_Controller
           }
         }
 
+        $status = 1;
+
+        if($param1 == 'by_status'){
+          $status = $param2 == 1 ? 0 : 1;
+        }
+
         $page_data['page_title'] 	= get_phrase('all_parents');
         $page_data['page_name']  = 'parent';
         $page_data['page_view']  = 'parent';
+        $page_data['status'] = $status;
+        $page_data['parents']  = $this->db->get_where('parent', array('status' => $status) )->result_array();
         $this->load->view('backend/index', $page_data);
     }
 

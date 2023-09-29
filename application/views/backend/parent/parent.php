@@ -4,18 +4,25 @@
 		<div class="panel panel-default" data-collapsed="0">
         	<div class="panel-heading">
             	<div class="panel-title" >
-            		<i class="fa fa-trophy"></i>
-					<?php echo get_phrase('parents_activity'); ?>
+            		<i class="fa fa-child"></i>
+					<?php echo get_phrase('parents'); ?>
             	</div>
             </div>
 			<div class="panel-body">
 
+                <div class = 'row'>
+                    <div class = 'col-xs-6'>
+                        <a href="<?=base_url();?>index.php?parents/parent/by_status/<?=$status;?>" id = "records_status" class = 'btn <?=$status == 1 ? 'btn-danger': 'btn-success';?>'><?=get_phrase($status == 1 ? 'show_inactive_records' : 'show_active_records');?></a>
+                    </div>
 
-	            <a href="<?php echo base_url(); ?>index.php?parents/parent_add/"
-	                class="btn btn-primary pull-right <?=get_access_class("add_parent",$this->session->login_type,"accounts")?>">
-	                <i class="entypo-plus-circled"></i>
-	                <?php echo get_phrase('add_new_parent'); ?>
-	            </a>
+                    <div class = 'col-xs-6'>
+                        <a href="<?php echo base_url(); ?>index.php?parents/parent_add/"
+                            class="btn btn-primary pull-right <?=get_access_class("add_parent",$this->session->login_type,"accounts")?>">
+                            <i class="entypo-plus-circled"></i>
+                            <?php echo get_phrase('add_new_parent'); ?>
+                        </a>
+                    </div>
+                </div>
 
                 <br><br>
                <table class="table table-striped datatable" id="table_export">
@@ -29,13 +36,13 @@
                             <th><div><?php echo get_phrase('beneficiaries'); ?></div></th>
                             <th><div><?php echo get_phrase('relationship'); ?></div></th>
                             <th><div><?php echo get_phrase('care_type'); ?></div></th>
+                            <th><div><?php echo get_phrase('status'); ?></div></th>
                             <th><div><?php echo get_phrase('options'); ?></div></th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                             $count = 1;
-                            $parents   =   $this->db->get('parent' )->result_array();
                             foreach($parents as $row):?>
                         <tr>
                             <td><?php echo $count++; ?></td>
@@ -62,6 +69,7 @@
 								echo get_phrase("none");
 							?></td>
                             <td><?php echo ucfirst($row['care_type']); ?></td>
+                            <td><?= $row['status'] == 1 ? get_phrase('active') : get_phrase('inactive') ;?></td>
                             <td>
 
                                 <div class="btn-group">
@@ -99,6 +107,15 @@
 
                                         <?php } ?>
 
+                                        <li class="<?=get_access_class($row['status'] == 1 ? "deactivate_parent" : "activate_parent", $this -> session -> login_type, "accounts") ?>">
+                                            <a href="#" onclick="confirm_action('<?php echo base_url(); ?>index.php?parents/parent/change_status/<?php echo $row['parent_id']; ?>/<?=$row['status'];?>');">
+                                                <i class="entypo-<?= $row['status'] == 1 ? 'mute' : 'sound';?>"></i>
+                                                    <?php echo get_phrase($row['status'] == 1 ? 'deactivate' : 'activate'); ?>
+                                                </a>
+                                        </li>
+
+                                        <li class="divider <?=get_access_class($row['status'] == 1 ? "deactivate_parent" : "activate_parent", $this -> session -> login_type, "accounts") ?>"></li>
+
                                         <!-- teacher DELETION LINK -->
                                         <li class="<?=get_access_class("delete_parent", $this -> session -> login_type, "accounts") ?>">
                                             <a href="#" onclick="confirm_modal('<?php echo base_url(); ?>index.php?parents/parent/delete/<?php echo $row['parent_id']; ?>');">
@@ -130,4 +147,15 @@
         });
     });
 
+// $("#records_status").on('click', function () {
+//     const has_danger = $(this).hasClass('btn-danger')
+    
+//     if(has_danger){
+//         $(this).removeClass('btn-danger')
+//         $(this).addClass('btn-success')
+//     }else{
+//         $(this).removeClass('btn-success')
+//         $(this).addClass('btn-danger')
+//     }
+// })
 </script>
