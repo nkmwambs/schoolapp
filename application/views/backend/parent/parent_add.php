@@ -91,7 +91,27 @@
 								?>
 							</select>
 						</div>
-					</div>					
+					</div>		
+					
+					<div class="form-group hidden" id="link_primay_caregiver_form_group">
+						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('link_to_primary_caregiver');?></label>
+
+						<div class="col-sm-5">
+							<?php
+								$primary_caregivers  = $this->db->get_where('parent',array('status' => 1,'care_type' => 'primary'))->result_object();
+							?>
+							<select class="form-control select2" name="link_to_primary_caregiver" >
+								<option><?=get_phrase("select");?></option>
+								<?php
+									foreach($primary_caregivers as $primary_caregiver){
+								?>
+									<option value="<?=$primary_caregiver->parent_id;?>"><?=$primary_caregiver->name;?></option>
+								<?php
+									}
+								?>
+							</select>
+						</div>
+					</div>	
 
 					<div class="form-group">
 						<label for="field-2" class="col-sm-3 control-label"><?php echo get_phrase('profession');?></label>
@@ -116,8 +136,10 @@
 	function toggleStudentList(elem){
 		if($(elem).val() == 'primary'){
 			$("#link_student_form_group").removeClass('hidden');
+			$('#link_primay_caregiver_form_group').addClass('hidden');
 		}else{
 			$("#link_student_form_group").addClass('hidden');
+			$('#link_primay_caregiver_form_group').removeClass('hidden');
 		}
 		
 	}

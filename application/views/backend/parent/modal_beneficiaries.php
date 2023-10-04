@@ -32,12 +32,16 @@
 						<?php	
 								endforeach;	
 							}else{
-								$beneficiaries  = $this->db->get_where('caregiver',array('parent_id'=>$param2))->result_object();
-								
-								foreach($beneficiaries as $row):
+								$beneficiaries = 0;
+								$primary_parent_id = $this->db->get_where('parent',array('parent_id' => $param2))->row()->primary_parent_id;
+    
+                                if($primary_parent_id){
 									$this->db->select(array('student_id','student.name as name','roll','class.name as class'));
 									$this->db->join('class','class.class_id=student.class_id');
-									$student = $this->db->get_where('student',array('student_id'=>$row->student_id,'active'=>1))->row();
+                                    $beneficiaries = $this -> db -> get_where('student', array('parent_id' => $primary_parent_id, 'active' => 1));
+								
+								if($beneficiaries->num_rows() > 0){
+								foreach($beneficiaries->result_object() as $student):
 
 						?>
 								<tr>
@@ -47,8 +51,10 @@
 								</tr>				
 						
 						<?php
-								endforeach;			
+								endforeach;		
+							}	
 							}
+						}
 
 						?>
 							

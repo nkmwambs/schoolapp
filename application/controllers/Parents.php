@@ -42,6 +42,14 @@ class Parents extends CI_Controller
     {
         if ($this->session->userdata('active_login') != 1)
             redirect('login', 'refresh');
+
+        if($param1 == 'assign_primary_caregiver'){
+          $update_caregiver['primary_parent_id'] = $this->input->post('primary_caregiver_id');
+          
+          $this->db->where(array('parent_id' => $param2));
+          $this->db->update('parent',$update_caregiver);
+        }
+
         if ($param1 == 'create') {
             $data['name']        			= $this->input->post('name');
             $data['email']       			= $this->input->post('email');
@@ -50,6 +58,7 @@ class Parents extends CI_Controller
             $data['relationship_id']     	= $this->input->post('relationship');
             $data['care_type']     	= $this->input->post('care_type');
             $data['profession']  			= $this->input->post('profession');
+            $data['primary_parent_id']     	= $this->input->post('link_to_primary_caregiver');
             
             $this->db->insert('parent', $data);
 			
@@ -78,6 +87,13 @@ class Parents extends CI_Controller
             $data['profession']             = $this->input->post('profession');
             $this->db->where('parent_id' , $param2);
             $this->db->update('parent' , $data);
+
+            if($this->input->post('care_type') == 'secondary'){
+              // Remove derect student relationship if secondary care
+              $this->db->where(array('parent_id' => $param2));
+              $this->db->update('student', ['parent_id' => 0]);
+            }
+            
             $this->session->set_flashdata('flash_message' , get_phrase('data_updated'));
             redirect(base_url() . 'index.php?parents/parent/', 'refresh');
         }

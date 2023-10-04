@@ -154,7 +154,7 @@ class Email_model extends CI_Model {
 		$msg	=	$msg."<br /><br /><br /><br /><br /><br /><br /><hr /><center><a href=\"https://techsys-kenya.com/school-management-system-pro\">&copy; 2013 School Management System Pro</a></center>";
 		$this->email->message($msg);
 
-		$this->email->send();
+		// $this->email->send();
 
 		log_message('error',$this->email->print_debugger());
 	}

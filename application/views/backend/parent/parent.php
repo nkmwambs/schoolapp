@@ -36,6 +36,7 @@
                             <th><div><?php echo get_phrase('beneficiaries'); ?></div></th>
                             <th><div><?php echo get_phrase('relationship'); ?></div></th>
                             <th><div><?php echo get_phrase('care_type'); ?></div></th>
+                            <th><div><?php echo get_phrase('linked_primary_caregiver'); ?></div></th>
                             <th><div><?php echo get_phrase('status'); ?></div></th>
                             <th><div><?php echo get_phrase('options'); ?></div></th>
                         </tr>
@@ -56,7 +57,14 @@
 								if ($row['care_type'] === "primary") {
 									echo $this -> db -> get_where('student', array('parent_id' => $row['parent_id'], 'active' => 1)) -> num_rows();
 								} else {
-									echo $this -> db -> get_where('caregiver', array('parent_id' => $row['parent_id'])) -> num_rows();
+                                        $primary_parent_id = $this->db->get_where('parent',array('parent_id' => $row['parent_id']))->row()->primary_parent_id;
+                                        // echo $primary_parent_id;
+                                        if($primary_parent_id){
+                                            echo $this -> db -> get_where('student', array('parent_id' => $primary_parent_id, 'active' => 1)) -> num_rows();
+                                        }else{
+                                            echo 0;
+                                        }
+
 								}
                             	?>
 
@@ -69,6 +77,16 @@
 								echo get_phrase("none");
 							?></td>
                             <td><?php echo ucfirst($row['care_type']); ?></td>
+                            <td>
+                                <?php 
+                                    // echo ucfirst($row['care_type']); 
+                                    $primary_parent_id = $this->db->get_where('parent',array('parent_id' => $row['parent_id']))->row()->primary_parent_id;
+
+                                    if($primary_parent_id){
+                                        echo $this->db->get_where('parent',array('parent_id' => $primary_parent_id))->row()->name;
+                                    }
+                                ?>
+                            </td>
                             <td><?= $row['status'] == 1 ? get_phrase('active') : get_phrase('inactive') ;?></td>
                             <td>
 
@@ -95,15 +113,15 @@
                                         </li>
                                         <li class="divider"></li>
 
-                                        <?php if($row['care_type'] === "secondary"){?>
+                                        <?php if($row['care_type'] != "primary"){?>
 
-                                        <li class="<?=get_access_class("assign_beneficiary",$this->session->login_type,"accounts")?>">
-                                            <a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_assign_beneficiaries/<?php echo $row['parent_id']; ?>/<?php echo $row['care_type']; ?>');">
+                                        <li class="<?=get_access_class("assign_primary_caregiver",$this->session->login_type,"accounts")?>">
+                                            <a href="#" onclick="showAjaxModal('<?php echo base_url(); ?>index.php?modal/popup/modal_assign_primary_caregiver/<?php echo $row['parent_id']; ?>');">
                                                 <i class="fa fa-link"></i>
-                                                    <?php echo get_phrase('assign_beneficiary'); ?>
+                                                    <?php echo get_phrase('assign_primary_caregiver'); ?>
                                                 </a>
                                         </li>
-                                        <li class="divider <?=get_access_class("assign_beneficiary", $this -> session -> login_type, "accounts") ?>"></li>
+                                        <li class="divider <?=get_access_class("assign_primary_caregiver", $this -> session -> login_type, "accounts") ?>"></li>
 
                                         <?php } ?>
 
