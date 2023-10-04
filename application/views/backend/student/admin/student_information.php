@@ -79,7 +79,8 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                             <th width="80"><div><?php echo get_phrase('roll');?></div></th>
                             <th width="80"><div><?php echo get_phrase('photo');?></div></th>
                             <th><div><?php echo get_phrase('name');?></div></th>
-                            <th class="span3"><div><?php echo get_phrase('caregiver');?></div></th>
+                            <th class="span3"><div><?php echo get_phrase('primary_caregiver');?></div></th>
+                            <th class="span3"><div><?php echo get_phrase('secondary_caregiver');?></div></th>
                             <th><div><?php echo get_phrase('phone');?></div></th>
                             <th><div><?php echo get_phrase('email');?></div></th>
                             <th><div><?php echo get_phrase('options');?></div></th>
@@ -94,6 +95,16 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                             <td><img src="<?php echo $this->crud_model->get_image_url('student',$row['student_id']);?>" class="img-circle" width="30" /></td>
                             <td><?php echo $row['name'];?></td>
                             <td><?php echo $row['parent_id']!=0?$this->crud_model->get_type_name_by_id('parent',$row['parent_id']):get_phrase('not_set');?></td>
+                            <td>
+                                <?php 
+                                    $sec_parent_obj = $this->db->get_where('parent', array('primary_parent_id' => $row['parent_id']));
+                                   //  echo $row['phone'];
+                                   if($sec_parent_obj->num_rows() > 0){
+                                        $care_names = array_column($sec_parent_obj->result_array(), 'name');
+                                        echo implode(',', $care_names);
+                                   }
+                                ?>
+                            </td>
                             <td><?php echo $row['phone'];?></td>
                             <td><?php echo $row['email'];?></td>
                             <td>

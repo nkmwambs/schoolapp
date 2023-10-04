@@ -30,7 +30,8 @@
 				<th><?php echo get_phrase('admission_number');?></th>
 				<th><?php echo get_phrase('username');?></th>
 	            <th><?php echo get_phrase('name');?></th>
-	            <th><?php echo get_phrase('caregiver');?></th>
+	            <th><?php echo get_phrase('primary_caregiver');?></th>
+				<th><?php echo get_phrase('secondary_caregiver');?></th>
 	            <th><?php echo get_phrase('email');?></th>
 	            <th><?php echo get_phrase('class');?></th>
 	            <th><?php echo get_phrase('gender');?></th>
@@ -130,6 +131,16 @@
 					<td><?=$student['roll'];?></td>
 					<td><a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_student_profile/<?php echo $student['student_id'];?>');"><?=ucwords($student['student_name']);?></a></td>
 					<td><?php echo $student['parent_id']!=0?$this->crud_model->get_type_name_by_id('parent',$student['parent_id']):get_phrase('not_set');?></td>
+					<td>
+                                <?php 
+                                    $sec_parent_obj = $this->db->get_where('parent', array('primary_parent_id' => $student['parent_id']));
+                                   //  echo $row['phone'];
+                                   if($sec_parent_obj->num_rows() > 0){
+                                        $care_names = array_column($sec_parent_obj->result_array(), 'name');
+                                        echo implode(',', $care_names);
+                                   }
+                                ?>
+                            </td>
 					<td><?=ucwords($student['email']);?></td>
 					<td><?=ucwords($student['class_name']);?></td>
 					<td><?=$student['sex'] == 'female'?'F':'M';?></td>
