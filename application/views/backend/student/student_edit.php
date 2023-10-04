@@ -1,4 +1,5 @@
 <?php
+// print_r($sec_caregivers_ids);
 $edit_data		=	$this->db->get_where('student' , array('student_id' => $student_id) )->result_array();
 foreach ( $edit_data as $row):
 ?>
@@ -73,10 +74,10 @@ foreach ( $edit_data as $row):
 						<div class="col-sm-5">
 							<select class="form-control select2" name="secondary_care[]" id="secondary_care" multiple="multiple">
 								<?php
-									$parents = $this->db->get_where('parent',array('care_type'=>'secondary'))->result_array();
+									$parents = $this->db->get_where('parent',array('care_type'=>'secondary', 'status' => 1))->result_array();
 									foreach($parents as $row3):
 								?>
-                            		<option value="<?php echo $row3['parent_id'];?>" <?php if($this->db->get_where("caregiver",array("parent_id"=>$row3['parent_id'],"student_id"=>$row['student_id']))->num_rows() > 0  ) echo "selected";?>>
+                            		<option value="<?php echo $row3['parent_id'];?>" <?php if(in_array($row3['parent_id'],$sec_caregivers_ids)) echo "selected";?>>
 										<?php echo $row3['name'];?>
                                     </option>
                                 <?php

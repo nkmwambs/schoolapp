@@ -44,7 +44,7 @@
 						<div class="col-sm-5">
 							<select class="form-control select2" name="secondary_care[]" id="secondary_care" multiple="multiple">
 								<?php
-									$parents = $this->db->get_where('parent',array('care_type'=>'secondary'))->result_array();
+									$parents = $this->db->get_where('parent',array('care_type'=>'secondary', 'status' => 1))->result_array();
 									foreach($parents as $row):
 								?>
                             		<option value="<?php echo $row['parent_id'];?>">

@@ -58,7 +58,7 @@ class Parents extends CI_Controller
             $data['relationship_id']     	= $this->input->post('relationship');
             $data['care_type']     	= $this->input->post('care_type');
             $data['profession']  			= $this->input->post('profession');
-            $data['primary_parent_id']     	= $this->input->post('link_to_primary_caregiver');
+            $data['primary_parent_id']     	= $this->input->post('link_to_primary_caregiver') != "" ? $this->input->post('link_to_primary_caregiver') : 0;
             
             $this->db->insert('parent', $data);
 			

@@ -72,6 +72,21 @@ class Student extends CI_Controller {
 		if ($this -> session -> userdata('active_login') != 1)
 			redirect('login', 'refresh');
 
+		$sec_caregivers_ids = [];
+		$student = $this->db->get_where('student', array('student_id' => $student_id))->row();
+
+		if($student->parent_id > 0){
+			$parent_id = $student->parent_id;
+			$this->db->select(array('parent_id'));
+			$sec_caregivers_obj = $this->db->get_where('parent', array('primary_parent_id' => $parent_id));
+
+			if($sec_caregivers_obj->num_rows() > 0){
+				$sec_caregivers_array = $sec_caregivers_obj->result_array();
+				$sec_caregivers_ids = array_column($sec_caregivers_array, 'parent_id');
+			}
+		}
+
+		$page_data['sec_caregivers_ids'] = $sec_caregivers_ids;
 		$page_data['student_id'] = $student_id;
 		$page_data['class_id'] = $this->db->get_where('student',array('student_id'=>$student_id))->row()->class_id;
 		$page_data['page_name'] = 'student_edit';
@@ -157,8 +172,8 @@ class Student extends CI_Controller {
 				$data['section_id'] = $this -> input -> post('section_id');
 			}
 			$data['parent_id'] = $this -> input -> post('parent_id');
-			$data['dormitory_id'] = $this -> input -> post('dormitory_id');
-			$data['transport_id'] = $this -> input -> post('transport_id');
+			$data['dormitory_id'] = $this -> input -> post('dormitory_id') != '' ? $this -> input -> post('dormitory_id')  : 0 ;
+			$data['transport_id'] = $this -> input -> post('transport_id') != '' ? $this -> input -> post('transport_id') : 0;
 			$data['roll'] = $this -> input -> post('roll');
 			$data['upi_number'] = $this -> input -> post('upi_number');
 			$this -> db -> insert('student', $data);
@@ -168,10 +183,10 @@ class Student extends CI_Controller {
 				$care_array = $this -> input -> post('secondary_care');
 
 				foreach ($care_array as $caregiver_id) {
-					$data2['parent_id'] = $caregiver_id;
-					$data2['student_id'] = $student_id;
-
-					$this -> db -> insert('caregiver', $data2);
+					$data2['primary_parent_id'] = $this -> input -> post('parent_id');
+					// $data2['student_id'] = $student_id;
+					$this->db->where(array('parent_id' => $caregiver_id));
+					$this -> db -> update('parent', $data2);
 				}
 			}
 
@@ -189,10 +204,10 @@ class Student extends CI_Controller {
 			$data['phone'] = $this -> input -> post('phone');
 			$data['email'] = $this -> input -> post('email');
 			$data['class_id'] = $this -> input -> post('class_id');
-			$data['section_id'] = $this -> input -> post('section_id');
+			$data['section_id'] = $this -> input -> post('section_id') != "" ? $this -> input -> post('section_id') : NULL;
 			$data['parent_id'] = $this -> input -> post('parent_id');
-			$data['dormitory_id'] = $this -> input -> post('dormitory_id');
-			$data['transport_id'] = $this -> input -> post('transport_id');
+			$data['dormitory_id'] = $this -> input -> post('dormitory_id') != "" ? $this -> input -> post('dormitory_id') : NULL;
+			$data['transport_id'] = $this -> input -> post('transport_id') != "" ? $this -> input -> post('transport_id') : NULL;
 			$data['roll'] = $this -> input -> post('roll');
 			$data['upi_number'] = $this -> input -> post('upi_number');
 
@@ -202,15 +217,15 @@ class Student extends CI_Controller {
 			if ($this -> input -> post('secondary_care')) {
 				$care_array = $this -> input -> post('secondary_care');
 
-				$this -> db -> where(array("student_id" => $param3));
-				$this -> db -> delete('caregiver');
+				$this -> db -> where(array("primary_parent_id" => $this -> input -> post('parent_id')));
+				$this -> db -> update('parent', ['primary_parent_id' => 0]);
 
 				foreach ($care_array as $caregiver_id) {
 
-					$data2['parent_id'] = $caregiver_id;
-					$data2['student_id'] = $param3;
+					$data2['primary_parent_id'] = $this -> input -> post('parent_id');
 
-					$this -> db -> insert('caregiver', $data2);
+					$this->db->where(array('parent_id' => $caregiver_id));
+					$this -> db -> update('parent', $data2);
 
 				}
 			}
