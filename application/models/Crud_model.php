@@ -1364,6 +1364,30 @@ class Crud_model extends CI_Model {
     return $unpaid_invoices;
   }
 
+function transitioned_invoices($summation = false){
+
+	$transitioned_invoices = null;
+	
+	if(!$summation){
+		$this->db->select(array('invoice_id','student.name as student_name','roll','class.name as class_name','yr','terms.name as term','amount_due'));
+	}else{
+		$this->db->select_sum('amount_due');
+	}
+    $this->db->where(array('status' => 'cancelled', 'transitioned' => 1));
+    $this->db->join('student','student.student_id=invoice.student_id');
+    $this->db->join('class','class.class_id=invoice.class_id');
+    $this->db->join('terms','terms.terms_id=invoice.term');
+    $transitioned_invoices_obj = $this->db->get('invoice');
+
+	if(!$summation){
+		$transitioned_invoices = $transitioned_invoices_obj->result_array();
+	}else{
+		$transitioned_invoices = $transitioned_invoices_obj->row()->amount_due;
+	}
+
+	return $transitioned_invoices;
+}
+
 function year_paid_invoices($year){
     $this -> db -> where('status', 'paid');
     $this -> db -> where('yr', $year);

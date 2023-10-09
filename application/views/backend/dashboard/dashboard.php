@@ -318,7 +318,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 					<div class="tile-stats tile-purple <?= get_access_class('years_expense_to_date', 'admin', 'dashboard'); ?>">
 						<div class="icon"><i class="entypo-paper-plane"></i></div>
-						<?php $transitioned_invoices = $this -> db -> select_sum('amount_due') -> get_where('invoice', array('status' => 'cancelled', 'transitioned' => 1)) -> row() -> amount_due; ?>
+						<?php $transitioned_invoices = $this -> crud_model-> transitioned_invoices(true); ?>
 						<div class="num"><?= number_format($transitioned_invoices); ?></div>
 
 						<h3>Transitioned</h3>
