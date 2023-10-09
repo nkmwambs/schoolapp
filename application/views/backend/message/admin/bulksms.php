@@ -9,6 +9,7 @@
 					 <select class="form-control" id="multiselect" name="reciever[]" multiple="multiple" required>
 
 			                <?php
+							$this->db->where(array('status' => 1));
 			                $parents = $this->db->order_by('name')->get('parent')->result_array();
 			                foreach ($parents as $row):
 								$students_result = $this->db->select(array('name'))->get_where('student',
@@ -17,7 +18,7 @@
 								$students = implode(",",array_column($students_result, 'name'));
 			                ?>
 			
-			                    <option value="<?php echo $row['phone']; ?>"><?php echo $row['name']; ?> <?php if(!empty($students_result)) {?>[<?=$students;?>]<?php }?></option>
+			                    <option value="<?php echo $row['phone']; ?>"><?php echo $row['name']; ?> - <?=ucwords($row['care_type']).' '.get_phrase('caregiver');;?> -  <?php if(!empty($students_result)) {?> [<?=$students;?>]<?php }?></option>
 			
 			                <?php endforeach; ?>
 
