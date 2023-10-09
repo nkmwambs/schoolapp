@@ -312,6 +312,23 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 			</div>
 		</div>
 
+		<div class="row  <?= get_access_class('dashboard', 'admin'); ?>">
+			<div class = "col-xs-12">
+				<div class="col-sm-3 <?= get_access_class('years_expense_to_date', 'admin', 'dashboard'); ?>">
+
+					<div class="tile-stats tile-purple <?= get_access_class('years_expense_to_date', 'admin', 'dashboard'); ?>">
+						<div class="icon"><i class="entypo-paper-plane"></i></div>
+						<?php $transitioned_invoices = $this -> db -> select_sum('amount_due') -> get_where('invoice', array('status' => 'cancelled', 'transitioned' => 1)) -> row() -> amount_due; ?>
+						<div class="num"><?= number_format($transitioned_invoices); ?></div>
+
+						<h3>Transitioned</h3>
+						<p>Total Transitioned Invoices</p>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
 		<p></p>
 
 		<div class="row <?= get_access_class('event_schedule', 'admin', 'dashboard'); ?>">

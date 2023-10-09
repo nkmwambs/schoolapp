@@ -1356,9 +1356,8 @@ class Crud_model extends CI_Model {
 	  */
 
   function year_unpaid_invoices($year){
-
-    $this -> db -> where('status', 'unpaid');
-    $this -> db -> where('yr', $year);
+	//transitioned
+    $this -> db -> where(array('status' => 'unpaid','yr' => $year, 'transitioned' => 0));
     $this -> db -> order_by('creation_timestamp', 'desc');
     $unpaid_invoices = $this -> db -> get('invoice') -> result_array();
 

@@ -1266,6 +1266,25 @@ class Finance extends CI_Controller
 
     }
 
+    function transitioned_invoices($param1=""){
+        if ($this -> session -> userdata('active_login') != 1) {
+            redirect('login', 'refresh');
+        }
+
+        $this->db->select(array('invoice_id','student.name as student_name','roll','class.name as class_name','yr','terms.name as term','amount_due'));
+        $this->db->where(array('status' => 'cancelled', 'transitioned' => 1));
+        $this->db->join('student','student.student_id=invoice.student_id');
+        $this->db->join('class','class.class_id=invoice.class_id');
+        $this->db->join('terms','terms.terms_id=invoice.term');
+        $transitioned_invoices = $this->db->get('invoice')->result_array();
+  
+        $page_data['transitioned_invoices'] = $transitioned_invoices;
+        $page_data['page_name'] = 'transitioned_invoices';
+        $page_data['page_view'] = "finance";
+        $page_data['page_title'] = get_phrase('transitioned_invoices');
+        $this -> load -> view('backend/index', $page_data);
+      }
+
     function unpaid_invoices($param1=""){
       if ($this -> session -> userdata('active_login') != 1) {
           redirect('login', 'refresh');

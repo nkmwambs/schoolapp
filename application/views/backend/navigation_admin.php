@@ -244,6 +244,12 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 								</li>
 
 								<li>
+									<a href="<?php echo base_url(); ?>index.php?finance/transitioned_invoices">
+										<span class="title"><?=get_phrase('transitioned_invoices');?></span>
+									</a>
+								</li>
+
+								<li>
 									<a href="<?php echo base_url(); ?>index.php?finance/paid_invoices">
 										<span class="title"><?=get_phrase('paid_invoices');?></span>
 									</a>

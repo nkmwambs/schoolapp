@@ -54,19 +54,19 @@ if (!defined('BASEPATH')) {
                         <thead>
                           <tr>
                             <th>#</th>
-                              <th><?php echo get_phrase('admission_number'); ?></th>
-                              <th><div><?php echo get_phrase('student'); ?></div></th>
-                              <th><div><?php echo get_phrase('year'); ?></div></th>
-                              <th><div><?php echo get_phrase('term'); ?></div></th>
-                              <th><div><?php echo get_phrase('class'); ?></div></th>
-                                  <th><div><?php echo get_phrase('fee_structure_total'); ?></div></th>
-                                  <th><div><?php echo get_phrase('payable_amount'); ?></div></th>
-                                  <th><div><?php echo get_phrase('actual_paid'); ?></div></th>
-                                  <th><div><?php echo get_phrase('balance'); ?></div></th>
-                              <!-- <th><div><?php echo get_phrase('date'); ?></div></th> -->
-                              <th><div><?php echo get_phrase('approval_request_type'); ?></div></th>
-                              <th><div><?php echo get_phrase('approval_status'); ?></div></th>
-                              <th><div><?php echo get_phrase('options'); ?></div></th>
+                            <th><?php echo get_phrase('admission_number'); ?></th>
+                            <th><div><?php echo get_phrase('student'); ?></div></th>
+                            <th><div><?php echo get_phrase('year'); ?></div></th>
+                            <th><div><?php echo get_phrase('term'); ?></div></th>
+                            <th><div><?php echo get_phrase('class'); ?></div></th>
+                            <th><div><?php echo get_phrase('fee_structure_total'); ?></div></th>
+                            <th><div><?php echo get_phrase('payable_amount'); ?></div></th>
+                            <th><div><?php echo get_phrase('actual_paid'); ?></div></th>
+                            <th><div><?php echo get_phrase('balance'); ?></div></th>
+                            <!-- <th><div><?php echo get_phrase('date'); ?></div></th> -->
+                            <th><div><?php echo get_phrase('approval_request_type'); ?></div></th>
+                            <th><div><?php echo get_phrase('approval_status'); ?></div></th>
+                            <th><div><?php echo get_phrase('options'); ?></div></th>
                   </tr>
                 </thead>
                           <tbody>
