@@ -2,10 +2,19 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 $edit_data = $this->db->get_where('invoice', array('invoice_id' => $param2))->result_array();
+// echo json_encode($edit_data);
 foreach ($edit_data as $row):
 	$this->db->select(array('route_name'));
 	$this->db->join('student','student.transport_id=transport.transport_id');
 	$transport_route = $this->db->get_where('transport',array('student.student_id'=>$row['student_id']));
+
+    // $this->
+    // $this->db->where(array('user_id' => $row['created_by']));
+    // $userObj = $created_by = $this->db->get('user');
+
+    // if($userObj){
+
+    // }
 ?>
 <center>
     <a onClick="PrintElem('#invoice_print')" class="btn btn-default btn-icon icon-left hidden-print pull-right">
@@ -21,6 +30,7 @@ foreach ($edit_data as $row):
             <tr>
                 <td align="right">
                     <h5><?php echo get_phrase('creation_date'); ?> : <?php echo date('d M,Y', $row['creation_timestamp']);?></h5>
+                    <h5><?php echo get_phrase('creation_by'); ?> : <?php echo $this->crud_model->get_user_details_by_id($row['created_by'])->name;?></h5>
                     <h5><?php echo get_phrase('year'); ?> : <?php echo $row['yr'];?></h5>
                     <h5><?php echo get_phrase('term'); ?> : <?php echo $this->db->get_where('terms',array('term_number'=>$row['term']))->row()->name;?></h5>
                     <h5><?php echo get_phrase('status'); ?> : <?php echo ucfirst($row['status']); ?></h5>

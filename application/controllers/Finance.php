@@ -348,6 +348,7 @@ class Finance extends CI_Controller
             $data['status'] = "unpaid";
             //$this->input->post('status');
             $data['creation_timestamp'] = strtotime($this -> input -> post('date'));
+            $data['created_by'] = $this->session->login_user_id;
 
             $this -> db -> insert('invoice', $data);
 

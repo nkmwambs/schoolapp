@@ -78,6 +78,25 @@ class Crud_model extends CI_Model {
         return $query->name;
     }
 
+	//////// User ////////////
+
+	function get_user_details_by_id($user_id){
+
+		$this->db->select(array('username', 'CONCAT(firstname, " ", lastname) as name','email', 'phone','login_type.name as login_type', 'profile.name as profile_name'));
+		$this->db->join('login_type','login_type.login_type_id=user.login_type_id');
+		$this->db->join('profile','profile.profile_id=user.profile_id');
+		$this->db->where(array('user_id' => $user_id));
+		$userObj = $this->db->get('user');
+
+		$user['name'] = get_phrase('system');
+
+		if($userObj->num_rows() > 0){
+			$user = $userObj->row_array();
+		}
+
+		return (object)$user;
+	}
+
     ////////////CLASS///////////
     function get_class_name($class_id) {
         $query = $this->db->get_where('class', array('class_id' => $class_id));
