@@ -18,6 +18,17 @@
 							<input type="text" class="form-control" name="name" data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>" value="" autofocus>
 						</div>
 					</div>
+
+					<div class="form-group">
+						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('show_on_student_invoice');?></label>
+                        
+						<div class="col-sm-6">
+							<select class = 'form-control' name = "show_on_student_invoice">
+								<option value = '1'><?=get_phrase('yes');?></option>
+								<option value = '0'><?=get_phrase('no');?></option>
+							</select>
+						</div>
+					</div>
 					
 					<div class="form-group">
 						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('opening_balance');?></label>

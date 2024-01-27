@@ -2,7 +2,7 @@
 //echo $approved_reports_exists;
 $display_style = '';
 $readonly = "";
-if($approved_reports_exists == true){
+if(isset($approved_reports_exists) && $approved_reports_exists == true){
 $readonly_style = '';
 	$display_style = "style='display:none;'";
 	$readonly = "disabled='disabled'";
@@ -42,6 +42,7 @@ $readonly_style = '';
 									</thead>
 									<tbody>
 										<?php
+											if(isset($terms)){
 											foreach($terms as $rows):
 										?>
 										<tr>
@@ -79,6 +80,7 @@ $readonly_style = '';
 										</tr>
 										<?php
 											endforeach;
+										}
 										?>
 									</tbody>
 								</table>
@@ -128,7 +130,8 @@ $readonly_style = '';
 								        <tr>
 								            <th><div>#</div></th>
 								            <th><div><?php echo get_phrase('name');?></div></th>
-														<th><div><?php echo get_phrase('account_status');?></div></th>
+											<th><div><?php echo get_phrase('account_status');?></div></th>
+											<th><div><?php echo get_phrase('show_on_student_invoice');?></div></th>
 								            <th><div><?php echo get_phrase('opening_balance');?></div></th>
 								            <th><?=get_phrase('fees_carry_forward_category');?></th>
 								            <th><div><?php echo get_phrase('options');?></div></th>
@@ -144,7 +147,8 @@ $readonly_style = '';
 								        <tr>
 								            <td><?php echo $count++;?></td>
 								            <td><?php echo $row['name'];?></td>
-														<td><?=$row['status'] == 1?get_phrase('active'):get_phrase('suspended');?></td>
+											<td><?=$row['status'] == 1?get_phrase('active'):get_phrase('suspended');?></td>
+											<td><?=$row['show_on_student_invoice'] == 1 ? get_phrase('yes') : get_phrase('no') ;?></td>
 								            <td><input <?=$readonly;?> type="text" id="openingbalance_<?=$row['income_category_id']?>" class="form-control opening_balance" value="<?php echo $row['opening_balance'];?>" /></td>
 								            <td><input <?=$readonly;?> type="radio" id="default_<?=$row['income_category_id']?>" name="defaut_category" class="default_category" value="1" <?=$row['default_category']== '1'?'checked':'';?> /></td>
 								            <td>

@@ -374,6 +374,7 @@ class Settings extends CI_Controller
 
         if ($param1 == 'create') {
             $data['name']   =   $this->input->post('name');
+            $data['show_on_student_invoice']   =   $this->input->post('show_on_student_invoice');
             $data['opening_balance']   =   $this->input->post('opening_balance');
             $this->db->insert('income_categories', $data);
             $this->session->set_flashdata('flash_message', get_phrase('data_added_successfully'));
@@ -381,6 +382,7 @@ class Settings extends CI_Controller
         }
         if ($param1 == 'edit') {
             $data['name']   =   $this->input->post('name');
+            $data['show_on_student_invoice']   =   $this->input->post('show_on_student_invoice');
             $data['opening_balance']   =   $this->input->post('opening_balance');
             //$data['income_category_id'] = $this->input->post('income_category_id');
             $this->db->where('income_category_id', $param2);

@@ -25,6 +25,17 @@
 							<input type="text" class="form-control" name="name" data-validate="required" data-message-required="<?php echo get_phrase('value_required');?>" value="<?php echo $row['name'];?>">
 						</div>
 					</div>
+
+					<div class="form-group">
+						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('show_on_student_invoice');?></label>
+                        
+						<div class="col-sm-6">
+							<select class = 'form-control' name = "show_on_student_invoice">
+								<option value = '1' <?=$row['show_on_student_invoice'] == 1 ? 'selected': '';?> ><?=get_phrase('yes');?></option>
+								<option value = '0' <?=$row['show_on_student_invoice'] == 0 ? 'selected': '';?> ><?=get_phrase('no');?></option>
+							</select>
+						</div>
+					</div>
 					
 					<div class="form-group">
 						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('opening_balance');?></label>
