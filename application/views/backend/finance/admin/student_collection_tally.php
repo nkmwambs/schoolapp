@@ -4,16 +4,39 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 ?>
 <div class="row">
 	<div class="col-xs-12">
-		<?php echo form_open(base_url() . 'index.php?finance/student_collection_tally/'.date('Y') , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
+		<?php echo form_open(base_url() . 'index.php?finance/student_collection_tally' , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
 				<div class="form-group">
 						<label class="control-label col-xs-3"><?=get_phrase('choose_invoice_status');?></label>
-						<div class="col-xs-6">
+						<div class="col-xs-2">
 							<select class="form-control" name="invoice_status">
 									<option value="unpaid"><?=get_phrase('select_status');?></option>
 									<option value="unpaid" <?php if($invoice_status == 'unpaid') echo 'selected';?> ><?=get_phrase('unpaid');?></option>
 									<option value="paid"  <?php if($invoice_status == 'paid') echo 'selected';?>  ><?=get_phrase('paid');?></option>
 									<option value="excess"  <?php if($invoice_status == 'excess') echo 'selected';?>  ><?=get_phrase('excess');?></option>
 									<option value="cancelled"  <?php if($invoice_status == 'cancelled') echo 'selected';?>  ><?=get_phrase('cancelled');?></option>
+							</select>
+						</div>
+						<label class="control-label col-xs-2"><?=get_phrase('year');?></label>
+						<div class="col-xs-2">
+							<select class = 'form-control' name = 'year'>
+								<?php 
+									for($lower_year = date('Y') - 5; $lower_year < date('Y'); $lower_year++){
+								?>
+									<option value = '<?=$lower_year;?>' <?php if($year == $lower_year) echo 'selected';?> ><?=$lower_year;?></option>
+								<?php
+									}
+								?>
+								
+								<option value = '<?=date('Y');?>' <?php if($year == date('Y')) echo 'selected';?>><?=date('Y');?></option>
+								
+								<?php 
+									for($upper_year = date('Y') + 1; $upper_year < date('Y') + 5; $upper_year++){
+								?>
+									<option value = '<?=$upper_year;?>' <?php if($year == $upper_year) echo 'selected';?> ><?=$upper_year;?></option>
+								<?php
+									}
+								?>
+
 							</select>
 						</div>
 						<div class="col-xs-2">

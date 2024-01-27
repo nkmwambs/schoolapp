@@ -1732,15 +1732,23 @@ class Finance extends CI_Controller
             redirect('login', 'refresh');
         }
 
+
         if($year == ""){
           $year = date('Y');
         }
 
+        // $year = '2023';
+
         if($this->input->post()){
           $invoice_status = $this->input->post('invoice_status');
+          $year = $this->input->post('year');
         }
 
         $ungrouped_payments = $this->crud_model->student_invoice_tally_by_invoice_status($year,$invoice_status);
+        
+        // log_message('error', json_encode($ungrouped_payments));
+
+        $payments = [];
 
         foreach ($ungrouped_payments as $row) {
 
@@ -1757,6 +1765,7 @@ class Finance extends CI_Controller
         $income_categories = $this->db->get('income_categories')->result_object();
 
         $page_data['invoice_status'] = $invoice_status;
+        $page_data['year'] = $year;
         $page_data['payments'] = $payments;
         $page_data['page_name'] = __FUNCTION__;
         $page_data['income_categories'] = $income_categories;
