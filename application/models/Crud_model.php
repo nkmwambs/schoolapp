@@ -1326,9 +1326,22 @@ class Crud_model extends CI_Model {
 	function get_invoice_transaction_history($invoice_id){
 		$this->db->join('transaction_method','transaction_method.transaction_method_id=transaction.transaction_method_id');
 
-		$history = $this->db->select(array('transaction.batch_number','t_date','amount','transaction.description as description',
-		'transaction_method.description as transaction_method'))->get_where('transaction',
-		array('invoice_id'=>$invoice_id))->result_object();
+		$this->db->select(array('transaction.batch_number','t_date','amount','transaction.description as description',
+		'transaction_method.description as transaction_method'));
+		$this->db->where(array('invoice_id'=>$invoice_id));
+		$history = $this->db->get('transaction')->result_object();
+
+		return $history;
+	}
+
+	function get_student_transaction_history($student_id){
+		
+		$this->db->select(array('transaction.batch_number','t_date','transaction.amount as amount','transaction.description as description',
+		'transaction_method.description as transaction_method'));
+		$this->db->where(array('invoice.student_id'=>$student_id));
+		$this->db->join('transaction_method','transaction_method.transaction_method_id=transaction.transaction_method_id');
+		$this->db->join('invoice','invoice.invoice_id=transaction.invoice_id');
+		$history = $this->db->get('transaction')->result_object();
 
 		return $history;
 	}
