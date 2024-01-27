@@ -305,7 +305,7 @@ class Finance extends CI_Controller
         return $this -> db -> select_min('term_number') -> get('terms') -> row() -> term_number;
     }
 
-    public function cancel_previous_invoice($student_id, $year, $term)
+    public function cancel_previous_invoice($student_id, $year, $term, $new_invoice_id = 0)
     {
         if ($term == $this -> min_term()) {
             $year -= 1;
@@ -318,11 +318,25 @@ class Finance extends CI_Controller
         $unpaid_invoice = $this -> db -> get_where('invoice', array('status' => 'unpaid', 'student_id' => $student_id, 'yr' => $year, 'term' => $term));
 
         if ($unpaid_invoice -> num_rows() > 0) {
+            $this->db->trans_start();
             $this -> db -> where(array('invoice_id' => $unpaid_invoice -> row() -> invoice_id));
             $cancel_status['status'] = 'cancelled';
             $cancel_status['carry_forward'] = 1;
             $cancel_status['cancellation_reason'] = get_phrase('invoice_balance_carried_forward');
+            $cancel_status['carry_forward_to'] = $new_invoice_id;
             $this -> db -> update('invoice', $cancel_status);
+
+            if($new_invoice_id > 0){
+                $this->db->where(array('invoice_id' => $new_invoice_id));
+                $update_new_invoice['carry_forward_from'] = $unpaid_invoice -> row() -> invoice_id;
+                $this->db->update('invoice', $update_new_invoice);
+            }
+
+            $this->db->trans_complete();
+
+            if($this->db->trans_status() == false){
+                log_message('info', 'invoice cancellation rolled back');
+            }
         }
     }
 
@@ -336,8 +350,6 @@ class Finance extends CI_Controller
 
         if ($param1 == 'create') {
             $this -> db -> trans_start();
-            //Cancel a previous invoice
-            $this -> cancel_previous_invoice($this -> input -> post('student_id'), $this -> input -> post('yr'), $this -> input -> post('term'));
 
             $data['student_id'] = $this -> input -> post('student_id');
             $data['class_id'] = $this -> input -> post('class_id');
@@ -354,6 +366,9 @@ class Finance extends CI_Controller
             $this -> db -> insert('invoice', $data);
 
             $invoice_id = $this -> db -> insert_id();
+
+            //Cancel a previous invoice
+            $this -> cancel_previous_invoice($this -> input -> post('student_id'), $this -> input -> post('yr'), $this -> input -> post('term'), $invoice_id);
 
             $structure_ids = $this -> input -> post('detail_id');
             $payable_amount = $this -> input -> post('payable');
@@ -449,9 +464,6 @@ class Finance extends CI_Controller
             if ($cnt === 0) {
                 foreach ($this->input->post('student_id') as $id) {
 
-                    //Cancel a previous invoice
-                    $this -> cancel_previous_invoice($id, $this -> input -> post('yr'), $this -> input -> post('term'));
-
                     $invoice_found = $this -> db -> get_where("invoice", array("student_id" => $id, "yr" => $this -> input -> post('yr'), "term" => $this -> input -> post('term')));
                     if ($invoice_found -> num_rows() === 0) {
                         $data['student_id'] = $id;
@@ -467,6 +479,10 @@ class Finance extends CI_Controller
                         $this -> db -> insert('invoice', $data);
 
                         $invoice_id = $this -> db -> insert_id();
+
+                        //Cancel a previous invoice
+                        $this -> cancel_previous_invoice($id, $this -> input -> post('yr'), $this -> input -> post('term'), $invoice_id);
+
 
                         $structure_ids = $this -> input -> post('detail_id');
                         $payable_amount = $this -> input -> post('payable');

@@ -121,7 +121,7 @@ $default_category_obj = $this->db->get_where('income_categories',
 									<option value=""><?=get_phrase('select_category')?></option>
 									<?php
 
-										$income_categories = $this->db->get_where('income_categories',array('default_category'=>0,'status'=>1))->result_object();
+										$income_categories = $this->db->get_where('income_categories',array('default_category'=>0 , 'show_on_student_invoice' => 1,'status'=>1))->result_object();
 
 										foreach($income_categories as $income_category){
 									?>
