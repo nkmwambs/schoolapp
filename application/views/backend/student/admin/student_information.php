@@ -93,7 +93,8 @@ $class = $this->db->get_where('class' , array('class_id' => $class_id));
                         <tr>
                             <td><?php echo $row['roll'];?></td>
                             <td><img src="<?php echo $this->crud_model->get_image_url('student',$row['student_id']);?>" class="img-circle" width="30" /></td>
-                            <td><?php echo $row['name'];?></td>
+                
+                            <td><a href="#" onclick="showAjaxModal('<?php echo base_url();?>index.php?modal/popup/modal_student_profile/<?php echo $row['student_id'];?>');"><?=ucwords($row['name']);?></a></td>
                             <td><?php echo $row['parent_id']!=0?$this->crud_model->get_type_name_by_id('parent',$row['parent_id']):get_phrase('not_set');?></td>
                             <td>
                                 <?php 
