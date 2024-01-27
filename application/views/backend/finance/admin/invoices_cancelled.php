@@ -11,6 +11,14 @@ if (!defined('BASEPATH')) {
 
 </style>
 
+<p></p>
+<div class="row">
+	<div class="col-xs-12" style="text-align: center;font-weight: bold;font-size: 18pt;">
+		<?=get_phrase('year');?> <?=$year;?>
+	</div>
+</div>
+<p></p>
+
 <div class="row">
 	<div class="col-xs-1">
 		<a href="<?= base_url(); ?>index.php?finance/cancelled_invoices/<?= $year - 1; ?>"><i style="font-size: 145pt;" class="fa fa-angle-left"></i></a>

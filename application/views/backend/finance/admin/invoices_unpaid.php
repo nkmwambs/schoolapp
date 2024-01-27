@@ -14,6 +14,14 @@ if (!defined('BASEPATH')) {
 }
 </style>
 
+<p></p>
+<div class="row">
+	<div class="col-xs-12" style="text-align: center;font-weight: bold;font-size: 18pt;">
+		<?=get_phrase('year');?> <?=$year;?>
+	</div>
+</div>
+<p></p>
+
 <div class="row">
 	<div class="col-xs-offset-4 col-xs-8 text-center" style="align:center;padding:5px;margin-bottom: 25px;">
 		<div class="<?=get_access_class('mass_edit_invoices', 'admin', 'accounting'); ?> pull-left">

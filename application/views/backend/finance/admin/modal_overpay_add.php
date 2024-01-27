@@ -15,7 +15,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                 <?php echo form_open(base_url() . 'index.php?finance/create_overpay_note' , array('class' => 'form-horizontal form-groups-bordered validate', 'enctype' => 'multipart/form-data'));?>
 
 					<div class="form-group">
-						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('student');?></label>
+						<label for="invoice_id" class="col-sm-3 control-label"><?php echo get_phrase('student');?></label>
 
 						<div class="col-sm-6">
 							<select class="form-control select2" required="required" name="invoice_id" id="invoice_id">
@@ -38,7 +38,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 
 					<div class="form-group">
-						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('batch_number');?></label>
+						<label for="batch_number" class="col-sm-3 control-label"><?php echo get_phrase('batch_number');?></label>
 
 						<div class="col-sm-6">
 							<input type="text" required="required" class="form-control" readonly="readonly" value="<?=$this->crud_model->next_batch_number();?>" id="batch_number" placeholder="<?=get_phrase("batch_number");?>" />
@@ -47,9 +47,9 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 					</div>
 
 					<div class="form-group">
-						<label class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
+						<label for = 'note_date' class="col-sm-3 control-label"><?php echo get_phrase('date');?></label>
 						<div class="col-sm-6">
-								<input type="text" class="datepicker form-control" readonly="readonly"
+								<input type="text" class="datepicker form-control" readonly="readonly" id = 'note_date'
 									data-start-date="<?php echo $this->crud_model->next_transaction_date()->start_date;?>"
 									data-end-date="<?php echo $this->crud_model->next_transaction_date()->end_date;?>"
 									data-format="yyyy-mm-dd" name="timestamp"
@@ -58,7 +58,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 					</div>
 
 					<div class="form-group">
-						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('amount');?></label>
+						<label for="amount" class="col-sm-3 control-label"><?php echo get_phrase('amount');?></label>
 
 						<div class="col-sm-6">
 							<input type="text" class="form-control" required="required" name="amount" id="amount" placeholder="<?=get_phrase("amount");?>" />
@@ -74,7 +74,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 					</div> -->
 
 					<div class="form-group">
-									<label class="col-sm-3 control-label"><?php echo get_phrase('method');?></label>
+									<label for = 'method' class="col-sm-3 control-label"><?php echo get_phrase('method');?></label>
 									<div class="col-sm-6">
 											<select name="method" id="method" class="form-control" required="required">
 													<option value="1"><?php echo get_phrase('cash');?></option>
@@ -87,7 +87,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 
 					<div class="form-group">
-						<label for="field-1" class="col-sm-3 control-label"><?php echo get_phrase('description');?></label>
+						<label for="description" class="col-sm-3 control-label"><?php echo get_phrase('description');?></label>
 
 						<div class="col-sm-6">
 							<textarea class="form-control" required="required" name="description" id="description" placeholder="<?=get_phrase("description");?>"></textarea>

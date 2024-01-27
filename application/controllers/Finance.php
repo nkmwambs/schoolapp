@@ -321,6 +321,7 @@ class Finance extends CI_Controller
             $this -> db -> where(array('invoice_id' => $unpaid_invoice -> row() -> invoice_id));
             $cancel_status['status'] = 'cancelled';
             $cancel_status['carry_forward'] = 1;
+            $cancel_status['cancellation_reason'] = get_phrase('invoice_balance_carried_forward');
             $this -> db -> update('invoice', $cancel_status);
         }
     }
@@ -1094,6 +1095,7 @@ class Finance extends CI_Controller
 
         $this -> db -> select(array('student.student_id', 'roll', 'student.name', 'student.class_id', 'class.name as class'));
         $this -> db -> where($sql);
+        $this->db->where(array('active' => 1));
         $this -> db -> join('class', 'class.class_id=student.class_id');
         $missing_invoices = $this -> db -> get_where('student') -> result_array();
 
