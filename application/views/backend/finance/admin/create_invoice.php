@@ -287,6 +287,15 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 	$("#frm_single_invoice").on('submit',function(ev){
 		var sum_overcharge = get_sum_overcharge();
 		var sum_payable_items = get_sum_payable();
+		
+		// alert(sum_overcharge)
+		// alert($('#overpay_hidden').val())
+		
+		// Prevent the user from submitting an invoice with unabsorbed overcharge pay
+		if(sum_overcharge != $('#overpay_hidden').val() && $('#overpay_hidden').val() != 0){
+			alert('You can\'t create an invoice with unabsorbed overpay');
+			ev.preventDefault();
+		}
 
 		//Check if the user has considered the balance forward in the invoices
 		
