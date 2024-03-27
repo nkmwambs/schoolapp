@@ -62,11 +62,11 @@ if(isset($current)){
 	<hr>
 		<table class="table table-hover table-bordered table-responsive journal_datatable">
 			<thead>
-				<!-- <tr>
+				<tr>
 					<th colspan="6">&nbsp;</th>
 					<th colspan="3"><?=get_phrase('bank');?> <br/> <?=get_phrase('balance_brought_forward');?>: <?=number_format($bank_balance,2);?></th>
 					<th colspan="3"><?=get_phrase('cash');?> <br/> <?=get_phrase('balance_brought_forward');?>: <?=number_format($cash_balance,2);?></th>
-				</tr> -->
+				</tr>
 
 				<tr>
 					<th><?=get_phrase('date');?></th>

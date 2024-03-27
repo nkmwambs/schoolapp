@@ -404,13 +404,13 @@ class Crud_model extends CI_Model {
 
 		$cash_balance = 0;
 
-		if(strtotime(date('Y-m-01',strtotime($start_date)))===strtotime(date('Y-m-01',strtotime($curr_date)))){
+		if(strtotime(date('Y-m-01',strtotime($start_date))) == strtotime(date('Y-m-01',strtotime($curr_date)))){
 
 				$bank_balance = $this->db->get_where('accounts',array('name'=>'bank'))->row()->opening_balance;
 
 				$cash_balance = $this->db->get_where('accounts',array('name'=>'cash'))->row()->opening_balance;
 
-		}elseif(strtotime(date('Y-m-01',strtotime($start_date)))<strtotime(date('Y-m-01',strtotime($curr_date)))){
+		}elseif(strtotime(date('Y-m-01',strtotime($start_date))) < strtotime(date('Y-m-01',strtotime($curr_date)))){
 
 				$c_date = date('Y-m-01',strtotime($curr_date));
 
@@ -419,11 +419,11 @@ class Crud_model extends CI_Model {
 				$month = date('m',strtotime($c_date));
 				$year = date('Y',strtotime($c_date));
 
-				$bank_income_cond = " ((transaction_type_id='1' AND transaction_method_id='2') OR transaction_type_id='3') AND t_date<'".$c_date."'";// AND t_date<='".$c_date."'
+				$bank_income_cond = " ((transaction_type_id='1' AND transaction_method_id='2') OR transaction_type_id='3') AND t_date<'".$c_date."' AND t_date >= '".$start_date."'";// AND t_date<='".$c_date."'
 
 				$bank_income = $this->db->select_sum('amount')->where($bank_income_cond)->get('transaction')->row()->amount;
 
-				$bank_expense_cond = " ((transaction_type_id='2' AND transaction_method_id='2') OR transaction_type_id='4') AND t_date<'".$c_date."'";
+				$bank_expense_cond = " ((transaction_type_id='2' AND transaction_method_id='2') OR transaction_type_id='4') AND t_date<'".$c_date."' AND t_date >= '".$start_date."'";
 
 				$bank_expense = $this->db->select_sum('amount')->where($bank_expense_cond)->get('transaction')->row()->amount;
 
@@ -431,11 +431,11 @@ class Crud_model extends CI_Model {
 
 				//Sum all Cash Income and expenses in previous months before the supplied months and get their difference
 
-				$cash_income_cond = " ((transaction_type_id='1' AND transaction_method_id='1') OR transaction_type_id='4') AND t_date<'".$c_date."'";
+				$cash_income_cond = " ((transaction_type_id='1' AND transaction_method_id='1') OR transaction_type_id='4') AND t_date<'".$c_date."' AND t_date >= '".$start_date."'";
 
 				$cash_income = $this->db->select_sum('amount')->where($cash_income_cond)->get('transaction')->row()->amount;
 
-				$cash_expense_cond = " ((transaction_type_id='2' AND transaction_method_id='1') OR transaction_type_id='3') AND t_date<'".$c_date."'";
+				$cash_expense_cond = " ((transaction_type_id='2' AND transaction_method_id='1') OR transaction_type_id='3') AND t_date<'".$c_date."' AND t_date >= '".$start_date."'";
 
 				$cash_expense = $this->db->select_sum('amount')->where($cash_expense_cond)->get('transaction')->row()->amount;
 
