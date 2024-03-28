@@ -13,7 +13,7 @@
 			                $parents = $this->db->order_by('name')->get('parent')->result_array();
 			                foreach ($parents as $row):
 								$students_result = $this->db->select(array('name'))->get_where('student',
-								array('parent_id'=>$row['parent_id']))->result_array();
+								array('parent_id'=>$row['parent_id'], 'active' => 1))->result_array();
 								
 								$students = implode(",",array_column($students_result, 'name'));
 			                ?>
