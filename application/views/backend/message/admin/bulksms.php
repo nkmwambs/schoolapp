@@ -9,12 +9,15 @@
 					 <select class="form-control" id="multiselect" name="reciever[]" multiple="multiple" required>
 
 			                <?php
+							// $this->db->join('student','student.parent_id=parent.parent_id','LEFT');
 							$this->db->where(array('status' => 1));
-			                $parents = $this->db->order_by('name')->get_where('parent', array('care_type' => 'primary'))->result_array();
+			                $parents = $this->db->order_by('parent.name')->get_where('parent', array('care_type' => 'primary'))->result_array();
 			                foreach ($parents as $row):
 								$students_result = $this->db->select(array('name'))->get_where('student',
 								array('parent_id'=>$row['parent_id'], 'active' => 1))->result_array();
 								
+								if(empty(array_column($students_result, 'name'))) continue;
+
 								$students = implode(",",array_column($students_result, 'name'));
 			                ?>
 			
