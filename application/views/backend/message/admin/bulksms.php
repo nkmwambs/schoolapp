@@ -10,7 +10,7 @@
 
 			                <?php
 							$this->db->where(array('status' => 1));
-			                $parents = $this->db->order_by('name')->get('parent')->result_array();
+			                $parents = $this->db->order_by('name')->get_where('parent', array('care_type' => 'primary'))->result_array();
 			                foreach ($parents as $row):
 								$students_result = $this->db->select(array('name'))->get_where('student',
 								array('parent_id'=>$row['parent_id'], 'active' => 1))->result_array();
